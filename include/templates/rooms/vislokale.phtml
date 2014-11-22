@@ -1,0 +1,51 @@
+<?php echo $this->getMessagesHtml();?>
+<div>
+    <fieldset>
+        <legend>Lokale - <a href="<?php echo $this->url('edit_lokale', array('id' => $this->lokale->id));?>"><i>Ret/slet</i></a></legend>
+        <div>
+            <span class='label'>Id:</span> <span class='detail'><?php echo $this->lokale->id;?></span> 
+        </div>
+        <div>
+            <span class='label'>Navn:</span> <span class='detail'><?php echo e($this->lokale->beskrivelse);?></span> 
+        </div>
+        <div>
+            <span class='label'>Område:</span> <span class='detail'><?php echo e($this->lokale->omraade);?></span> 
+        </div>
+        <div>
+            <span class='label'>Skole:</span> <span class='detail'><?php echo e($this->lokale->skole);?></span> 
+        </div>
+        <div>
+            <span class='label'>Kan bookes:</span> <span class='detail'><?php echo e($this->lokale->kan_bookes);?></span> 
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Afviklinger i lokalet</legend>
+        <table>
+            <thead>
+                <tr>
+                    <th colspan='2'>Start</th>
+                    <th> </th>
+                    <th>Slut</th>
+                    <th>Aktivitet</th>
+                    <th>Hold</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->lokale_afviklinger as $afv) : ?>
+                <tr>
+                    <td><?php echo danishDayNames(date('D', strtotime($afv->start)));?></td>
+                    <td><?php echo date('H:i', strtotime($afv->start));?></td>
+                    <td>&mdash;</td>
+                    <td><?php echo date('H:i', strtotime($afv->slut));?></td>
+                    <td><a href="<?php echo $this->url('visaktivitet',array('id' => $afv->getAktivitet()->id));?>"><?php echo e($afv->getAktivitet()->navn);?></a></td>
+                    <?php foreach ($afv->getHold() as $hold) :
+                        if ($hold->lokale_id == $this->lokale->id) : ?>
+                        <td><a href="<?php echo $this->url('vis_hold',array('id' => $hold->id));?>">Hold <?php echo e($hold->holdnummer);?></a></td>
+                        <?php endif;
+                    endforeach;?>
+                </tr>
+                <?php endforeach;?>
+            </tbody>
+        </table>
+    </fieldset>
+</div>

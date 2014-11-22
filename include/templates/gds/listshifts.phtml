@@ -1,0 +1,13 @@
+<?php echo $this->getMessagesHtml();?>
+<h1>Vagter for <?php echo e($this->gds->navn);?> (<?php echo e($this->gds->title_en);?>)</h1>
+<ul>
+    <?php foreach ($this->shifts as $shift) :?>
+        <li><?php echo danishDayNames(date('l, H:i', strtotime($shift->start)));?>
+            <ul>
+                <?php foreach ($shift->getParticipants() as $participant) :?>
+                    <li><?php echo e($participant->getName());?> - Mobil: <?php echo e($participant->mobiltlf);?></li>
+                <?php endforeach;?>
+            </ul>
+        </li>
+    <?php endforeach;?>
+</ul>

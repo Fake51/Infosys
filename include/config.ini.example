@@ -1,0 +1,24 @@
+[live]
+db.host         =
+db.user         =
+db.password     =
+db.database     =
+db.type         =
+app.public_uri  =
+app.sitename    =
+app.log_file    =
+con.start       = 
+con.end         = 
+con.signupstart = 
+con.signupend   = 
+sms.user        =
+sms.pass        =
+
+[test]
+db.host        = 'localhost'
+db.user        = 'fasta'
+db.password    = 'fasta'
+db.database    = 'infosys2012'
+app.public_uri = 'http://infosys.dk/'
+sms.test       =
+sms.test       =

@@ -1,0 +1,592 @@
+<?php
+/**
+ * Copyright (C) 2011-2012  Peter Lind
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *
+ * PHP version 5.3+
+ *
+ * @category  Infosys
+ * @package   Controllers 
+ * @author    Peter Lind <peter.e.lind@gmail.com>
+ * @copyright 2009-2012 Peter Lind
+ * @license   http://www.gnu.org/licenses/gpl.html GPL 3
+ * @link      http://www.github.com/Fake51/Infosys
+ */
+
+/**
+ * handles api calls
+ *
+ * @category Infosys
+ * @package  Controllers 
+ * @author   Peter Lind <peter.e.lind@gmail.com>
+ * @license  http://www.gnu.org/licenses/gpl.html GPL 3
+ * @link     http://www.github.com/Fake51/Infosys
+ */
+class ApiController extends Controller
+{
+    protected $prerun_hooks = array(
+        array('method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup')),
+        array('method' => 'checkAuth', 'exclusive' => false, 'methodlist' => array('getUserSchedule', 'getUserScheduleV2')),
+    );
+
+    /**
+     * checks that the user connecting is authenticated
+     *
+     * @access public
+     * @return void
+     */
+    public function checkAuth()
+    {
+        $session = $this->dic->get('Session');
+        if (empty($session->api_user) || empty($session->api_key)) {
+            header('HTTP/1.1 403 Not authorized for this method');
+            exit;
+        }
+    }
+
+    /**
+     * method to create a participant
+     *
+     * @access public
+     * @return void
+     */
+    public function createParticipant()
+    {
+        $this->jsonOutput($this->model->createParticipant());
+    }
+
+    /**
+     * checks that data has been posted right in the request
+     *
+     * @access public
+     * @return void
+     */
+    public function checkData()
+    {
+        if (!$this->page->request->isPost()) {
+            header('HTTP/1.1 400 Not post request');
+            exit;
+        }
+
+        $post = $this->page->request->post;
+        if (empty($post->data)) {
+            if (!($data = file_get_contents('php://input'))) {
+                header('HTTP/1.1 400 Bad data');
+                exit;
+            }
+        } else {
+            $data = $post->data;
+        }
+
+        if (!($json = json_decode($data, true))) {
+            header('HTTP/1.1 400 Bad data');
+            exit;
+        }
+
+        if (isset($json['nameValuePairs'])) {
+            $json = $json['nameValuePairs'];
+        }
+
+        $this->json = $json;
+    }
+
+    /**
+     * adds wear to a participants entry
+     *
+     * @access public
+     * @return void
+     */
+    public function addWear()
+    {
+        $this->jsonOutput($this->model->addWear($this->json));
+    }
+
+    /**
+     * adds a chore to a participants entry
+     *
+     * @access public
+     * @return void
+     */
+    public function addGDS()
+    {
+        $this->jsonOutput($this->model->addGDS($this->json));
+    }
+
+    /**
+     * adds an activity to a participants entry
+     *
+     * @access public
+     * @return void
+     */
+    public function addActivity()
+    {
+        $this->jsonOutput($this->model->addActivity($this->json));
+    }
+
+    /**
+     * adds an entry form to a participants entry
+     *
+     * @access public
+     * @return void
+     */
+    public function addEntrance()
+    {
+        $this->jsonOutput($this->model->addEntrance($this->json));
+    }
+
+    /**
+     * parses a json blob from the signup
+     * essentially all details in one go
+     *
+     * @access public
+     * @return void
+     */
+    public function parseSignup()
+    {
+        $this->jsonOutput($this->model->parseSignup($this->json));
+    }
+
+    /**
+     * handles authentication against the API
+     *
+     * @access public
+     * @return void
+     */
+    public function auth()
+    {
+        if (!$this->page->request->isPost()) {
+            $session            = $this->dic->get('Session');
+            $session->api_token = md5(uniqid());
+            $session->save();
+            $this->jsonOutput(array('token' => $session->api_token));
+        } else {
+            $session = $this->dic->get('Session');
+            $post    = $this->page->request->post;
+            $this->checkData();
+
+            if (!$this->model->authenticate($this->json)) {
+                header('HTTP/1.1 403 Access denied');
+                exit;
+            }
+
+            $this->jsonOutput($this->model->generateApiKey());
+        }
+    }
+
+    /**
+     * returns json encoded array of activities
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function allActivities()
+    {
+        $this->vars['all'] = true;
+        $this->activities();
+    }
+
+    /**
+     * returns json encoded array of activities
+     * as requested through a variable,
+     * - output suited for a mobile app
+     *
+     * @access public
+     * @return void
+     */
+    public function activitiesForAppV2()
+    {
+        return $this->activitiesForApp(2);
+    }
+
+    /**
+     * returns json encoded array of activities
+     * as requested through a variable,
+     * - output suited for a mobile app
+     *
+     * @access public
+     * @return void
+     */
+    public function activitiesForApp($version = 1)
+    {
+        if (empty($this->vars)) {
+            $this->vars['id'] = '*';
+        }
+
+        $timestamp = 0;
+        if ($this->page->request->get->since) {
+            //$timestamp = intval($this->page->request->get->since);
+        }
+
+        if (preg_match('/\\d{4}-\\d{2}-\\d{2}/', $this->vars['id'])) {
+            $this->jsonOutput($this->model->getActivityDataForDay($this->vars['id'], !empty($this->vars['all']), true, $timestamp, $version));
+        } elseif ($this->vars['id'] === '*') {
+            $ids = array();
+        } elseif (!intval($this->vars['id'])) {
+            $this->jsonOutput($this->model->getActivityDataForType($this->vars['id'], !empty($this->vars['all']), true, $timestamp, $version));
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+
+        $this->jsonOutput($this->model->getActivityData($ids, !empty($this->vars['all']), true, $timestamp, $version));
+    }
+
+    /**
+     * returns json encoded array of activities
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function activities()
+    {
+        if ($this->page->request->isPost()) {
+            $this->checkAuth();
+
+            try {
+                if (empty($this->vars['id'])) {
+                    $this->model->createActivity($_POST);
+
+                } else {
+                    $this->model->updateActivity($_POST, $this->vars['id']);
+
+                }
+            } catch (Exception $e) {
+                header('HTTP/1.1 500 Fail');
+                exit;
+            }
+        }
+
+        if (empty($this->vars)) {
+            $this->vars['id'] = '*';
+        }
+
+        $timestamp = 0;
+        if ($this->page->request->get->since) {
+            //$timestamp = intval($this->page->request->get->since);
+        }
+
+        if (preg_match('/\\d{4}-\\d{2}-\\d{2}/', $this->vars['id'])) {
+            $this->jsonOutput($this->model->getActivityDataForDay($this->vars['id'], !empty($this->vars['all']), false, $timestamp));
+        } elseif ($this->vars['id'] === '*') {
+            $ids = array();
+        } elseif (!intval($this->vars['id'])) {
+            $this->jsonOutput($this->model->getActivityDataForType($this->vars['id'], !empty($this->vars['all']), false, $timestamp));
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+
+        $this->jsonOutput($this->model->getActivityData($ids, !empty($this->vars['all']), false, $timestamp));
+    }
+
+    /**
+     * returns json encoded array of activity schedules
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function schedules() {
+        if (preg_match('/\\d{4}-\\d{2}-\\d{2}/', $this->vars['id'])) {
+            $this->jsonOutput($this->model->getScheduleStructureForDay($this->vars['id']));
+        } elseif ($this->vars['id'] === '*') {
+            $ids = array();
+        } elseif (!intval($this->vars['id'])) {
+            $this->jsonOutput($this->model->getScheduleStructureForType($this->vars['id']));
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+        $this->jsonOutput($this->model->getScheduleStructure($ids));
+    }
+
+    /**
+     * returns json encoded array of activities
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function gds()
+    {
+        if ($this->vars['id'] === '*') {
+            $ids = array();
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+        $this->jsonOutput($this->model->getGDSStructure($ids));
+    }
+
+    /**
+     * returns json encoded array of DIY categories
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function gdsCategories()
+    {
+        if ($this->vars['id'] === '*') {
+            $ids = array();
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+        $this->jsonOutput($this->model->getGDSCategoryStructure($ids));
+    }
+
+    /**
+     * returns json encoded array of gds shifts
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function gdsShift()
+    {
+        if ($this->vars['id'] === '*') {
+            header('HTTP/1.1 400 Bad data');
+            exit;
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+        $this->jsonOutput($this->model->getGDSShiftStructure($ids));
+    }
+
+    /**
+     * returns json encoded array of food
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function food()
+    {
+        if ($this->vars['id'] === '*') {
+            $ids = array();
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+        $this->jsonOutput($this->model->getFoodStructure($ids));
+    }
+
+    /**
+     * returns json encoded array of entrance info
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function entrance()
+    {
+        if ($this->vars['id'] === '*') {
+            $ids = array();
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+        $this->jsonOutput($this->model->getEntranceStructure($ids));
+    }
+
+    /**
+     * returns json encoded array of wear info
+     * as requested through a variable
+     *
+     * @access public
+     * @return void
+     */
+    public function wear()
+    {
+        if ($this->vars['id'] === '*') {
+            $ids = array();
+        } else {
+            $ids = explode(',', $this->vars['id']);
+        }
+        $this->jsonOutput($this->model->getWearStructure($ids));
+    }
+
+    /**
+     * outputs json data and sets headers accordingly
+     *
+     * @param string $data        Data to output
+     * @param string $http_status HTTP status code
+     *
+     * @access protected
+     * @return void
+     */
+    protected function jsonOutput($data, $http_status = '200 Awesome', $content_type = 'text/plain')
+    {
+        $string = json_encode($data);
+        header('HTTP/1.1 ' . $http_status);
+        header('Content-Type: ' . $content_type . '; charset=UTF-8');
+        header('Content-Length: ' . strlen($string));
+        echo $string;
+        exit;
+    }
+
+    /**
+     * method docblock
+     *
+     * @param
+     *
+     * @access public
+     * @return void
+     */
+    public function fetchGraphData()
+    {
+        $this->page->layout_template = 'minimal.phtml';
+        $data = $this->model->fetchGraphData($this->vars['name']);
+
+        try {
+            $this->page->data = json_encode($data);
+
+        } catch (Exception $e) {
+            die($e->getMessage());
+            header('HTTP/1.1 500 Failed');
+            echo "Failed to gather data";
+            exit;
+        }
+    }
+
+    /**
+     * outputs the data structure for activities
+     *
+     * @access public
+     * @return void
+     */
+    public function activityStructure()
+    {
+        $this->jsonOutput($this->model->getActivityStructure(), '200 Awesome', 'application/json');
+    }
+
+    /**
+     * sets the proper header to allow cross site
+     * access to the api
+     *
+     * @access public
+     * @return void
+     */
+    public function allowCrossSiteAccess()
+    {
+        header('Access-Control-Allow-Origin: *');
+    }
+
+    /**
+     * searches for an activity given a field and a value
+     *
+     * @access public
+     * @return void
+     */
+    public function activitiesByField()
+    {
+        $entity = $this->model->findActivityByField($this->vars['field'], $this->vars['value']);
+        $output = $entity ? $this->model->formatEntityForJson($entity) : array();
+        $output['schedules'] = $entity ? $this->model->getScheduleInfo($entity) : array();
+        $this->jsonOutput($output, '200 Awesome', 'application/json');
+    }
+
+    /**
+     * outputs the schedule for a given user
+     *
+     * @access public
+     * @return void
+     */
+    public function getUserScheduleV2()
+    {
+        return $this->getUserSchedule(2);
+    }
+
+    /**
+     * outputs the schedule for a given user
+     *
+     * @access public
+     * @return void
+     */
+    public function getUserSchedule($version = 1)
+    {
+        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id']))) {
+            header('HTTP/1.1 400 No such user');
+            exit;
+        }
+
+        if (!$this->page->request->get->pass || $participant->password != $this->page->request->get->pass) {
+            header('HTTP/1.1 403 No access');
+            exit;
+        }
+
+        $this->jsonOutput($this->model->getParticipantSchedule($participant, $version), '200 Awesome', 'application/json');
+    }
+
+    /**
+     * registers an app for a participant
+     *
+     * @access public
+     * @return void
+     */
+    public function registerApp()
+    {
+        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id']))) {
+            header('HTTP/1.1 400 No such user');
+            exit;
+        }
+
+        $this->checkData();
+
+        if (!$this->json['password'] || $participant->password != $this->json['password']) {
+            header('HTTP/1.1 403 No access');
+            exit;
+        }
+
+        try {
+            $this->model->registerApp($participant, $this->json);
+
+            $this->log("Deltager #{$participant->id} registrerede sin app", 'Api', null);
+
+        } catch (FrameworkException $e) {
+            header('HTTP/1.1 500 Fail');
+        }
+
+        exit;
+    }
+
+    /**
+     * unregisters an app for a participant
+     *
+     * @access public
+     * @return void
+     */
+    public function unregisterApp()
+    {
+        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id']))) {
+            header('HTTP/1.1 400 No such user');
+            exit;
+        }
+
+        $this->checkData();
+
+        if (!$this->json['password'] || $participant->password != $this->json['password']) {
+            header('HTTP/1.1 403 No access');
+            exit;
+        }
+
+        try {
+            $this->model->unregisterApp($participant, $this->json);
+
+            $this->log("Deltager #{$participant->id} afregistrerede sin app", 'Api', null);
+
+        } catch (FrameworkException $e) {
+            header('HTTP/1.1 500 Fail');
+        }
+
+        exit;
+    }
+}
