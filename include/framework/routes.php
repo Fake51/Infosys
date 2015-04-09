@@ -167,20 +167,6 @@ class Routes
         $this->routes['graph_participant_shares']        = array('url' => 'graph/ajax/shares', 'controller' => 'Graph', 'method' => 'ajaxShares');
         $this->routes['graph_food_shares']               = array('url' => 'graph/ajax/foodshares', 'controller' => 'Graph', 'method' => 'ajaxFoodShares');
 
-        // newsletter routes
-        $this->routes['newsletters_home']        = array('url' => 'newsletter', 'controller' => 'Newsletter', 'method' => 'main');
-        $this->routes['newsletters_create']      =  array('url' => 'newsletter/create', 'controller' => 'Newsletter', 'method' => 'create');
-        $this->routes['newsletters_edit']        = array('url' => 'newsletter/edit/:id:', 'controller' => 'Newsletter', 'method' => 'edit');
-        $this->routes['newsletters_view']        = array('url' => 'newsletter/view/:id:', 'controller' => 'Newsletter', 'method' => 'view');
-        $this->routes['newsletters_all']         = array('url' => 'newsletter/all', 'controller' => 'Newsletter', 'method' => 'viewAll');
-        $this->routes['newsletters_send']        = array('url' => 'newsletter/send/:id:', 'controller' => 'Newsletter', 'method' => 'send');
-        $this->routes['newsletters_send_test']   = array('url' => 'newsletter/sendtest/:id:', 'controller' => 'Newsletter', 'method' => 'sendTest');
-        $this->routes['newsletters_subscribers'] = array('url' => 'newsletter/subscribers', 'controller' => 'Newsletter', 'method' => 'subscribers');
-        $this->routes['newsletter_subscribe']    = array('url' => 'newsletter/subscribe', 'controller' => 'Newsletter', 'method' => 'subscribe');
-        $this->routes['newsletter_confirm']      = array('url' => 'newsletter/confirm/:token:', 'controller' => 'Newsletter', 'method' => 'confirm');
-        $this->routes['newsletter_unsubscribe']  = array('url' => 'newsletter/unsubscribe/:token:', 'controller' => 'Newsletter', 'method' => 'unsubscribe');
-        $this->routes['newsletters_ajax']        = array('url' => 'newsletter/ajax/:action:', 'controller' => 'Newsletter', 'method' => 'ajax');
-
         // aktivitet routes
         $this->routes['aktiviteterhome']           = array('url' => 'aktiviteter/', 'controller' => 'Activity', 'method' => 'main');
         $this->routes['vis_alle_aktiviteter']      = array('url' => 'aktiviteter/visalle', 'controller' => 'Activity', 'method' => 'visAlle');
