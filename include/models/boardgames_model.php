@@ -79,6 +79,26 @@ SELECT b.name, COUNT(*) AS count FROM boardgames AS b JOIN boardgameevents AS be
             $return['Top ' . $index++] = $row['name'] . ' (' . $row['count'] . ')';
         }
 
+        $gameevents = array();
+        $time       = 0;
+
+        $query = '
+SELECT be.type, be.boardgame_id, be.timestamp FROM boardgameevents AS be WHERE be.type IN ("borrowed", "returned") ORDER BY be.boardgame_id, be.timestamp
+';
+
+        foreach ($this->db->query($query) as $row) {
+            if ($row['type'] === 'borrowed') {
+                $gameevents[$row['boardgame_id']] = $row['timestamp'];
+                continue;
+            }
+
+            if ($row['type'] === 'returned' && !empty($gameevents[$row['boardgame_id']])) {
+                $time += round((strtotime($row['timestamp']) - strtotime($gameevents[$row['boardgame_id']])) / 3600, 2);
+            }
+        }
+
+        $return['Samlet udlånstid i timer'] = $time;
+
         return $return;
     }
 
