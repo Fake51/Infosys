@@ -47,6 +47,17 @@ class Hold extends DBObject
     protected $places;
 
     /**
+     * wrapper for getAktivitet
+     *
+     * @access publi
+     * @return object
+     */
+    public function getActivity()
+    {
+        return $this->getAktivitet();
+    }
+
+    /**
      * loads the aktivitet for the afvikling for the hold
      *
      * @return bool
@@ -161,6 +172,17 @@ class Hold extends DBObject
             return false;
         }
         return (!$this->needsGMs() && !$this->needsGamers());
+    }
+
+    /**
+     * wrapper for getAfvikling
+     *
+     * @return object
+     * @access public
+     */
+    public function getSchedule()
+    {
+        return $this->getAfvikling();
     }
 
     /**

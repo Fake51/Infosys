@@ -37,8 +37,8 @@
 class ApiController extends Controller
 {
     protected $prerun_hooks = array(
-        array('method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup')),
-        array('method' => 'checkAuth', 'exclusive' => false, 'methodlist' => array('getUserSchedule', 'getUserScheduleV2')),
+        array('method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup', 'requestPasswordReminder')),
+        array('method' => 'checkAuth', 'exclusive' => false, 'methodlist' => array('getUserSchedule', 'getUserScheduleV2', 'getUserData')),
     );
 
     /**
@@ -64,7 +64,16 @@ class ApiController extends Controller
      */
     public function createParticipant()
     {
-        $this->jsonOutput($this->model->createParticipant());
+        if ($this->page->request->isPost()) {
+            $post = $this->page->request->post;
+
+        } else {
+            $post = new StdClass();
+        }
+
+        $output = $this->model->createParticipant($post);
+
+        $this->jsonOutput($output);
     }
 
     /**
@@ -155,7 +164,18 @@ class ApiController extends Controller
      */
     public function parseSignup()
     {
-        $this->jsonOutput($this->model->parseSignup($this->json));
+        // save signup data
+        file_put_contents(__DIR__ . '/../signup-data/parse-' . date('Y-m-d_H:i:s'), print_r($this->json, true));
+
+        list($json_output, $participant) = $this->model->parseSignup($this->json);
+
+        if (!empty($json_output['status']) && $json_output['status'] === 'ok') {
+            $participant_controller = new ParticipantController($this->route, $this->config, $this->dic);
+
+            $participant_controller->sendEmailFromSignup($participant);
+        }
+
+        $this->jsonOutput($json_output);
     }
 
     /**
@@ -301,13 +321,17 @@ class ApiController extends Controller
     public function schedules() {
         if (preg_match('/\\d{4}-\\d{2}-\\d{2}/', $this->vars['id'])) {
             $this->jsonOutput($this->model->getScheduleStructureForDay($this->vars['id']));
+
         } elseif ($this->vars['id'] === '*') {
             $ids = array();
+
         } elseif (!intval($this->vars['id'])) {
             $this->jsonOutput($this->model->getScheduleStructureForType($this->vars['id']));
+
         } else {
             $ids = explode(',', $this->vars['id']);
         }
+
         $this->jsonOutput($this->model->getScheduleStructure($ids));
     }
 
@@ -411,7 +435,8 @@ class ApiController extends Controller
         } else {
             $ids = explode(',', $this->vars['id']);
         }
-        $this->jsonOutput($this->model->getWearStructure($ids));
+
+        $this->jsonOutput($this->model->getWearStructure($ids, $this->page->request->get->brugertype));
     }
 
     /**
@@ -425,7 +450,7 @@ class ApiController extends Controller
      */
     protected function jsonOutput($data, $http_status = '200 Awesome', $content_type = 'text/plain')
     {
-        $string = json_encode($data);
+        $string = json_encode($data, JSON_UNESCAPED_UNICODE);
         header('HTTP/1.1 ' . $http_status);
         header('Content-Type: ' . $content_type . '; charset=UTF-8');
         header('Content-Length: ' . strlen($string));
@@ -513,7 +538,7 @@ class ApiController extends Controller
      */
     public function getUserSchedule($version = 1)
     {
-        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id']))) {
+        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id'])) || $participant->annulled === 'ja') {
             header('HTTP/1.1 400 No such user');
             exit;
         }
@@ -527,6 +552,27 @@ class ApiController extends Controller
     }
 
     /**
+     * outputs base data for a given user
+     *
+     * @access public
+     * @return void
+     */
+    public function getUserData()
+    {
+        if (empty($this->vars['email']) || !$this->page->request->get->pass) {
+            header('HTTP/1.1 400 No such user');
+            exit;
+        }
+
+        if (!($participant = $this->model->getParticipantByEmailAndPassword($this->vars['email'], $this->page->request->get->pass)) || $participant->annulled === 'ja') {
+            header('HTTP/1.1 403 No access');
+            exit;
+        }
+
+        $this->jsonOutput($this->model->getParticipantBaseData($participant), '200 Awesome', 'application/json');
+    }
+
+    /**
      * registers an app for a participant
      *
      * @access public
@@ -534,17 +580,12 @@ class ApiController extends Controller
      */
     public function registerApp()
     {
-        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id']))) {
+        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id'])) || $participant->annulled === 'ja') {
             header('HTTP/1.1 400 No such user');
             exit;
         }
 
         $this->checkData();
-
-        if (!$this->json['password'] || $participant->password != $this->json['password']) {
-            header('HTTP/1.1 403 No access');
-            exit;
-        }
 
         try {
             $this->model->registerApp($participant, $this->json);
@@ -566,26 +607,60 @@ class ApiController extends Controller
      */
     public function unregisterApp()
     {
-        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id']))) {
+        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id'])) || $participant->annulled === 'ja') {
             header('HTTP/1.1 400 No such user');
             exit;
         }
 
-        $this->checkData();
-
-        if (!$this->json['password'] || $participant->password != $this->json['password']) {
-            header('HTTP/1.1 403 No access');
-            exit;
-        }
-
         try {
-            $this->model->unregisterApp($participant, $this->json);
+            $this->model->unregisterApp($participant);
 
             $this->log("Deltager #{$participant->id} afregistrerede sin app", 'Api', null);
 
         } catch (FrameworkException $e) {
             header('HTTP/1.1 500 Fail');
         }
+
+        exit;
+    }
+
+    public function requestPasswordReminder()
+    {
+        if (!($participants = $this->model->findParticipantsByEmail($this->json['email']))) {
+            header('HTTP/1.1 400 No such user');
+            exit;
+        }
+
+        $title = 'Password reminder';
+
+        foreach ($participants as $participant) {
+            if ($participant->annulled === 'ja') {
+                continue;
+            }
+
+            $this->page->participant = $participant;
+
+            if ($participant->speaksDanish()) {
+                $this->page->setTemplate('participant/sendpasswordemailda');
+
+            } else {
+                $this->page->setTemplate('participant/sendpasswordemailen');
+            }
+
+            $this->page->link = $this->url('participant_reset_password', array('hash' => md5('reset-pw-' . $participant->id . '-' . $participant->password)));
+
+            $html_body = $this->page->render();
+            $txt_body  = strip_tags($html_body);
+
+            $mail = new Mail('info@fastaval.dk', $participant->email, $title, $txt_body);
+            $mail->addHtmlBody($html_body);
+
+            $this->log("Deltager #{$participant->id} fik sendt password-reset email", 'Api', null);
+
+            $mail->send();
+        }
+
+        header('HTTP/1.1 200 Emails sent');
 
         exit;
     }

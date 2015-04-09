@@ -46,7 +46,7 @@ class ParticipantController extends Controller
      * @var array
      */
     protected $prerun_hooks = array(
-        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array('displayParticipantInfo', 'showSignupDetails', 'showSignupDetailsJson', 'listAssignedGMs', 'ean8SmallBarcode', 'ean8Barcode', 'ean8Badge')),
+        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array('displayParticipantInfo', 'showSignupDetails', 'showSignupDetailsJson', 'listAssignedGMs', 'ean8SmallBarcode', 'ean8Barcode', 'ean8Badge', 'processPayment', 'registerPayment', 'showPaymentDone', 'resetParticipantPassword', 'sendFirstPaymentReminder', 'sendSecondPaymentReminder', 'cancelParticipantSignup')),
     );
 
     /**
@@ -84,12 +84,17 @@ class ParticipantController extends Controller
             $this->page->deltager_info = $this->model->findDeltagerInfo($deltager);
             $this->page->late_signup   = strtotime($this->config->get('con.signupend')) < strtotime($deltager->created);
 
+            $this->page->banking_fee = $this->model->findBankingFee();
+
             $get = $this->page->request->get;
+
             if (!empty($get->payment_edit)) {
                 $this->page->payment_edit = true;
             }
 
-            $this->page->allow_checkin = $this->model->isUser(array('Fake51', 'Admin')) || $this->model->getLoggedInUser()->hasRole('Infonaut');
+            $this->page->allow_checkin         = $this->model->getLoggedInUser()->hasRole('Infonaut') || $this->model->getLoggedInUser()->hasRole('Admin');
+            $this->page->is_read_only          = $this->model->getLoggedInUser()->hasRole('Read-only') || $this->model->getLoggedInUser()->hasRole('Read-only activity');
+            $this->page->is_read_only_activity = $this->model->getLoggedInUser()->hasRole('Read-only activity');
 
         } else {
             $this->page->setTemplate('noResults');
@@ -413,6 +418,7 @@ class ParticipantController extends Controller
      */
     public function createDeltager() {
         $this->page->setTitle('Opret deltager');
+
         if ($this->page->request->isPost()) {
             $post = $this->page->request->post;
 
@@ -563,7 +569,7 @@ class ParticipantController extends Controller
         } else {
             $this->model->updateIMW($deltager, $this->page->request->post) ? $this->successMessage('Deltageren blev opdateret.') : $this->errorMessage('Kunne ikke opdatere deltageren.');
 
-            if (!($this->model->isUser(array('Fake51', 'Admin')) || $this->model->getLoggedInUser()->hasRole('Infonaut'))) {
+            if (!($this->model->getLoggedInUser()->hasRole('Infonaut') || $this->model->getLoggedInUser()->hasRole('Admin'))) {
                 $this->errorMessage('Mad og wear kan pt kun opdateres af den hoved-ansvarlige for området');
             }
 
@@ -759,19 +765,17 @@ class ParticipantController extends Controller
     {
         $this->page->layout_template = "external.phtml";
         $this->page->setTemplate('external_pass');
-        if (!($deltager = $this->model->findDeltager($this->vars['id'])))
-        {
+        if (!($deltager = $this->model->findDeltager($this->vars['id'])) || $deltager->annulled === 'ja') {
             $this->page->setTemplate('noResults');
             return;
         }
-        if ($deltager->getBrugerkategori()->navn != 'Forfatter')
-        {
+
+        if ($deltager->getBrugerkategori()->navn != 'Forfatter') {
             $this->errorMessage("Kun forfattere har adgang til denne side.");
             return;
         }
 
-        if ($this->externalLogin($deltager))
-        {
+        if ($this->externalLogin($deltager)) {
             $this->page->activity_list = $this->model->getAllAktiviteter();
             $this->page->gm_list = $this->model->getGMList();
             $this->page->model = $this->model;
@@ -791,12 +795,11 @@ class ParticipantController extends Controller
     {
         $direction = ((!empty($this->vars['direction'])) ? $this->vars['direction'] : 'asc');
         $deltagere = $this->model->findSortedByField('rel_karma', $direction);
-        if (empty($deltagere))
-        {
+
+        if (empty($deltagere)) {
             $this->page->setTemplate('noResults');
-        }
-        else
-        {
+
+        } else {
             $this->page->deltagere = $deltagere;
             $this->page->sortedby = 'Karma';
             $get = $this->page->request->get;
@@ -992,7 +995,7 @@ class ParticipantController extends Controller
 
     public function showSignupDetails()
     {
-        if (!($deltager = $this->model->findDeltager($this->vars['id']))) {
+        if (!($deltager = $this->model->findDeltager($this->vars['id'])) || $deltager->annulled === 'ja') {
             $this->page->setTemplate('noResults');
             return;
         }
@@ -1148,7 +1151,7 @@ class ParticipantController extends Controller
             $this->successMessage('Sendte ' . $result['success'] . ' beskeder. ' . $result['failure'] . ' beskeder fejlede.');
         }
 
-        $this->log("{$this->model->getLoggedInUser()->user} har sendt {$result['success']} SMSer, med {$result['failure']} fejlede", "SMS", $this->model->getLoggedInUser());
+        $this->log("{$this->model->getLoggedInUser()->user} har sendt {$result['success']} beskeder, med {$result['failure']} fejlede", "SMS", $this->model->getLoggedInUser());
         $this->hardRedirect($this->url('deltagerehome'));
     }
 
@@ -1494,5 +1497,298 @@ class ParticipantController extends Controller
         } catch (Exception $e) {
             header('HTTP/1.1 500 Failed');
         }
+
+        exit;
+    }
+
+    /**
+     * handle a participant wanting to pay
+     *
+     * @access public
+     * @return void
+     */
+    public function processPayment()
+    {
+        if (empty($this->vars['hash'])) {
+            header('HTTP/1.1 400 Bad request');
+            exit;
+        }
+
+        if (!($participant = $this->model->getParticipantFromPaymentHash($this->vars['hash'])) || $participant->annulled === 'ja') {
+            $this->page->setTitle('Fejl / Fail');
+            $this->page->no_participant = true;
+
+            return;
+        }
+
+        $this->page->setTitle('Fejl / Fail');
+        $this->page->convention_done = true;
+
+        return;
+
+        if (!$this->model->participantHasOutstandingPayment($participant)) {
+            $this->page->setTitle('All good');
+            $this->page->nothing_outstanding = true;
+
+            return;
+        }
+
+        if (!($url = $this->model->generatePaymentUrl($participant))) {
+            $this->page->setTitle('Fejl / Fail');
+            $this->page->no_payment_url = true;
+
+            $this->log("Failed to create payment url for participant " . $participant->id, 'Payment', null);
+
+            return;
+        }
+
+        $this->log("Created payment url for participant " . $participant->id, 'Payment', null);
+
+        // redirect to url
+        $this->hardRedirect($url);
+    }
+
+    /**
+     * shows a thank you page after payment is done
+     *
+     * @access public
+     * @return void
+     */
+    public function showPaymentDone()
+    {
+    }
+
+    /**
+     * handle a participant wanting to pay
+     *
+     * @access public
+     * @return void
+     */
+    public function registerPayment()
+    {
+        if (empty($this->vars['hash'])) {
+            header('HTTP/1.1 400 Bad request');
+            exit;
+        }
+
+        if (!($participant = $this->model->getParticipantFromPaymentHash($this->vars['hash']))) {
+            header('HTTP/1.1 400 Bad request');
+
+            $this->log("Failed to locate participant for registering payment. Hash " . $this->vars['hash'], 'Payment', null);
+
+            exit;
+        }
+
+        if (!$this->page->request->isPost()) {
+            header('HTTP/1.1 400 Bad request');
+
+            $this->log("Received payment callback for participant " . $participant->id . ". No POST vars received.", 'Payment', null);
+            exit;
+        }
+
+        if (!$this->model->registerParticipantPayment($participant, $this->page->request->post)) {
+            $this->log("Failed to register payment for participant " . $participant->id . ". Posted to error log" , 'Payment', null);
+
+            error_log("Failed payment. " . print_r($this->page->request->post, true));
+            exit;
+        }
+
+        $this->log("Registered payment for participant " . $participant->id, 'Payment', null);
+
+        exit;
+    }
+
+    public function sendSignupEmail()
+    {
+        if (!($participant = $this->model->findDeltager($this->vars['id']))) {
+            $this->hardRedirect('/');
+        }
+
+        $this->sendEmailFromSignup($participant);
+
+        header('HTTP/1.1 200 Email sent');
+        header('Content-Type: text/plain; charset=UTF-8');
+
+        echo "Email sent";
+
+        exit;
+    }
+
+    public function requestSignupEmails()
+    {
+        if ($this->page->request->isPost()) {
+            $post = $this->page->request->post;
+
+            $participant = $this->model->findParticipant($post->id);
+
+            $this->sendEmailFromSignup($participant);
+
+            header('HTTP/1.1 200 Email sent');
+
+        } else {
+            header('HTTP/1.1 400 Bad method');
+        }
+
+        exit;
+    }
+
+    public function sendEmailFromSignup(Deltagere $participant)
+    {
+        $this->model->setupSignupEmail($participant, $this->page);
+
+        if ($participant->speaksDanish()) {
+            $title = 'Tilmelding til Fastaval 2015';
+            $this->page->setTemplate('participant/sendsignupemail');
+
+        } else {
+            $title = 'Signup for Fastaval 2015';
+            $this->page->setTemplate('participant/sendsignupemailen');
+        }
+
+        $html_body = $this->page->render();
+        $txt_body  = strip_tags($html_body);
+
+        $mail = new Mail('info@fastaval.dk', $participant->email, $title, $txt_body);
+        $mail->addHtmlBody($html_body);
+        return $mail->send();
+    }
+
+    public function resetParticipantPassword()
+    {
+        if (!($participant = $this->model->getParticipantFromResetPasswordHash($this->vars['hash']))) {
+            $this->hardRedirect('/');
+        }
+
+        $this->page->participant = $participant;
+        $this->page->danish      = $participant->speaksDanish();
+
+        $updated = false;
+
+        if ($this->page->request->isPost()) {
+            $post = $this->page->request->post;
+
+            if (!empty($post->password) && !empty($post->password_copy) && mb_strlen($post->password) >= 6 && $post->password === $post->password_copy) {
+                $participant->password = $post->password;
+                $participant->update();
+
+                $updated = true;
+
+                $this->log("Deltager #{$participant->id} opdaterede sit password", 'Participant', null);
+            }
+
+        }
+
+        $this->page->updated = $updated;
+    }
+
+    // todo add method for updating bank payment details, here, in routes, and in model
+
+    public function sendFirstPaymentReminder()
+    {
+        $days_ago = 7;
+
+        $participants = $this->model->getParticipantsForPaymentReminder($days_ago);
+
+        $count = 0;
+
+        foreach ($participants as $participant) {
+            $this->sendPaymentReminder($participant, 'firstpaymentreminder', $participant->speaksDanish());
+
+            $this->log('System sent payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
+
+            $count++;
+        }
+
+        $this->log('7 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
+
+        exit;
+    }
+
+    public function sendSecondPaymentReminder()
+    {
+        $days_ago = 13;
+
+        $participants = $this->model->getParticipantsForPaymentReminder($days_ago);
+
+        $count = 0;
+
+        foreach ($participants as $participant) {
+            $this->sendPaymentReminder($participant, 'secondpaymentreminder', $participant->speaksDanish());
+
+            $this->log('System sent payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
+
+            $count++;
+        }
+
+        $this->log('13 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
+
+        exit;
+    }
+
+    protected function sendPaymentReminder($participant, $template, $danish, $danish_title = '', $english_title = '')
+    {
+        $this->model->setupPaymentReminderEmail($participant, $this->page);
+
+        if ($danish) {
+            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval 2015';
+            $this->page->setTemplate('participant/' . $template . '-da');
+
+        } else {
+            $title = $english_title ? $english_title : 'Reminder: payment for signup to Fastaval 2015';
+            $this->page->setTemplate('participant/' . $template . '-en');
+        }
+
+        $html_body = $this->page->render();
+        $txt_body  = strip_tags($html_body);
+
+        $mail = new Mail('info@fastaval.dk', $participant->email, $title, $txt_body);
+        $mail->addHtmlBody($html_body);
+        return $mail->send();
+    }
+
+    public function registerBankTransfer()
+    {
+        if (!$this->page->request->isPost()) {
+            header('HTTP/1.1 400 Bad method');
+            exit;
+
+        }
+
+        try {
+            $this->model->registerBankTransfer($this->vars['id'], $this->page->request->post);
+
+            header('HTTP/1.1 200 Registered');
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            header('HTTP/1.1 500 Uh-oh');
+        }
+
+        exit;
+    }
+
+    public function cancelParticipantSignup()
+    {
+        $days_ago = 17;
+
+        $participants = $this->model->getParticipantsForPaymentReminder($days_ago);
+
+        $count = 0;
+
+        foreach ($participants as $participant) {
+            $this->sendPaymentReminder($participant, 'paymentreminderannulled', $participant->speaksDanish(), 'Din tilmelding til Fastaval 2015', 'Your sign up for Fastaval 2015');
+
+            $participant->annulled = 'ja';
+            $participant->update();
+
+            $this->log('System sent payment reminder (annulment) to participant (ID: ' . $participant->id . ')', 'Payment', null);
+            $this->log('Participant (ID: ' . $participant->id . ') signup marked annulled', 'Payment', null);
+
+            $count++;
+        }
+
+        $this->log('Annulment check done. Sent emails to ' . $count . ' participants', 'Payment', null);
+
+        exit;
     }
 }

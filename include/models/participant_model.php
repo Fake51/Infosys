@@ -205,13 +205,16 @@ class ParticipantModel extends Model
 
         $result       = $this->createEntity('Deltagere')->findBySelectMany($select);
         $participants = $full_matches = array();
+
         foreach ($result as $participant) {
             $name       = $participant->fornavn . ' ' . $participant->efternavn;
             $full_match = true;
+
             foreach ($terms as $term) {
-                if (mb_stripos($name, $term) === false) {
+                if ($term && mb_stripos($name, $term) === false) {
                     $full_match = false;
                 }
+
             }
 
             if ($full_match) {
@@ -219,6 +222,7 @@ class ParticipantModel extends Model
             }
 
             $participants[] = $participant;
+
         }
 
         return $full_matches ? $full_matches : $participants;
@@ -646,6 +650,7 @@ class ParticipantModel extends Model
             'may_contact',
             'game_reallocation_participant',
             'interpreter',
+            'annulled',
         );
 
         $data = $post->getRequestVarArray();
@@ -700,7 +705,8 @@ class ParticipantModel extends Model
         }
 
         $deltager->createPass();
-        $deltager->created = date('Y-m-d H:i:s');
+
+        $deltager->created = $deltager->updated = $deltager->signed_up = date('Y-m-d H:i:s');
 
         try {
             $return = $deltager->insert();
@@ -1391,15 +1397,20 @@ SQL;
     {
         $hash = md5('EAN8Small_' . $participant_id);
         $filename = PUBLIC_PATH . 'barcodes/' . $hash . '.png';
+
         if (file_exists(PUBLIC_PATH . 'barcodes/' . $hash)) {
             return $filename;
+        }
+
+        if (!($participant = $this->createEntity('Deltagere')->findById($participant_id))) {
+            throw new FrameworkException('No such participant');
         }
 
         require_once 'PEAR.php';
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw(numberToEAN8(date('Y') . str_pad($participant_id, 3, '0', STR_PAD_LEFT)), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = 536;
@@ -1427,15 +1438,20 @@ SQL;
     {
         $hash = md5('EAN8Sheet_' . $participant_id);
         $filename = PUBLIC_PATH . 'barcodes/' . $hash . '.png';
+
         if (file_exists(PUBLIC_PATH . 'barcodes/' . $hash)) {
             return $filename;
+        }
+
+        if (!($participant = $this->createEntity('Deltagere')->findById($participant_id))) {
+            throw new FrameworkException('No such participant');
         }
 
         require_once 'PEAR.php';
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw(numberToEAN8(date('Y') . str_pad($participant_id, 3, '0', STR_PAD_LEFT)), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = 134;
@@ -1536,7 +1552,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw(numberToEAN8(date('Y') . str_pad($participant_id, 3, '0', STR_PAD_LEFT)), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = round($width * 4.60);
@@ -1972,8 +1988,17 @@ SQL;
     public function sendSMSes(RequestVars $post)
     {
         $status = array();
+
         foreach ($this->getSavedSearchResult() as $receiver) {
-            $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $post->sms_besked));
+            if ($receiver->gcm_id) {
+                list($code, $data, $return) = $receiver->sendGcmMessage($this->config->get('gcm.server_api_key'), $post->sms_besked, 'Fastaval message');
+                $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . $return, 'App', null);
+
+                $status[] = intval($code === GcmPushMessage::SEND_SUCCESS);
+
+            } else {
+                $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $post->sms_besked));
+            }
         }
 
         $grouped = array_count_values($status);
@@ -1982,5 +2007,395 @@ SQL;
         $failed  = empty($grouped[0]) ? 0 : $grouped[0];
 
         return array('success' => $success, 'failure' => $failed);
+    }
+
+    /**
+     * fetches a participant from a payment hash, that is
+     * an md5 hash of id and password
+     *
+     * @param string $hash Hash to search by
+     *
+     * @access public
+     * @return null|Deltagere
+     */
+    public function getParticipantFromPaymentHash($hash)
+    {
+        $query = "SELECT id FROM deltagere WHERE MD5(CONCAT(id, '-', password)) = ?";
+
+        $participant = null;
+
+        if ($results = $this->db->query($query, array($hash))) {
+            $participant = $this->createEntity('Deltagere')->findById($results[0]['id']);
+        }
+
+        return $participant;
+    }
+
+    /**
+     * fetches a participant from a payment hash, that is
+     * an md5 hash of id and password
+     *
+     * @param string $hash Hash to search by
+     *
+     * @access public
+     * @return null|Deltagere
+     */
+    public function getParticipantFromResetPasswordHash($hash)
+    {
+        $query = "SELECT id FROM deltagere WHERE MD5(CONCAT('reset-pw-', id, '-', password)) = ?";
+
+        $participant = null;
+
+        if ($results = $this->db->query($query, array($hash))) {
+            $participant = $this->createEntity('Deltagere')->findById($results[0]['id']);
+        }
+
+        return $participant;
+    }
+
+    /**
+     * checks if the participant has outstanding payments on their ticket
+     *
+     * @param Deltagere $participant Participant to check
+     *
+     * @access public
+     * @return bool
+     */
+    public function participantHasOutstandingPayment(Deltagere $participant)
+    {
+        return !($participant->calcRealTotal() <= 0 || $participant->calcRealTotal() <= $participant->betalt_beloeb);
+    }
+
+    /**
+     * generates a url for accepting payment from user
+     *
+     * @param Deltagere $participant Participant to take payment for
+     *
+     * @access public
+     * @return string
+     */
+    public function generatePaymentUrl(Deltagere $participant)
+    {
+        $sic         = $this->config->get('payment.sic');
+        $freehash    = $this->config->get('payment.freehash');
+        $event_id    = $this->config->get('payment.event_id');
+        $ticket_url  = $this->config->get('payment.ticket_url');
+        $payment_url = $this->config->get('payment.pay_url');
+        $public_uri  = $this->config->get('app.public_uri');
+        $testing     = $this->config->get('payment.testing');
+
+        if (empty($participant->id) || empty($event_id)) {
+            return '';
+        }
+
+        $unique = uniqid();
+
+        $participant->paid_note = $participant->paid_note . PHP_EOL . 'Payment: ' . $unique;
+        $participant->update();
+
+        $phone = trim(preg_replace('/[^0-9]/', '', $participant->mobiltlf));
+
+        if (empty($phone)) {
+            $phone = '00000000';
+        }
+
+        $fields = array(
+            'blockid'     => $event_id,
+            'username'    => $participant->fornavn . ' ' . $participant->efternavn,
+            'number'      => $phone,
+            'email'       => $participant->email,
+            'amount'      => ceil($participant->calcSignupTotal() - $participant->betalt_beloeb) * 100,
+            'callbackurl' => $this->url('participant_register_payment', array('hash' => md5($participant->id . '-' . $participant->password))) . '?blob=' . $unique,
+            'returnuser'  => $this->url('participant_post_payment'),
+            'ticketname'  => 'Fastaval billet',
+            'userid'      => $participant->id,
+        );
+
+        $post_data = http_build_query($fields);
+
+        $ch = curl_init($ticket_url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_REFERER, $public_uri);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec ($ch);
+        curl_close($ch);
+
+        if (substr($response, 0, 1) !== '4') {
+            return '';
+        }
+
+        $fields = array(
+            'id'      => $participant->id,
+            'blockid' => $event_id,
+        );
+
+        if ($testing) {
+            $fields['testing']  = 1;
+            $fields['sic']      = $sic;
+            $fields['freehash'] = $freehash;
+        }
+
+        return $payment_url . '?' . http_build_query($fields);
+    }
+
+    /**
+     * checks the posted vars from the online payment
+     *
+     * @param Deltagere   $participant Participant to register payment for
+     * @param RequestVars $post        Posted vars from online payment gateway
+     *
+     * @access public
+     * @return bool
+     */
+    public function registerParticipantPayment($participant, RequestVars $post)
+    {
+        $event_id = $this->config->get('payment.event_id');
+
+        if (!$post->status == 1 || empty($_GET['blob']) || strpos($participant->paid_note, 'Payment: ' . $_GET['blob']) === false || $post->userid != $participant->id || $post->blockid != $event_id) {
+            return false;
+        }
+
+        $participant->betalt_beloeb = $participant->betalt_beloeb ? $participant->betalt_beloeb + ($post->amount / 100) : $post->amount / 100;
+
+        $participant->paid_note .= PHP_EOL . 'Online payment of ' . ($post->amount / 100) . ' on ' . date('Y-m-d H:i:s');
+
+        $participant->update();
+
+        return true;
+    }
+
+    /**
+     * preps all the variables needed for
+     * the payment reminder email
+     *
+     * @param Deltagere $participant Participant for the email
+     * @param Page      $page        Output object instance
+     *
+     * @access public
+     * @return Deltagere
+     */
+    public function setupPaymentReminderEmail(Deltagere $participant, Page $page)
+    {
+        $page->participant = $participant;
+        $page->payment_remainder = $participant->calcSignupTotal() - $participant->betalt_beloeb;
+        $page->payment_url = $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password)));
+        $page->payment_day = date('d/m-Y', strtotime($participant->signed_up) + 14 * 86400);
+
+        return $participant;
+    }
+
+    /**
+     * preps all the variables needed for
+     * the signup email
+     *
+     * @param Deltagere $participant Participant for the email
+     *
+     * @access public
+     * @return Deltagere
+     */
+    public function setupSignupEmail(Deltagere $participant, Page $page)
+    {
+        $page->participant = $participant;
+        $page->wear        = $participant->getWear();
+        $page->activities  = $participant->getTilmeldinger();
+        $page->gds         = $participant->getGDSTilmeldinger();
+        $page->payment_url = $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password)));
+        $page->payment_day = date('d/m-Y', strtotime($participant->updated) + 14 * 86400);
+        $page->food        = $participant->getMadtider();
+
+        $entrance = array();
+        $prices   = array(
+            'alea'        => 0,
+            'sleeping'    => 0,
+            'entrance'    => 0,
+            'food'        => 0,
+            'activities'  => 0,
+            'wear'        => 0,
+            'other-stuff' => 0,
+            'total'       => 0,
+        );
+
+        foreach ($participant->getIndgang() as $indgang) {
+            if ($indgang->isAleaMembership()) {
+                $entrance['alea-membership'] = true;
+                $prices['alea']              = $indgang->pris;
+
+            } elseif ($indgang->isPartout()) {
+                if ($indgang->isSleepTicket()) {
+                    $entrance['sleeping-partout']  = true;
+                    $prices['sleeping']           += $indgang->pris;
+
+                } else {
+                    $entrance['entrance-partout']  = true;
+                    $prices['entrance']           += $indgang->pris;
+                }
+
+            } elseif ($indgang->isDayTicket()) {
+                $entrance['entrance-' . date('d', strtotime($indgang->start))] = true;
+
+                $prices['entrance'] += $indgang->pris;
+
+            } elseif ($indgang->isSleepTicket()) {
+                $entrance['sleeping-' . date('d', strtotime($indgang->start))] = true;
+
+                $prices['sleeping'] += $indgang->pris;
+
+            } elseif ($indgang->isParty()) {
+                $entrance['ottofest'] = true;
+                $entrance['otto']     = true;
+
+                $prices['food'] += $indgang->pris;
+
+            } else {
+                $entrance[$indgang->type] = true;
+
+                if (strtolower(substr($indgang->type, 0, 4)) === 'otto') {
+                    $entrance['otto'] = true;
+
+                    $prices['food'] += $indgang->pris;
+
+                } else {
+                    $prices['other-stuff'] += $indgang->pris;
+                }
+            }
+        }
+
+        foreach ($page->food as $item) {
+            $prices['food'] += $item->getMad()->pris;
+        }
+
+        if ($participant->rig_onkel === 'ja') {
+            $prices['other-stuff'] += 300;
+        }
+
+        if ($participant->hemmelig_onkel === 'ja') {
+            $prices['other-stuff'] += 300;
+        }
+
+        foreach ($page->wear as $item) {
+            $prices['wear'] += $item->antal * $item->getWearpris()->pris;
+        }
+
+        foreach ($page->activities as $signup) {
+            $prices['activities'] += $signup->getActivity()->pris;
+        }
+
+        $prices['total'] = array_sum($prices);
+
+        $page->entrance = $entrance;
+        $page->prices   = $prices;
+
+        return $participant;
+    }
+
+    public function findParticipantsByEmail($email)
+    {
+        $select = $this->createEntity('Deltagere')->getSelect();
+        $select->setWhere('email', '=', $email);
+        return $this->createEntity('Deltagere')->findBySelectMany($select);
+    }
+
+    public function findBankingFee()
+    {
+        $select = $this->createEntity('Indgang')->getSelect();
+        $select->setWhere('type', '=', 'Bankoverførselsgebyr');
+        return $this->createEntity('Indgang')->findBySelect($select);
+    }
+
+    public function getParticipantsSignedupDaysAgo($days_ago)
+    {
+        $select = $this->createEntity('Deltagere')->getSelect();
+
+        $select->setRawWhere('DATE(signed_up) = DATE(NOW() - INTERVAL ' . intval($days_ago) . ' DAY)', 'AND')
+            ->setOrder('id', 'ASC');
+
+        return $this->createEntity('Deltagere')->findBySelectMany($select);
+    }
+
+    public function filterOutPaidSignups(array $participants)
+    {
+        return array_filter($participants, function ($x) {
+            return !($x->original_price <= 200 && $x->betalt_beloeb > 0
+                || $x->betalt_beloeb > ($x->original_price / 2));
+        });
+    }
+
+    public function filterOutTodaysReminders(array $participants)
+    {
+        $select = $this->createEntity('LogItem')->getSelect();
+
+        $select->setWhere('message', 'LIKE', '%sent payment reminder%')
+            ->setRawWhere('DATE(created) = DATE(NOW())', 'AND');
+
+        foreach ($this->createEntity('LogItem')->findBySelectMany($select) as $log_item) {
+            foreach ($participants as $id => $participant) {
+                if (stripos($log_item->message, '(ID: ' . $participant->id . ')') !== false) {
+                    unset($participants[$id]);
+                }
+            }
+        }
+
+        return $participants;
+    }
+
+    public function getParticipantsForPaymentReminder($days_ago)
+    {
+        $participants = $this->getParticipantsSignedupDaysAgo($days_ago);
+        $participants = $this->filterOutPaidSignups($participants);
+        $participants = $this->filterOutTodaysReminders($participants);
+
+        return $participants;
+    }
+
+    /**
+     * registeres a bank transfer and optionally a bank transfer entrance
+     *
+     * @param int         $participant_id ID of participant to register for
+     * @param RequestVars $post           Post vars to register
+     *
+     * @access public
+     * @return $this
+     */
+    public function registerBankTransfer($participant_id, RequestVars $post)
+    {
+        $participant = $this->findParticipant($participant_id);
+
+        if (!$participant->id) {
+            throw new Exception('No participant available');
+        }
+
+        if (!$post->amount) {
+            throw new Exception('No amount to register');
+        }
+
+        $fee = null;
+
+        if ($post->fee) {
+            $select = $this->createEntity('Indgang')->getSelect();
+            $select->setWhere('id', '=', $post->fee);
+
+            $fee = $this->createEntity('Indgang')->findBySelect($select);
+        }
+
+        if ($fee && $fee->id) {
+            if (!$participant->setIndgang($fee)) {
+                throw new Exception('Could not add bank registration fee');
+            }
+        }
+
+        $participant->betalt_beloeb += intval($post->amount);
+
+        $participant->paid_note .= PHP_EOL . 'Bank transfer of ' . floatval($post->amount) . 'DKK transferred on ' . $post->date;
+
+        if ($post->payment_id) {
+            $participant->paid_note .= ' with ID: ' . $post->payment_id;
+        }
+
+        if (!$participant->update()) {
+            throw new Exception('Could not update participant payment to register bank transfer');
+        }
+
+        $this->log("Deltager #{$participant->id} har fået registreret bankoverførsel på {$post->amount} af {$this->getLoggedInUser()->user}", 'Payment', $this->getLoggedInUser());
     }
 }

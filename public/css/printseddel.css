@@ -1,3 +1,5 @@
+@import url('http://fonts.googleapis.com/css?family=Chelsea+Market');
+
 body {
     -webkit-print-color-adjust:exact;
     -moz-print-color-adjust:exact;
@@ -11,13 +13,8 @@ div, p, table, tr, td, th, span {
     padding: 0px;
 }
 
-@font-face {
-    font-family: edosz;
-    src: url('/fonts/edosz.ttf');
-}
-
 body {
-    font-family: edosz;
+    font-family: 'Chelsea Market';
 }
 
 img {

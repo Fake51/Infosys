@@ -166,6 +166,9 @@ HTML;
                         <td><b>Udeblevet:</b> {$this->view->genSelect('deltager_search[udeblevet]', array('', 'nej','ja'))}</td>
                         <td><strong>Simultantolk:</strong> {$this->view->genSelect('deltager_search[interpreter]', array('', 'nej','ja'))}</td>
                     </tr>
+                    <tr>
+                        <td><b>Annulleret:</b> {$this->view->genSelect('deltager_search[annulled]', array('', 'nej','ja'))}</td>
+                    </tr>
                     <tr><td colspan='3'><b>Ungdomsskole:</b> <input class='tripleinput' type='text' value='' name='deltager_search[ungdomsskole]' /></td></tr>
                     <tr><td colspan='3'><b>Arrangørområde:</b> <input class='tripleinput' type='text' value='' name='deltager_search[arbejdsomraade]' /></td></tr>
                     <tr><td colspan='3'><b>Scenarie:</b> <input class='tripleinput' type='text' value='' name='deltager_search[scenarie]' /></td></tr>

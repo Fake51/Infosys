@@ -183,5 +183,6 @@ class Aktiviteter extends DBObject
         $this->tids_eksklusiv         = $this->tids_eksklusiv ? $this->tids_eksklusiv : 'ja';
         $this->sprog                  = $this->sprog ? $this->sprog : 'dansk';
         $this->replayable             = $this->replayable ? $this->replayable : 'nej';
+        $this->hidden                 = $this->hidden ? $this->hidden : 'nej';
     }
 }

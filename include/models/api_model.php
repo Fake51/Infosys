@@ -129,20 +129,29 @@ class ApiModel extends Model {
                     continue;
                 }
 
+                $text_da = strip_tags(mb_detect_encoding($res->foromtale, 'UTF-8', true) ? $res->foromtale : iconv("ISO-8859-1", "UTF-8", $res->foromtale));
+                $text_en = strip_tags(mb_detect_encoding($res->description_en, 'UTF-8', true) ? $res->description_en : iconv("ISO-8859-1", "UTF-8", $res->description_en));
+
+                if ($version == 2) {
+                    $text_da = nl2br($text_da);
+                    $text_en = nl2br($text_en);
+                }
+
                 $act = array(
                     'aktivitet_id' => intval($res->id),
                     'afviklinger' => array(),
                     'info' => array(
                         'title_da'       => $res->navn,
-                        'text_da'        => strip_tags(mb_detect_encoding($res->foromtale, 'UTF-8', true) ? $res->foromtale : iconv("ISO-8859-1", "UTF-8", $res->foromtale)),
+                        'text_da'        => $text_da,
                         'description_da' => '',
                         'title_en'       => $res->title_en,
-                        'text_en'        => strip_tags(mb_detect_encoding($res->description_en, 'UTF-8', true) ? $res->description_en : iconv("ISO-8859-1", "UTF-8", $res->description_en)),
+                        'text_en'        => $text_en,
                         'description_en' => '',
                         'author'         => explode(',', $res->author),
                         'price'          => intval($res->pris),
                         'min_player'     => intval($res->min_deltagere_per_hold),
                         'max_player'     => intval($res->max_deltagere_per_hold),
+                        'gms'            => intval($res->spilledere_per_hold),
                         'type'           => $res->type,
                         'play_hours'     => floatval($res->varighed_per_afvikling),
                         'language'       => $res->sprog,
@@ -188,8 +197,10 @@ class ApiModel extends Model {
                         foreach ($multiblok as $multi) {
                             if ($multi->afvikling_id == $afvikling->id) {
                                 $time = array(
-                                    'afvikling_id' => intval($multi->id),
+                                    'afvikling_id' => intval($afvikling->id) . '-' . intval($multi->id),
                                     'aktivitet_id' => intval($res->id),
+                                    'lokale_id'    => $lokale ? $lokale->id : '',
+                                    'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
                                     'start'        => $this->makeJsonTimestamp($multi->start, $app_output),
                                     'end'          => $this->makeJsonTimestamp($multi->slut, $app_output),
                                     'linked'       => $afvikling->id,
@@ -225,10 +236,12 @@ class ApiModel extends Model {
         $select = $this->createEntity('Aktiviteter')
             ->getSelect();
 
-        $result = $this->createEntity('Aktiviteter')->findBySelectMany($select);
-        $return = array();
+        $result    = $this->createEntity('Aktiviteter')->findBySelectMany($select);
+        $return    = array();
+
         $multiblok = $this->createEntity('AfviklingerMultiblok')->findAll();
         $multi_ids = array();
+
         foreach ($multiblok as $multi) {
             $multi_ids[] = $multi->afvikling_id;
         }
@@ -245,6 +258,7 @@ class ApiModel extends Model {
                     }
 
                     $lokale = $this->createEntity('Lokaler')->findById($afvikling->lokale_id);
+
                     $time = array(
                         'afvikling_id' => intval($afvikling->id),
                         'aktivitet_id' => intval($res->id),
@@ -254,17 +268,22 @@ class ApiModel extends Model {
                         'end'          => $this->makeJsonTimestamp($afvikling->slut),
                         'linked'       => 0,
                     );
+
                     $return[] = $time;
+
                     if (in_array($afvikling->id, $multi_ids)) {
                         foreach ($multiblok as $multi) {
                             if ($multi->afvikling_id == $afvikling->id) {
                                 $time = array(
-                                    'afvikling_id' => intval($multi->id),
+                                    'afvikling_id' => intval($afvikling->id) . '-' . intval($multi->id),
                                     'aktivitet_id' => intval($res->id),
+                                    'lokale_id'    => $lokale ? $lokale->id : '',
+                                    'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
                                     'start' => $this->makeJsonTimestamp($multi->start),
                                     'end' => $this->makeJsonTimestamp($multi->slut),
                                     'linked' => $afvikling->id,
                                 );
+
                                 $return[] = $time;
                             }
                         }
@@ -381,7 +400,7 @@ class ApiModel extends Model {
     }
 
     /**
-     * creates 
+     * creates
      *
      * @param
      *
@@ -442,8 +461,8 @@ class ApiModel extends Model {
                     'mad_id' => intval($res->id),
                     'tider' => array(),
                     'info' => array(
-                        'title_da' => $res->kategori,
-                        'title_en' => $res->title_en,
+                        'title_da' => $res->id == 2 ? 'Ja tak (vegetarisk)' : 'Ja tak',
+                        'title_en' => $res->id == 2 ? 'Yes please (vegetarian)' : 'Yes please',
                         'price'    => intval($res->pris),
                     ),
                 );
@@ -522,15 +541,28 @@ class ApiModel extends Model {
      * @access public
      * @return array
      */
-    public function getWearStructure(array $ids) {
+    public function getWearStructure(array $ids, $usertype = '') {
         $select = $this->createEntity('Wear')
             ->getSelect();
         if ($ids) {
             $select->setWhere('id', 'in', $ids);
         }
+
         $result = $this->createEntity('Wear')->findBySelectMany($select);
         $return = array();
+
         if ($result) {
+
+            $usertype_obj = null;
+
+            if ($usertype) {
+                $select = $this->createEntity('BrugerKategorier')
+                    ->getSelect()
+                    ->setWhere('navn', '=', str_replace('arrangoer', 'arrangør', $usertype));
+
+                $usertype_obj = $this->createEntity('BrugerKategorier')->findBySelect($select);
+            }
+
             foreach ($result as $res) {
                 $act = array(
                     'wear_id'    => intval($res->id),
@@ -539,7 +571,19 @@ class ApiModel extends Model {
                     'title_en'   => $res->title_en,
                     'prices'     => array(),
                 );
+
+                if (file_exists(PUBLIC_PATH . 'uploads/wear/' . intval($res->id) . '.jpg')) {
+                    $act['image'] = '/uploads/wear/' . intval($res->id) . '.jpg';
+
+                } elseif (file_exists(PUBLIC_PATH . 'uploads/wear/' . intval($res->id) . '.png')) {
+                    $act['image'] = '/uploads/wear/' . intval($res->id) . '.png';
+                }
+
                 foreach ($res->getWearpriser() as $price) {
+                    if ($usertype_obj && $usertype_obj->id !== $price->brugerkategori_id) {
+                        continue;
+                    }
+
                     $act['prices'][] = array(
                         'wear_id' => intval($res->id),
                         'wearpris_id' => intval($price->id),
@@ -548,9 +592,15 @@ class ApiModel extends Model {
                         'price' => intval($price->pris),
                     );
                 }
+
+                if (empty($act['prices'])) {
+                    continue;
+                }
+
                 $return[] = $act;
             }
         }
+
         return $return;
     }
 
@@ -574,21 +624,38 @@ class ApiModel extends Model {
         );
     }
 
-    public function createParticipant() {
+    public function createParticipant($post) {
+        $data = array();;
+
+        if (isset($post->data)) {
+            $data = json_decode($post->data, true);
+        }
+
+        if (!isset($data['brugertype']) || !isset($data['email'])) {
+            $data = array(
+                'brugertype' => 'Deltager',
+                'email'      => '',
+            );
+
+        }
+
         $bk  = $this->createEntity('BrugerKategorier');
-        $sel = $bk->getSelect()->setWhere('navn', '=', 'Deltager');
+        $sel = $bk->getSelect()->setWhere('navn', '=', $data['brugertype']);
         $bk->findBySelect($sel);
 
         $deltager                    = $this->createEntity('Deltagere');
-        $deltager->fornavn           = $deltager->efternavn = $deltager->email = $deltager->adresse1 = $deltager->postnummer = $deltager->by = $deltager->land = '';
+        $deltager->email             = $data['email'];
+        $deltager->fornavn           = $deltager->efternavn = $deltager->adresse1 = $deltager->postnummer = $deltager->by = $deltager->land = '';
         $deltager->medical_note      = $deltager->gcm_id = '';
         $deltager->password          = sprintf('%06d', mt_rand(100, 1000000));
         $deltager->brugerkategori_id = $bk->id;
         $deltager->gender            = 'm';
         $deltager->alder             = 0;
         $deltager->birthdate         = '0000-00-00';
+        $deltager->annulled          = 'nej';
         $deltager->insert();
-        return array('id' => $deltager->id, 'password' => $deltager->password);
+
+        return array('id' => $deltager->id, 'password' => $deltager->password, 'payment_url' => $this->url('participant_payment', array('hash' => md5($deltager->id . '-' . $deltager->password))));
     }
 
     public function addWear(array $json, $deltager = null) {
@@ -601,6 +668,8 @@ class ApiModel extends Model {
                 header("HTTP/1.1 403 Bad data - Wear");
                 exit;
             }
+
+            $this->db->exec("DELETE FROM deltagere_wear WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['wear'] as $wear) {
                 $wearprice = $this->createEntity('WearPriser');
@@ -624,13 +693,13 @@ class ApiModel extends Model {
 
     public function addGDS(array $json) {
         try {
-            if (!$deltager) {
-                $deltager = $this->createEntity('Deltagere')->findById($json['id']);
-            }
+            $deltager = $this->createEntity('Deltagere')->findById($json['id']);
 
             if (empty($json['gds']) || !is_array($json['gds'])) {
                 throw new FrameworkException('No data available');
             }
+
+            $this->db->exec("DELETE FROM deltagere_gdstilmeldinger WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['gds'] as $gds) {
                 $this->db->exec("INSERT INTO deltagere_gdstilmeldinger (deltager_id, category_id, period) VALUES (?, ?, ?)", $deltager->id, $gds['kategori_id'], $gds['period']);
@@ -642,13 +711,13 @@ class ApiModel extends Model {
 
     public function addFood(array $json) {
         try {
-            if (!$deltager) {
-                $deltager = $this->createEntity('Deltagere')->findById($json['id']);
-            }
+            $deltager = $this->createEntity('Deltagere')->findById($json['id']);
 
             if (empty($json['food']) || !is_array($json['food'])) {
                 throw new FrameworkException('No data available');
             }
+
+            $this->db->exec("DELETE FROM deltagere_madtider WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['food'] as $food) {
                 $this->db->exec("INSERT INTO deltagere_madtider (deltager_id, madtid_id) VALUES (?, ?)", $deltager->id, $food['madtid_id']);
@@ -668,6 +737,8 @@ class ApiModel extends Model {
                 throw new FrameworkException('No data available ');
             }
 
+            $this->db->exec("DELETE FROM deltagere_tilmeldinger WHERE deltager_id = ?", $deltager->id);
+
             foreach ($json['activity'] as $activity) {
                 $this->db->exec("INSERT INTO deltagere_tilmeldinger (deltager_id, prioritet, afvikling_id, tilmeldingstype) VALUES (?, ?, ?, ?)", $deltager->id, $activity['priority'], $activity['schedule_id'], $activity['type']);
             }
@@ -686,6 +757,8 @@ class ApiModel extends Model {
             if (empty($json['entrance']) || !is_array($json['entrance'])) {
                 throw new FrameworkException('No data available');
             }
+
+            $this->db->exec("DELETE FROM deltagere_indgang WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['entrance'] as $entrance) {
                 $this->db->exec("INSERT INTO deltagere_indgang (deltager_id, indgang_id) VALUES (?, ?)", $deltager->id, $entrance['entrance_id']);
@@ -708,23 +781,38 @@ class ApiModel extends Model {
     public function parseSignup(array $data)
     {
         $participant = $this->createEntity('Deltagere')->findById($data['id']);
-        if (!$participant->id) {
+
+        if (!$participant || !$participant->id) {
             $this->fileLog('No participant available for signup');
             return array(
-                'status'     => 'fail',
-                'failReason' => 'No such participant'
+                array(
+                    'status'     => 'fail',
+                    'failReason' => 'No such participant'
+                ),
+                $participant,
             );
+        }
+
+        if (isset($data['session'])) {
+            file_put_contents(__DIR__ . '/../signup-data/session-' . $participant->id, $data['session']);
         }
 
         if (empty($data['participant'])) {
             $this->fileLog('No participant data available for signup');
             return array(
-                'status'     => 'fail',
-                'failReason' => 'No participant data sent to API'
+                array(
+                    'status'     => 'fail',
+                    'failReason' => 'No participant data sent to API'
+                ),
+                $participant,
             );
         }
 
+        $participant->signed_up = date('Y-m-d H:i:s');
+        $participant->annulled  = 'nej';
+
         $this->setParticipantData($participant, $data['participant']);
+
         try {
             if (!$participant->update()) {
                 throw new FrameworkException('Could not save object');
@@ -732,8 +820,11 @@ class ApiModel extends Model {
         } catch (Exception $e) {
             $e->logException();
             return array(
-                'status'     => 'fail',
-                'failReason' => 'Could not update database with participant data'
+                array(
+                    'status'     => 'fail',
+                    'failReason' => 'Could not update database with participant data'
+                ),
+                $participant,
             );
         }
 
@@ -764,13 +855,19 @@ class ApiModel extends Model {
             $this->fileLog('Failed to create participant relations. Errors: ' . print_r($errors, true) . '. Data: ' . $data);
             $this->cleanParticipantSignup($participant);
             return array(
-                'status'     => 'fail',
-                'failReason' => implode("\n", $errors),
+                array(
+                    'status'     => 'fail',
+                    'failReason' => implode("\n", $errors),
+                ),
+                $participant,
             );
         } else {
             return array(
-                'status'     => 'ok',
-                'failReason' => null,
+                array(
+                    'status'     => 'ok',
+                    'failReason' => null,
+                ),
+                $participant,
             );
         }
     }
@@ -1029,7 +1126,15 @@ class ApiModel extends Model {
         $activity = $this->createEntity('Aktiviteter');
         $this->fillActivity($activity, $data);
 
-        $activity->insert();
+        try {
+            $activity->insert();
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            error_log(print_r($data, true));
+
+            throw $e;
+        }
     }
 
     /**
@@ -1091,6 +1196,115 @@ class ApiModel extends Model {
     }
 
     /**
+     * returns a participant if it exists
+     *
+     * @param string $email Email of participant to find
+     *
+     * @access public
+     * @return array
+     */
+    public function findParticipantsByEmail($email)
+    {
+        $select = $this->createEntity('Deltagere')
+            ->getSelect();
+
+        $select->setWhere('email', '=', $email);
+
+        $result = $this->createEntity('Deltagere')->findBySelectMany($select);
+
+        return $result;
+    }
+
+    /**
+     * returns a participant if it exists
+     *
+     * @param string $email Email of participant to find
+     * @param string $pass  Password of participant to find
+     *
+     * @access public
+     * @return null|Deltagere
+     */
+    public function getParticipantByEmailAndPassword($email, $pass)
+    {
+        $select = $this->createEntity('Deltagere')
+            ->getSelect();
+
+        $select->setWhere('email', '=', $email);
+        $select->setWhere('password', '=', $pass);
+
+        $result = $this->createEntity('Deltagere')->findBySelectMany($select);
+
+        if (count($result) !== 1) {
+            return null;
+        }
+
+        return array_pop($result);
+    }
+
+    /**
+     * returns JSON object of participants schedule for fastaval
+     *
+     * @param DBObject $participant Participant to get schedule for
+     *
+     * @access public
+     * @return array
+     */
+    public function getParticipantBaseData(DBObject $participant)
+    {
+        $return = array(
+            'fornavn' => $participant->fornavn,
+            'efternavn' => $participant->efternavn,
+            'gender' => $participant->gender,
+            'birthdate' => $participant->birthdate,
+            'alder' => $participant->alder,
+            'email' => $participant->email,
+            'tlf' => $participant->tlf,
+            'mobiltlf' => $participant->mobiltlf,
+            'adresse1' => $participant->adresse1,
+            'adresse2' => $participant->adresse2,
+            'postnummer' => $participant->postnummer,
+            'by' => $participant->by,
+            'land' => $participant->land,
+            'medbringer_mobil' => $participant->medbringer_mobil,
+            'sprog' => $participant->sprog,
+            'forfatter' => $participant->forfatter,
+            'international' => $participant->international,
+            'arrangoer_naeste_aar' => $participant->arrangoer_naeste_aar,
+            'deltager_note' => $participant->deltager_note,
+            'flere_gdsvagter' => $participant->flere_gdsvagter,
+            'supergm' => $participant->supergm,
+            'supergds' => $participant->supergds,
+            'rig_onkel' => $participant->rig_onkel,
+            'arbejdsomraade' => $participant->arbejdsomraade,
+            'hemmelig_onkel' => $participant->hemmelig_onkel,
+            'ready_mandag' => $participant->ready_mandag,
+            'ready_tirsdag' => $participant->ready_tirsdag,
+            'oprydning_tirsdag' => $participant->oprydning_tirsdag,
+            'tilmeld_scenarieskrivning' => $participant->tilmeld_scenarieskrivning,
+            'may_contact' => $participant->may_contact,
+            'desired_activities' => $participant->desired_activities,
+            'game_reallocation_participant' => $participant->game_reallocation_participant,
+            'sovesal' => $participant->sovesal,
+            'ungdomsskole' => $participant->ungdomsskole,
+            'original_price' => $participant->original_price,
+            'scenarie' => $participant->scenarie,
+            'medical_note' => $participant->medical_note,
+            'interpreter' => $participant->interpreter,
+            'skills' => $participant->skills,
+            'brugerkategori' => $participant->getBrugerKategori()->navn,
+            'payment_url' => $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password))),
+            'id' => $participant->id,
+            'session' => '',
+        );
+
+        if (is_file(__DIR__ . '/../signup-data/session-' . $participant->id)) {
+            $return['session'] = file_get_contents(__DIR__ . '/../signup-data/session-' . $participant->id);
+        }
+
+        return $return;
+    }
+
+    /**
      * returns JSON object of participants schedule for fastaval
      *
      * @param DBObject $participant Participant to get schedule for
@@ -1101,14 +1315,27 @@ class ApiModel extends Model {
     public function getParticipantSchedule(DBObject $participant, $version = 1)
     {
         $sleep = 0;
+
+        $otto_party = array();
+
         foreach ($participant->getIndgang() as $entrance) {
             if ($entrance->isSleepTicket()) {
                 $sleep = 1;
-                break;
+            }
+
+            if ($entrance->isParty() || $entrance->isPartyBubbles()) {
+                $otto_party[] = array(
+                    'id'       => $entrance->id,
+                    'title_en' => $entrance->getDescription(true),
+                    'title_da' => $entrance->getDescription(),
+                    'amount'   => 1,
+                );
             }
         }
 
         $sleep = $participant->sovesal == 'ja' ? 2 : $sleep;
+
+        $category = $participant->getBrugerKategori();
 
         $return = array(
             'id'         => $participant->id,
@@ -1116,12 +1343,17 @@ class ApiModel extends Model {
             'checked_in' => strtotime($participant->checkin_time) > 1 ? 1 : 0,
             'messages'   => $participant->beskeder,
             'sleep'      => $sleep,
+            'category'   => $category->navn,
             'food' => array(
             ),
             'wear' => array(
             ),
             'scheduling' => array(),
         );
+
+        if ($version == 2) {
+            $return['otto_party'] = $otto_party;
+        }
 
         foreach ($participant->getWear() as $wearorder) {
             $wear = $wearorder->getWear();
@@ -1159,6 +1391,8 @@ class ApiModel extends Model {
                 'title_en' => $food->title_en,
                 'food_id'  => $food->id,
                 'time_id'  => $foodtime->id,
+                'text_da'  => $foodtime->description_da,
+                'text_en'  => $foodtime->description_en,
             );
         }
 
@@ -1172,10 +1406,13 @@ class ApiModel extends Model {
                 continue;
             }
 
+            $type = $play->type === 'spilleder' && $version >= 2 ? 'spilleder' : $activity->type;
+
             $return['scheduling'][] = array(
                 'type'          => 'activity',
-                'activity_type' => $activity->type,
+                'activity_type' => $type,
                 'id'   => $activity->id,
+                'schedule_id' => $schedule->id,
                 'title_da'  => $activity->navn,
                 'title_en' => $activity->title_en,
                 'start' => strtotime($schedule->start),
@@ -1192,6 +1429,7 @@ class ApiModel extends Model {
                 'type' => 'gds',
                 'activity_type' => 'gds',
                 'id'    => $diy->id,
+                'schedule_id'    => $shift->id,
                 'title_da' => $diy->navn,
                 'title_en' => $diy->title_en,
                 'room_da' => $diy->moedested,
@@ -1199,7 +1437,7 @@ class ApiModel extends Model {
                 'start' => strtotime($shift->start),
                 'stop' => strtotime($shift->slut),
             );
-            
+
         }
 
         usort($return['scheduling'], function($a, $b) {
@@ -1225,8 +1463,27 @@ class ApiModel extends Model {
             throw new FrameworkException('Lacking gcm_id in post');
         }
 
+        if ($participant->gcm_id === $json['gcm_id']) {
+            return $this;
+        }
+
         $participant->gcm_id = $json['gcm_id'];
         $participant->update();
+
+        if ($participant->speaksDanish()) {
+            $message = 'Du vil fremover modtage notifikationer via Fastavappen';
+            $title   = 'Fastavappen notifikation';
+
+        } else {
+            $message = 'You now from now on receive notification via the Fastaval App';
+            $title   = 'Fastaval app notification';
+        }
+
+        list($code, $data, $return) = $participant->sendGcmMessage($this->config->get('gcm.server_api_key'), $message, $title);
+
+        $this->log('Sent android notification to participant #' . $participant->id . '. Result: ' . $return, 'App', null);
+
+        return $this;
     }
 
     /**
@@ -1239,7 +1496,7 @@ class ApiModel extends Model {
      * @access public
      * @return void
      */
-    public function unregisterApp(DBObject $participant, $json)
+    public function unregisterApp(DBObject $participant)
     {
         $participant->gcm_id = '';
         $participant->update();

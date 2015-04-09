@@ -131,6 +131,23 @@ class Mail
     }
 
     /**
+     * returns the source for embedding the file
+     *
+     * @param string $filename Path of file
+     *
+     * @access public
+     * @return string
+     */
+    public function embedImage($filename)
+    {
+        if (!is_file($filename)) {
+            throw new MailException('Cannot access file to add as attachment');
+        }
+
+        return $this->_message->embed(Swift_Image::fromPath($filename));
+    }
+
+    /**
      * sends the previously prepared email
      *
      * @throws MailException
@@ -143,7 +160,7 @@ class Mail
             throw new MailException("No message set");
         }
 
-        $transport = Swift_SmtpTransport::newInstance('localhost', 25);
+        $transport = Swift_SmtpTransport::newInstance('127.0.0.1', 25);
         return !!Swift_Mailer::newInstance($transport)->send($this->_message);
     }
 

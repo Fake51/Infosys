@@ -348,17 +348,30 @@ class ActivityModel extends Model {
      */
     public function getGameStartDetails($time)
     {
-        if (false == strtotime($time)) return array();
+        if (false == strtotime($time)) {
+            return array();
+        }
+
         $af = $this->createEntity('Afviklinger');
         $select = $af->getSelect();
         $select->setWhere('start', '=', date('Y-m-d H:i:s', strtotime($time)));
         $afviklinger = $af->findBySelectMany($select);
         $result = array();
+
         foreach ($afviklinger as $afvikling) {
             $activity = $afvikling->getAktivitet();
-            if (!in_array($activity->type, array('rolle', 'live'))) continue;
+
+            if (!in_array($activity->type, array('rolle', 'live', 'braet'))) {
+                continue;
+            }
+
             $result[] = array('run' => $afvikling, 'activity' => $activity);
         }
+
+        usort($result, function ($a, $b) {
+            return strcmp($a['activity']->navn, $b['activity']->navn);
+        });
+
         return $result;
     }
 
@@ -370,7 +383,7 @@ class ActivityModel extends Model {
      */
     public function getNextGamestart()
     {
-        $result = $this->db->query("SELECT `start` FROM afviklinger, aktiviteter WHERE `start` > NOW() AND aktiviteter.type IN ('rolle', 'live') AND aktiviteter.id = afviklinger.aktivitet_id ORDER BY `start` ASC LIMIT 1");
+        $result = $this->db->query("SELECT `start` FROM afviklinger, aktiviteter WHERE `start` > NOW() AND aktiviteter.type IN ('rolle', 'live', 'braet') AND aktiviteter.id = afviklinger.aktivitet_id ORDER BY `start` ASC LIMIT 1");
         if ($result) return $result[0]['start'];
         return false;
     }
@@ -383,7 +396,7 @@ class ActivityModel extends Model {
      */
     public function getAllGamestarts()
     {
-        $result = $this->db->query("SELECT distinct(`start`) AS start FROM afviklinger, aktiviteter WHERE aktiviteter.type IN ('rolle', 'live') AND aktiviteter.id = afviklinger.aktivitet_id  ORDER BY `start` ASC");
+        $result = $this->db->query("SELECT distinct(`start`) AS start FROM afviklinger, aktiviteter WHERE aktiviteter.type IN ('rolle', 'live', 'braet') AND aktiviteter.id = afviklinger.aktivitet_id  ORDER BY `start` ASC");
         $return = array();
 
         if ($result) {
@@ -770,5 +783,73 @@ class ActivityModel extends Model {
         $gamestart_schedule->update();
 
         $this->log("Master update gamestart detail: reserves offered. For " . $gamestart_schedule->getActivity()->navn . ' at ' . $gamestart_schedule->getSchedule()->start, 'Spilstart', $this->getLoggedInUser());
+    }
+
+    public function fetchGameStartQueueData()
+    {
+        $query = '
+SELECT
+    id
+FROM
+    gamestarts
+WHERE
+    datetime BETWEEN NOW() - interval 30 MINUTE AND NOW() + interval 30 MINUTE
+ORDER BY id DESC
+LIMIT 1
+';
+
+        $result = $this->db->query($query);
+
+        if (empty($result)) {
+            return array();
+        }
+
+        $gamestart = $this->getGameStart($result[0]['id']);
+
+        if ($gamestart->status != gamestart::OPEN) {
+            return array();
+        }
+
+        $output = array();
+
+        foreach ($gamestart->getGamestartSchedules() as $schedule) {
+            $missing = $schedule->getMissingPlayers();
+
+            if ($schedule->status != GameStartSchedule::OPEN || $missing === 0) {
+                continue;
+            }
+
+            $activity = $schedule->getActivity();
+
+            switch ($activity->type) {
+            case 'rolle':
+                $type = 'Scenarie / Scenario';
+                break;
+
+            case 'braet':
+                $type = 'Brætspil / Boardgamer';
+                break;
+
+            case 'live':
+                $type = 'Live / Larp';
+                break;
+
+            default:
+                $type = '';
+            }
+
+            $output[] = array(
+                'id' => $schedule->id,
+                'titles' => array(
+                    'da' => $activity->navn,
+                    'en' => $activity->title_en,
+                ),
+                'author' => $activity->author,
+                'type'   => $type,
+                'gamers_needed' => $schedule->getMissingPlayers(),
+            );
+        }
+
+        return $output;
     }
 }

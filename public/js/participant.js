@@ -35,6 +35,8 @@ $(function() {
                     }, 3000);
 
                     $('td.checkin-time').text(text);
+
+                    $('#checkin, #checkin-print').remove();
                 },
                 error: function(jqXHR) {
                     var message = $('<div class="alert alert-danger">Kunne ikke tjekke deltageren ind.<br/>' + jqXHR.responseText + '</div>');
@@ -287,6 +289,74 @@ $(function() {
             return new_table;
         }
 
+        $('a.register-bank-payment').click(function () {
+            var $dialog  = $('<div class="bank-payment-dialog"></div>'),
+                template = $('#bank-payment-template').text(),
+                data     = {},
+                $date,
+                $fee,
+                $total,
+                $id,
+                $amount;
+
+            //todo: send data back, handle success and error
+
+            function updateTotal() {
+                if ($fee.is(':checked')) {
+                    $total.text(parseInt($fee.val(), 10) + parseInt($amount.val(), 10));
+
+                } else {
+                    $total.text(parseInt($amount.val(), 10));
+                }
+            }
+
+            function commitUpdate() {
+                data.date        = $date.val();
+                data.amount      = $total.text();
+                data.fee         = $fee.is(':checked') ? $fee.attr('data-id') : 0;
+                data.payment_id  = $id.val();
+
+                $.ajax({
+                    url: window.infosys_data.register_bank_transfer_url,
+                    type: 'POST',
+                    data: data,
+                    success: function () {
+                        document.location.reload(true);
+                    },
+                    error: function () {
+                        alert('Kunne ikke opdatere deltageren');
+                    }
+                });
+
+                $dialog.dialog('close');
+            }
+
+            $dialog.html(template);
+
+            $('body').append($dialog);
+
+            $fee    = $dialog.find('input[name=fee]');
+            $total  = $dialog.find('span.total');
+            $amount = $dialog.find('input[name=amount]');
+            $date   = $dialog.find('input[name=date]');
+            $id     = $dialog.find('input[name=id]');
+
+            $dialog.dialog({
+                modal: true,
+                width: '600px',
+                close: function () {
+                    $dialog.dialog('destroy');
+                    $dialog.remove();
+                }
+            });
+
+            $dialog.on('click.fee', 'input[name=fee]', updateTotal);
+
+            $dialog.on('change.amount', 'input[name=amount]', updateTotal);
+
+            $dialog.on('click.commit', 'button.commit', commitUpdate);
+        });
+
         $('.activity-signup').on('click', 'a', function(e) {
             e.stopPropagation();
         }).on('click', 'tbody tr', function(e) {
@@ -316,6 +386,35 @@ $(function() {
         $('#checkin-print').click(checkInPrint);
     }
 
+    $('body').on('keyup', function (event) {
+        var $focus,
+            $form;
+
+        if ((event.keyCode !== 37 && event.keyCode !== 39) || event.altKey || event.ctrlKey) {
+            return;
+        }
+
+        if (event.target) {
+            $focus = $(event.target);
+
+            if ($focus.prop('nodeName') === 'TEXTAREA' || ($focus.prop('nodeName') === 'INPUT' && $focus.val() !== '')) {
+                return;
+            }
+
+            if (event.keyCode === 37) {
+                $form = $('#prev-participant');
+
+            } else if (event.keyCode === 39) {
+                $form = $('#next-participant');
+            }
+
+            if ($form && $form.length) {
+                $form.submit();
+            }
+        }
+
+    });
+
     if (document.location.href.search(/payment_edit/) != -1) {
         var search_form = $('form.search').clone();
 
@@ -326,6 +425,6 @@ $(function() {
     $('input.datepicker').datepicker({
         dateFormat: 'yy-mm-dd',
         changeYear: true,
-        yearRange: "1940:2013"
+        yearRange: "1940:2014"
     });
 });

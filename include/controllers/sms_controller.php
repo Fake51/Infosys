@@ -48,16 +48,23 @@ class SmsController extends Controller
     public function autoDryRun()
     {
         $this->page->setTitle('SMS');
+
         if (!$this->page->request->isPost()) {
             return;
         }
 
         $post = $this->page->request->post;
+
         if (empty($post->when)) {
             return;
         }
 
         $this->page->dryrun_results = $this->model->getDryRunResults($post->when);
         $this->page->when           = $post->when;
+    }
+
+    public function showStats()
+    {
+        $this->page->stats = $this->model->getSmsStats();
     }
 }

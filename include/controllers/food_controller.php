@@ -306,6 +306,7 @@ class FoodController extends Controller
     public function showTradeable()
     {
         $user = $this->model->getLoggedInUser();
+
         if (!($user->hasRole('Infonaut') || $user->hasRole('Food-admin'))) {
             $this->hardRedirect($this->url('no_access'));
         }
@@ -313,5 +314,29 @@ class FoodController extends Controller
         $this->page->tradeable_food       = $this->model->getTradeableFood();
         $this->page->maybe_tradeable_food = $this->model->getMaybeTradeableFood();
         $this->page->headings             = array_merge(array_keys($this->page->tradeable_food));
+    }
+
+    public function resetParticipantHandoutTimes()
+    {
+        $user = $this->model->getLoggedInUser();
+
+        if (!($user->hasRole('admin'))) {
+            $this->hardRedirect($this->url('no_access'));
+        }
+
+        try {
+            $this->model->updateFoodHandoutTimes();
+
+            $this->successMessage('Uddelingstiderne blev opdateret');
+
+            $this->log("Uddelingstiderne blev opdateret af {$user->user}", 'Mad', $user);
+            $this->hardRedirect($this->url('home'));
+
+        } catch (Exception $e) {
+            $this->errorMessage('Uddelingstiderne kunne ikke opdateres');
+
+            $this->log("Uddelingstiderne kunne ikke opdateres af {$user->user}", 'Mad', $user);
+            $this->hardRedirect($this->url('home'));
+        }
     }
 }

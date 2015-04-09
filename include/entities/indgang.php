@@ -91,6 +91,15 @@ class Indgang extends DBObject
         return $this->type == 'Ottofest';
     }
 
+    public function isPartyBubbles()
+    {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return $this->type == 'Ottofest - Champagne';
+    }
+
     /**
      * returns a shorthand string for the object
      *
@@ -172,7 +181,7 @@ class Indgang extends DBObject
             return false;
         }
 
-        return stripos($this->type, "medlemsskab") !== false;
+        return stripos($this->type, "medlemskab") !== false;
     }
 
     public function getDescription($english = false)
@@ -190,7 +199,10 @@ class Indgang extends DBObject
         } elseif ($this->isParty()) {
             return $english ? 'Party' : "Fest";
 
-        } elseif ($this->type == 'Alea medlemsskab') {
+        } elseif ($this->isPartyBubbles()) {
+            return $english ? 'Bubbles' : "Bobler";
+
+        } elseif ($this->type == 'Alea medlemskab') {
             return $english ? 'Alea membership' : $this->type;
 
         } elseif ($this->type == 'Leje af madras') {

@@ -212,4 +212,15 @@ class GamestartSchedule extends DBObject
 
         return $this->findBySelectMany($select);
     }
+
+    public function getAssignedPlayers()
+    {
+        $groups = $this->getSchedule()->getAssignedByType('spiller');
+        return array_sum(array_map(function($x) {return count($x);}, $groups));
+    }
+
+    public function getMissingPlayers()
+    {
+        return $this->getAssignedPlayers() - $this->gamers_present;
+    }
 }

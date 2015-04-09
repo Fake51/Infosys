@@ -80,13 +80,15 @@ class DeltagereWear extends DBObject
      * @access public
      * @return string
      */
-    public function getWearName()
+    public function getWearName($lang = 'da')
     {
-        if (!$this->isLoaded() || !($wearpris = $this->createEntity('WearPriser')->findById($this->wearpris_id)))
-        {
+        if (!$this->isLoaded() || !($wearpris = $this->createEntity('WearPriser')->findById($this->wearpris_id))) {
             return false;
         }
-        return $this->createEntity('Wear')->findById($wearpris->wear_id)->navn;
+
+        $wear = $this->createEntity('Wear')->findById($wearpris->wear_id); 
+
+        return $lang === 'da' ? $wear->navn : $wear->title_en;
     }
 
     /**

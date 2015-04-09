@@ -13,6 +13,10 @@
 */
 /* default layout styles {{{  */
 
+.clear-all {
+clear: both;
+}
+
 span.span-block {
     display: block;
 }
@@ -1977,4 +1981,146 @@ table.accounting tbody {
 
 .gs-rooms {
     clear: both;
+}
+
+#shop-overview-table {
+    width: 100%;
+}
+
+#shop-overview-table th,
+#shop-overview-table td {
+    margin-right: 0.25em;
+}
+
+#shop-overview-table th {
+    border-bottom: 1px solid #777;
+}
+
+#shop-overview-table td {
+    text-align: right;
+}
+
+#shop-overview-table tr *:nth-child(1),
+#shop-overview-table tr *:nth-child(2),
+#shop-overview-table tr *:nth-child(3),
+#shop-overview-table tr *:nth-child(4) {
+    text-align: left;
+}
+
+#shop-overview-table tr *:nth-child(9),
+#shop-overview-table tr *:nth-child(11) {
+    text-align: center;
+}
+
+#shop-overview-table tbody tr:nth-child(odd) {
+    background: #bbd;
+}
+
+#shop-overview-table .delete,
+#upload-spreadsheet-data {
+    cursor: pointer;
+}
+
+.spreadsheet-upload {
+    width: 60em;
+    height: 20em;
+    display: block;
+}
+
+#shop-overview-table .good-product img,
+#shop-overview-table .product-warning img {
+    display: none;
+}
+
+#shop-overview-table .good .good-product img,
+#shop-overview-table .warning .product-warning img {
+    display: inline;
+}
+
+.product-development img,
+.increase-stock img {
+    cursor: pointer;
+}
+
+.row.fileupload-buttonbar {
+    margin-left: 0;
+}
+
+#image-overview tr.child {
+    display: none;
+}
+
+#image-overview td:nth-child(1) {
+    width: 10em;
+    padding: 0 0.5em;
+}
+
+#image-overview tr.parent {
+    cursor: pointer;
+}
+
+#image-overview tr.parent td:nth-child(2) {
+    text-align: right;
+}
+
+#queue-container {
+    list-style: none;
+}
+
+#queue-container li {
+    float: left;
+    width: 49.5%;
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #ccc;
+    display: none;
+}
+
+#queue-container .english,
+#queue-container .danish {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#queue-container .english {
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+#queue-container .right-side {
+    width: 70%;
+    float: left;
+}
+
+#queue-container .writer {
+    float: left;
+    font-style: italic;
+}
+
+#queue-container .count {
+    width: 20%;
+    padding-top: 0.3em;
+    float: left;
+    font-size: 3em;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#queue-container .type {
+    float: right;
+    text-align: right;
+    background-color: rgba(255, 113, 0, 0.3);
+    border-radius: 5px;
+    padding: 0.3em 2em;
+}
+
+#queue-container .circle {
+    display: inline-block;
+    border-radius: 2.3em;
+    background-color: #ddd;
+    padding: 0.33em;
+}
+
+#queue-container .extras {
+    margin-top: 1em;
 }

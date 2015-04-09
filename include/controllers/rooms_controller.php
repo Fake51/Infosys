@@ -38,7 +38,7 @@
 class RoomsController extends Controller
 {
     protected $prerun_hooks = array(
-        array('method' => 'checkUser','exclusive' => true),
+        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array('imageOverview')),
     );
 
     /**
@@ -170,6 +170,20 @@ class RoomsController extends Controller
         }
         $this->page->lokaler = $this->model->getAll();
         $this->page->room_use = $this->model->getRoomUseForDates($days);
+    }
+
+    public function uploadImages()
+    {
+        $this->model->handleFileUploads($this->vars['id']);
+
+        header('HTTP/1.1 200 Done');
+        exit;
+    }
+
+    public function imageOverview()
+    {
+        $this->page->room_images = $this->model->getRoomImageOverview();
+        $this->page->public_uri  = $this->config->get('app.public_uri');
     }
 
     //{{{ ajax methods

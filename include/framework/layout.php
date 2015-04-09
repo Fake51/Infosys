@@ -456,6 +456,16 @@ XML;
             <li><a href='{$this->url('food_stats')}'>Statistik</a></li>
             <li><a href='{$this->url('food_handout')}'>Mad-udlevering</a></li>
             <li><a href='{$this->url('show_tradeable_food')}'>Madbørs</a></li>
+HTML;
+
+        if ($this->user && $this->user->hasRole('admin')) {
+            $return .= <<<HTML
+            <li><a href='{$this->url('reset_participant_foodtime')}'>Reset madtidsfordeling</a></li>
+HTML;
+
+        }
+
+        $return .= <<<HTML
         </ul>
     </li>
     <li class='topmenu-item'>
@@ -481,6 +491,25 @@ XML;
             <li><a href='{$this->url('entry_stats')}'>Statistik</a></li>
         </ul>
     </li>
+HTML;
+
+        if ($this->user && $this->user->canAccess('ShopController', 'main')) {
+            $return .= <<<HTML
+    <li class='topmenu-item'>
+        <a href='{$this->url('shop_overview')}'>Kiosk</a>
+    </li>
+HTML;
+        }
+
+        if ($this->user && $this->user->canAccess('BoardgamesController', 'overview')) {
+            $return .= <<<HTML
+    <li class='topmenu-item'>
+        <a href='{$this->url('boardgames_overview')}'>Brætspil</a>
+    </li>
+HTML;
+        }
+
+        $return .= <<<HTML
     <li class='topmenu-item'>
         <a href='{$this->url('log')}'>Log</a>
     </li>
@@ -494,7 +523,7 @@ HTML;
         <ul class="submenu">
             <li><a href='{$this->url('sms_auto_dryrun')}'>Auto send dryrun</a></li>
             <li><a href='{$this->url('admin_handle_users')}'>Manual send dryrun</a></li>
-            <li><a href='{$this->url('admin_handle_users')}'>Statistics</a></li>
+            <li><a href='{$this->url('sms_stats')}'>Statistics</a></li>
         </ul>
     </li>
     <li class='topmenu-item'>

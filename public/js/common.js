@@ -37,6 +37,58 @@ var common = {
         if (!(this instanceof arguments.callee)) {
             return new arguments.callee();
         }
+    },
+
+    makeChart: function (chart_element, chart_data, chart_config) {
+        var data,
+            chart,
+            options,
+            col;
+
+        if (!google.visualization[chart_config.type]) {
+            throw {
+                name: 'InfosysError',
+                message: 'No such graph type'
+            };
+        }
+
+        data = new google.visualization.DataTable();
+
+        for (col in chart_config.columns) {
+            if (chart_config.columns.hasOwnProperty(col)) {
+                data.addColumn(chart_config.columns[col].type, chart_config.columns[col].name);
+            }
+        }
+
+        data.addRows(chart_data);
+
+        options = {
+          title: chart_config.title
+        };
+
+        chart = new google.visualization[chart_config.type](chart_element);
+        chart.draw(data, options);
+
+        return chart;
+    },
+    selectElementContents: function (el) {
+        var body = document.body, range, sel;
+        if (document.createRange && window.getSelection) {
+            range = document.createRange();
+            sel = window.getSelection();
+            sel.removeAllRanges();
+            try {
+                range.selectNodeContents(el);
+                sel.addRange(range);
+            } catch (e) {
+                range.selectNode(el);
+                sel.addRange(range);
+            }
+        } else if (body.createTextRange) {
+            range = body.createTextRange();
+            range.moveToElementText(el);
+            range.select();
+        }
     }
 };
 

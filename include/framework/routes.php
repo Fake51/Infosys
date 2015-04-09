@@ -84,8 +84,9 @@ class Routes
         $this->routes['logout_page'] = array('url' => 'logout', 'controller' => 'Index', 'method' => 'logout');
 
         // SMS stuffs - hackish
-        $this->routes['kickoff_sms_script'] = array('url' => 'index/kickoffsmsscript/', 'controller' => 'index', 'method' => 'kickOffSMSScript');
+        $this->routes['kickoff_sms_script'] = array('url' => 'index/kickoffsmsscript', 'controller' => 'index', 'method' => 'kickOffSMSScript');
         $this->routes['sms_auto_dryrun']    = array('url' => 'sms/auto-dryrun', 'controller' => 'sms', 'method' => 'autoDryRun');
+        $this->routes['sms_stats']          = array('url' => 'sms/stats', 'controller' => 'sms', 'method' => 'showStats');
 
         // deltager routes
         $this->routes['all_users_ajax']                             = array('url' => 'deltager/ajax/userlist', 'controller' => 'Participant', 'method' => 'ajaxlist');
@@ -138,6 +139,22 @@ class Routes
         $this->routes['ean8_badge']                                 = array('url' => 'participant/ean8badge/:participant_id:', 'controller' => 'Participant', 'method' => 'ean8Badge');
         $this->routes['ean8_sheet']                                 = array('url' => 'participant/ean8sheet/:participant_id:', 'controller' => 'Participant', 'method' => 'ean8Sheet');
         $this->routes['email_list']                                 = array('url' => 'participant/email-list', 'controller' => 'Participant', 'method' => 'displayEmailList');
+        $this->routes['participant_signup_email']                   = array('url' => 'participant/send-signup-email/:id:', 'controller' => 'Participant', 'method' => 'sendSignupEmail');
+
+        $this->routes['participant_reset_password']                 = array('url' => 'participant/reset-password/:hash:', 'controller' => 'Participant', 'method' => 'resetParticipantPassword');
+
+        // online payment
+        $this->routes['participant_post_payment']                   = array('url' => 'participant/payment/done', 'controller' => 'Participant', 'method' => 'showPaymentDone');
+        $this->routes['participant_payment']                        = array('url' => 'participant/payment/:hash:', 'controller' => 'Participant', 'method' => 'processPayment');
+        $this->routes['participant_register_payment']               = array('url' => 'participant/payment/register/:hash:', 'controller' => 'Participant', 'method' => 'registerPayment');
+
+        // payment reminders
+        $this->routes['7-day_payment_reminder']                     = array('url' => 'participant/payment-reminder/first', 'controller' => 'Participant', 'method' => 'sendFirstPaymentReminder');
+        $this->routes['13-day_payment_reminder']                    = array('url' => 'participant/payment-reminder/second', 'controller' => 'Participant', 'method' => 'sendSecondPaymentReminder');
+        $this->routes['payment_reminder_annulled']                  = array('url' => 'participant/payment-reminder/annulled', 'controller' => 'Participant', 'method' => 'cancelParticipantSignup');
+
+        // bank transfer
+        $this->routes['participant_register_bank_payment']          = array('url' => 'participant/register-bank-transfer/:id:', 'controller' => 'Participant', 'method' => 'registerBankTransfer');
 
         // economy stuffs
         $this->routes['economy_breakdown']    = array('url' => 'economy/breakdown', 'controller' => 'Participant', 'method' => 'economyBreakdown');
@@ -188,15 +205,20 @@ class Routes
         $this->routes['gamestart_ajax_info'  ]     = array('url' => 'aktiviteter/gamestart/ajax/:id:/info', 'controller' => 'Activity', 'method' => 'gameStartAjaxInfo');
         $this->routes['gamestart_master_change']   = array('url' => 'aktiviteter/gamestart/master/:id:/change', 'controller' => 'Activity', 'method' => 'gameStartMasterChange');
 
+        $this->routes['gamestart_queue']           = array('url' => 'activities/gamestart-queue', 'controller' => 'Activity', 'method' => 'gamestartQueue');
+        $this->routes['gamestart_queue_ajax']      = array('url' => 'activities/gamestart-queue-ajax', 'controller' => 'Activity', 'method' => 'gamestartQueueAjax');
+
         // lokaler routes
-        $this->routes['lokalerhome'] = array('url' => 'lokaler/', 'controller' => 'Rooms', 'method' => 'main');
-        $this->routes['opret_lokale'] = array('url' => 'lokaler/create', 'controller' => 'Rooms', 'method' => 'create');
-        $this->routes['vis_lokale'] = array('url' => 'lokaler/vis/:id:', 'controller' => 'Rooms', 'method' => 'visLokale');
-        $this->routes['vis_alle_lokaler'] = array('url' => 'lokaler/all', 'controller' => 'Rooms', 'method' => 'visAlle');
-        $this->routes['edit_lokale'] = array('url' => 'lokaler/edit/:id:', 'controller' => 'Rooms', 'method' => 'edit');
-        $this->routes['slet_lokale'] = array('url' => 'lokaler/slet/:id:', 'controller' => 'Rooms', 'method' => 'deleteRoom');
-        $this->routes['ajax_get_lokaler'] = array('url' => 'lokaler/getlokaler/:afvikling_id:', 'controller' => 'Rooms', 'method' => 'ajaxGetLokaler');
-        $this->routes['lokale_brug'] = array('url' => 'lokaler/lokalebrug/:day:','controller' => 'Rooms', 'method' => 'roomUse');
+        $this->routes['lokalerhome']         = array('url' => 'lokaler/', 'controller' => 'Rooms', 'method' => 'main');
+        $this->routes['opret_lokale']        = array('url' => 'lokaler/create', 'controller' => 'Rooms', 'method' => 'create');
+        $this->routes['vis_lokale']          = array('url' => 'lokaler/vis/:id:', 'controller' => 'Rooms', 'method' => 'visLokale');
+        $this->routes['vis_alle_lokaler']    = array('url' => 'lokaler/all', 'controller' => 'Rooms', 'method' => 'visAlle');
+        $this->routes['edit_lokale']         = array('url' => 'lokaler/edit/:id:', 'controller' => 'Rooms', 'method' => 'edit');
+        $this->routes['slet_lokale']         = array('url' => 'lokaler/slet/:id:', 'controller' => 'Rooms', 'method' => 'deleteRoom');
+        $this->routes['ajax_get_lokaler']    = array('url' => 'lokaler/getlokaler/:afvikling_id:', 'controller' => 'Rooms', 'method' => 'ajaxGetLokaler');
+        $this->routes['lokale_brug']         = array('url' => 'lokaler/lokalebrug/:day:','controller' => 'Rooms', 'method' => 'roomUse');
+        $this->routes['image_upload']        = array('url' => 'rooms/upload-images/:id:','controller' => 'Rooms', 'method' => 'uploadImages');
+        $this->routes['room_image_overview'] = array('url' => 'rooms/image-overview','controller' => 'Rooms', 'method' => 'imageOverview');
 
         // wear routes
         $this->routes['wearhome'] = array('url' => 'wear/', 'controller' => 'Wear', 'method' => 'main');
@@ -228,6 +250,8 @@ class Routes
         $this->routes['ajax_get_madtider']    = array('url' => 'mad/ajaxgetmadtider/:id:', 'controller' => 'Food', 'method' => 'ajaxGetMadtider');
         $this->routes['food_handout']         = array('url' => 'mad/handout', 'controller' => 'Food', 'method' => 'displayHandout');
         $this->routes['food_handout_ajax']    = array('url' => 'mad/handout/ajax', 'controller' => 'Food', 'method' => 'ajaxHandout');
+
+        $this->routes['reset_participant_foodtime'] = array('url' => 'food/reset-handout-times', 'controller' => 'Food', 'method' => 'resetParticipantHandoutTimes');
 
         // indgang routes
         $this->routes['indganghome'] = array('url' => 'indgang/', 'controller' => 'Entrance', 'method' => 'main');
@@ -318,8 +342,28 @@ class Routes
         $this->routes['api_activity_structure']  = array('url' => 'api/activity-structure', 'controller' => 'Api', 'method' => 'activityStructure');
         $this->routes['api_user_schedules']      = array('url' => 'api/user/:id:', 'controller' => 'Api', 'method' => 'getUserSchedule');
         $this->routes['api_user_schedules_v2']   = array('url' => 'api/v2/user/:id:', 'controller' => 'Api', 'method' => 'getUserScheduleV2');
+        $this->routes['api_user_data']           = array('url' => 'api/v2/user-data/:email:', 'controller' => 'Api', 'method' => 'getUserData');
         $this->routes['api_user_register']       = array('url' => 'api/user/:id:/register', 'controller' => 'Api', 'method' => 'registerApp');
         $this->routes['api_user_unregister']     = array('url' => 'api/user/:id:/unregister', 'controller' => 'Api', 'method' => 'unregisterApp');
+
+        $this->routes['api_request_password_reminder'] = array('url' => 'api/request-password-email', 'controller' => 'Api', 'method' => 'requestPasswordReminder');
+
+        // shop
+        $this->routes['shop_overview']               = array('url' => 'shop', 'controller' => 'Shop', 'method' => 'overview');
+        $this->routes['shop_parse_spreadsheet_data'] = array('url' => 'shop/parsedata', 'controller' => 'Shop', 'method' => 'parseSpreadsheetData');
+        $this->routes['shop_single_update']          = array('url' => 'shop/ajaxupdate', 'controller' => 'Shop', 'method' => 'ajaxUpdate');
+        $this->routes['shop_delete_product']         = array('url' => 'shop/deleteproduct', 'controller' => 'Shop', 'method' => 'deleteProduct');
+        $this->routes['shop_product_graph_data']     = array('url' => 'shop/product-data/:id:', 'controller' => 'Shop', 'method' => 'fetchProductStats');
+
+        // boardgames
+        $this->routes['boardgames_overview']         = array('url' => 'boardgames', 'controller' => 'Boardgames', 'method' => 'overview');
+        $this->routes['boardgames_data']             = array('url' => 'boardgames/data', 'controller' => 'Boardgames', 'method' => 'fetchData');
+        $this->routes['boardgames_create']           = array('url' => 'boardgames/create', 'controller' => 'Boardgames', 'method' => 'createGame');
+        $this->routes['boardgames_update']           = array('url' => 'boardgames/update', 'controller' => 'Boardgames', 'method' => 'updateGame');
+        $this->routes['boardgames_edit']             = array('url' => 'boardgames/edit', 'controller' => 'Boardgames', 'method' => 'editGame');
+        $this->routes['boardgames_parse']            = array('url' => 'boardgames/parse', 'controller' => 'Boardgames', 'method' => 'parseSpreadsheet');
+        $this->routes['boardgames_update_note']      = array('url' => 'boardgames/update-note', 'controller' => 'Boardgames', 'method' => 'updateNote');
+
     }
 
     /**

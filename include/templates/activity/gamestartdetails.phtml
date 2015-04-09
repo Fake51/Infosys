@@ -25,6 +25,7 @@
             <?php if ($this->gamestart->status == 1) :?>
             <li><a href="<?= $this->url('gamestart_minion', array('id' => $detail['run']->id));?>" class="btn btn-primary">Kør spilstart for hold</a></li>
             <?php endif;?>
+            <li><strong>Forfatter/designer:</strong> <?= e($detail['activity']->author);?></li>
             <?php if (!empty($detail['run']->note)) :?>
             <li><b>Noter:</b> <?php echo e($detail['run']->note);?></li>
             <?php endif;

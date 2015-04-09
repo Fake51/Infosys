@@ -70,7 +70,8 @@ class IndexModel extends Model
     public function generateParticipantStats()
     {
         $stats = array();
-        $query = 'SELECT COUNT(*) AS count FROM deltagere';
+        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE signed_up > "0000-00-00" AND annulled = "nej"';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             $stats['overall_signups'] = $result[0]['count'];
         } else {
@@ -78,34 +79,39 @@ class IndexModel extends Model
         }
 
         $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE checkin_time > "0000-00-00"';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             $stats['overall_checkins'] = $result[0]['count'];
         } else {
             $stats['overall_checkins'] = '';
         }
 
-        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE created > NOW() - INTERVAL 24 hour';
+        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE signed_up > NOW() - INTERVAL 24 hour AND annulled = "nej"';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             $stats['24h_signups'] = $result[0]['count'];
         } else {
             $stats['24h_signups'] = '';
         }
 
-        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE checkin_time > NOW() - INTERVAL 24 hour';
+        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE checkin_time > NOW() - INTERVAL 24 hour AND annulled ="nej"';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             $stats['24h_checkins'] = $result[0]['count'];
         } else {
             $stats['24h_checkins'] = '';
         }
 
-        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE created > NOW() - INTERVAL 7 day';
+        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE signed_up > NOW() - INTERVAL 7 day AND annulled ="nej"';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             $stats['7d_signups'] = $result[0]['count'];
         } else {
             $stats['7d_signups'] = '';
         }
 
-        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE checkin_time > NOW() - INTERVAL 3 day';
+        $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE checkin_time > NOW() - INTERVAL 3 day AND annulled = "nej"';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             $stats['3d_checkins'] = $result[0]['count'];
         } else {
@@ -113,13 +119,15 @@ class IndexModel extends Model
         }
 
         $query = 'SELECT COUNT(*) AS count FROM deltagere WHERE udeblevet = "ja"';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             $stats['no_shows'] = $result[0]['count'];
         } else {
             $stats['no_shows'] = '';
         }
 
-        $query = 'SELECT bk.navn, COUNT(*) AS count FROM deltagere AS d JOIN brugerkategorier AS bk ON bk.id = d.brugerkategori_id GROUP BY bk.navn ORDER BY bk.navn';
+        $query = 'SELECT bk.navn, COUNT(*) AS count FROM deltagere AS d JOIN brugerkategorier AS bk ON bk.id = d.brugerkategori_id WHERE signed_up > "0000-00-00" AND annulled = "nej" GROUP BY bk.navn ORDER BY bk.navn';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             foreach ($result as $row) {
                 $stats['kategori'][$row['navn']] = $row['count'];
@@ -139,6 +147,9 @@ SELECT
     COUNT(*) AS count
 FROM
     deltagere AS d
+WHERE
+    signed_up > "0000-00-00"
+    AND annulled = "nej"
 GROUP BY
     grouping
 ORDER BY
@@ -151,7 +162,8 @@ ORDER BY
             }
         }
 
-        $query = 'SELECT d.gender, COUNT(*) AS count FROM deltagere AS d GROUP BY d.gender ORDER BY d.gender';
+        $query = 'SELECT d.gender, COUNT(*) AS count FROM deltagere AS d WHERE signed_up > "0000-00-00" GROUP BY d.gender ORDER BY d.gender';
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             foreach ($result as $row) {
                 $stats['gender'][$row['gender']] = $row['count'];
@@ -180,7 +192,11 @@ SELECT
 FROM
     wear AS w
     JOIN wearpriser AS wp ON wp.wear_id = w.id
-    LEFT JOIN deltagere_wear AS dw ON wp.id = dw.wearpris_id
+    JOIN deltagere_wear AS dw ON wp.id = dw.wearpris_id
+    JOIN deltagere AS d ON d.id = dw.deltager_id
+WHERE
+    d.annulled = "nej"
+    AND d.betalt_beloeb > 0
 GROUP BY
     w.navn,
     dw.received
@@ -228,6 +244,9 @@ FROM
     mad AS m
     JOIN madtider AS mt ON mt.mad_id = m.id
     JOIN deltagere_madtider AS dm ON mt.id = dm.madtid_id
+    JOIN deltagere AS d ON d.id = dm.deltager_id
+WHERE
+    d.annulled = "nej"
 GROUP BY
     m.kategori,
     dm.received
@@ -247,7 +266,7 @@ ORDER BY
 
                 $stats['types'][$row['navn']] += $row['count'];
 
-                if ($row['received'] == 't') {
+                if (!empty($row['received'])) {
                     $stats['received'][$row['navn']] += $row['count'];
                 }
             }
@@ -272,22 +291,27 @@ SELECT
     COUNT(*) AS count
 FROM
     indgang AS i
-    LEFT JOIN deltagere_indgang AS di ON i.id = di.indgang_id
+    JOIN deltagere_indgang AS di ON i.id = di.indgang_id
+    JOIN deltagere AS d ON d.id = di.deltager_id
+WHERE
+    d.annulled = "nej"
 GROUP BY
     i.type
 ORDER BY
     i.type
 ';
 
+        foreach ($this->createEntity('Indgang')->findAll() as $entrance) {
+            $stats['types'][$entrance->type] = 0;
+        }
+
         if (($result = $this->db->query($query)) && !empty($result[0])) {
             foreach ($result as $row) {
-                if (!isset($stats['types'][$row['navn']])) {
-                    $stats['types'][$row['navn']] = 0;
-                }
-
                 $stats['types'][$row['navn']] += $row['count'];
             }
         }
+
+        ksort($stats['types']);
 
         return $stats;
     }
@@ -355,8 +379,13 @@ ORDER BY
                 $message = "Hej {$firstname}. Om lidt skal du spille {$title}{$room} - mvh. Fastaval";
             }
 
-            if ($deltager->sendSMS($sender, $message)) {
-                $count++;
+            if ($deltager->gcm_id) {
+                continue;
+
+            } else {
+                if ($deltager->sendSMS($sender, $message)) {
+                    $count++;
+                }
             }
         }
 
@@ -418,7 +447,7 @@ SQL;
             $deltager = $this->createEntity('Deltagere')->findById($res['deltager_id']);
             $vagt     = $this->createEntity('GDSVagter')->findById($res['gdsvagt_id']);
 
-            if (!$deltager || !$vagt || $deltager->medbringer_mobil == 'nej') {
+            if (!$deltager || !$vagt || $deltager->medbringer_mobil == 'nej' || $deltager->gcm_id) {
                 continue;
             }
 

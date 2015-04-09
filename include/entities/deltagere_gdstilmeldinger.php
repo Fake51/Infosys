@@ -129,6 +129,10 @@ class DeltagereGDSTilmeldinger extends DBObject
             }
         }
 
+        if ($hour < 4) {
+            $timestamp -= 86400;
+        }
+
         return date('Y-m-d', $timestamp) . ' ' . $start . '-' . $end;
     }
 
@@ -181,5 +185,52 @@ class DeltagereGDSTilmeldinger extends DBObject
         $date  = array_shift($parts);
 
         return date('l ' . implode('', $parts), strtotime($date));
+    }
+
+    public function getPeriodStart()
+    {
+        if (!$this->period) {
+            return '';
+        }
+
+        $parts = explode(' ', $this->period);
+        $date  = array_shift($parts);
+        $parts = explode('-', $parts[0]);
+
+        return $date . ' ' . $parts[0] . ':00:00';
+    }
+
+    public function getTextDescription($lang)
+    {
+        if (!$this->period) {
+            return '';
+        }
+
+        $parts = explode(' ', $this->period);
+
+        switch ($parts[1]) {
+        case '04-12':
+            return $lang === 'en' ? 'Morning' : 'Morgen';
+
+        case '12-17':
+            return $lang === 'en' ? 'Midday' : 'Middag';
+
+        case '17-04':
+            return $lang === 'en' ? 'Evening' : 'Aften';
+
+        }
+
+        return '';
+    }
+
+    public function getDate()
+    {
+        if (!$this->period) {
+            return '';
+        }
+
+        $parts = explode(' ', $this->period);
+
+        return $parts[0];
     }
 }

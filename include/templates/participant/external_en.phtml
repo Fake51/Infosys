@@ -21,7 +21,7 @@ If you have any questions regarding the details here, you can e-mail us at <a st
             </tr>
             <tr>
                 <td class='label'>Date of signup:</td>
-                <td><?= $this->replaceDayNames(date('Y-m-d', strtotime($this->deltager->created)));?></td>
+                <td><?= $this->replaceDayNames(date('Y-m-d', strtotime($this->deltager->signed_up)));?></td>
             </tr>
         </tbody>
     </table>
@@ -98,7 +98,7 @@ If you have any questions regarding the details here, you can e-mail us at <a st
             if ((strtotime($schedule->slut) - strtotime($schedule->start)) > 86400) {
                 $helcon[] = '
             <tr>
-                <td><strong>' . e($activity->title_en) . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Gamer') . '</em></td>
+                <td><strong>' . ($activity->wp_link ? '<a href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '') . e($activity->title_en) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Gamer') . '</em></td>
             </tr>
 ';
                 continue;
@@ -111,7 +111,7 @@ If you have any questions regarding the details here, you can e-mail us at <a st
 
             $dates[$date][] = '
             <tr>
-                <td><strong>' . e($activity->title_en) . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Gamer') . '</em>. ' . date('D H:i', strtotime($schedule->start)) . ' - ' . date('D H:i', strtotime($schedule->slut)) . '</td></tr>
+                <td><strong>' . ($activity->wp_link ? '<a href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '') . e($activity->title_en) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Gamer') . '</em>. ' . date('D H:i', strtotime($schedule->start)) . ' - ' . date('D H:i', strtotime($schedule->slut)) . '</td></tr>
 ';
 
             foreach ($schedule->getMultiBlok() as $block) {

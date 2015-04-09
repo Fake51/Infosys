@@ -1,3 +1,8 @@
 include/config.ini
 public/barcodes/*
 public/.htaccess
+public/audio/*
+public/uploads/*
+public/error_log.txt
+include/signup-data/*
+include/scripts/*

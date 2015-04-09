@@ -38,7 +38,7 @@ class ActivityController extends Controller
 {
 
     protected $prerun_hooks = array(
-        array('method' => 'checkUser', 'exclusive' => true),
+        array('method' => 'checkUser', 'exclusive' => true, 'methodlist' => array('gamestartQueue', 'gamestartQueueAjax')),
     );
 
     /**
@@ -515,6 +515,27 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             header('HTTP/1.1 500 Fail');
             header('Content-Type: text/plain; charset=UTF-8');
+            echo $e->getMessage();
+        }
+
+        exit;
+    }
+
+    public function gamestartQueue()
+    {
+    }
+
+    public function gamestartQueueAjax()
+    {
+        try {
+
+            header('HTTP/1.1 200 Done');
+            header('Content-Type: application/json; charset=UTF-8');
+
+            echo json_encode($this->model->fetchGameStartQueueData());
+
+        } catch (Exception $e) {
+            header('HTTP/1.1 500 fail');
             echo $e->getMessage();
         }
 

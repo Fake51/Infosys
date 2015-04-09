@@ -44,7 +44,7 @@ class GraphModel extends Model
      */
     public function getSignupData()
     {
-        $day    = $this->config->get('con.signupstart');
+        $day    = date('Y-m-d', strtotime($this->config->get('con.signupstart')));
         $end    = $this->config->get('con.end');
         $today  = time() < strtotime($end) ? time() : strtotime($end);
         $result = $this->getSignupNumbers($day);
@@ -84,7 +84,7 @@ class GraphModel extends Model
 
         $query = '
 SELECT
-    DATE(created) AS date,
+    DATE(signed_up) AS date,
     CASE WHEN birthdate > NOW() - INTERVAL 20 YEAR THEN 20
          WHEN birthdate > NOW() - INTERVAL 35 YEAR THEN 35
          ELSE 100 END AS agegroup,
@@ -92,7 +92,7 @@ SELECT
 FROM
     deltagere AS d
 WHERE
-    DATE(created) BETWEEN ? AND ?
+    DATE(signed_up) BETWEEN ? AND ?
 GROUP BY
     date,
     agegroup
@@ -166,13 +166,13 @@ ORDER BY
     {
         $query = '
 SELECT
-    DATE(created) AS date,
+    DATE(signed_up) AS date,
     COUNT(*) AS count
 FROM
     deltagere AS d
 WHERE
-    DATE(created) >= ?
-    AND DATE(created) <= NOW()
+    DATE(signed_up) >= ?
+    AND DATE(signed_up) <= NOW()
 GROUP BY
     date
 ORDER BY
@@ -216,13 +216,14 @@ ORDER BY
      */
     public function getTotalSignupData()
     {
-        $day    = $this->config->get('con.signupstart');
+        $day    = date('Y-m-d', strtotime($this->config->get('con.signupstart')));
         $end    = $this->config->get('con.end');
         $today  = time() < strtotime($end) ? time() : strtotime($end);
         $result = $this->getSignupNumbers($day);
 
         $ordered_result = array();
         $index          = $total = 0;
+
         while (strtotime($day) < $today) {
             $ordered_result[$index] = array(
                 0 => date('d-m-Y', strtotime($day)),

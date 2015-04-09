@@ -127,3 +127,15 @@ div#food-handout-container .color4 {
 .header {
     border-bottom: 1px solid #ccc;
 }
+
+a {
+    color: #000;
+}
+
+a:hover {
+    color: #444;
+}
+
+a:active {
+    color: #777;
+}

@@ -36,8 +36,6 @@
  */
 class SMSSender implements SMSSending
 {
-    const ADDRESS = 'http://sms.coolsmsc.dk/';
-
     private $entify_factory;
 
     private $config;
@@ -165,7 +163,20 @@ class SMSSender implements SMSSending
         $smslog->besked      = $message;
         $smslog->sendt       = date('Y-m-d H:i:s');
         $smslog->return_val  = $result;
-        $smslog->insert();
+
+        try {
+            $smslog->insert();
+
+        } catch (Exception $e) {
+            $smslog->nummer      = '00000000';
+            $smslog->deltager_id = $participant->id;
+            $smslog->besked      = $message;
+            $smslog->sendt       = date('Y-m-d H:i:s');
+            $smslog->return_val  = $result;
+
+            $smslog->insert();
+
+        }
 
         return $result == '{"code":"1","message":"message spooled","status":"Beskeden blev afsendt korrekt."}';
     }

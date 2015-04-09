@@ -160,24 +160,26 @@ function EAN8ToNumber($input) {
 
     if (strlen($input) == 7) {
         $sub = substr($input, 0, 7);
+
         if (substr(numberToEAN8($sub), 1) != $input) {
             return false;
         }
 
-        if (substr($sub, 0, 4) == date('Y')) {
-            return intval(substr($sub, 4));
+        if (substr($sub, 0, 2) == date('y')) {
+            return intval(substr($sub, 2));
         }
 
         return intval($sub);
     }
 
     $sub = substr($input, 0, 7);
+
     if (numberToEAN8($sub) !== $input) {
         return false;
     }
 
-    if (substr($sub, 0, 4) == date('Y')) {
-        return intval(substr($sub, 4));
+    if (substr($sub, 0, 2) == date('y')) {
+        return intval(substr($sub, 2));
     }
 
     return intval($sub);

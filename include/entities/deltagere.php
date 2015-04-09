@@ -45,6 +45,7 @@ class Deltagere extends DBObject
      */
     protected $human_readable_fieldnames = array(
         'id'                            => 'Id',
+        'gcm_id'                        => 'GCM ID',
         'abs_karma'                     => 'Absolut karma',
         'admin_note'                    => 'Admin note',
         'arbejdsomraade'                => 'Arbejdsområde',
@@ -56,6 +57,9 @@ class Deltagere extends DBObject
         'by'                            => 'By',
         'checkin_time'                  => 'Checkin',
         'created'                       => 'Oprettet',
+        'updated'                       => 'Opdateret',
+        'signed_up'                     => 'Tilmeldt',
+        'annulled'                      => 'Annulleret',
         'deltager_note'                 => 'Deltager beskeder',
         'desired_activities'            => 'Ønskede aktiviteter',
         'efternavn'                     => 'Efternavn',
@@ -181,6 +185,12 @@ class Deltagere extends DBObject
                         {
                             $select->setWhereOr($field, '=', "{$bit}");
                         }
+                        break;
+                    case "updated":
+                        if (strtotime($bit) > 0) {
+                            $select->setWhereOr($field, '=', "{$bit}");
+                        }
+
                         break;
                     case 'fornavn':
                     case 'efternavn':
@@ -884,22 +894,27 @@ class Deltagere extends DBObject
     {
         $start = strtotime($start);
         $slut  = strtotime($end);
+
         if (!$this->isLoaded()) {
             return false;
         }
 
         if (!$this->busy_cache) {
             $busy_cache = array();
+
             foreach ($this->getPladser() as $plads) {
                 if ($role && $role != $plads->type) {
                     continue;
                 }
-                $afv          = $plads->getAfvikling();
+
+                $afv = $plads->getAfvikling();
+
                 if ($afv->getAktivitet()->tids_eksklusiv == 'nej') {
                     continue;
                 }
 
                 $busy_cache[] = array('start' => strtotime($afv->start), 'slut' => strtotime($afv->slut));
+
                 if ($afv->hasMultiBlok()) {
                     foreach ($afv->getMultiBlok() as $multiblok) {
                         $busy_cache[] = array('start' => strtotime($multiblok->start), 'slut' => strtotime($multiblok->slut));
@@ -1039,7 +1054,7 @@ class Deltagere extends DBObject
     public function hasRegisteredLate()
     {
         if (!$this->isLoaded()) return false;
-        return strtotime($this->created) > strtotime(SIGNUPEND);
+        return strtotime($this->signed_up) > strtotime(SIGNUPEND);
     }
 
     /**
@@ -1141,6 +1156,118 @@ class Deltagere extends DBObject
         return $dm;
     }
 
+    protected function getNextInRange(array $range, array $excepted = array()) {
+        if (!isset($range[0]) || !isset($range[1])) {
+            throw new Exception('No range');
+        }
+
+        $query = '
+SELECT
+    id
+FROM
+    ' . $this->tablename . '
+WHERE
+    id BETWEEN ? AND ?
+ORDER BY
+    id
+';
+
+        $ids = $this->db->query($query, $range);
+
+        $range_ids = array_flip(range($range[0], $range[1]));
+
+        foreach ($ids as $id) {
+            unset($range_ids[$id['id']]);
+        }
+
+        $id = array_shift(array_flip($range_ids));
+
+        return $id;
+    }
+
+    protected function getNextId(array $excepted = array()) {
+        $exceptions = '';
+
+        $id_range = range(1, 5000);
+
+        $ranges = array();
+
+        foreach ($excepted as $range) {
+            if (isset($range[0]) && isset($range[1])) {
+                $exceptions .= 'AND id + 1 NOT BETWEEN ' . intval($range[0]) . ' AND ' . intval($range[1]) . ' AND id != ' . intval($range[0]) . ' ';
+
+                $id_range = array_diff($id_range, range($range[0], $range[1]));
+            }
+        }
+
+        $query = '
+SELECT
+    id
+FROM
+    ' . $this->tablename . '
+WHERE
+    id IN (' . implode(', ', $id_range) . ')
+';
+
+        try {
+            $ids = array_map(function ($x) {return $x['id'];}, $this->db->query($query));
+
+        } catch (Exception $e) {
+            $ids = array();
+        }
+
+        $usable_ids = array_diff($id_range, $ids);
+
+        $id = array_shift($usable_ids);
+
+        return $id;
+    }
+
+    protected function idAvailable($id) {
+        $query = '
+SELECT
+    id
+FROM
+    ' . $this->tablename . '
+WHERE
+    id = ?
+';
+
+        $ids = $this->db->query($query, array($id));
+
+        return count($ids) === 0;
+    }
+
+    protected function setInsertId() {
+        if ($this->email == '1@makey.biz' && $this->idAvailable(911)) {
+            $this->id = 911;
+
+        } elseif ($this->email == 'ak47@762.dk' && $this->idAvailable(60)) {
+            $this->id = 60;
+
+        } elseif ($this->email == 'hex_henrik@hotmail.com' && $this->idAvailable(1)) {
+            $this->id = 1;
+
+        } elseif ($this->email == 'elias.helfer@gmail.com' && $this->idAvailable(2)) {
+            $this->id = 2;
+
+        } elseif ($this->email == 'peter.e.lind@gmail.com' && $this->idAvailable(999)) {
+            $this->id = 999;
+
+        } elseif ($this->email == 'olesofasorensen@gmail.com' && $this->idAvailable(500)) {
+            $this->id = 500;
+
+        } elseif ($this->brugerkategori_id == 3) {
+            $this->id = $this->getNextInRange(array(900, 929), array(911));
+
+        } elseif ($this->brugerkategori_id == 9) {
+            $this->id = $this->getNextInRange(array(930, 969));
+
+        } else {
+            $this->id = $this->getNextId(array(array(900, 969), array(1, 2), array(60, 60), array(999, 999), array(500, 500)));
+        }
+    }
+
     /**
      * overrides DBObject::insert() in order
      * to normalize phone and email
@@ -1151,6 +1278,12 @@ class Deltagere extends DBObject
     public function insert() {
         $this->normalizePhone();
         $this->normalizeEmail();
+
+        $this->setInsertId();
+
+        $this->created = date('Y-m-d H:i:s');
+        $this->updated = date('Y-m-d H:i:s');
+
         return parent::insert();
     }
 
@@ -1164,6 +1297,9 @@ class Deltagere extends DBObject
     public function update() {
         $this->normalizePhone();
         $this->normalizeEmail();
+
+        $this->updated = date('Y-m-d H:i:s');
+
         return parent::update();
     }
 
@@ -1176,10 +1312,9 @@ class Deltagere extends DBObject
      */
     protected function normalizePhone() {
         foreach (array('tlf' => $this->tlf, 'mobiltlf' => $this->mobiltlf) as $field => $value) {
-            $num = preg_replace('/[^\d]/', '', $value);
-            $num = ((strlen($num) == 10 && substr($num, 0, 2) == '45') ? substr($num, 2) : $num);
-            $this->$field = strlen($num) != 8 && substr(trim($value), 0, 1) == '+' ? '+' . $num : $num;
+            $this->$field = preg_replace('/(\\+dk|0045)(\\d{8})/', '$2', trim($value));
         }
+
         return $this;
     }
 
@@ -1262,4 +1397,27 @@ class Deltagere extends DBObject
 
         return $sender->sendMessage($this, $this->mobiltlf, $message);
     }
+
+    public function speaksDanish()
+    {
+        return stripos($this->sprog, 'dansk') !== false;
+    }
+
+    public function getEan8Number()
+    {
+        return numberToEAN8(date('y', strtotime($this->created)) . str_pad($this->id, 5, '0', STR_PAD_LEFT));
+    }
+
+    public function sendGcmMessage($server_api_token, $message, $title)
+    {
+        if (empty($this->gcm_id)) {
+            throw new Exception('No GCM ID set for participant - cannot send message');
+        }
+
+        $gcm = new GcmPushMessage($server_api_token);
+        $gcm->setDevices(array($this->gcm_id));
+
+        return $gcm->send($message, array('title' => $title));
+    }
+
 }

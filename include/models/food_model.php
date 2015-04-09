@@ -476,4 +476,64 @@ ORDER BY
 
         return $maybe_tradeable_food;
     }
+
+    public function updateFoodHandoutTimes()
+    {
+        $participants = $this->createEntity('Deltagere')->findAll();
+
+        $usage = array();
+
+        foreach ($this->createEntity('Mad')->findAll() as $food) {
+            foreach ($food->getMadtider() as $madtid) {
+                if ($madtid->isDinner()) {
+                    $usage[$madtid->dato] = array(1 => 0, 2 => 0, 3 => 0);
+                }
+            }
+        }
+
+        ksort($usage);
+
+        $early_categories = array('Vegetar');
+
+        foreach ($participants as $participant) {
+            foreach ($participant->getMadtider() as $madtid) {
+                $link = $participant->getFoodItemLink($madtid);
+                $food = $madtid->getMad();
+
+                if (!$food || $madtid->isBreakfast()) {
+                    continue;
+                }
+
+                if (in_array($food->kategori, $early_categories) || $participant->isBusyBetween($madtid->dato, date('Y-m-d H:i:s', strtotime($madtid->dato . ' + 2 hour')), 'spilleder')) {
+                    $link->time_type = 1;
+                    $link->update();
+                    $usage[$madtid->dato][1]++;
+
+                    continue;
+                }
+
+                $time_type       = $this->getTimeType($usage, $madtid);
+                $link->time_type = $time_type;
+                $link->update();
+                $usage[$madtid->dato][$time_type]++;
+            }
+        }
+
+        $this->log("Der er opsat madtids-valg for " . count($participants) . " deltagere.", "Mad", $this->getLoggedInUser());
+
+    }
+
+    public function getTimeType(array $usage, MadTider $madtid) {
+        $type = 0;
+        $min  = 1000;
+
+        foreach ($usage[$madtid->dato] as $id => $people) {
+            if ($people < $min) {
+                $type = $id;
+                $min  = $people;
+            }
+        }
+
+        return $type;
+    }
 }

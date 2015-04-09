@@ -8,7 +8,7 @@ $i = 0;
 $gm_status = $this->gamestart_schedule->getGMStatus();
 ?>
 <div class="gamestart-app">
-    <h1>Spilstart for <?= e($this->activity->navn);?></h1>
+    <h1>Spilstart for <?= e($this->activity->navn);?><?= $this->activity->author ? ' af ' . e($this->activity->author) : '' ;?></h1>
     <?php if ($this->groups_lacking_gms) :?>
     <p class="text-error">Der mangler <?= e($this->groups_lacking_gms);?> spilleder(e)!</p>
     <?php endif;?>
@@ -37,6 +37,10 @@ $gm_status = $this->gamestart_schedule->getGMStatus();
         </ul>
     </div>
     <div class="half float-right">
+        <p>Reserver:</p>
+        <div class="reserves">
+        </div>
+        <div class="clearit"></div>
         <p>Manglende spillere:</p>
         <div class="gamers">
             <?php for ($i = 1; $i <= $this->assigned_players; $i++) :
@@ -44,10 +48,6 @@ $gm_status = $this->gamestart_schedule->getGMStatus();
             ?>
                 <div class="gamer <?= $class;?>" data-number="<?= $i;?>"><?= $i;?></div>
             <?php endfor;?>
-        </div>
-        <div class="clearit"></div>
-        <p>Reserver:</p>
-        <div class="reserves">
         </div>
     </div>
 </div>

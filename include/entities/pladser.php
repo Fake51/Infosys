@@ -129,6 +129,17 @@ class Pladser extends DBObject
     }
 
     /**
+     * wrapper for getDeltager
+     *
+     * @access public
+     * @return object
+     */
+    public function getParticipant()
+    {
+        return $this->getDeltager();
+    }
+
+    /**
      * returns the participant that this activity-spot is tied to
      *
      * @access public

@@ -261,4 +261,52 @@ ORDER BY temp.start;", array($date, $date)))
         return $results;
     }
 
+    public function handleFileUploads($room_id)
+    {
+        $options = array(
+            'script_url' => $this->url('image_upload', array('id' => $room_id)),
+            'upload_dir' => realpath(__DIR__ . '/../../public/uploads/rooms/') . '/' . $room_id . '/',
+            'upload_url' => $this->config->get('app.public_uri') . 'uploads/rooms/' . $room_id . '/',
+        );
+
+        $uploader = new UploadHandler($options);
+    }
+
+    public function getRoomImageOverview()
+    {
+        $directory = new DirectoryIterator(__DIR__ . '/../../public/uploads/rooms/');
+
+        $rooms = array();
+
+        foreach ($directory as $file) {
+            if ($file->isDot() || !$file->isDir()) {
+                continue;
+            }
+
+            if ($room = $this->createEntity('Lokaler')->findById($file->getFilename())) {
+                $sub_dirname = __DIR__ . '/../../public/uploads/rooms/' . $room->id;
+
+                $images = array();
+
+                if (is_dir($sub_dirname)) {
+                    $sub_dir = new DirectoryIterator($sub_dirname);
+
+                    foreach ($sub_dir as $sub_file) {
+                        if (!$sub_file->isDot() && $sub_file->isFile()) {
+                            $images[] = $sub_file->getFilename();
+                        }
+                    }
+                }
+
+                $rooms[$file->getFilename()] = array(
+                    'room'   => $room,
+                    'images' => $images,
+                );
+            }
+        }
+
+        ksort($rooms);
+
+        return $rooms;
+    }
 }

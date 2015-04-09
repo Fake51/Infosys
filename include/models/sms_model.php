@@ -58,4 +58,18 @@ class SmsModel extends Model
 
         return $log_sender->getMessages();
     }
+
+    public function getSmsStats()
+    {
+        $query = '
+SELECT
+    COUNT(*) AS messages_sent
+FROM
+    smslog
+';
+
+        $result = $this->db->query($query);
+
+        return $result[0]['messages_sent'];
+    }
 }

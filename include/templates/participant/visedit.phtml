@@ -78,7 +78,7 @@
                 </tr>
                 <tr>
                     <td><b>Udeblevet:</b> <?php echo $this->genSelect('deltager[udeblevet]',array('nej','ja'), $this->deltager->udeblevet);?></td>
-                    <td>&nbsp;</td>
+                    <td><b>Annulleret:</b> <?php echo $this->genSelect('deltager[annulled]',array('nej','ja'), $this->deltager->annulled);?></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr><td colspan='3'><b>Ungdomsskole:</b> <input class='tripleinput' type='text' value='<?php echo e($this->deltager->ungdomsskole);?>' name='deltager[ungdomsskole]' /></td></tr>

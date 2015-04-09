@@ -1,18 +1,26 @@
 [live]
-db.host         =
-db.user         =
-db.password     =
-db.database     =
-db.type         =
-app.public_uri  =
-app.sitename    =
-app.log_file    =
-con.start       = 
-con.end         = 
-con.signupstart = 
-con.signupend   = 
-sms.user        =
-sms.pass        =
+db.host            =
+db.user            =
+db.password        =
+db.database        =
+db.type            =
+app.public_uri     =
+app.sitename       =
+app.log_file       =
+con.start          =
+con.end            =
+con.signupstart    =
+con.signupend      =
+sms.user           =
+sms.pass           =
+sms.baseurl        =
+payment.freehash   =
+payment.sic        =
+payment.event_id   =
+payment.ticket_url =
+payment.pay_url    =
+payment.testing    =
+gcm.server_api_key =
 
 [test]
 db.host        = 'localhost'
