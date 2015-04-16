@@ -59,22 +59,32 @@ class Config
     protected $environment;
 
     /**
+     * flag indicating that config file needs setup
+     *
+     * @var boolean
+     */
+    private $setup_required = false;
+
+    /**
      * public constructor
      *
      * @param string $config_path Path to config .ini file
      * @param string $environment Which environment we're running in
      *
      * @access public
-     * @return void
      */
     public function __construct($config_path, $environment = 'test')
     {
         if (!is_string($config_path) || substr($config_path, -4) !== '.ini' || !is_file($config_path)) {
-            throw new FrameworkException('Config path is either not valid or does not point to a .ini file');
+            $this->setup_required = true;
+            return;
+
         }
 
         if (!is_array($this->data = parse_ini_file($config_path, true))) {
-            throw new FrameworkException('Config file cannot be parsed');
+            $this->setup_required = true;
+            return;
+
         }
 
         $this->environment = $environment;
@@ -107,15 +117,32 @@ class Config
      *
      * @param string $key Name of value to retrieve
      *
+     * @throws FrameworkException
      * @access public
      * @return mixed
      */
     public function get($key)
     {
+        if ($this->setup_required) {
+            throw new FrameworkException('Config file not available, cannot supply config data');
+        }
+
         if (isset($this->parsed_data[$key])) {
             return $this->parsed_data[$key];
         }
 
         return null;
+    }
+
+    /**
+     * returns true if the config file is missing or invalid
+     * and so needs to be set up
+     *
+     * @access public
+     * @return bool
+     */
+    public function isSetupRequired()
+    {
+        return $this->setup_required;
     }
 }

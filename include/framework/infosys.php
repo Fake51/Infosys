@@ -161,6 +161,10 @@ class Infosys
      */
     public function setup()
     {
+        if ($this->config->isSetupRequired()) {
+            return $this;
+        }
+
         $this->dic->addReusableObject(new DB($this->config))
             ->addReusableObject(new Log($this->dic->get('DB'), $this->config))
             ->addReusableObject(new Session($this->config->get('app.public_uri')))
@@ -199,11 +203,27 @@ class Infosys
      * wraps a call to the request handler
      *
      * @access public
-     * @return void
+     * @return mixed
      */
     public function handleRequest()
     {
+        if ($this->config->isSetupRequired()) {
+            return $this->doAppSetup();
+        }
+
         return $this->request_handler->handleRequest();
+    }
+
+    /**
+     * sets up app setup, for handling config writing
+     * and database setup
+     *
+     * @access public
+     * @return void
+     */
+    public function doAppSetup()
+    {
+        die('do app install');
     }
 
     /**
