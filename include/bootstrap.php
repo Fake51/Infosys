@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
  *
- * PHP version 5
+ * PHP version 5.3+
  *
  * this file inits the framework. It needs a couple of set definitions (both paths should end with '/':
  * - INCLUDE_PATH: the full path to the include folder
@@ -40,6 +40,9 @@ require FRAMEWORK_FOLDER . 'functions.php';
 
 $infosys = new Infosys(INCLUDE_PATH . "config.ini", FRAMEWORK_FOLDER . 'exception.php', FRAMEWORK_FOLDER . 'autoload.php');
 
+$infosys->setup()
+    ->handleRequest();
+
 /**
  * sets session and encoding settings
  *
@@ -51,6 +54,12 @@ function bootstrap_settings() {
     mb_internal_encoding("UTF-8");
 }
 
+/**
+ * hack to disable damage done by
+ * magic quotes if they're enabled
+ *
+ * @return void
+ */
 function bootstrap_fix_magic_quotes()
 {
     // hack: remove damage done by magic quotes
@@ -61,18 +70,29 @@ function bootstrap_fix_magic_quotes()
         while (list($key, $val) = each($process)) {
             foreach ($val as $k => $v) {
                 unset($process[$key][$k]);
+
                 if (is_array($v)) {
                     $process[$key][stripslashes($k)] = $v;
                     $process[]                       = &$process[$key][stripslashes($k)];
+
                 } else {
                     $process[$key][stripslashes($k)] = stripslashes($v);
                 }
+
             }
+
         }
+
         unset($process);
+
     }
 }
 
+/**
+ * sets up path definitions
+ *
+ * @return void
+ */
 function bootstrap_setup_path_constants() {
     define('PUBLIC_PATH', realpath(dirname(__FILE__) . '/../public/') . '/'); 
     define('INCLUDE_PATH', realpath(dirname(__FILE__)) . '/'); 
