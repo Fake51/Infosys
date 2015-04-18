@@ -1,9 +1,11 @@
 [live]
 db.host            =
+db.port            =
 db.user            =
 db.password        =
 db.database        =
 db.type            =
+db.prefix          =
 app.public_uri     =
 app.sitename       =
 app.log_file       =
@@ -14,12 +16,14 @@ con.signupend      =
 sms.user           =
 sms.pass           =
 sms.baseurl        =
+sms.service        =
 payment.freehash   =
 payment.sic        =
 payment.event_id   =
 payment.ticket_url =
 payment.pay_url    =
 payment.testing    =
+payment.service    =
 gcm.server_api_key =
 
 [test]

@@ -223,7 +223,13 @@ class Infosys
      */
     public function doAppSetup()
     {
-        die('do app install');
+        if (isset($_GET['ajax'])) {
+
+        }
+
+        include __DIR__ . '/../templates/setup/form.phtml';
+
+        exit;
     }
 
     /**
