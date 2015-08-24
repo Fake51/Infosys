@@ -25,6 +25,9 @@
  * @link      http://www.github.com/Fake51/Infosys
  */
 
+require FRAMEWORK_FOLDER . 'exception.php';
+require FRAMEWORK_FOLDER . 'autoload.php';
+
 /**
  * app class - setups up everything and sandboxes it
  *
@@ -116,20 +119,8 @@ class Infosys
      * @access public
      * @return void
      */
-    public function __construct($config_path, $exception_path, $autoload_path)
+    public function __construct($config_path)
     {
-        if (!is_file($exception_path)) {
-            throw new Exception('Exception class path is not valid');
-        }
-
-        include $exception_path;
-
-        if (!is_file($autoload_path)) {
-            throw new Exception('Autoload class path is not valid');
-        }
-
-        include $autoload_path;
-
         set_exception_handler(array($this, 'exceptionHandler'));
 
         $this->autoload = new Autoload(
@@ -141,6 +132,7 @@ class Infosys
                 LIB_FOLDER,
             )
         );
+
         spl_autoload_register(array($this->autoload, 'autoloader'));
 
         if (!($environment = getenv('ENVIRONMENT'))) {
@@ -223,13 +215,59 @@ class Infosys
      */
     public function doAppSetup()
     {
-        if (isset($_GET['ajax'])) {
+        if (isset($_GET['ajax']) && !empty($_POST)) {
+            $config_maker = new ConfigMaker($this);
+
+            $config_maker->loadFromSession();
+
+            $errors = $config_maker->handlePost();
+
+            $config_maker->writeToSession();
+
+            if ($errors) {
+                header('HTTP/1.1 400 Input fail');
+                header('Content-Type: application/json; charset=UTF-8');
+
+                echo json_encode($errors);
+
+            } else {
+                header('HTTP/1.1 200 Done');
+            }
+
+            exit;
 
         }
 
         include __DIR__ . '/../templates/setup/form.phtml';
 
         exit;
+    }
+
+    /**
+     * attempts to ping itself
+     *
+     * @param string $url Url to ping
+     *
+     * @access public
+     * @return bool
+     */
+    public function pingInfosys($url)
+    {
+        if (strpos($url, '?') !== false) {
+            return false;
+        }
+
+        $base = preg_replace('#(https?://)?([^/]+).*#', '$2', $url);
+
+        if (gethostbyname($base) === $base) {
+            return false;
+        }
+
+        $request_uri = $url . '?ping';
+
+        $response = file_get_contents($request_uri);
+
+        return $response === 'pong';
     }
 
     /**

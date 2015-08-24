@@ -38,7 +38,7 @@ bootstrap_setup_path_constants();
 require FRAMEWORK_FOLDER . 'infosys.php';
 require FRAMEWORK_FOLDER . 'functions.php';
 
-$infosys = new Infosys(INCLUDE_PATH . "config.ini", FRAMEWORK_FOLDER . 'exception.php', FRAMEWORK_FOLDER . 'autoload.php');
+$infosys = new Infosys(INCLUDE_PATH . "config.ini");
 
 $infosys->setup()
     ->handleRequest();
@@ -89,7 +89,7 @@ function bootstrap_fix_magic_quotes()
 }
 
 /**
- * sets up path definitions
+ * sets up path defines
  *
  * @return void
  */
@@ -102,6 +102,7 @@ function bootstrap_setup_path_constants() {
      * Define various folder
      */
     define('FRAMEWORK_FOLDER', INCLUDE_PATH . 'framework/');
+    define('LOGS_FOLDER', INCLUDE_PATH . 'logs/');
     define('CONTROLLER_FOLDER', INCLUDE_PATH . 'controllers/');
     define('MODEL_FOLDER', INCLUDE_PATH . 'models/');
     define('TEMPLATE_FOLDER', INCLUDE_PATH . 'templates/');
