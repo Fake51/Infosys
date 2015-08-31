@@ -25,19 +25,15 @@
             <legend>2. Database properties</legend>
             <dl>
                 <dt>Database type</dt>
-                <dd><select name="db.type" id="db.type"><option value="mysql">Mysql</option><option value="sqlite">Sqlite</option><option value="postgresql">PostgreSql</option></select></dd>
-                <dt>Host/file</dt>
-                <dd><input name="db.host" id="db.host" required/></dd>
-                <dt>Port</dt>
-                <dd><input name="db.port" id="db.port" required/></dd>
-                <dt>Username</dt>
-                <dd><input name="db.user" id="db.user" required/></dd>
-                <dt>Password</dt>
-                <dd><input name="db.password" id="db.password" required/></dd>
-                <dt>Database</dt>
-                <dd><input name="db.database" id="db.database" required/></dd>
-                <dt>Table prefix</dt>
-                <dd><input name="db.prefix" id="db.prefix"/></dd>
+                <dd><select name="db.type" id="db-type">
+                <?php foreach ($tester->getDbTypes() as $value => $type) : ?>
+                <option value="<?= $value;?>"><?= $type;?></option>
+                <?php endforeach;?>
+                </select></dd>
+                <?php foreach ($tester->getSetupData() as $data) : ?>
+                <dt class="db-property <?= $data['class'];?>"><?= $data['description'];?></dt>
+                <dd class="db-property <?= $data['class'];?>"><input name="<?= $data['config-name'];?>" id="<?= $data['class'];?>-<?= str_replace('.', '-', $data['config-name']);?>" <?= $data['required'] ? 'required' : '';?> value="<?= $data['default'];?>"/></dd>
+                <?php endforeach;?>
             </dl>
             <button class="previous">Previous</button>
             <button class="next">Next</button>

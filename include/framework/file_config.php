@@ -35,53 +35,66 @@
  * @license   http://www.gnu.org/licenses/gpl.html GPL 3
  * @link      http://www.github.com/Fake51/Infosys
  */
-abstract class Config
+class FileConfig extends Config
 {
     /**
-     * holds parsed config data
+     * data read in from config ini file
      *
      * @var array
      */
-    protected $parsed_data = array();
+    protected $data;
 
     /**
-     * flag indicating that config file needs setup
+     * string describing environment
      *
-     * @var boolean
+     * @var string
      */
-    protected $setup_required = false;
+    protected $environment;
 
     /**
-     * returns a value if it's available
+     * public constructor
      *
-     * @param string $key Name of value to retrieve
+     * @param string $config_path Path to config .ini file
+     * @param string $environment Which environment we're running in
      *
-     * @throws FrameworkException
      * @access public
-     * @return mixed
      */
-    public function get($key)
+    public function __construct($config_path, $environment = 'test')
     {
-        if ($this->setup_required) {
-            throw new FrameworkException('Config file not available, cannot supply config data');
+        if (!is_string($config_path) || substr($config_path, -4) !== '.ini' || !is_file($config_path)) {
+            $this->setup_required = true;
+            return;
+
         }
 
-        if (isset($this->parsed_data[$key])) {
-            return $this->parsed_data[$key];
+        if (!is_array($this->data = parse_ini_file($config_path, true))) {
+            $this->setup_required = true;
+            return;
+
         }
 
-        return null;
+        $this->environment = $environment;
+
+        $this->parseData();
     }
 
     /**
-     * returns true if the config file is missing or invalid
-     * and so needs to be set up
+     * parses config data according to environment
      *
-     * @access public
-     * @return bool
+     * @access protected
+     * @return void
      */
-    public function isSetupRequired()
+    protected function parseData()
     {
-        return $this->setup_required;
+        foreach ($this->data as $environment => $data) {
+
+            foreach ($data as $key => $value) {
+                $this->parsed_data[$key] = $value;
+            }
+
+            if ($environment == $this->environment) {
+                break;
+            }
+        }
     }
 }

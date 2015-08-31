@@ -6,6 +6,8 @@
     var $fieldsets,
         $activeFieldset,
         $form,
+        $dbType,
+        $dbProperties,
         stop = function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -63,15 +65,24 @@
                 document.location.reload();
             });
         },
+        updateDbPropertyVisibility = function () {
+            $dbProperties.hide();
+            $form.find('.db-property.' + $dbType.val()).show();
+        },
         initialize = function () {
-            $fieldsets = $('fieldset');
-            $form      = $('form');
+            $fieldsets    = $('fieldset');
+            $form         = $('form');
+            $dbType       = $('#db-type');
+            $dbProperties = $('.db-property');
 
             $activeFieldset = $fieldsets.first().addClass('active');
 
             $form.on('click.next', 'button.next', nextPartHandler);
             $form.on('click.previous', 'button.previous', previousPartHandler);
             $form.on('click.finish', 'button.finish', finishHandler);
+            $dbType.change(updateDbPropertyVisibility);
+
+            updateDbPropertyVisibility();
         };
 
     $(initialize);

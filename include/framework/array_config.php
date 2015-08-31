@@ -35,53 +35,17 @@
  * @license   http://www.gnu.org/licenses/gpl.html GPL 3
  * @link      http://www.github.com/Fake51/Infosys
  */
-abstract class Config
+class ArrayConfig extends Config
 {
     /**
-     * holds parsed config data
+     * public constructor
      *
-     * @var array
-     */
-    protected $parsed_data = array();
-
-    /**
-     * flag indicating that config file needs setup
-     *
-     * @var boolean
-     */
-    protected $setup_required = false;
-
-    /**
-     * returns a value if it's available
-     *
-     * @param string $key Name of value to retrieve
-     *
-     * @throws FrameworkException
-     * @access public
-     * @return mixed
-     */
-    public function get($key)
-    {
-        if ($this->setup_required) {
-            throw new FrameworkException('Config file not available, cannot supply config data');
-        }
-
-        if (isset($this->parsed_data[$key])) {
-            return $this->parsed_data[$key];
-        }
-
-        return null;
-    }
-
-    /**
-     * returns true if the config file is missing or invalid
-     * and so needs to be set up
+     * @param array $data Config data
      *
      * @access public
-     * @return bool
      */
-    public function isSetupRequired()
+    public function __construct(array $data)
     {
-        return $this->setup_required;
+        $this->parsed_data = $data;
     }
 }

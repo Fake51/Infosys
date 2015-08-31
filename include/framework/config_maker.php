@@ -52,15 +52,23 @@ class ConfigMaker
     private $infosys;
 
     /**
+     * Db property tester
+     *
+     * @var DbSetupTester
+     */
+    private $db_tester;
+
+    /**
      * public constructor
      *
      * @param Infosys $infosys Infosys app instance
      *
      * @access public
      */
-    public function __construct(Infosys $infosys)
+    public function __construct(Infosys $infosys, DbSetupTester $tester)
     {
-        $this->infosys = $infosys;
+        $this->infosys   = $infosys;
+        $this->db_tester = $tester;
     }
 
     /**
@@ -159,23 +167,39 @@ class ConfigMaker
     }
 
     /**
+     * handles mysql settings
+     *
+     * @param array $post Post vars
+     *
+     * @access protected
+     * @return string
+     */
+    protected function handleMysqlProperties(array $post)
+    {
+        $config = new ArrayConfig($post);
+    }
+
+    /**
      * handles db settings
      *
-     * @param array $post Description
+     * @param array $post Post vars
      *
      * @access protected
      * @return string
      */
     protected function handleDbProperties($post)
     {
-        switch ($post['db.type']) {
-        case 'mysql':
-        case 'postgresql':
-        case 'sqlite':
+        $db_properties = [];
 
-        default:
-            return 'Unrecognized DB type';
+        foreach ($post as $key => $value) {
+            if (substr($key, 0, 3) === 'db_') {
+                $db_properties['db.' . substr($key, 3)] = $value;
+            }
         }
+
+        $config = new ArrayConfig($db_properties);
+
+        return $this->db_tester->testConfig($config);
     }
 
     /**
@@ -201,7 +225,7 @@ class ConfigMaker
         }
 
         if (isset($_POST['db_type'])) {
-            $errors['db_type'] = $this->handleDbProperties($_POST);
+            $errors['db'] = $this->handleDbProperties($_POST);
         }
 
         return array_filter($errors);

@@ -37,7 +37,7 @@
  * @license  http://www.gnu.org/licenses/gpl.html GPL 3
  * @link     http://www.github.com/Fake51/Infosys
  */
-class Autoload
+class Autoloader
 {
     /**
      * locations to check for class files

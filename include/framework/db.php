@@ -56,10 +56,10 @@ class DB
      */
     protected $connection;
 
-    protected $LastError;
-    protected $QueryResult;
-    protected $LastQuery;
-    protected $LastId;
+    protected $last_error;
+    protected $query_result;
+    protected $last_query;
+    protected $last_id;
 
     /**
      * number of rows changed by query
@@ -99,12 +99,14 @@ class DB
         try {
             $this->connection = new PDO($config->get('db.type') . ':host=' . $config->get('db.host') . ';dbname=' . $config->get('db.database'), $config->get('db.user'), $config->get('db.password'));
             if (false === $this->connection->exec("SET NAMES 'utf8';") || false === $this->connection->exec("SET CHARACTER SET 'utf8';") || false ===  $this->connection->exec("SET SESSION sql_mode='STRICT_ALL_TABLES';")) {
-                $this->LastError = "Could not init database connection with proper settings.";
-                throw new DBException($this->LastError);
+                $this->last_error = "Could not init database connection with proper settings.";
+                throw new DBException($this->last_error);
+
             }
+
         } catch (Exception $e) {
-            $this->LastError = "Connection to DataBase failed. Errormessage: {$e->getMessage()}";
-            throw new DBException($this->LastError);
+            $this->last_error = "Connection to DataBase failed. Errormessage: {$e->getMessage()}";
+            throw new DBException($this->last_error);
         }
 
     }
@@ -163,8 +165,8 @@ class DB
     {
         // Check if there's a connection to use
         if (!$this->getState()) {
-            $this->LastError = "No connection has been established. Can't sanitize input.";
-            throw new DBException($this->LastError);
+            $this->last_error = "No connection has been established. Can't sanitize input.";
+            throw new DBException($this->last_error);
         }
 
         if (!is_scalar($input)) {
@@ -181,7 +183,7 @@ class DB
 
     /**
      * executes a supplied SQL command, and records the result (if any)
-     * in the public QueryResult variable.
+     * in the public query_result variable.
      *
      * @throws DBException
      * @return bool
@@ -217,19 +219,19 @@ class DB
             }
         }
 
-        $this->LastQuery = $query;
+        $this->last_query = $query;
         // Check if there's a connection to use
         if (!$this->getState()) {
-            $this->LastError = "No connection to database has been established.";
-            error_log($this->LastError);
-            throw new DBException($this->LastError);
+            $this->last_error = "No connection to database has been established.";
+            error_log($this->last_error);
+            throw new DBException($this->last_error);
         } elseif (!preg_match('/^\s*(describe|select)\s+/i', $query)) {
-            $this->LastError = "Query is not a SELECT, exec() should have been used. Query: {$query}";
-            error_log($this->LastError);
-            throw new DBException($this->LastError);
+            $this->last_error = "Query is not a SELECT, exec() should have been used. Query: {$query}";
+            error_log($this->last_error);
+            throw new DBException($this->last_error);
         }
 
-        $this->QueryResult = array();
+        $this->query_result = array();
 
         try {
             if (false === ($statement = $this->connection->prepare($query))) {
@@ -239,20 +241,20 @@ class DB
 
             if (false !== $statement->execute($args)) {
                 while (false !== ($row = $statement->fetch())) {
-                    $this->QueryResult[] = $row;
+                    $this->query_result[] = $row;
                 }
             } else {
                 $error           = $statement->errorInfo();
-                $this->LastError = "Query failed. Error: ". $error[2] . '. Query: ' . $statement->queryString;
-                error_log($this->LastError);
-                throw new DBException($this->LastError);
+                $this->last_error = "Query failed. Error: ". $error[2] . '. Query: ' . $statement->queryString;
+                error_log($this->last_error);
+                throw new DBException($this->last_error);
             }
         } catch (PDOException $e) {
             error_log("Issuing prepared statement failed - {$query}");
             throw new DBException("Issuing prepared statement failed - {$query}");
         }
 
-        return $this->QueryResult;
+        return $this->query_result;
     }
 
     /**
@@ -266,7 +268,7 @@ class DB
     {
         $args = func_get_args();
         if (empty($args)) {
-            error_log($this->LastError);
+            error_log($this->last_error);
             throw new DBException("DB exec method called with no arguments");
         }
 
@@ -281,15 +283,15 @@ class DB
             }
         }
 
-        $this->LastQuery = $query;
+        $this->last_query = $query;
         // Check if there's a connection to use
         if (!$this->getState()) {
-            $this->LastError = "No connection to database has been established.";
-            error_log($this->LastError);
+            $this->last_error = "No connection to database has been established.";
+            error_log($this->last_error);
             throw new DBException("No connection to database has been established.");
         } elseif (!preg_match('/^\s*(delete|insert|update|drop|alter|create|set)\s+/is', $query)) {
-            $this->LastError = "Query is not one of INSERT, UPDATE or DELETE, query() should have been used. Query: {$query}";
-            error_log($this->LastError);
+            $this->last_error = "Query is not one of INSERT, UPDATE or DELETE, query() should have been used. Query: {$query}";
+            error_log($this->last_error);
             throw new DBException("Query is not one of INSERT, UPDATE or DELETE, query() should have been used. Query: {$query}");
         }
 
@@ -300,18 +302,18 @@ class DB
             }
 
             if (false !== $statement->execute($args)) {
-                $this->LastId = false;
+                $this->last_id = false;
                 if (preg_match('/^s*insert\s+/i', $query)) {
-                    $this->LastId = $this->connection->lastInsertId();
+                    $this->last_id = $this->connection->lastInsertId();
                 }
 
                 $this->affected_rows = $statement->rowCount();
-                return $this->LastId ? $this->LastId : true;
+                return $this->last_id ? $this->last_id : true;
             } else {
                 $error           = $statement->errorInfo();
-                $this->LastError = "Query failed. Error: ". $error[2] . '. Query: ' . $statement->queryString;
-                error_log($this->LastError);
-                throw new DBException($this->LastError);
+                $this->last_error = "Query failed. Error: ". $error[2] . '. Query: ' . $statement->queryString;
+                error_log($this->last_error);
+                throw new DBException($this->last_error);
             }
         } catch (PDOException $e) {
             error_log("Issuing prepared statement failed - {$query}");

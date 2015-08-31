@@ -26,7 +26,7 @@
  */
 
 require FRAMEWORK_FOLDER . 'exception.php';
-require FRAMEWORK_FOLDER . 'autoload.php';
+require FRAMEWORK_FOLDER . 'autoloader.php';
 
 /**
  * app class - setups up everything and sandboxes it
@@ -119,30 +119,14 @@ class Infosys
      * @access public
      * @return void
      */
-    public function __construct($config_path)
+    public function __construct(AutoLoader $autoload, Config $config, DIC $dic, $environment)
     {
         set_exception_handler(array($this, 'exceptionHandler'));
 
-        $this->autoload = new Autoload(
-            array(
-                FRAMEWORK_FOLDER,
-                CONTROLLER_FOLDER,
-                MODEL_FOLDER,
-                HELPER_FOLDER,
-                LIB_FOLDER,
-            )
-        );
+        spl_autoload_register(array($autoload, 'autoloader'));
 
-        spl_autoload_register(array($this->autoload, 'autoloader'));
-
-        if (!($environment = getenv('ENVIRONMENT'))) {
-            $environment = 'test';
-        }
-
-        $this->config = new Config($config_path, $environment);
-        $this->dic    = new DIC();
-
-        $this->dic->addReusableObject($this->autoload);
+        $this->config = $config;
+        $this->dic    = $dic;
     }
 
     /**
@@ -156,6 +140,8 @@ class Infosys
         if ($this->config->isSetupRequired()) {
             return $this;
         }
+
+        // move DIC setup out of Infosys, into bootstrap
 
         $this->dic->addReusableObject(new DB($this->config))
             ->addReusableObject(new Log($this->dic->get('DB'), $this->config))
@@ -213,10 +199,10 @@ class Infosys
      * @access public
      * @return void
      */
-    public function doAppSetup()
+    public function doAppSetup(DbSetupTester $tester)
     {
         if (isset($_GET['ajax']) && !empty($_POST)) {
-            $config_maker = new ConfigMaker($this);
+            $config_maker = new ConfigMaker($this, $tester);
 
             $config_maker->loadFromSession();
 
@@ -268,6 +254,17 @@ class Infosys
         $response = file_get_contents($request_uri);
 
         return $response === 'pong';
+    }
+
+    /**
+     * returns the config
+     *
+     * @access public
+     * @return Config
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**

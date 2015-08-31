@@ -37,11 +37,56 @@ bootstrap_setup_path_constants();
 
 require FRAMEWORK_FOLDER . 'infosys.php';
 require FRAMEWORK_FOLDER . 'functions.php';
+require FRAMEWORK_FOLDER . 'config.php';
+require FRAMEWORK_FOLDER . 'file_config.php';
+require FRAMEWORK_FOLDER . 'dic.php';
 
-$infosys = new Infosys(INCLUDE_PATH . "config.ini");
+$infosys = createInfosys()
+    ->setup();
 
-$infosys->setup()
-    ->handleRequest();
+if ($infosys->getConfig()->isSetupRequired()) {
+    $infosys->doAppSetup(getDbTester());
+
+} else {
+    $infosys->handleRequest();
+}
+
+/**
+ * creates a DbSetupTester with required objects
+ *
+ * @return DbSetupTester
+ */
+function getDbTester()
+{
+    return new DbSetupTester([new MySqlTester(), new PgSqlTester(), new SqliteTester()]);
+}
+
+/**
+ * creates the Infosys object and required dependencies
+ *
+ * @return Infosys
+ */
+function createInfosys()
+{
+    $autoload = new Autoloader(
+        array(
+            FRAMEWORK_FOLDER,
+            CONTROLLER_FOLDER,
+            MODEL_FOLDER,
+            HELPER_FOLDER,
+            LIB_FOLDER,
+        )
+    );
+
+    if (!($environment = getenv('ENVIRONMENT'))) {
+        $environment = 'test';
+    }
+
+    $config = new FileConfig(INCLUDE_PATH . "config.ini", $environment);
+    $dic    = new DIC();
+
+    return new Infosys($autoload, $config, $dic, $environment);
+}
 
 /**
  * sets session and encoding settings
