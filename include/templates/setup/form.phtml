@@ -13,11 +13,11 @@
             <legend>1. Basic properties</legend>
             <dl>
                 <dt>Url of install</dt>
-                <dd><input name="app.public_uri" id="app.public_uri" value="<?= $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];?>" required/></dd>
+                <dd><input name="app.public_uri" id="app_public_uri" value="<?= $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];?>" required/></dd>
                 <dt>Name of site</dt>
-                <dd><input name="app.sitename" id="app.sitename" value="Infosys" required/></dd>
+                <dd><input name="app.sitename" id="app_sitename" value="Infosys" required/></dd>
                 <dt>Name of log file</dt>
-                <dd><input name="app.log_file" id="app.log_file" value="error.log" required/></dd>
+                <dd><input name="app.log_file" id="app_log_file" value="error.log" required/></dd>
             </dl>
             <button class="next">Next</button>
         </fieldset>
@@ -42,13 +42,13 @@
             <legend>3. Convention properties</legend>
             <dl>
                 <dt>Convention start</dt>
-                <dd><input type="datetime" name="con.start" id="con.start"/>
+                <dd><input type="date" name="con.start" id="con_start"/>
                 <dt>Convention end</dt>
-                <dd><input type="datetime" name="con.end" id="con.end"/>
+                <dd><input type="date" name="con.end" id="con_end"/>
                 <dt>Signup start</dt>
-                <dd><input type="datetime" name="con.start" id="con.start"/>
+                <dd><input type="date" name="con.signupstart" id="con_signupstart"/>
                 <dt>Signup end</dt>
-                <dd><input type="datetime" name="con.end" id="con.end"/>
+                <dd><input type="date" name="con.signupend" id="con_signupend"/>
             </dl>
             <button class="previous">Previous</button>
             <button class="next">Next</button>

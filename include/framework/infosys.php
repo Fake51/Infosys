@@ -25,9 +25,6 @@
  * @link      http://www.github.com/Fake51/Infosys
  */
 
-require FRAMEWORK_FOLDER . 'exception.php';
-require FRAMEWORK_FOLDER . 'autoloader.php';
-
 /**
  * app class - setups up everything and sandboxes it
  *
@@ -40,11 +37,11 @@ require FRAMEWORK_FOLDER . 'autoloader.php';
 class Infosys
 {
     /**
-     * instannce of the autoload class
+     * instannce of the Autoloader class
      *
-     * @var Autoload
+     * @var Autoloader
      */
-    protected $autoload;
+    protected $autoloader;
 
     /**
      * instannce of the config class
@@ -112,21 +109,23 @@ class Infosys
     /**
      * public constructor
      *
-     * @param string $config_path    Path to config file
-     * @param string $exception_path Path to framework exception class
-     * @param string $autoload_path  Path to autoload class
+     * @param Autoloader $autoloader  Autoloader instance
+     * @param Config     $config      Config instance
+     * @param DIC        $dic         DI container
+     * @param string     $environment Environment indicator
      *
      * @access public
      * @return void
      */
-    public function __construct(AutoLoader $autoload, Config $config, DIC $dic, $environment)
+    public function __construct(AutoLoader $autoloader, Config $config, DIC $dic, $environment)
     {
         set_exception_handler(array($this, 'exceptionHandler'));
 
-        spl_autoload_register(array($autoload, 'autoloader'));
+        spl_autoload_register(array($autoloader, 'autoloader'));
 
-        $this->config = $config;
-        $this->dic    = $dic;
+        $this->config     = $config;
+        $this->dic        = $dic;
+        $this->autoloader = $autoloader;
     }
 
     /**
@@ -144,11 +143,12 @@ class Infosys
         // move DIC setup out of Infosys, into bootstrap
 
         $this->dic->addReusableObject(new DB($this->config))
+            ->addReusableObject($this->autoloader)
             ->addReusableObject(new Log($this->dic->get('DB'), $this->config))
             ->addReusableObject(new Session($this->config->get('app.public_uri')))
             ->addReusableObject(new Messages($this->dic->get('Session')))
             ->addReusableObject(new Routes($this->config))
-            ->addReusableObject(new EntityFactory($this->dic->get('DB'), $this->autoload))
+            ->addReusableObject(new EntityFactory($this->dic->get('DB'), $this->autoloader))
             ->addReusableObject(new Layout($this->config, $this->dic->get('Routes')))
             ->addReusableObject(new Request($this->dic->get('Routes'), $this->config))
             ->addReusableObject(new Page($this->dic->get('Request'), $this->dic->get('Layout'), $this->dic->get('Messages'), $this->config->get('app.public_uri'), $this->config))

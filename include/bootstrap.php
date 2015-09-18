@@ -40,6 +40,8 @@ require FRAMEWORK_FOLDER . 'functions.php';
 require FRAMEWORK_FOLDER . 'config.php';
 require FRAMEWORK_FOLDER . 'file_config.php';
 require FRAMEWORK_FOLDER . 'dic.php';
+require FRAMEWORK_FOLDER . 'exception.php';
+require FRAMEWORK_FOLDER . 'autoloader.php';
 
 $infosys = createInfosys()
     ->setup();
@@ -58,7 +60,9 @@ if ($infosys->getConfig()->isSetupRequired()) {
  */
 function getDbTester()
 {
-    return new DbSetupTester([new MySqlTester(), new PgSqlTester(), new SqliteTester()]);
+    return new DbSetupTester([new MySqlTester()]);
+    // get other db types working
+    //return new DbSetupTester([new MySqlTester(), new PgSqlTester(), new SqliteTester()]);
 }
 
 /**

@@ -88,7 +88,7 @@ class RequestHandler
         }
 
         // try to see if the file of the requested controller exists
-        if (!$this->dic->get('Autoload')->checkClassFile($match['controller'] . "Controller", CONTROLLER_FOLDER)) {
+        if (!$this->dic->get('Autoloader')->checkClassFile($match['controller'] . "Controller", CONTROLLER_FOLDER)) {
             throw new FrameworkException("{$match['controller']} could not be found. Route from {$request->getPath()}.");
         }
 

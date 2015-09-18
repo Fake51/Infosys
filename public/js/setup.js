@@ -36,6 +36,27 @@
             return data;
         },
         explainErrors = function (jqXHR) {
+            var errors = JSON.parse(jqXHR.responseText),
+                key,
+                error,
+                $temp;
+
+            if (errors instanceof Object) {
+                for (key in errors) {
+                    if (errors.hasOwnProperty(key)) {
+                        $temp = $('#' + key);
+                        error = '<p class="error">' + errors[key] + '</p>';
+
+                        if ($temp.length) {
+                            $temp.before(error);
+
+                        } else {
+                            $('fieldset.active dl').before(error);
+                        }
+
+                    }
+                }
+            }
         },
         updateConfigPart = function (callback) {
             $.ajax({
@@ -48,6 +69,8 @@
         },
         nextPartHandler = function (e) {
             stop(e);
+
+            $('p.error').remove();
 
             updateConfigPart(function () {
                 navigate('next');

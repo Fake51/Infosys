@@ -121,11 +121,11 @@ class EntityFactory
     /**
      * Autoloader object
      *
-     * @var Autoload
+     * @var Autoloader
      */
     protected $autoload;
 
-    public function __construct(DB $db, Autoload $autoload)
+    public function __construct(DB $db, Autoloader $autoload)
     {
         $this->db       = $db;
         $this->autoload = $autoload;

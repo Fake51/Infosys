@@ -167,19 +167,6 @@ class ConfigMaker
     }
 
     /**
-     * handles mysql settings
-     *
-     * @param array $post Post vars
-     *
-     * @access protected
-     * @return string
-     */
-    protected function handleMysqlProperties(array $post)
-    {
-        $config = new ArrayConfig($post);
-    }
-
-    /**
      * handles db settings
      *
      * @param array $post Post vars
@@ -200,6 +187,44 @@ class ConfigMaker
         $config = new ArrayConfig($db_properties);
 
         return $this->db_tester->testConfig($config);
+    }
+
+    /**
+     * checks date properties like con start and end
+     *
+     * @param array $post, array $errors   Post vars
+     * @param array $errors Errors array
+     *
+     * @access protected
+     * @return array
+     */
+    protected function handleDateProperties(array $post, array $errors)
+    {
+        if (empty($post['con_start'])) {
+            $errors['con_start'] = 'Missing convention start date';
+        }
+
+        if (empty($post['con_end'])) {
+            $errors['con_end'] = 'Missing convention end date';
+        }
+
+        if (!empty($post['con_start']) && !empty($post['con_end'])) {
+            if (!strtotime($post['con_start'])) {
+                $errors['con_start'] = 'Cannot make sense of convention start date';
+            }
+
+            if (!strtotime($post['con_end'])) {
+                $errors['con_end'] = 'Cannot make sense of convention end date';
+            }
+
+            if (strtotime($post['con_start']) && strtotime($post['con_end'])) {
+                if (strtotime($post['con_start']) > strtotime($post['con_end'])) {
+                    $errors['con_start'] = 'Convention start date is after end date';
+                }
+            }
+        }
+
+        return $errors;
     }
 
     /**
@@ -226,6 +251,10 @@ class ConfigMaker
 
         if (isset($_POST['db_type'])) {
             $errors['db'] = $this->handleDbProperties($_POST);
+        }
+
+        if (isset($_POST['con_start'])) {
+            $errors = $this->handleDateProperties($_POST, $errors);
         }
 
         return array_filter($errors);

@@ -50,6 +50,10 @@ class MySqlTester implements DbTester
         try {
             $db = new Db($config);
 
+            if (!$config->get('db.database')) {
+                throw new Exception('No database name');
+            }
+
             return '';
 
         } catch (Exception $e) {
@@ -128,12 +132,14 @@ class MySqlTester implements DbTester
                  'required'    => true,
                  'default'     => '',
                 ],
+                /*
                 [
                  'description' => 'Table prefix',
                  'config-name' => 'db.prefix',
                  'required'    => false,
                  'default'     => '',
                 ],
+                */
                ];
     }
 }
