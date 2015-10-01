@@ -188,11 +188,13 @@ class Model extends Common
         if (!$user->findBySelect($select) || !$user->confirmPass($pass)) {
             $this->log("User failed login. Username: {$username}, IP: {$_SERVER['REMOTE_ADDR']}", 'Login', $user);
             return false;
+
         }
 
         if ($user->disabled == 'ja') {
             $this->log("User has been disabled. Username: {$username}, IP: {$_SERVER['REMOTE_ADDR']}", 'Login', $user);
             return false;
+
         }
 
         $this->log("User logged in: {$user->user}", 'Login', $user);

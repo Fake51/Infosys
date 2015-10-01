@@ -50,11 +50,18 @@ class User extends DBObject
      */
     public function confirmPass($pass)
     {
-        if (!$this->isLoaded() || md5($pass) != $this->pass)
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        return true;
+
+        if (md5($pass) === $this->pass) {
+            $this->pass = password_hash($pass, PASSWORD_DEFAULT);
+
+            $this->update();
+            return true;
+        }
+
+        return password_verify($pass, $this->pass);
     }
 
     /**

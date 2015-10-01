@@ -50,7 +50,14 @@ if ($infosys->getConfig()->isSetupRequired()) {
     $infosys->doAppSetup(getDbTester());
 
 } else {
-    $infosys->handleRequest();
+    if ($infosys->isMigrationNeeded()) {
+        $infosys->runMigrations();
+
+    }
+
+    $infosys->ensureDatabaseVersion()
+        ->handleRequest();
+
 }
 
 /**
@@ -159,4 +166,5 @@ function bootstrap_setup_path_constants() {
     define('LAYOUT_FOLDER', INCLUDE_PATH . 'layouts/');
     define('ENTITY_FOLDER', INCLUDE_PATH . 'entities/');
     define('LIB_FOLDER', INCLUDE_PATH . 'lib/');
+    define('MIGRATION_FOLDER', INCLUDE_PATH . 'migrations/');
 }

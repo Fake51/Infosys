@@ -36,6 +36,8 @@
  */
 class Infosys
 {
+    const REQUIRED_DB_VERSION = 1003;
+
     /**
      * instannce of the Autoloader class
      *
@@ -145,6 +147,7 @@ class Infosys
         $this->dic->addReusableObject(new DB($this->config))
             ->addReusableObject($this->autoloader)
             ->addReusableObject(new Log($this->dic->get('DB'), $this->config))
+            ->addReusableObject(new Migration($this->dic->get('DB'), $this->dic->get('Log')))
             ->addReusableObject(new Session($this->config->get('app.public_uri')))
             ->addReusableObject(new Messages($this->dic->get('Session')))
             ->addReusableObject(new Routes($this->config))
@@ -220,13 +223,43 @@ class Infosys
                 header('HTTP/1.1 200 Done');
             }
 
-            exit;
+            return;
 
         }
 
         include __DIR__ . '/../templates/setup/form.phtml';
+    }
 
-        exit;
+    /**
+     * calls migration class to run all available migrations
+     *
+     * @access public
+     * @return $this
+     */
+    public function runMigrations()
+    {
+        $this->dic->get('Migration')
+            ->runAvailableMigrations();
+
+        header('HTTP/1.1 303 Updates run');
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+
+        return $this;
+    }
+
+    /**
+     * uses the migration class to ensure proper
+     * database version
+     *
+     * @access public
+     * @return $this
+     */
+    public function ensureDatabaseVersion()
+    {
+        $this->dic->get('Migration')
+            ->ensureVersion(self::REQUIRED_DB_VERSION);
+
+        return $this;
     }
 
     /**
@@ -254,6 +287,18 @@ class Infosys
         $response = file_get_contents($request_uri);
 
         return $response === 'pong';
+    }
+
+    /**
+     * returns true if migrations should be run
+     *
+     * @throws Exception
+     * @access public
+     * @return bool
+     */
+    public function isMigrationNeeded()
+    {
+        return $this->dic->get('Migration')->checkMigrationRequirement();
     }
 
     /**

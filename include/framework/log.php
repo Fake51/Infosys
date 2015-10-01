@@ -71,12 +71,11 @@ class Log
      */
     public function logToFile($message)
     {
-        if (!($file = fopen($this->config->get('app.log_file'), "a")))
-        {
+        if (!($file = fopen(LOGS_FOLDER . $this->config->get('app.log_file'), "a"))) {
             throw new FrameworkException("Failed to init log");
         }
-        if (empty($message))
-        {
+
+        if (empty($message)) {
             throw new FrameworkException("Message to log is empty");
         }
 
