@@ -77,11 +77,15 @@ class Routes
     {
         $this->config = $config;
 
-        $this->routes['home'] = array('url' => '', 'controller' => 'Index', 'method' => 'main');
-        $this->routes['default'] = array('url' => '*', 'controller' => 'Index', 'method' => 'main');
-        $this->routes['no_access'] = array('url' => 'noaccess', 'controller' => 'Index', 'method' => 'noAccess');
-        $this->routes['login_page'] = array('url' => 'login', 'controller' => 'Index', 'method' => 'login');
-        $this->routes['logout_page'] = array('url' => 'logout', 'controller' => 'Index', 'method' => 'logout');
+        $this->routes['home']                  = array('url' => '', 'controller' => 'Index', 'method' => 'main');
+        $this->routes['default']               = array('url' => '*', 'controller' => 'Index', 'method' => 'main');
+        $this->routes['no_access']             = array('url' => 'noaccess', 'controller' => 'Index', 'method' => 'noAccess');
+        $this->routes['login_page']            = array('url' => 'login', 'controller' => 'Index', 'method' => 'login');
+        $this->routes['logout_page']           = array('url' => 'logout', 'controller' => 'Index', 'method' => 'logout');
+        $this->routes['forgotten_pass']        = array('url' => 'forgotten-pass', 'controller' => 'Index', 'method' => 'forgottenPassDialog');
+        $this->routes['forgotten_pass_submit'] = array('url' => 'forgotten-pass-submit', 'controller' => 'Index', 'method' => 'forgottenPassAction');
+        $this->routes['reset_pass']            = array('url' => 'reset-pass/:hash:', 'controller' => 'Index', 'method' => 'resetPassDialog');
+        $this->routes['reset_pass_submit']     = array('url' => 'reset-pass-submit/:hash:', 'controller' => 'Index', 'method' => 'resetPassAction');
 
         // SMS stuffs - hackish
         $this->routes['kickoff_sms_script'] = array('url' => 'index/kickoffsmsscript', 'controller' => 'index', 'method' => 'kickOffSMSScript');

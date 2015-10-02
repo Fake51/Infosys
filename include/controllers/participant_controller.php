@@ -1645,11 +1645,13 @@ class ParticipantController extends Controller
             $this->page->setTemplate('participant/sendsignupemailen');
         }
 
-        $html_body = $this->page->render();
-        $txt_body  = strip_tags($html_body);
+        $mail = new Mail();
 
-        $mail = new Mail('info@fastaval.dk', $participant->email, $title, $txt_body);
-        $mail->addHtmlBody($html_body);
+        $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+            ->setRecipient($participant->email)
+            ->setSubject($title)
+            ->setBodyFromPage($this->page);
+
         return $mail->send();
     }
 
@@ -1738,11 +1740,14 @@ class ParticipantController extends Controller
             $this->page->setTemplate('participant/' . $template . '-en');
         }
 
-        $html_body = $this->page->render();
-        $txt_body  = strip_tags($html_body);
 
-        $mail = new Mail('info@fastaval.dk', $participant->email, $title, $txt_body);
-        $mail->addHtmlBody($html_body);
+        $mail = new Mail();
+
+        $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+            ->setRecipient($participant->email)
+            ->setSubject($title)
+            ->setBodyFromPage($this->page);
+
         return $mail->send();
     }
 

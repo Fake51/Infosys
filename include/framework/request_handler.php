@@ -79,6 +79,7 @@ class RequestHandler
     {
         $request = $this->request;
         $match   = $request->getRoute();
+
         if (empty($match)) {
             throw new FrameworkException("No matching route found for {$request->getPath()}.");
         }
@@ -93,7 +94,7 @@ class RequestHandler
         }
 
         // instantiate controller, and see if the requested method exists
-        $controller = $match['controller'] ."Controller";
+        $controller = $match['controller'] . "Controller";
         $method     = $match['method'];
 
         $page = $this->dic->get('Page');
@@ -113,16 +114,13 @@ class RequestHandler
         $session->RequestURI = $request->getPath();
         $session->Route      = $match;
 
-        $this->handleRunHooks($controller, $method,true);
+        $this->handleRunHooks($controller, $method, true);
 
         call_user_func(array($controller, $method));
 
-        $this->handleRunHooks($controller, $method,false);
+        $this->handleRunHooks($controller, $method, false);
 
         $this->dic->get('Layout')->render();
-
-        // controller has handled execution of the mvc, time to quit
-        exit();
     }
     
     /**

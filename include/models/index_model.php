@@ -490,4 +490,65 @@ SQL;
 
         return $this->db->query($query, array($datetime, $datetime));
     }
+
+    /**
+     * attempts to send a password reset email to the provided address
+     *
+     * @param string $email_address Address to send to
+     * @param Page   $page          Page object for rendering email
+     *
+     * @access public
+     * @return bool
+     */
+    public function sendPasswordResetEmail($email_address, Page $page)
+    {
+        if (!filter_var($email_address, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        $user = $this->createEntity('User')->findByEmail($email_address);
+
+        if (!$user || $user->isDisabled()) {
+            return false;
+        }
+
+        $page->setTemplate('index/passwordresetemail');
+
+        $user->password_reset_hash = md5(password_hash($user->pass, PASSWORD_DEFAULT));
+        $user->password_reset_time = date('Y-m-d H:i:s');
+        $user->update();
+
+        $page->link = $this->url('reset_pass', array('hash' => $user->password_reset_hash));
+        $page->site = $this->config->get('app.sitename');
+
+        // send email
+        $mail = new Mail();
+
+        $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+            ->setRecipient($user->user)
+            ->setSubject($this->config->get('app.sitename') . ': Password reset request received')
+            ->setBodyFromPage($page);
+
+        return $mail->send();
+    }
+
+    /**
+     * attempts to locate a user for password reset, using a hash and checking
+     * for proper time
+     *
+     * @param string $hash Hash to locate user by
+     *
+     * @access public
+     * @return User|false
+     */
+    public function getUserForPasswordReset($hash)
+    {
+        $user = $this->createEntity('User');
+        $select = $user->getSelect()
+            ->setWhere('password_reset_hash', '=', $hash)
+            ->setWhere('password_reset_time', '>=', date('Y-m-d H:i:s', time() - 20 * 60));
+
+        return $user->findBySelect($select);
+
+    }
 }

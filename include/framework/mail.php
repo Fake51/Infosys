@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009  Peter Lind
+ * Copyright (C) 2015  Peter Lind
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,36 +19,27 @@
  *
  * @package   Framework
  * @author    Peter Lind <peter.e.lind@gmail.com>
- * @copyright 2009 Peter Lind
+ * @copyright 2015 Peter Lind
  * @license   http://www.gnu.org/licenses/gpl.html GPL 3
  * @link      http://www.github.com/Fake51/Infosys
  */
 
+require_once LIB_FOLDER . 'swift/lib/swift_required.php';
+
 /**
- * Mail exception type
+ * wrapper for SwiftMailer
  *
  * @package   Framework
  * @author    Peter Lind <peter.e.lind@gmail.com>
  */
-class MailException extends FrameworkException
-{
-}
-
-    /**
-     * wrapper for SwiftMailer
-     *
-     * @package   Framework
-     * @author    Peter Lind <peter.e.lind@gmail.com>
-     */
 class Mail
 {
-
     /**
      * stores the message to send
      *
      * @var object
      */
-    protected $message;
+    private $message;
 
     /**
      * cache of attached entities
@@ -72,50 +63,115 @@ class Mail
      * @access public
      * @return void
      */
-    public function __construct($from, $to, $subject, $message, $cc = '', $bcc = '', $attachment = null)
+    public function __construct()
     {
-        require_once LIB_FOLDER . 'swift/lib/swift_required.php';
-        if (is_string($from)) {
-            if (!$this->validateEmail($from)) {
-                throw new MailException("From address is invalid: {$from}");
-            }
-        } elseif (is_array($from)) {
-            reset($from);
-
-            if (!$this->validateEmail(key($from))) {
-                throw new MailException("From address is invalid: " . key($from));
-            }
-
-        } else {
-            throw new MailException("From address is invalid: " . gettype($from));
-        }
-
-        if (!$this->validateEmail($to)) {
-            throw new MailException("To address is invalid: {$to}");
-        }
-
         try {
-            $this->_message = Swift_Message::newInstance()
-                ->setFrom($from)
-                ->setTo($to)
-                ->setSubject($subject)
-                ->setBody($message, 'text/plain');
+            $this->message = Swift_Message::newInstance();
+
         } catch (Exception $e) {
             throw new MailException("Failed to create new message using SwiftMailer. Exception message: {$e->getMessage()}");
         }
     }
 
     /**
-     * adds a html part to the message
+     * sets the sender address
      *
-     * @param string $html
+     * @param string $address From address
+     * @param string $alias   From alias, optional 
+     *
+     * @throws MailException
+     * @access public
+     * @return $this
+     */
+    public function setFrom($address, $alias = '')
+    {
+        if (!is_string($address) || !$this->validateEmail($address)) {
+            throw new MailException("From address is invalid: " . gettype($from));
+        }
+
+        $this->message->setFrom($alias ? [$address => $alias] : $address);
+
+        return $this;
+    }
+
+    /**
+     * sets the recipient address
+     *
+     * @param string $address To address
+     *
+     * @throws MailException
+     * @access public
+     * @return $this
+     */
+    public function setRecipient($address)
+    {
+        if (!is_string($address) || !$this->validateEmail($address)) {
+            throw new MailException("Recipient address is invalid: " . gettype($from));
+        }
+
+        $this->message->setTo($address);
+
+        return $this;
+    }
+
+    /**
+     * sets the subject of the mail
+     *
+     * @param string $subject Subject line of the email
      *
      * @access public
      * @return $this
      */
-    public function addHtmlBody($html) {
-        $this->_message->addPart($html, 'text/html');
+    public function setSubject($subject)
+    {
+        $this->message->setSubject((string) $subject);
+
         return $this;
+    }
+
+    /**
+     * sets a plain text body for the email
+     *
+     * @param string $message Plain text message to set
+     *
+     * @access public
+     * @return $this
+     */
+    public function setPlainTextBody($message)
+    {
+        $this->message->setBody((string) $message, 'text/plain');
+
+        return $this;
+    }
+
+    /**
+     * adds a html part to the message
+     *
+     * @param string $message Html message to set
+     *
+     * @access public
+     * @return $this
+     */
+    public function setHtmlBody($message) {
+        $this->message->addPart((string) $message, 'text/html');
+
+        return $this;
+    }
+
+    /**
+     * uses a Page object to set the body, both plain text and html
+     *
+     * @param Page $page Page object to render
+     *
+     * @access public
+     * @return $this
+     */
+    public function setBodyFromPage(Page $page)
+    {
+        $html = $page->render();
+
+        return $this->setPlainTextBody(strip_tags($html))
+            ->setHtmlBody($html);
     }
 
     public function addAttachmentFile($filename, $content_type = null)
@@ -125,7 +181,7 @@ class Mail
         }
 
         $this->attachments[] = $attachment = Swift_Attachment::newInstance(file_get_contents($filename), basename($filename), $content_type);
-        $this->_message->attach($attachment);
+        $this->message->attach($attachment);
 
         return $this;
     }
@@ -144,7 +200,7 @@ class Mail
             throw new MailException('Cannot access file to add as attachment');
         }
 
-        return $this->_message->embed(Swift_Image::fromPath($filename));
+        return $this->message->embed(Swift_Image::fromPath($filename));
     }
 
     /**
@@ -156,43 +212,24 @@ class Mail
      */
     public function send()
     {
-        if (!isset($this->_message)) {
+        if (!isset($this->message)) {
             throw new MailException("No message set");
         }
 
         $transport = Swift_SmtpTransport::newInstance('127.0.0.1', 25);
-        return !!Swift_Mailer::newInstance($transport)->send($this->_message);
+        return !!Swift_Mailer::newInstance($transport)->send($this->message);
     }
 
     /**
      * attempts to validate one or more email addresses
      *
-     * @param string|array $email - string or array of strings to validate
+     * @param string $email Address to validate
      *
      * @access public
      * @return bool
      */
     protected function validateEmail($email)
     {
-        if (is_string($email))
-        {
-            if (filter_var($email, FILTER_VALIDATE_EMAIL))
-            {
-                return true;
-            }
-            return false;
-        }
-        else if (is_array($email))
-        {
-            foreach ($email as $e)
-            {
-                if (!filter_var($e, FILTER_VALIDATE_EMAIL))
-                {
-                    return false;
-                }
-                return true;
-            }
-        }
-        return false;
+        return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 }

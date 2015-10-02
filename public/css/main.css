@@ -2124,3 +2124,9 @@ table.accounting tbody {
 #queue-container .extras {
     margin-top: 1em;
 }
+
+.reset-password {
+    float: right;
+    margin-right: 1.2em;
+    margin-top: 1em;
+}

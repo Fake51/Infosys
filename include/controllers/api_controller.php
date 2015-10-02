@@ -652,12 +652,15 @@ class ApiController extends Controller
             $html_body = $this->page->render();
             $txt_body  = strip_tags($html_body);
 
-            $mail = new Mail('info@fastaval.dk', $participant->email, $title, $txt_body);
-            $mail->addHtmlBody($html_body);
+            $mail = new Mail();
 
-            $this->log("Deltager #{$participant->id} fik sendt password-reset email", 'Api', null);
+            $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+                ->setRecipient($participant->email)
+                ->setSubject($title)
+                ->setBodyFromPage($this->page);
 
             $mail->send();
+
         }
 
         header('HTTP/1.1 200 Emails sent');

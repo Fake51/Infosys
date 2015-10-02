@@ -36,7 +36,19 @@
 class IndexController extends Controller
 {
     protected $prerun_hooks = array(
-        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array('login', 'noAccess', 'kickOffSMSScript')),
+        array(
+         'method'     => 'checkUser',
+         'exclusive'  => true,
+         'methodlist' => array(
+                          'login',
+                          'noAccess',
+                          'kickOffSMSScript',
+                          'forgottenPassDialog',
+                          'forgottenPassAction',
+                          'resetPassDialog',
+                          'resetPassAction',
+                         ),
+        ),
     );
 
     /**
@@ -90,11 +102,13 @@ class IndexController extends Controller
      */
     public function login() {
         $this->page->setTitle('Login');
+
         if (!$this->page->request->isPost()) {
             return;
         }
 
         $post = $this->page->request->post;
+
         if (empty($post->user) || empty($post->pass)) {
             return;
         }
@@ -131,6 +145,134 @@ class IndexController extends Controller
      */
     public function noAccess()
     {
-        header('HTTP/1.1 403 No access');
+        $this->page->setStatus(403, 'No access');
+    }
+
+    /**
+     * shows a dialog for resetting password - step 1
+     *
+     * @access public
+     * @return void
+     */
+    public function forgottenPassDialog()
+    {
+    }
+
+    /**
+     * checks the submission from the forgotten pass dialog
+     *
+     * @access public
+     * @return void
+     */
+    public function forgottenPassAction()
+    {
+        $done = false;
+
+        if (!$this->page->request->isPost()) {
+            $location = $this->url('forgotten_pass');
+            $this->errorMessage('No data sent');
+
+        } else {
+            if ($this->model->sendPasswordResetEmail($this->page->request->post->user, $this->page)) {
+                $location = $this->url('login_page');
+                $this->successMessage('Email with instructions sent to the address provided');
+
+            } else {
+                $location = $this->url('forgotten_pass');
+                $this->errorMessage('Could not send email to provided address');
+
+            }
+
+        }
+
+        $this->page->setStatus(303, 'See elsewhere')
+            ->setHeader('Location', $location)
+            ->setTemplate('');
+    }
+
+    /**
+     * shows a dialog for resetting password - step 2
+     *
+     * @access public
+     * @return void
+     */
+    public function resetPassDialog()
+    {
+        if (empty($this->vars['hash']) || !($user = $this->model->getUserForPasswordReset($this->vars['hash']))) {
+            $location = $this->url('login_page');
+            $this->errorMessage('User not found for password reset');
+
+            $this->page->setTemplate('')
+                ->setStatus(303, 'No such user')
+                ->setHeader('Location', $location);
+
+            return;
+
+        }
+
+        $this->page->hash = $this->vars['hash'];
+
+        $user->password_reset_time = date('Y-m-d H:i:s', time() - 15 * 20);
+
+        $this->page->user = $user;
+    }
+
+    /**
+     * resets a users password
+     *
+     * @access public
+     * @return void
+     */
+    public function resetPassAction()
+    {
+        $done = false;
+
+        if (empty($this->vars['hash']) || !($user = $this->model->getUserForPasswordReset($this->vars['hash']))) {
+            $location = $this->url('login_page');
+            $this->errorMessage('User not found for password reset');
+
+            $done = true;
+
+        }
+
+        if (!$done && !($this->page->request->isPost() && !empty($this->page->request->post->pass))) {
+            $location = $this->url('reset_pass', ['hash' => $user->password_reset_hash]);
+            $this->errorMessage('No data received');
+
+            $done = true;
+
+        }
+
+        if (!$done && $this->page->request->post->pass !== $this->page->request->post->check) {
+            $location = $this->url('reset_pass', ['hash' => $user->password_reset_hash]);
+            $this->errorMessage('Passwords do not match');
+
+            $done = true;
+
+        }
+
+        if (!$done && mb_strlen($this->page->request->post->pass) < 8) {
+            $location = $this->url('reset_pass', ['hash' => $user->password_reset_hash]);
+            $this->errorMessage('Passwords too short. Min length is 8 characters.');
+
+            $done = true;
+
+        }
+
+        if (!$done) {
+            $user->pass = password_hash($this->page->request->post->pass, PASSWORD_DEFAULT);
+            $user->password_reset_time = '0000-00-00 00:00:00';
+            $user->update();
+
+            $location = $this->url('login_page');
+            $this->successMessage('Password reset');
+
+        }
+
+        $this->page->setTemplate('')
+            ->setStatus(303, 'See elsewhere')
+            ->setHeader('Location', $location);
+
+        return;
     }
 }

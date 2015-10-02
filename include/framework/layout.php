@@ -229,22 +229,6 @@ class Layout
     }
 
     /**
-     * method docblock
-     *
-     * @param
-     *
-     * @access protected
-     * @return void
-     */
-    protected function addResponseContentType()
-    {
-        if (!headers_sent()) {
-            header('HTTP/1.1 200 Served');
-            header('Content-Type: text/html; charset=UTF-8');
-        }
-    }
-
-    /**
      * renders the page, by outputing layout plus content
      *
      * @access public
@@ -261,7 +245,7 @@ class Layout
             throw new FrameworkException("Specified layout file ({$this->page->layout_template}) does not exist");
         }
 
-        $this->addResponseContentType();
+        $this->page->sendHeaders();
 
         if (!$this->getDocType()) {
             $doctype = <<<XML

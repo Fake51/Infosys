@@ -74,21 +74,21 @@ class User extends DBObject
      */
     public function canAccess($controller, $method)
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        if (!($roles = $this->createEntity('UserRole')->getUserRoles($this)))
-        {
+
+        if (!($roles = $this->createEntity('UserRole')->getUserRoles($this))) {
             return false;
         }
-        foreach ($roles as $role)
-        {
-            if ($role->canAccessControllermethod($controller, $method))
-            {
+
+        foreach ($roles as $role) {
+            if ($role->canAccessControllermethod($controller, $method)) {
                 return true;
             }
+
         }
+
         return false;
     }
 
@@ -99,10 +99,12 @@ class User extends DBObject
      * @access public
      * @return bool
      */
-    public function hasRole($role) {
+    public function hasRole($role)
+    {
         if (!$this->isLoaded()) {
             return false;
         }
+
         if (is_string($role)) {
             if (!($role = $this->createEntity('Role')->findByName($role))) {
                 return false;
@@ -120,10 +122,10 @@ class User extends DBObject
      */
     public function getRoles()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return array();
         }
+
         return (($result = $this->createEntity('UserRole')->getUserRoles($this)) ? $result : array());
     }
 
@@ -136,10 +138,10 @@ class User extends DBObject
      */
     public function addRole($role)
     {
-        if (!$this->isLoaded() || !is_object($role) || !$role->isLoaded())
-        {
+        if (!$this->isLoaded() || !is_object($role) || !$role->isLoaded()) {
             return false;
         }
+
         return $this->createEntity('UserRole')->addUserRole($this, $role);
     }
 
@@ -152,10 +154,10 @@ class User extends DBObject
      */
     public function removeRole($role)
     {
-        if (!$this->isLoaded() || !is_object($role) || !$role->isLoaded())
-        {
+        if (!$this->isLoaded() || !is_object($role) || !$role->isLoaded()) {
             return false;
         }
+
         return $this->createEntity('UserRole')->removeUserRole($this, $role);
     }
 
@@ -167,15 +169,16 @@ class User extends DBObject
      */
     public function disable()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        if ($this->disabled == 'ja')
-        {
+
+        if ($this->disabled === 'ja') {
             return true;
         }
+
         $this->disabled = 'ja';
+
         return $this->update();
     }
 
@@ -187,15 +190,43 @@ class User extends DBObject
      */
     public function enable()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        if ($this->disabled == 'nej')
-        {
+
+        if ($this->disabled === 'nej') {
             return true;
         }
+
         $this->disabled = 'nej';
+
         return $this->update();
+    }
+
+    /**
+     * returns true if the user was disabled
+     *
+     * @access public
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->disabled !== 'nej';
+    }
+
+    /**
+     * returns instance loaded by email/username if found
+     *
+     * @param string $email_address Address to search by
+     *
+     * @access public
+     * @return false|User
+     */
+    public function findByEmail($email_address)
+    {
+        $select = $this->getSelect();
+        $select->setWhere('user', '=', $email_address);
+
+        return $this->createEntity('User')->findBySelect($select);
     }
 }

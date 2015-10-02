@@ -1,44 +1,65 @@
 <?php
-    /**
-     * Copyright (C) 2009-2012 Peter Lind
-     *
-     * This program is free software: you can redistribute it and/or modify
-     * it under the terms of the GNU General Public License as published by
-     * the Free Software Foundation, either version 3 of the License, or
-     * (at your option) any later version.
-     *
-     * This program is distributed in the hope that it will be useful,
-     * but WITHOUT ANY WARRANTY; without even the implied warranty of
-     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     * GNU General Public License for more details.
-     *
-     * You should have received a copy of the GNU General Public License
-     * along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
-     *
-     * PHP version 5
-     *
-     * @package    Framework
-     * @author     Peter Lind <peter.e.lind@gmail.com>
-     * @copyright  2009 Peter Lind
-     * @license    http://www.gnu.org/licenses/gpl.html GPL 3
-     * @link       http://www.github.com/Fake51/Infosys
-     */
+/**
+ * Copyright (C) 2009-2012 Peter Lind
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *
+ * PHP version 5
+ *
+ * @package    Framework
+ * @author     Peter Lind <peter.e.lind@gmail.com>
+ * @copyright  2009 Peter Lind
+ * @license    http://www.gnu.org/licenses/gpl.html GPL 3
+ * @link       http://www.github.com/Fake51/Infosys
+ */
 
-    /**
-     * generic class for templates in the MVC
-     *
-     * @package    Framework
-     * @author     Peter Lind <peter.e.lind@gmail.com>
-     */
+/**
+ * generic class for templates in the MVC
+ *
+ * @package    Framework
+ * @author     Peter Lind <peter.e.lind@gmail.com>
+ */
 class Page
 {
+
+    /**
+     * current status code
+     *
+     * @var integer
+     */
+    private $status_code = 200;
+
+    /**
+     * current status code message
+     *
+     * @var string
+     */
+    private $status_message = 'Served';
 
     /**
      * stores the layout object that things are output into
      *
      * @var Layout
      */
-    protected $layout;
+    private $layout;
+
+    /**
+     * headers to send upon output
+     *
+     * @var array
+     */
+    private $headers = [];
 
     /**
      * stores the layout file that will frame everything
@@ -52,21 +73,21 @@ class Page
      *
      * @var array
      */
-    protected $storage = array();
+    private $storage = array();
 
     /**
      * holds the request object
      *
      * @var Request
      */
-    protected $request;
+    private $request;
 
     /**
      * names of scripts to include in page head
      *
      * @var array
      */
-    protected $earlyload_js = array(
+    private $earlyload_js = array(
         'common.js',
     );
 
@@ -75,7 +96,7 @@ class Page
      *
      * @var array
      */
-    protected $lateload_js = array();
+    private $lateload_js = array();
 
     /**
      * css-filename => media type array
@@ -83,42 +104,42 @@ class Page
      *
      * @var array
      */
-    protected $included_css = array();
+    private $included_css = array();
 
     /**
      * Controller of the MVC triad
      *
      * @var object
      */
-    protected $controller;
+    private $controller;
 
     /**
      * name of template to use
      *
      * @var string
      */
-    protected $template;
+    private $template;
 
     /**
      * contains a copy of a ViewHelper object
      *
      * @var object
      */
-    protected $viewhelper;
+    private $viewhelper;
 
     /**
      * Messages object
      *
      * @var Messages
      */
-    protected $messages;
+    private $messages;
 
     /**
      * web path to public folders
      *
      * @var string
      */
-    protected $public_uri;
+    private $public_uri;
 
     /**
      * common magic get function, to grab things from the storage space of the classes
@@ -204,16 +225,19 @@ class Page
      * @param string $template Name of template to use, should be in form 'method' or 'controller/method'
      *
      * @access public
-     * @return void
+     * @return $this
      */
     public function setTemplate($template)
     {
-        if (strpos($template, '/') === false) {
+        if (strpos($template, '/') === false && !empty($template)) {
             preg_match('/^([A-Z][a-z]+)[A-Z]+.*/', get_class($this->controller), $match);
             $template = strtolower($match[1]) . '/' . $template;
+
         }
 
-        $this->template = strtolower($template) . '.phtml';
+        $this->template = $template ? strtolower($template) . '.phtml' : '';
+
+        return $this;
     }
     
     /**
@@ -486,5 +510,59 @@ class Page
     public function getPublicPath()
     {
         return realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public') . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * sets a status code and message for HTTP headers
+     *
+     * @param int    $status  Status code
+     * @param string $message Status message
+     *
+     * @access public
+     * @return $this
+     */
+    public function setStatus($status, $message)
+    {
+        $this->status_code    = $status;
+        $this->status_message = $message;
+
+        return $this;
+    }
+
+    /**
+     * sets a header for later output
+     *
+     * @param string $header Header to set
+     * @param string $value  Value to set for header
+     *
+     * @access public
+     * @return $this
+     */
+    public function setHeader($header, $value)
+    {
+        $this->headers[$header] = $value;
+
+        return $this;
+    }
+
+    /**
+     * outputs HTTP headers if possible
+     *
+     * @access public
+     * @return $this
+     */
+    public function sendHeaders()
+    {
+        if (!headers_sent()) {
+            header('HTTP/1.1 ' . intval($this->status_code) . ' ' . $this->status_message);
+
+            foreach ($this->headers as $header => $value) {
+                header($header . ': ' . $value);
+
+            }
+
+        }
+
+        return $this;
     }
 }
