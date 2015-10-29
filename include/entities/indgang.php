@@ -100,6 +100,15 @@ class Indgang extends DBObject
         return $this->type == 'Ottofest - Champagne';
     }
 
+    public function isMattress()
+    {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return mb_stripos($this->type, 'madras') !== false;
+    }
+
     /**
      * returns a shorthand string for the object
      *
@@ -200,12 +209,12 @@ class Indgang extends DBObject
             return $english ? 'Party' : "Fest";
 
         } elseif ($this->isPartyBubbles()) {
-            return $english ? 'Bubbles' : "Bobler";
+            return $english ? 'Champagne' : 'Champagne';
 
         } elseif ($this->type == 'Alea medlemskab') {
             return $english ? 'Alea membership' : $this->type;
 
-        } elseif ($this->type == 'Leje af madras') {
+        } elseif ($this->isMattress()) {
             return $english ? 'Mattress' : $this->type;
 
         } else {

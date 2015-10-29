@@ -115,15 +115,19 @@ class Afviklinger extends DBObject
      */
     public function getLokale()
     {
-        if (!$this->isLoaded())
-        {
-            return false;
-        }
-        if ($this->lokale_id && ($lokale = $this->createEntity('Lokaler')->findById($this->lokale_id))) {
+        if ($lokale = $this->getRoomObject()) {
             return "{$lokale->beskrivelse}";
         } else {
             return 'Mødested: spørg venligst i informationen.';
         }
+    }
+
+    public function getRoomObject()
+    {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+        return $this->lokale_id ? $this->createEntity('Lokaler')->findById($this->lokale_id) : false;
     }
 
     /**
@@ -134,10 +138,7 @@ class Afviklinger extends DBObject
      */
     public function getRoom()
     {
-        if (!$this->isLoaded()) {
-            return false;
-        }
-        if ($this->lokale_id && ($lokale = $this->createEntity('Lokaler')->findById($this->lokale_id))) {
+        if ($lokale = $this->getRoomObject()) {
             return "{$lokale->beskrivelse}";
         } else {
             return 'Ask at the information for room.';

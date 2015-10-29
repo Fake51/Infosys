@@ -239,6 +239,19 @@ class ApiController extends Controller
      * @access public
      * @return void
      */
+    public function activitiesForAppVersioned()
+    {
+        return $this->activitiesForApp($this->vars['version']);
+    }
+
+    /**
+     * returns json encoded array of activities
+     * as requested through a variable,
+     * - output suited for a mobile app
+     *
+     * @access public
+     * @return void
+     */
     public function activitiesForApp($version = 1)
     {
         if (empty($this->vars)) {
@@ -536,6 +549,17 @@ class ApiController extends Controller
      * @access public
      * @return void
      */
+    public function getUserScheduleVersioned()
+    {
+        return $this->getUserSchedule($this->vars['version']);
+    }
+
+    /**
+     * outputs the schedule for a given user
+     *
+     * @access public
+     * @return void
+     */
     public function getUserSchedule($version = 1)
     {
         if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id'])) || $participant->annulled === 'ja') {
@@ -543,7 +567,9 @@ class ApiController extends Controller
             exit;
         }
 
-        if (!$this->page->request->get->pass || $participant->password != $this->page->request->get->pass) {
+        $pass = $this->page->request->post->pass ? $this->page->request->post->pass : $this->page->request->get->pass;
+
+        if (!$pass || $participant->password != $pass) {
             header('HTTP/1.1 403 No access');
             exit;
         }

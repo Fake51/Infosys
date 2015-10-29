@@ -312,6 +312,7 @@ class Routes
         $this->routes['api_activities_short']    = array('url' => 'api/activities', 'controller' => 'Api', 'method' => 'activities');
         $this->routes['api_activities']          = array('url' => 'api/activities/:id:', 'controller' => 'Api', 'method' => 'activities');
         $this->routes['api_activities_app']      = array('url' => 'api/app/activities/:id:', 'controller' => 'Api', 'method' => 'activitiesForApp');
+        $this->routes['api_activities_app_v']    = array('url' => 'api/app/v:version:/activities/:id:', 'controller' => 'Api', 'method' => 'activitiesForAppVersioned');
         $this->routes['api_activities_app_v2']   = array('url' => 'api/app/v2/activities/:id:', 'controller' => 'Api', 'method' => 'activitiesForAppV2');
         $this->routes['api_activities_by_field'] = array('url' => 'api/activities/:field:/:value:', 'controller' => 'Api', 'method' => 'activitiesByField');
         $this->routes['api_all_activities']      = array('url' => 'api/activities/all/:id:', 'controller' => 'Api', 'method' => 'allActivities');
@@ -331,7 +332,9 @@ class Routes
         $this->routes['api_parse_signup']        = array('url' => 'api/participant/signup', 'controller' => 'Api', 'method' => 'parseSignup');
         $this->routes['api_activity_structure']  = array('url' => 'api/activity-structure', 'controller' => 'Api', 'method' => 'activityStructure');
         $this->routes['api_user_schedules']      = array('url' => 'api/user/:id:', 'controller' => 'Api', 'method' => 'getUserSchedule');
+        $this->routes['api_user_schedules_v']    = array('url' => 'api/v:version:/user/:id:', 'controller' => 'Api', 'method' => 'getUserScheduleVersioned');
         $this->routes['api_user_schedules_v2']   = array('url' => 'api/v2/user/:id:', 'controller' => 'Api', 'method' => 'getUserScheduleV2');
+        $this->routes['api_user_data_v']         = array('url' => 'api/v:version:/user-data/:email:', 'controller' => 'Api', 'method' => 'getUserDataVersioned');
         $this->routes['api_user_data']           = array('url' => 'api/v2/user-data/:email:', 'controller' => 'Api', 'method' => 'getUserData');
         $this->routes['api_user_register']       = array('url' => 'api/user/:id:/register', 'controller' => 'Api', 'method' => 'registerApp');
         $this->routes['api_user_unregister']     = array('url' => 'api/user/:id:/unregister', 'controller' => 'Api', 'method' => 'unregisterApp');

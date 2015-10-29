@@ -1314,7 +1314,7 @@ class ApiModel extends Model {
      */
     public function getParticipantSchedule(DBObject $participant, $version = 1)
     {
-        $sleep = 0;
+        $sleep = $mattress = 0;
 
         $otto_party = array();
 
@@ -1331,11 +1331,42 @@ class ApiModel extends Model {
                     'amount'   => 1,
                 );
             }
+
+            if ($entrance->isMattress()) {
+                $mattress = 1;
+            }
+
         }
 
         $sleep = $participant->sovesal == 'ja' ? 2 : $sleep;
 
         $category = $participant->getBrugerKategori();
+
+        if (intval($version) >= 3) {
+            switch ($sleep) {
+            case 1:
+                $name = 'Store sovesal';
+                $area_id = 68;
+                break;
+
+            case 2:
+                $name = 'Arrangørsovesal';
+                $area_id = 66;
+                break;
+
+            default:
+                $name = '';
+                $area_id = 0;
+            }
+
+            $sleep = array(
+                'id' => 1,
+                'access' => $name ? 1 : 0,
+                'mattress' => $mattress,
+                'area_name' => $name,
+                'area_id' => 'R' . $area_id,
+            );
+        }
 
         $return = array(
             'id'         => $participant->id,
@@ -1351,20 +1382,30 @@ class ApiModel extends Model {
             'scheduling' => array(),
         );
 
-        if ($version == 2) {
+        if ($version >= 3) {
+            $return['barcode'] = $participant->getEan8Number();
+        }
+
+        if ($version >= 2) {
             $return['otto_party'] = $otto_party;
         }
 
         foreach ($participant->getWear() as $wearorder) {
             $wear = $wearorder->getWear();
 
-            $return['wear'][] = array(
+            $item = array(
                 'amount'   => $wearorder->antal,
                 'size'     => $wearorder->size,
                 'title_da' => $wear->navn,
                 'title_en' => $wear->title_en,
                 'wear_id'  => $wear->id,
             );
+
+            if ($version >= 3) {
+                $item['received'] = $wearorder->received === 't' ? 1 : 0;
+            }
+
+            $return['wear'][] = $item;
         }
 
         $foodtime_links = $participant->getFoodOrderLinks();
@@ -1399,7 +1440,6 @@ class ApiModel extends Model {
         foreach ($participant->getPladser() as $play) {
             $schedule  = $play->getAfvikling();
             $activity  = $schedule->getAktivitet();
-            //$room      = $play->getLokale();
             $room_name = $schedule->getRoom();
 
             if ($activity->hidden === 'ja' || ($version == 1 && $activity->type == 'system')) {
@@ -1408,7 +1448,7 @@ class ApiModel extends Model {
 
             $type = $play->type === 'spilleder' && $version >= 2 ? 'spilleder' : $activity->type;
 
-            $return['scheduling'][] = array(
+            $item = array(
                 'type'          => 'activity',
                 'activity_type' => $type,
                 'id'   => $activity->id,
@@ -1420,6 +1460,21 @@ class ApiModel extends Model {
                 'room_da'  => $room_name,
                 'room_en'  => $room_name,
             );
+
+            if ($version >= 3) {
+                $room = $play->type === 'spilleder' ? $play->getLokale() : false;
+
+                $item['play_room_id'] = $room ? 'R' . $room->id : '';
+                $item['play_room_name'] = $room ? $room->beskrivelse : '';
+
+                $room = $schedule->getRoomObject();
+
+                $item['meet_room_id'] = $room ? 'R' . $room->id : '';
+                $item['meet_room_name'] = $room ? $room->beskrivelse : '';
+
+            }
+
+            $return['scheduling'][] = $item;
         }
 
         foreach ($participant->getGDSVagter() as $shift) {
