@@ -1,3 +1,3 @@
-DROP TABLE newsletters_subscribers;
-DROP TABLE newsletters;
-DROP TABLE newslettersubscribers;
+DROP TABLE IF EXISTS newsletters_subscribers;
+DROP TABLE IF EXISTS newsletters;
+DROP TABLE IF EXISTS newslettersubscribers;
