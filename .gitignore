@@ -9,3 +9,4 @@ include/signup-data/*
 include/scripts/*
 logs/*
 tags
+index.json

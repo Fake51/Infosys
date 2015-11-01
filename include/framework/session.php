@@ -51,7 +51,7 @@ class Session
     public function __construct($public_uri)
     {
         if (!isset(self::$session)) {
-            session_set_cookie_params(7200, '/', rtrim(str_replace('http://', '', $public_uri), '/'));
+            session_set_cookie_params(7200, '/', rtrim(str_replace(['http://', 'https://'], '', $public_uri), '/'));
             if (@session_start()) {
                 $session = array();
                 foreach ($_SESSION as $key => $val) {
