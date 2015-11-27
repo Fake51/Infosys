@@ -86,7 +86,7 @@ class Mail
     public function setFrom($address, $alias = '')
     {
         if (!is_string($address) || !$this->validateEmail($address)) {
-            throw new MailException("From address is invalid: " . gettype($from));
+            throw new MailException("From address is invalid: " . gettype($address));
         }
 
         $this->message->setFrom($alias ? [$address => $alias] : $address);

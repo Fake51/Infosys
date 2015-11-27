@@ -2,6 +2,7 @@
 $this->registerEarlyLoadJS('json2.js');
 $this->registerLateLoadJS('ajax.js');
 $this->registerLateLoadJS('activity.js');
+$this->registerLateLoadJS('location-module.js');
 ?>
         <div id='debug'></div>
 <div class='middleboxes'>
@@ -90,7 +91,7 @@ $this->registerLateLoadJS('activity.js');
             <?php if (!$afvikling->isMultiBlock()) :?><a href="<?php echo $this->url('list_schedule_signups', array('afvikling_id' => $afvikling->id));?>">Liste over tilmeldte</a>
             <p class='afviklingsbox-groupbutton'><button class='add-group'>Tilføj hold</button></p>
             <?php endif;?>
-            <?= $afvikling->getLokale();?>
+            <span data-location-id="<?= $afvikling->getRoomObject() ? $afvikling->getRoomObject()->id : '';?>" class="location-link"><?= $afvikling->getLokale();?></span>
             <div class='clearit'></div>
             <div class='afviklingsbox-groupbox'>
                 <?php foreach ($afvikling->getHold() as $hold) :
