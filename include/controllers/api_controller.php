@@ -38,7 +38,6 @@ class ApiController extends Controller
 {
     protected $prerun_hooks = array(
         array('method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup', 'requestPasswordReminder')),
-        array('method' => 'checkAuth', 'exclusive' => false, 'methodlist' => array('getUserSchedule', 'getUserScheduleV2', 'getUserData')),
     );
 
     /**
