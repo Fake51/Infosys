@@ -10,3 +10,6 @@ include/scripts/*
 logs/*
 tags
 index.json
+vendor
+composer.phar
+bin

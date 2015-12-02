@@ -80,6 +80,12 @@ class Autoloader
                 include $folder . $normalized_name . '.php';
                 return true;
             }
+
+            if (is_file($folder . $class_name . '.php')) {
+                include $folder . $class_name . '.php';
+                return true;
+            }
+
         }
 
         // since the file containing the class could not be found, die in error
