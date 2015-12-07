@@ -1,4 +1,4 @@
-<?php echo $this->getMessagesHtml();
+<?= $this->getMessagesHtml();
 $this->registerEarlyLoadJS('json2.js');
 $this->registerLateLoadJS('ajax.js');
 $this->registerLateLoadJS('activity.js');
@@ -7,14 +7,14 @@ $this->registerLateLoadJS('activity.js');
 <div class='middleboxes'>
     <div class='aktivitetbox'>
         <div id='popup_creator'>
-            <form action="<?php echo $this->url('opret_afvikling', array('aktivitet_id' => $this->aktivitet->id));?>" method='post'>
+            <form action="<?= $this->url('opret_afvikling', array('aktivitet_id' => $this->aktivitet->id));?>" method='post'>
                 <div>
                     <label for='start'>Start: </label> <input type="text" class="datetimepicker" name="start" id="start"/>
                     <label for='start'>Slut: </label> <input type="text" class="datetimepicker" name="end" id="stop"/>
                     <label for='lokale_id'>Mødelokale:</label>
                     <select name='lokale_id' id='lokale_id'>
                         <?php foreach ($this->lokaler as $lokale) : ?>
-                            <option value='<?php echo e($lokale->id);?>'><?php echo e($lokale->beskrivelse);?></option>
+                            <option value='<?= e($lokale->id);?>'><?= e($lokale->beskrivelse);?></option>
                         <?php endforeach;?>
                     </select>
                 </div>
@@ -23,51 +23,52 @@ $this->registerLateLoadJS('activity.js');
             </form>
         </div>
         <fieldset>
-            <legend>Aktivitet - <a href="<?php echo $this->url('edit_aktivitet', array('id' => $this->aktivitet->id));?>"><i>Ret/slet</i></a> - <a id='popup_creator_link' href='#'><i>Opret afvikling</i></a></legend>
+            <legend>Aktivitet - <a href="<?= $this->url('edit_aktivitet', array('id' => $this->aktivitet->id));?>"><i>Ret/slet</i></a> - <a id='popup_creator_link' href='#'><i>Opret afvikling</i></a></legend>
             <table>
                 <tr>
-                    <td colspan='3'><b>Id:</b> <i><?php echo $this->aktivitet->id;?></i></td>
+                    <td colspan='3'><b>Id:</b> <i><?= $this->aktivitet->id;?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Titel:</b> <i><?php echo e($this->aktivitet->navn);?></i></td>
+                    <td colspan='3'><b>Titel:</b> <i><?= e($this->aktivitet->navn);?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Engelsk titel:</b> <i><?php echo e($this->aktivitet->title_en);?></i></td>
+                    <td colspan='3'><b>Engelsk titel:</b> <i><?= e($this->aktivitet->title_en);?></i></td>
                 </tr>
                 <tr>
                     <td colspan='3'><strong>Forfatter(e):</strong> <i><?= e($this->aktivitet->author);?></i></td>
                 </tr>
                 <tr>
-                    <td><b>WP Id:</b> <i><?php echo $this->aktivitet->wp_link;?></i></td>
-                    <td><b>Spiltype:</b> <i><?php echo e($this->aktivitet->type);?></i></td>
-                    <td><b>Varighed:</b> <i><?php echo e($this->aktivitet->varighed_per_afvikling);?> timer</i></td>
+                    <td><b>WP Id:</b> <i><?= $this->aktivitet->wp_link;?></i></td>
+                    <td><b>Spiltype:</b> <i><?= e($this->aktivitet->type);?></i></td>
+                    <td><b>Varighed:</b> <i><?= e($this->aktivitet->varighed_per_afvikling);?> timer</i></td>
                 </tr>
                 <tr>
-                    <td><b>Min Spillere:</b> <i id="min-gamers"><?php echo e($this->aktivitet->min_deltagere_per_hold);?></i></td>
-                    <td><b>Max Spillere:</b> <i id="max-gamers"><?php echo e($this->aktivitet->max_deltagere_per_hold);?></i></td>
-                    <td><b>Spilledere:</b> <i id="gms-required"><?php echo e($this->aktivitet->spilledere_per_hold);?></i></td>
+                    <td><b>Min Spillere:</b> <i id="min-gamers"><?= e($this->aktivitet->min_deltagere_per_hold);?></i></td>
+                    <td><b>Max Spillere:</b> <i id="max-gamers"><?= e($this->aktivitet->max_deltagere_per_hold);?></i></td>
+                    <td><b>Spilledere:</b> <i id="gms-required"><?= e($this->aktivitet->spilledere_per_hold);?></i></td>
                 </tr>
                 <tr>
-                    <td><b>Pris:</b> <i><?php echo e($this->aktivitet->pris);?></i></td>
-                    <td><b>Kan tilmeldes:</b> <i><?php echo $this->aktivitet->kan_tilmeldes;?></i></td>
-                    <td><b>Fylder lokale:</b> <i><?php echo $this->aktivitet->lokale_eksklusiv;?></i></td>
+                    <td><b>Pris:</b> <i><?= e($this->aktivitet->pris);?></i></td>
+                    <td><b>Kan tilmeldes:</b> <i><?= $this->aktivitet->kan_tilmeldes;?></i></td>
+                    <td><b>Fylder lokale:</b> <i><?= $this->aktivitet->lokale_eksklusiv;?></i></td>
                 </tr>
                 <tr>
-                    <td><b>Sprog:</b> <i><?php echo e($this->aktivitet->sprog);?></i></td>
-                    <td><b>Udelukker samtidige aktiviteter:</b> <i><?php echo $this->aktivitet->tids_eksklusiv;?></i></td>
+                    <td><b>Sprog:</b> <i><?= e($this->aktivitet->sprog);?></i></td>
+                    <td><b>Udelukker samtidige aktiviteter:</b> <i><?= $this->aktivitet->tids_eksklusiv;?></i></td>
                     <td><b>Kan spilles flere gange:</b> <i><?= e($this->aktivitet->replayable);?></i></td>
                 </tr>
                 <tr>
-                    <td><b>Skjult:</b> <i><?php echo e($this->aktivitet->hidden);?></i></td>
+                    <td><b>Skjult:</b> <i><?= e($this->aktivitet->hidden);?></i></td>
+                    <td><b>Karmatype:</b> <i><?= e($this->aktivitet->getMeaningfulKarmatype());?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Note:</b> <i><?php echo nl2br(htmlspecialchars($this->aktivitet->note, ENT_QUOTES));?></i></td>
+                    <td colspan='3'><b>Note:</b> <i><?= nl2br(htmlspecialchars($this->aktivitet->note, ENT_QUOTES));?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Foromtale:</b> <i><?php echo nl2br(htmlspecialchars($this->aktivitet->foromtale, ENT_QUOTES));?></i></td>
+                    <td colspan='3'><b>Foromtale:</b> <i><?= nl2br(htmlspecialchars($this->aktivitet->foromtale, ENT_QUOTES));?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Engelsk foromtale:</b> <i><?php echo nl2br(htmlspecialchars($this->aktivitet->description_en, ENT_QUOTES));?></i></td>
+                    <td colspan='3'><b>Engelsk foromtale:</b> <i><?= nl2br(htmlspecialchars($this->aktivitet->description_en, ENT_QUOTES));?></i></td>
                 </tr>
             </table>
         </fieldset>
@@ -86,8 +87,8 @@ $this->registerLateLoadJS('activity.js');
                 
     <div class='afviklingsbox' data-schedule_id="<?= e($afvikling->id);?>">
         <fieldset class="schedule-fieldset">
-            <legend>Afvikling: <?php echo $start;?>-<?php echo $slut;?><?php if (!$afvikling->isMultiBlock()) :?> (ID: <?php echo $afvikling->id;?>) - <a href="<?php echo $this->url('edit_afvikling', array('id' => $afvikling->id));?>"><i>Ret/slet</i></a><?php endif;?></legend>
-            <?php if (!$afvikling->isMultiBlock()) :?><a href="<?php echo $this->url('list_schedule_signups', array('afvikling_id' => $afvikling->id));?>">Liste over tilmeldte</a>
+            <legend>Afvikling: <?= $start;?>-<?= $slut;?><?php if (!$afvikling->isMultiBlock()) :?> (ID: <?= $afvikling->id;?>) - <a href="<?= $this->url('edit_afvikling', array('id' => $afvikling->id));?>"><i>Ret/slet</i></a><?php endif;?></legend>
+            <?php if (!$afvikling->isMultiBlock()) :?><a href="<?= $this->url('list_schedule_signups', array('afvikling_id' => $afvikling->id));?>">Liste over tilmeldte</a>
             <p class='afviklingsbox-groupbutton'><button class='add-group'>Tilføj hold</button></p>
             <?php endif;?>
             <span data-location-id="<?= $afvikling->getRoomObject() ? $afvikling->getRoomObject()->id : '';?>" class="location-link"><?= $afvikling->getLokale();?></span>
