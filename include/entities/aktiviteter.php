@@ -188,6 +188,7 @@ class Aktiviteter extends DBObject
         $this->sprog                  = $this->sprog ? $this->sprog : 'dansk';
         $this->replayable             = $this->replayable ? $this->replayable : 'nej';
         $this->hidden                 = $this->hidden ? $this->hidden : 'nej';
+        $this->karmatype              = $this->karmatype ? $this->karmatype : 0;
     }
 
     /**
