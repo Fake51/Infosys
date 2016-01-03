@@ -267,4 +267,18 @@ class Model extends Common
     {
         return in_array($this->getLoggedInUser()->user, $usernames);
     }
+
+    /**
+     * checks if the current user matches one of the
+     * supplied usernames
+     *
+     * @param array $usernames Users to check against
+     *
+     * @access public
+     * @return bool
+     */
+    public function userHasRole($role)
+    {
+        return $this->getLoggedInUser()->hasRole($role);
+    }
 }
