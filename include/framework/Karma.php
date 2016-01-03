@@ -94,12 +94,13 @@ SELECT
     "factual" AS type
 FROM
     pladser AS p
-    JOIN hold AS h ON pladser.hold_id = h.id
+    JOIN hold AS h ON p.hold_id = h.id
     JOIN afviklinger AS afv ON afv.id = h.afvikling_id
     JOIN aktiviteter AS akt ON akt.id = afv.aktivitet_id
 WHERE
-    p.deltager_in IN (' . $id_string . ')
-UNION
+    p.deltager_id IN (' . $id_string . ')
+    AND p.type != "spilleder"
+UNION ALL
 SELECT
     t.deltager_id,
     CASE WHEN t.tilmeldingstype = "spilleder" THEN 0 ELSE t.prioritet END,
@@ -107,7 +108,7 @@ SELECT
 FROM
     deltagere_tilmeldinger AS t
 WHERE
-    p.deltager_in IN (' . $id_string . ')
+    t.deltager_id IN (' . $id_string . ')
 ';
 
         $data = [];
@@ -149,6 +150,6 @@ WHERE
     {
         $output = array_map([$this, 'calculateForParticipant'], $this->getParticipantData($participant));
 
-        return count($output) === 1 ? array_pop($output) : $output;
+        return count($output) <= 1 ? array_pop($output) : $output;
     }
 }
