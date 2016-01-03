@@ -462,7 +462,7 @@ class ApiController extends Controller
      */
     protected function jsonOutput($data, $http_status = '200 Awesome', $content_type = 'text/plain')
     {
-        $string = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $string = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         header('HTTP/1.1 ' . $http_status);
         header('Content-Type: ' . $content_type . '; charset=UTF-8');
         header('Content-Length: ' . strlen($string));

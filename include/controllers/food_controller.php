@@ -94,7 +94,7 @@ class FoodController extends Controller
      */
     public function deleteFood()
     {
-        if (!($this->model->isUser(array('Fake51', 'Admin', 'j_lindhard@yahoo.com')) || $this->model->getLoggedInUser()->hasRole('Infonaut'))) {
+        if (!($this->model->getLoggedInUser()->hasRole('Infonaut') || $this->model->getLoggedInUser()->hasRole('admin'))) {
             $this->hardRedirect($this->url('no_access'));
         }
 
@@ -131,7 +131,7 @@ class FoodController extends Controller
      */
     public function createFood()
     {
-        if (!($this->model->isUser(array('Fake51', 'Admin', 'j_lindhard@yahoo.com')) || $this->model->getLoggedInUser()->hasRole('Infonaut'))) {
+        if (!($this->model->getLoggedInUser()->hasRole('Infonaut') || $this->model->getLoggedInUser()->hasRole('admin'))) {
             $this->hardRedirect($this->url('no_access'));
         }
 
@@ -161,7 +161,7 @@ class FoodController extends Controller
      */
     public function editFood()
     {
-        if (!($this->model->isUser(array('Fake51', 'Admin', 'j_lindhard@yahoo.com')) || $this->model->getLoggedInUser()->hasRole('Infonaut'))) {
+        if (!($this->model->getLoggedInUser()->hasRole('Infonaut') || $this->model->getLoggedInUser()->hasRole('admin'))) {
             $this->hardRedirect($this->url('no_access'));
         }
 

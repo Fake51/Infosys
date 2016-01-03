@@ -573,10 +573,10 @@ class ApiModel extends Model {
                 );
 
                 if (file_exists(PUBLIC_PATH . 'uploads/wear/' . intval($res->id) . '.jpg')) {
-                    $act['image'] = '/uploads/wear/' . intval($res->id) . '.jpg';
+                    $act['image'] = $this->config->get('app.public_uri') . 'uploads/wear/' . intval($res->id) . '.jpg';
 
                 } elseif (file_exists(PUBLIC_PATH . 'uploads/wear/' . intval($res->id) . '.png')) {
-                    $act['image'] = '/uploads/wear/' . intval($res->id) . '.png';
+                    $act['image'] = $this->config->get('app.public_uri') . 'uploads/wear/' . intval($res->id) . '.png';
                 }
 
                 foreach ($res->getWearpriser() as $price) {

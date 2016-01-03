@@ -86,7 +86,7 @@ class WearController extends Controller {
      * @return void
      */
     public function deleteWear() {
-        if (!$this->model->isUser(array('Fake51', 'Admin', 'kclhatting@gmail.com', 'idatski@gmail.com')) && !$this->model->userHasRole('admin')) {
+        if (!$this->model->userHasRole('admin')) {
             $this->hardRedirect($this->url('no_access'));
         }
 
@@ -117,7 +117,7 @@ class WearController extends Controller {
      * @return void
      */
     public function createWear() {
-        if (!$this->model->isUser(array('Fake51', 'Admin', 'kclhatting@gmail.com', 'idatski@gmail.com')) && !$this->model->userHasRole('admin')) {
+        if (!$this->model->userHasRole('admin')) {
             $this->hardRedirect($this->url('no_access'));
         }
 
@@ -143,7 +143,7 @@ class WearController extends Controller {
      * @return void
      */
     public function editWear() {
-        if (!$this->model->isUser(array('Fake51', 'Admin', 'kclhatting@gmail.com', 'idatski@gmail.com')) && !$this->model->userHasRole('admin')) {
+        if (!$this->model->userHasRole('admin')) {
             $this->hardRedirect($this->url('no_access'));
         }
 

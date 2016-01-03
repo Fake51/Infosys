@@ -740,13 +740,13 @@ class ParticipantModel extends Model
 
         $this->handleEntranceUpdate($deltager, $post);
 
-        if ($this->isUser(array('Fake51', 'Admin')) || $this->getLoggedInUser()->hasRole('Infonaut')) {
+        if ($this->getLoggedInUser()->hasRole('Infonaut') || $this->model->getLoggedInUser()->hasRole('admin')) {
             $this->handleFoodUpdate($deltager, $post);
         } else {
             $this->dic->get('Messages')->addError('Kun infonauter kan opdatere mad');
         }
 
-        if ($this->isUser(array('Fake51', 'Admin', 'kclhatting@gmail.com', 'Livlykke86@gmail.com')) || $this->getLoggedInUser()->hasRole('Infonaut')) {
+        if ($this->getLoggedInUser()->hasRole('Infonaut') || $this->model->getLoggedInUser()->hasRole('admin')) {
             $this->handleWearUpdate($deltager, $post);
         } else {
             $this->dic->get('Messages')->addError('Kun infonauter kan opdatere wear');
