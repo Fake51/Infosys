@@ -83,13 +83,16 @@ class DIC
     {
         if (is_string($class)) {
             $class_name = $class;
+
         } elseif (is_object($class)) {
             $class_name = get_class($class);
+
         } else {
             throw new DICException('Class parameter is not object or string');
         }
 
         $class_options = array();
+
         if (!empty($options->reusable)) {
             $class_options['reusable'] = true;
         }
@@ -104,18 +107,19 @@ class DIC
      *   and setups of objects if needed
      *
      * @param object $object Object for reuse
+     * @param string $class  Class name, optional
      *
      * @throws DICException
      * @access public
      * @return $this
      */
-    public function addReusableObject($object)
+    public function addReusableObject($object, $class = '')
     {
         if (!is_object($object)) {
             throw new DICException('Provided parameter is not an object');
         }
 
-        $class = get_class($object);
+        $class = $class ? $class : get_class($object);
 
         if (!isset($this->dependencies[$class])) {
             $this->dependencies[$class] = array('reusable' => true);

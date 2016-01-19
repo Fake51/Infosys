@@ -88,6 +88,7 @@ class EntityFactory
         'Madtider'                  => 'Madtider',
         'Newsletter'                => 'Newsletter',
         'NewsletterSubscriber'      => 'NewsletterSubscriber',
+        'DummyParticipant'          => 'DummyParticipant',
         'Pladser'                   => 'Pladser',
         'Privilege'                 => 'Privilege',
         'Role'                      => 'Role',

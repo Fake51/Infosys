@@ -72,7 +72,7 @@ class DeltagereTilmeldinger extends DBObject
      */
     public function getAfvikling()
     {
-        if (!$this->isLoaded())
+        if (!$this->afvikling_id)
         {
             return false;
         }
@@ -87,7 +87,7 @@ class DeltagereTilmeldinger extends DBObject
      */
     public function getAktivitet()
     {
-        if (!$this->isLoaded())
+        if (!$this->afvikling_id)
         {
             return false;
         }

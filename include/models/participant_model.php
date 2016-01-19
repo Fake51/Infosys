@@ -2194,7 +2194,7 @@ SQL;
      * @access public
      * @return Deltagere
      */
-    public function setupSignupEmail(Deltagere $participant, Page $page)
+    public function setupSignupEmail(DBObject $participant, Page $page)
     {
         $page->participant = $participant;
         $page->wear        = $participant->getWear();

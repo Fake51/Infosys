@@ -452,6 +452,23 @@ class Deltagere extends DBObject
         return $vagt->insert();
     }
 
+
+    /**
+     * sets a wear order for a specific wearprice,
+     * amount and size
+     *
+     * @param DBObject $wearprice Wearprice to order
+     *
+     * @access public
+     * @return $this
+     */
+    public function setWearOrder(DBObject $wearprice, $size, $amount)
+    {
+        $this->createEntity('DeltagereWear')->setOrderDirect($this, $wearprice, $size, $amount);
+
+        return $this;
+    }
+
     /**
      * signs the user up for some wear, with a given amount and size 
      *
@@ -467,6 +484,7 @@ class Deltagere extends DBObject
         {
             return false;
         }
+
         return $this->createEntity('DeltagereWear')->setBestilling($this, $wear, $antal, $size, $kategori);
     }
 
@@ -1349,25 +1367,11 @@ WHERE
      */
     public function delete()
     {
-        foreach ($this->getTilmeldinger() as $signup) {
-            $signup->delete();
-        }
-
-        foreach ($this->getGDSTilmeldinger() as $diy_signup) {
-            $diy_signup->delete();
-        }
-
-        foreach ($this->createEntity('DeltagereIndgang')->getForParticipant($this) as $entrance) {
-            $entrance->delete();
-        }
-
-        foreach ($this->createEntity('DeltagereMadtider')->getForParticipant($this) as $food) {
-            $food->delete();
-        }
-
-        foreach ($this->getWear() as $wear) {
-            $wear->delete();
-        }
+        $this->removeAllWear()
+            ->removeActivitySignups()
+            ->removeEntrance()
+            ->removeDiySignup()
+            ->removeFood();
 
         foreach ($this->getPladser() as $play) {
             $play->delete();
@@ -1378,6 +1382,81 @@ WHERE
         }
 
         return parent::delete();
+    }
+
+    /**
+     * removes all ordered food for the participant
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeFood()
+    {
+        foreach ($this->createEntity('DeltagereMadtider')->getForParticipant($this) as $food) {
+            $food->delete();
+        }
+
+        return $this;
+    }
+
+    /**
+     * removes Diy signups
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeDiySignup()
+    {
+        foreach ($this->getGDSTilmeldinger() as $diy_signup) {
+            $diy_signup->delete();
+        }
+
+        return $this;
+    }
+
+    /**
+     * removes all entrance relationships
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeEntrance()
+    {
+        foreach ($this->createEntity('DeltagereIndgang')->getForParticipant($this) as $entrance) {
+            $entrance->delete();
+        }
+
+        return $this;
+    }
+
+    /**
+     * removes all activity signups
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeActivitySignups()
+    {
+        foreach ($this->getTilmeldinger() as $signup) {
+            $signup->delete();
+        }
+
+        return $this;
+    }
+
+    /**
+     * removes all wear for the participant
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeAllWear()
+    {
+        foreach ($this->getWear() as $wear) {
+            $wear->delete();
+        }
+
+        return $this;
     }
 
     /**
@@ -1419,5 +1498,4 @@ WHERE
 
         return $gcm->send($message, array('title' => $title));
     }
-
 }

@@ -37,7 +37,7 @@
 class ApiController extends Controller
 {
     protected $prerun_hooks = array(
-        array('method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup', 'requestPasswordReminder')),
+        array('method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup', 'requestPasswordReminder', 'getConfirmationData')),
     );
 
     /**
@@ -691,5 +691,22 @@ class ApiController extends Controller
         header('HTTP/1.1 200 Emails sent');
 
         exit;
+    }
+
+    public function getConfirmationData()
+    {
+        // parse input and fill participant like object
+        // -- refactor parseSignup in api-model, to separate creation
+        //    locating object from parsing data and filling it
+        // -- convert all the add* methods in api-model to
+        //    methods on the participant/dummy object
+        // if parse went ok, render template
+
+        $this->page->participant = $this->model->parseSignupConfirmation($this->json);
+        $this->page->setTemplate('confirmationdata');
+
+        $participant_model = new ParticipantModel($this->dic->get('DB'), $this->config, $this->dic);
+        $participant_model->setupSignupEmail($this->page->participant, $this->page);
+        $this->page->layout_template = 'contentonly.phtml';
     }
 }

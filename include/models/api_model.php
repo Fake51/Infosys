@@ -669,58 +669,82 @@ class ApiModel extends Model {
                 exit;
             }
 
-            $this->db->exec("DELETE FROM deltagere_wear WHERE deltager_id = ?", $deltager->id);
+            $deltager->removeAllWear();
+            //$this->db->exec("DELETE FROM deltagere_wear WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['wear'] as $wear) {
                 $wearprice = $this->createEntity('WearPriser');
                 $wearprice = $wearprice->findBySelect($wearprice->getSelect()->setWhere('wear_id', '=', $wear['id'])->setWhere('brugerkategori_id', '=', $deltager->brugerkategori_id));
+
                 if (!$wearprice) {
                     $participant_category = $this->createEntity('BrugerKategorier');
                     $participant_category->findBySelect($participant_category->getSelect()->setWhere('navn', '=', 'Deltager'));
                     $wearprice = $this->createEntity('WearPriser');
                     $wearprice = $wearprice->findBySelect($wearprice->getSelect()->setWhere('wear_id', '=', $wear['id'])->setWhere('brugerkategori_id', '=', $participant_category->id));
+
                     if (!$wearprice) {
                         continue;
                     }
+
                 }
 
-                $this->db->exec("INSERT INTO deltagere_wear (deltager_id, wearpris_id, size, antal) VALUES (?, ?, ?, ?)", $deltager->id, $wearprice->id, $wear['size'], $wear['amount']);
+                $deltager->setWearOrder($wearprice, $wear['size'], $wear['amount']);
+
+//                $this->db->exec("INSERT INTO deltagere_wear (deltager_id, wearpris_id, size, antal) VALUES (?, ?, ?, ?)", $deltager->id, $wearprice->id, $wear['size'], $wear['amount']);
             }
+
         } catch (Exception $e) {
             return 'Failed to add wear choices for participant';
         }
+
+        return '';
     }
 
-    public function addGDS(array $json) {
+    public function addGDS(array $json, $deltager) {
         try {
-            $deltager = $this->createEntity('Deltagere')->findById($json['id']);
+            if (!$deltager) {
+                $deltager = $this->createEntity('Deltagere')->findById($json['id']);
+            }
 
             if (empty($json['gds']) || !is_array($json['gds'])) {
                 throw new FrameworkException('No data available');
             }
 
-            $this->db->exec("DELETE FROM deltagere_gdstilmeldinger WHERE deltager_id = ?", $deltager->id);
+            //$this->db->exec("DELETE FROM deltagere_gdstilmeldinger WHERE deltager_id = ?", $deltager->id);
+            $deltager->removeDiySignup();
 
             foreach ($json['gds'] as $gds) {
-                $this->db->exec("INSERT INTO deltagere_gdstilmeldinger (deltager_id, category_id, period) VALUES (?, ?, ?)", $deltager->id, $gds['kategori_id'], $gds['period']);
+                $category = $this->createEntity('GDSCategory')->findById($gds['kategori_id']);
+
+                $deltager->setGDSTilmelding($category, $gds['period']);
+                //$this->db->exec("INSERT INTO deltagere_gdstilmeldinger (deltager_id, category_id, period) VALUES (?, ?, ?)", $deltager->id, $gds['kategori_id'], $gds['period']);
             }
         } catch (Exception $e) {
+            echo "<pre>";
+            var_dump($e);
+            echo "</pre>";
+            exit;
             return 'Failed to add gds choices for participant';
         }
     }
 
-    public function addFood(array $json) {
+    public function addFood(array $json, $deltager) {
         try {
-            $deltager = $this->createEntity('Deltagere')->findById($json['id']);
+            if (!$deltager) {
+                $deltager = $this->createEntity('Deltagere')->findById($json['id']);
+            }
 
             if (empty($json['food']) || !is_array($json['food'])) {
                 throw new FrameworkException('No data available');
             }
 
-            $this->db->exec("DELETE FROM deltagere_madtider WHERE deltager_id = ?", $deltager->id);
+            $deltager->removeFood();
+            //$this->db->exec("DELETE FROM deltagere_madtider WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['food'] as $food) {
-                $this->db->exec("INSERT INTO deltagere_madtider (deltager_id, madtid_id) VALUES (?, ?)", $deltager->id, $food['madtid_id']);
+                $foodtime = $this->createEntity('Madtider')->findById($food['madtid_id']);
+                $deltager->setMad($foodtime);
+                //$this->db->exec("INSERT INTO deltagere_madtider (deltager_id, madtid_id) VALUES (?, ?)", $deltager->id, $food['madtid_id']);
             }
         } catch (Exception $e) {
             return 'Failed to add food choices for participant';
@@ -737,10 +761,14 @@ class ApiModel extends Model {
                 throw new FrameworkException('No data available ');
             }
 
-            $this->db->exec("DELETE FROM deltagere_tilmeldinger WHERE deltager_id = ?", $deltager->id);
+            $deltager->removeActivitySignups();
+            //$this->db->exec("DELETE FROM deltagere_tilmeldinger WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['activity'] as $activity) {
-                $this->db->exec("INSERT INTO deltagere_tilmeldinger (deltager_id, prioritet, afvikling_id, tilmeldingstype) VALUES (?, ?, ?, ?)", $deltager->id, $activity['priority'], $activity['schedule_id'], $activity['type']);
+                $schedule = $this->createEntity('Afviklinger')->findById($activity['schedule_id']);
+
+                $deltager->setAktivitetTilmelding($schedule, $activity['priority'], $activity['type']);
+                //$this->db->exec("INSERT INTO deltagere_tilmeldinger (deltager_id, prioritet, afvikling_id, tilmeldingstype) VALUES (?, ?, ?, ?)", $deltager->id, $activity['priority'], $activity['schedule_id'], $activity['type']);
             }
         } catch (Exception $e) {
             $e->logException();
@@ -758,15 +786,96 @@ class ApiModel extends Model {
                 throw new FrameworkException('No data available');
             }
 
-            $this->db->exec("DELETE FROM deltagere_indgang WHERE deltager_id = ?", $deltager->id);
+            $deltager->removeEntrance();
+            //$this->db->exec("DELETE FROM deltagere_indgang WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['entrance'] as $entrance) {
-                $this->db->exec("INSERT INTO deltagere_indgang (deltager_id, indgang_id) VALUES (?, ?)", $deltager->id, $entrance['entrance_id']);
+                $entry = $this->createEntity('Indgang')->findById($entrance['entrance_id']);
+
+                $deltager->setIndgang($entry);
+                //$this->db->exec("INSERT INTO deltagere_indgang (deltager_id, indgang_id) VALUES (?, ?)", $deltager->id, $entrance['entrance_id']);
             }
         } catch (Exception $e) {
             $e->logException();
             return 'Failed to add entrance choices for participant';
         }
+    }
+
+    /**
+     * parses the actual signup data and sets it on
+     * the provided participant object
+     *
+     * @param array     $data        Data to parse
+     * @param Deltagere $participant Participant object
+     *
+     * @throws Exception
+     * @access public
+     * @return array
+     */
+    public function parseSignupData(array $data, DBObject $participant)
+    {
+        $participant->signed_up = date('Y-m-d H:i:s');
+        $participant->annulled  = 'nej';
+
+        $this->setParticipantData($participant, $data['participant']);
+
+        try {
+            if (!$participant->update()) {
+                return ['Could not update database with participant data'];
+            }
+
+        } catch (Exception $e) {
+            $e->logException();
+
+            return ['Could not update database with participant data'];
+
+        }
+
+        $errors = array();
+
+        if (!empty($data['wear']) && is_array($data['wear'])) {
+            $errors[] = $this->addWear($data, $participant);
+        }
+
+        if (!empty($data['activity']) && is_array($data['activity'])) {
+            $errors[] = $this->addActivity($data, $participant);
+        }
+
+        if (!empty($data['entrance']) && is_array($data['entrance'])) {
+            $errors[] = $this->addEntrance($data, $participant);
+        }
+
+        if (!empty($data['gds']) && is_array($data['gds'])) {
+            $errors[] = $this->addGDS($data, $participant);
+        }
+
+        if (!empty($data['food']) && is_array($data['food'])) {
+            $errors[] = $this->addFood($data, $participant);
+        }
+
+        return array_filter($errors);
+    }
+
+    /**
+     * creates a dummy participant and adds all relevant data
+     * from signup to it
+     *
+     * @param array $data Signup confirmation data
+     *
+     * @access public
+     * @return array
+     */
+    public function parseSignupConfirmation(array $data)
+    {
+        $participant = $this->createEntity('DummyParticipant');
+
+        $errors = $this->parseSignupData($data, $participant);
+
+        if (!$errors) {
+            return $participant;
+        }
+
+        throw new FrameworkException('Errors in signup data');
     }
 
     /**
@@ -808,49 +917,10 @@ class ApiModel extends Model {
             );
         }
 
-        $participant->signed_up = date('Y-m-d H:i:s');
-        $participant->annulled  = 'nej';
-
-        $this->setParticipantData($participant, $data['participant']);
-
-        try {
-            if (!$participant->update()) {
-                throw new FrameworkException('Could not save object');
-            }
-        } catch (Exception $e) {
-            $e->logException();
-            return array(
-                array(
-                    'status'     => 'fail',
-                    'failReason' => 'Could not update database with participant data'
-                ),
-                $participant,
-            );
-        }
-
-        $errors = array();
-
-        if (!empty($data['wear']) && is_array($data['wear'])) {
-            $errors[] = $this->addWear($data, $participant);
-        }
-
-        if (!empty($data['activity']) && is_array($data['activity'])) {
-            $errors[] = $this->addActivity($data, $participant);
-        }
-
-        if (!empty($data['entrance']) && is_array($data['entrance'])) {
-            $errors[] = $this->addEntrance($data, $participant);
-        }
-
-        if (!empty($data['gds']) && is_array($data['gds'])) {
-            $errors[] = $this->addGDS($data, $participant);
-        }
-
-        if (!empty($data['food']) && is_array($data['food'])) {
-            $errors[] = $this->addFood($data, $participant);
-        }
+        $errors = $this->parseSignupData($data, $participant);
 
         $errors = array_filter($errors);
+
         if ($errors) {
             $this->fileLog('Failed to create participant relations. Errors: ' . print_r($errors, true) . '. Data: ' . $data);
             $this->cleanParticipantSignup($participant);
@@ -896,9 +966,9 @@ class ApiModel extends Model {
      * @param array     $data        JSON data
      *
      * @access protected
-     * @return void
+     * @return $this
      */
-    protected function setParticipantData(Deltagere $participant, array $data)
+    protected function setParticipantData(DBObject $participant, array $data)
     {
         $fields = array(
             'fornavn',
@@ -954,9 +1024,12 @@ class ApiModel extends Model {
         $bk  = $this->createEntity('BrugerKategorier');
         $sel = $bk->getSelect()->setWhere('navn', '=', $data['brugertype']);
         $bk->findBySelect($sel);
+
         if ($bk->id) {
             $participant->brugerkategori_id = $bk->id;
         }
+
+        return $this;
     }
 
     /**

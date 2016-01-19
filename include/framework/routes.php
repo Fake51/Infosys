@@ -211,21 +211,21 @@ class Routes
         $this->routes['room_image_overview'] = array('url' => 'rooms/image-overview','controller' => 'Rooms', 'method' => 'imageOverview');
 
         // wear routes
-        $this->routes['wearhome'] = array('url' => 'wear/', 'controller' => 'Wear', 'method' => 'main');
-        $this->routes['show_wear'] = array('url' => 'wear/showwear', 'controller' => 'Wear', 'method' => 'showTypes');
-        $this->routes['vis_wear'] = array('url' => 'wear/viswear/:id:', 'controller' => 'Wear', 'method' => 'showWear');
-        $this->routes['edit_wear'] = array('url' => 'wear/editwear/:id:', 'controller' => 'Wear', 'method' => 'editWear');
-        $this->routes['delete_wear'] = array('url' => 'wear/deletewear/:id:', 'controller' => 'Wear', 'method' => 'deleteWear');
-        $this->routes['create_wear'] = array('url' => 'wear/createwear', 'controller' => 'Wear', 'method' => 'createWear');
-        $this->routes['wear_breakdown'] = array('url' => 'wear/breakdown', 'controller' => 'Wear', 'method' => 'wearBreakdown');
-        $this->routes['detailed_order_list'] = array('url' => 'wear/detailed', 'controller' => 'Wear', 'method' => 'detailedOrderList');
+        $this->routes['wearhome']                     = array('url' => 'wear/', 'controller' => 'Wear', 'method' => 'main');
+        $this->routes['show_wear']                    = array('url' => 'wear/showwear', 'controller' => 'Wear', 'method' => 'showTypes');
+        $this->routes['vis_wear']                     = array('url' => 'wear/viswear/:id:', 'controller' => 'Wear', 'method' => 'showWear');
+        $this->routes['edit_wear']                    = array('url' => 'wear/editwear/:id:', 'controller' => 'Wear', 'method' => 'editWear');
+        $this->routes['delete_wear']                  = array('url' => 'wear/deletewear/:id:', 'controller' => 'Wear', 'method' => 'deleteWear');
+        $this->routes['create_wear']                  = array('url' => 'wear/createwear', 'controller' => 'Wear', 'method' => 'createWear');
+        $this->routes['wear_breakdown']               = array('url' => 'wear/breakdown', 'controller' => 'Wear', 'method' => 'wearBreakdown');
+        $this->routes['detailed_order_list']          = array('url' => 'wear/detailed', 'controller' => 'Wear', 'method' => 'detailedOrderList');
         $this->routes['detailed_unfilled_order_list'] = array('url' => 'wear/unfilled', 'controller' => 'Wear', 'method' => 'detailedUnfilledOrderList');
-        $this->routes['detailed_ajax'] = array('url' => 'wear/detailed/ajax/', 'controller' => 'Wear', 'method' => 'detailedOrderAjax');
-        $this->routes['detailed_order_list_print'] = array('url' => 'wear/detailed/print/', 'controller' => 'Wear', 'method' => 'detailedOrderListPrint');
-        $this->routes['detailed_mini_list'] = array('url' => 'wear/detailed/:type:/:size:', 'controller' => 'Wear', 'method' => 'detailedMiniList');
-        $this->routes['ajax_get_wear'] = array('url' => 'wear/ajaxgetwear/:id:', 'controller' => 'Wear', 'method' => 'ajaxGetWear');
-        $this->routes['wear_handout'] = array('url' => 'wear/handout', 'controller' => 'Wear', 'method' => 'displayHandout');
-        $this->routes['wear_handout_ajax'] = array('url' => 'wear/handout/ajax', 'controller' => 'Wear', 'method' => 'ajaxHandout');
+        $this->routes['detailed_ajax']                = array('url' => 'wear/detailed/ajax/', 'controller' => 'Wear', 'method' => 'detailedOrderAjax');
+        $this->routes['detailed_order_list_print']    = array('url' => 'wear/detailed/print/', 'controller' => 'Wear', 'method' => 'detailedOrderListPrint');
+        $this->routes['detailed_mini_list']           = array('url' => 'wear/detailed/:type:/:size:', 'controller' => 'Wear', 'method' => 'detailedMiniList');
+        $this->routes['ajax_get_wear']                = array('url' => 'wear/ajaxgetwear/:id:', 'controller' => 'Wear', 'method' => 'ajaxGetWear');
+        $this->routes['wear_handout']                 = array('url' => 'wear/handout', 'controller' => 'Wear', 'method' => 'displayHandout');
+        $this->routes['wear_handout_ajax']            = array('url' => 'wear/handout/ajax', 'controller' => 'Wear', 'method' => 'ajaxHandout');
 
         // mad routes
         $this->routes['madhome']              = array('url' => 'mad/', 'controller' => 'Food', 'method' => 'main');
@@ -244,13 +244,13 @@ class Routes
         $this->routes['reset_participant_foodtime'] = array('url' => 'food/reset-handout-times', 'controller' => 'Food', 'method' => 'resetParticipantHandoutTimes');
 
         // indgang routes
-        $this->routes['indganghome'] = array('url' => 'indgang/', 'controller' => 'Entrance', 'method' => 'main');
+        $this->routes['indganghome']  = array('url' => 'indgang/', 'controller' => 'Entrance', 'method' => 'main');
         $this->routes['show_entries'] = array('url' => 'indgang/entrytypes/', 'controller' => 'Entrance', 'method' => 'entryTypes');
-        $this->routes['show_entry'] = array('url' => 'indgang/entry/:id:', 'controller' => 'Entrance', 'method' => 'showType');
+        $this->routes['show_entry']   = array('url' => 'indgang/entry/:id:', 'controller' => 'Entrance', 'method' => 'showType');
         $this->routes['create_entry'] = array('url' => 'indgang/createentry/', 'controller' => 'Entrance', 'method' => 'createEntry');
-        $this->routes['edit_entry'] = array('url' => 'indgang/editentry/:id:', 'controller' => 'Entrance', 'method' => 'editEntry');
+        $this->routes['edit_entry']   = array('url' => 'indgang/editentry/:id:', 'controller' => 'Entrance', 'method' => 'editEntry');
         $this->routes['delete_entry'] = array('url' => 'indgang/deleteentry/:id:', 'controller' => 'Entrance', 'method' => 'deleteEntry');
-        $this->routes['entry_stats'] = array('url' => 'entry/stats', 'controller' => 'Entrance', 'method' => 'entryStats');
+        $this->routes['entry_stats']  = array('url' => 'entry/stats', 'controller' => 'Entrance', 'method' => 'entryStats');
 
         // gds routes
         $this->routes['gdshome']                = array('url' => 'gds/', 'controller' => 'Gds', 'method' => 'main');
@@ -269,33 +269,33 @@ class Routes
         $this->routes['get_gds_suggestions']    = array('url' => 'gds/shift-suggestions/:shift_id:', 'controller' => 'Gds', 'method' => 'getShiftSuggestions');
 
         // hold routes
-        $this->routes['holdhome'] = array('url' => 'hold/', 'controller' => 'Groups', 'method' => 'main');
-        $this->routes['vis_alle_hold'] = array('url' => 'hold/visalle/', 'controller' => 'Groups', 'method' => 'visAlle');
-        $this->routes['vis_hold'] = array('url' => 'hold/vis/:id:', 'controller' => 'Groups', 'method' => 'visHold');
-        $this->routes['opret_hold'] = array('url' => 'hold/new/', 'controller' => 'Groups', 'method' => 'createGroup');
-        $this->routes['edit_hold'] = array('url' => 'hold/edit/:id:', 'controller' => 'Groups', 'method' => 'edit');
-        $this->routes['delete_hold'] = array('url' => 'hold/slet/:id:', 'controller' => 'Groups', 'method' => 'deleteGroup');
-        $this->routes['ajax_delete_hold'] = array('url' => 'hold/ajaxdeletegroup/:id:', 'controller' => 'Groups', 'method' => 'ajaxDeleteGroup');
-        $this->routes['ajax_create_group'] = array('url' => 'hold/ajaxcreategroup/:afvikling_id:', 'controller' => 'Groups', 'method' => 'ajaxCreateGroup');
+        $this->routes['holdhome']                  = array('url' => 'hold/', 'controller' => 'Groups', 'method' => 'main');
+        $this->routes['vis_alle_hold']             = array('url' => 'hold/visalle/', 'controller' => 'Groups', 'method' => 'visAlle');
+        $this->routes['vis_hold']                  = array('url' => 'hold/vis/:id:', 'controller' => 'Groups', 'method' => 'visHold');
+        $this->routes['opret_hold']                = array('url' => 'hold/new/', 'controller' => 'Groups', 'method' => 'createGroup');
+        $this->routes['edit_hold']                 = array('url' => 'hold/edit/:id:', 'controller' => 'Groups', 'method' => 'edit');
+        $this->routes['delete_hold']               = array('url' => 'hold/slet/:id:', 'controller' => 'Groups', 'method' => 'deleteGroup');
+        $this->routes['ajax_delete_hold']          = array('url' => 'hold/ajaxdeletegroup/:id:', 'controller' => 'Groups', 'method' => 'ajaxDeleteGroup');
+        $this->routes['ajax_create_group']         = array('url' => 'hold/ajaxcreategroup/:afvikling_id:', 'controller' => 'Groups', 'method' => 'ajaxCreateGroup');
         $this->routes['ajax_schedule_participant'] = array('url' => 'groups/scheduleparticipant', 'controller' => 'Groups', 'method' => 'ajaxScheduleParticipant');
 
         // log routes
-        $this->routes['log'] = array('url' => 'log', 'controller' => 'Log', 'method' => 'showLog');
+        $this->routes['log']      = array('url' => 'log', 'controller' => 'Log', 'method' => 'showLog');
         $this->routes['log_ajax'] = array('url' => 'log/ajax/', 'controller' => 'Log', 'method' => 'ajaxList');
 
         // test routes
         $this->routes['test_signup'] = array('url' => 'deltager/testsignup/', 'controller' => 'Deltager', 'method' => 'test');
 
         // admin routes
-        $this->routes['admin_options'] = array('url' => 'admin/', 'controller' => 'Admin', 'method' => 'main');
-        $this->routes['admin_handle_users'] = array('url' => 'admin/users/', 'controller' => 'Admin', 'method' => 'handleUsers');
-        $this->routes['admin_handle_roles'] = array('url' => 'admin/roles/', 'controller' => 'Admin', 'method' => 'handleRoles');
+        $this->routes['admin_options']           = array('url' => 'admin/', 'controller' => 'Admin', 'method' => 'main');
+        $this->routes['admin_handle_users']      = array('url' => 'admin/users/', 'controller' => 'Admin', 'method' => 'handleUsers');
+        $this->routes['admin_handle_roles']      = array('url' => 'admin/roles/', 'controller' => 'Admin', 'method' => 'handleRoles');
         $this->routes['admin_handle_privileges'] = array('url' => 'admin/privileges/', 'controller' => 'Admin', 'method' => 'handlePrivileges');
 
         // admin ajax routes
-        $this->routes['admin_ajax_changepass'] = array('url' => 'admin/ajax/changepass/:id:', 'controller' => 'Admin', 'method' => 'ajaxChangePass');
-        $this->routes['admin_ajax_removerole'] = array('url' => 'admin/ajax/removerole/:id:/:role_id:', 'controller' => 'Admin', 'method' => 'ajaxRemoveRole');
-        $this->routes['admin_ajax_addrole'] = array('url' => 'admin/ajax/addrole/:id:/:role_id:', 'controller' => 'Admin', 'method' => 'ajaxAddRole');
+        $this->routes['admin_ajax_changepass']      = array('url' => 'admin/ajax/changepass/:id:', 'controller' => 'Admin', 'method' => 'ajaxChangePass');
+        $this->routes['admin_ajax_removerole']      = array('url' => 'admin/ajax/removerole/:id:/:role_id:', 'controller' => 'Admin', 'method' => 'ajaxRemoveRole');
+        $this->routes['admin_ajax_addrole']         = array('url' => 'admin/ajax/addrole/:id:/:role_id:', 'controller' => 'Admin', 'method' => 'ajaxAddRole');
         $this->routes['admin_ajax_disableuser']     = array('url' => 'admin/ajax/disableuser/:id:', 'controller' => 'Admin', 'method' => 'ajaxDisableUser');
         $this->routes['admin_ajax_enableuser']      = array('url' => 'admin/ajax/enableuser/:id:', 'controller' => 'Admin', 'method' => 'ajaxEnableUser');
         $this->routes['admin_ajax_deleteuser']      = array('url' => 'admin/ajax/deleteuser/:id:', 'controller' => 'Admin', 'method' => 'ajaxDeleteUser');
@@ -338,6 +338,7 @@ class Routes
         $this->routes['api_user_data']           = array('url' => 'api/v2/user-data/:email:', 'controller' => 'Api', 'method' => 'getUserData');
         $this->routes['api_user_register']       = array('url' => 'api/user/:id:/register', 'controller' => 'Api', 'method' => 'registerApp');
         $this->routes['api_user_unregister']     = array('url' => 'api/user/:id:/unregister', 'controller' => 'Api', 'method' => 'unregisterApp');
+        $this->routes['api_user_data_v']         = array('url' => 'api/v:version:/confirmation-data', 'controller' => 'Api', 'method' => 'getConfirmationData');
 
         $this->routes['api_request_password_reminder'] = array('url' => 'api/request-password-email', 'controller' => 'Api', 'method' => 'requestPasswordReminder');
 

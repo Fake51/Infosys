@@ -149,6 +149,25 @@ class DeltagereWear extends DBObject
     }
 
     /**
+     * sets a wear order, given participant, wearprice,
+     * amount and size
+     *
+     * @param $participant Participant to set order for
+     *
+     * @access public
+     * @return bool
+     */
+    public function setOrderDirect($participant, $wearprice, $size, $amount)
+    {
+        $this->deltager_id = $participant->id;
+        $this->wearpris_id = $wearprice->id;
+        $this->antal       = $amount;
+        $this->size        = $size;
+
+        return $this->insert();
+    }
+
+    /**
      * sets an order for a given infonaut
      *
      * @param object $deltager - Deltagere entity

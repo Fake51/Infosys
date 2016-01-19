@@ -73,6 +73,14 @@ class Autoloader
             return;
         }
 
+        if (strpos($class_name, 'PHPUnit') === 0) {
+            return;
+        }
+
+        if (strpos($class_name, 'Composer') === 0) {
+            return;
+        }
+
         $normalized_name = $this->normalizeClass($class_name);
 
         foreach ($this->class_folders as $folder) {
@@ -87,7 +95,10 @@ class Autoloader
             }
 
         }
-
+echo "<pre>";
+var_dump($class_name);
+echo "</pre>";
+exit;
         // since the file containing the class could not be found, die in error
         // not very nice, but you cannot throw an exception inside the autoloader
         $exception_class = <<<EOD
