@@ -306,8 +306,15 @@ class ApiController extends Controller
         }
 
         $timestamp = 0;
+
         if ($this->page->request->get->since) {
             //$timestamp = intval($this->page->request->get->since);
+        }
+
+        $birthdate_timestamp = null;
+
+        if ($this->page->request->get->birthdate) {
+            $birthdate_timestamp = strtotime($this->page->request->get->birthdate);
         }
 
         if (preg_match('/\\d{4}-\\d{2}-\\d{2}/', $this->vars['id'])) {
@@ -320,7 +327,7 @@ class ApiController extends Controller
             $ids = explode(',', $this->vars['id']);
         }
 
-        $this->jsonOutput($this->model->getActivityData($ids, !empty($this->vars['all']), false, $timestamp));
+        $this->jsonOutput($this->model->getActivityData($ids, !empty($this->vars['all']), false, $timestamp, 1, $birthdate_timestamp));
     }
 
     /**

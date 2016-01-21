@@ -102,7 +102,7 @@ class ApiModel extends Model {
      * @access public
      * @return array
      */
-    public function getActivityData(array $ids, $all = false, $app_output = false, $timestamp = 0, $version = 1) {
+    public function getActivityData(array $ids, $all = false, $app_output = false, $timestamp = 0, $version = 1, $birthdate_timestamp = null) {
         $select = $this->createEntity('Aktiviteter')
             ->getSelect();
 
@@ -121,6 +121,16 @@ class ApiModel extends Model {
 
         foreach ($multiblok as $multi) {
             $multi_ids[] = $multi->afvikling_id;
+        }
+
+        if ($birthdate_timestamp) {
+            $filter = function ($x) use ($birthdate_timestamp) {
+                return date('Y') - date('Y', $birthdate_timestamp) < 13 && in_array($x->id, [247, 238])
+                    || date('Y') - date('Y', $birthdate_timestamp) >= 13 && !in_array($x->id, [247, 238]);
+            };
+
+            $result = array_filter($result, $filter);
+
         }
 
         if ($result) {
