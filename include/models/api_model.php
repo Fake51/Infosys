@@ -126,7 +126,7 @@ class ApiModel extends Model {
         if ($birthdate_timestamp) {
             $filter = function ($x) use ($birthdate_timestamp) {
                 return date('Y') - date('Y', $birthdate_timestamp) < 13 && in_array($x->id, [247, 238])
-                    || date('Y') - date('Y', $birthdate_timestamp) >= 13 && !in_array($x->id, [247, 238]);
+                    || date('Y') - date('Y', $birthdate_timestamp) >= 13 && !in_array($x->id, [247]);
             };
 
             $result = array_filter($result, $filter);
