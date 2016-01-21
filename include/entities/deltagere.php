@@ -31,7 +31,7 @@
      * @package MVC
      * @subpackage Entities
      */
-class Deltagere extends DBObject
+class Deltagere extends DBObject implements AgeFulfilment
 {
 
     const RICH_BASTARD_DONATION = 300;
@@ -1497,5 +1497,54 @@ WHERE
         $gcm->setDevices(array($this->gcm_id));
 
         return $gcm->send($message, array('title' => $title));
+    }
+
+    /**
+     * returns age as a float
+     *
+     * @access public
+     * @return float
+     */
+    public function getAge(DateTime $at_time = null)
+    {
+        if (!$this->birthdate) {
+            return -1;
+        }
+
+        $now = $at_time ? $at_time : new DateTime();
+
+        $diff = $now->diff(new DateTime($this->birthdate));
+
+        return floor($diff->y);
+    }
+
+    /**
+     * returns true if the instance is younger than the
+     * provided limit
+     *
+     * @param int      $limit   Age limit to check against
+     * @param DateTime $at_time Optional time for comparison
+     *
+     * @access public
+     * @return bool
+     */
+    public function isYoungerThan($limit, DateTime $at_time = null)
+    {
+        return $this->getAge($at_time) < intval($limit);
+    }
+
+    /**
+     * returns true if the instance is older than or
+     * the same age as the provided limit
+     *
+     * @param int      $limit   Age limit to check against
+     * @param DateTime $at_time Optional time for comparison
+     *
+     * @access public
+     * @return bool
+     */
+    public function isOlderThan($limit, DateTime $at_time = null)
+    {
+        return !$this->isYoungerThan($limit, $at_time);
     }
 }

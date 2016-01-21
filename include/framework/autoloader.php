@@ -95,25 +95,6 @@ class Autoloader
             }
 
         }
-echo "<pre>";
-var_dump($class_name);
-echo "</pre>";
-exit;
-        // since the file containing the class could not be found, die in error
-        // not very nice, but you cannot throw an exception inside the autoloader
-        $exception_class = <<<EOD
-        class {$class_name} {
-            function __construct() {
-                \$error = "Failed to load class {$class_name}";
-                if (class_exists('FrameworkException', false)) {
-                    throw new FrameworkException(\$error);
-                } else {
-                    throw new Exception(\$error);
-                }
-            }
-        }
-EOD;
-        eval($exception_class);
     }
 
     /**
