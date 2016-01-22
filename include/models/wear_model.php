@@ -201,25 +201,27 @@ class WearModel extends Model
      */
     public function updateWear(Wear $wear, RequestVars $post)
     {
-        if (!$wear->isLoaded())
-        {
+        if (!$wear->isLoaded()) {
             return false;
         }
-        $size_array = $wear->getWearSizes();
+
+        $size_array   = $wear->getWearSizes();
         $size_flipped = array_flip($size_array);
-        if (empty($post->min_size) || empty($post->max_size) || !in_array($post->min_size,$size_array) ||  !in_array($post->max_size,$size_array) || $size_flipped[$post->min_size] > $size_flipped[$post->max_size])
-        {
+
+        if (empty($post->min_size) || empty($post->max_size) || !in_array($post->min_size,$size_array) ||  !in_array($post->max_size,$size_array) || $size_flipped[$post->min_size] > $size_flipped[$post->max_size]) {
             return false;
         }
+
         $wear->navn = ((!empty($post->navn)) ? $post->navn : '');
         $wear->beskrivelse = ((!empty($post->beskrivelse)) ? $post->beskrivelse : '');
         $wear->size_range = $post->min_size . '-' .$post->max_size;
         $wear->title_en = ((!empty($post->title_en)) ? $post->title_en : '');
         $wear->description_en = ((!empty($post->description_en)) ? $post->description_en : '');
-        if (!$wear->update())
-        {
+
+        if (!$wear->update()) {
             return false;
         }
+
         return $this->updatePrices($wear, $post);
     }
 
@@ -234,63 +236,48 @@ class WearModel extends Model
      */
     protected function updatePrices(Wear $wear, RequestVars $post)
     {
-        $priser = $wear->getWearpriser();
-        $priser_id = $this->extractIds($priser);
-        $success = true;
-        if (!empty($post->wearpriceid) && !empty($post->wearprice_category) && !empty($post->wearprice_price))
-        {
-            $i = 0;
-            foreach ($post->wearpriceid as $id)
-            {
-                if (in_array($id, $priser_id))
-                {
-                    for ($ii = 0; $ii < count($priser_id); $ii++)
-                    {
-                        if ($priser_id[$ii] == $id)
-                        {
-                            unset($priser_id[$ii]);
-                            sort($priser_id);
-                        }
-                        break;
-                    }
-                    $wearprice = $this->findEntity('WearPriser', $id);
-                    $wearprice->pris = $post->wearprice_price[$i];
+        $priser     = $wear->getWearpriser();
+        $pris_index = array_flip($this->extractIds($priser));
+        $success    = true;
+
+        if (!empty($post->wearpriceid) && !empty($post->wearprice_category) && !empty($post->wearprice_price)) {
+            foreach ($post->wearpriceid as $index => $id) {
+                if (isset($pris_index[$id])) {
+                    $wearprice = $priser[$pris_index[$id]];
+                    $wearprice->pris = $post->wearprice_price[$index];
                     $wearprice->update();
-                    $i++;
+
+                    unset($priser[$pris_index[$id]]);
+
                     continue;
-                }
-                elseif ($id > 0)
-                {
-                    $i++;
+
+                } elseif ($id > 0) {
                     continue;
+
                 }
-                $new_wearprice = $this->createEntity('WearPriser');
-                $new_wearprice->wear_id = $wear->id;
-                $new_wearprice->brugerkategori_id = $post->wearprice_category[$i];
-                $new_wearprice->pris = $post->wearprice_price[$i];
-                if (!$new_wearprice->insert())
-                {
+
+                $new_wearprice                    = $this->createEntity('WearPriser');
+                $new_wearprice->wear_id           = $wear->id;
+                $new_wearprice->brugerkategori_id = $post->wearprice_category[$index];
+                $new_wearprice->pris              = $post->wearprice_price[$index];
+
+                if (!$new_wearprice->insert()) {
                     $success = false;
                 }
-                $i++;
-            }
-        }
-        if (!$success)
-        {
-            return false;
-        }
-        foreach ($priser_id as $prisid)
-        {
-            foreach ($priser as $pris)
-            {
-                if ($pris->id == $prisid)
-                {
-                    $pris->delete();
-                    continue;
-                }
+
             }
 
         }
+
+        if (!$success) {
+            return false;
+        }
+
+        foreach ($priser as $pris) {
+            $pris->delete();
+
+        }
+
         return true;
     }
 
