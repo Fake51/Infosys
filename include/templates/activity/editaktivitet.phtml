@@ -32,7 +32,11 @@
                     <td><b>Fylder lokale:</b> <?= $this->genSelect('aktivitet[lokale_eksklusiv]', array('ja', 'nej'), $this->aktivitet->lokale_eksklusiv);?></td>
                 </tr>
                 <tr>
-                    <td colspan='2'><strong>Sprog:</strong> <label><input type='radio' name='aktivitet[sprog]' value='dansk' <?= ($this->aktivitet->sprog == 'dansk' ? "checked='checked'" : '');?>> dansk</label> <label><input type='radio' name='aktivitet[sprog]' value='engelsk' <?= ($this->aktivitet->sprog == 'engelsk' ? "checked='checked'" : '');?>> engelsk</label> <label><input type='radio' name='aktivitet[sprog]' value='dansk+engelsk' <?= ($this->aktivitet->sprog == 'engelsk+engelsk' ? "checked='checked'" : '');?>> dansk, med mulighed for engelsk</label></td>
+                    <td colspan='2'><strong>Sprog:</strong>
+                        <label><input type='radio' name='aktivitet[sprog]' value='dansk' <?= ($this->aktivitet->sprog == 'dansk' ? "checked='checked'" : '');?>> dansk</label>
+                        <label><input type='radio' name='aktivitet[sprog]' value='engelsk' <?= ($this->aktivitet->sprog == 'engelsk' ? "checked='checked'" : '');?>> engelsk</label>
+                        <label><input type='radio' name='aktivitet[sprog]' value='dansk+engelsk' <?= ($this->aktivitet->sprog == 'dansk+engelsk' ? "checked='checked'" : '');?>> dansk, med mulighed for engelsk</label>
+                    </td>
                     <td><strong>Udelukker samtidige aktiviteter:</strong> <?= $this->genSelect('aktivitet[tids_eksklusiv]', array('ja', 'nej'), $this->aktivitet->tids_eksklusiv);?></td>
                 </tr>
                 <tr>
