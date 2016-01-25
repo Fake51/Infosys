@@ -1521,11 +1521,6 @@ class ParticipantController extends Controller
             return;
         }
 
-        $this->page->setTitle('Fejl / Fail');
-        $this->page->convention_done = true;
-
-        return;
-
         if (!$this->model->participantHasOutstandingPayment($participant)) {
             $this->page->setTitle('All good');
             $this->page->nothing_outstanding = true;

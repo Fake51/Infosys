@@ -166,6 +166,7 @@ class ApiModel extends Model {
                         'play_hours'     => floatval($res->varighed_per_afvikling),
                         'language'       => $res->sprog,
                         'wp_id'          => $res->wp_link,
+                        'can_sign_up'    => $res->kan_tilmeldes === 'ja' ? 1 : 0,
                     ),
                 );
 
@@ -181,7 +182,7 @@ class ApiModel extends Model {
 
                 foreach ($res->getAfviklinger() as $afvikling) {
                     if ($res->kan_tilmeldes == 'nej' && !$all || (strtotime($afvikling->end) - strtotime($afvikling->start) > 86400)) {
-                        continue;
+                        //continue;
                     }
 
                     $lokale = $this->createEntity('Lokaler')->findById($afvikling->lokale_id);
@@ -259,7 +260,7 @@ class ApiModel extends Model {
         if ($result) {
             foreach ($result as $res) {
                 if ($res->kan_tilmeldes == 'nej') {
-                    continue;
+                    //continue;
                 }
 
                 foreach ($res->getAfviklinger() as $afvikling) {

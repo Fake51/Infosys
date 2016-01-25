@@ -2262,7 +2262,9 @@ SQL;
         }
 
         foreach ($page->food as $item) {
-            $prices['food'] += $item->getMad()->pris;
+            if ($item) {
+                $prices['food'] += $item->getMad()->pris;
+            }
         }
 
         if ($participant->rig_onkel === 'ja') {
