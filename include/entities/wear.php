@@ -41,7 +41,9 @@ class Wear extends DBObject
      */
     protected $tablename = 'wear';
 
-    private $sizes = array('XS', 'S', 'M', 'L', 'XL','2XL', '3XL','4XL','5XL','6XL');
+    private $grownup_sizes = array('XS', 'S', 'M', 'L', 'XL','2XL', '3XL','4XL','5XL','6XL');
+
+    private $kids_sizes = array('92CM', '98CM', '104CM', '110CM', '116CM', '122CM', '128CM', '134CM', '140CM', '146CM', '152CM');
 
     /**
      * checks if a given size is within the sizerange of this wear-object
@@ -53,29 +55,35 @@ class Wear extends DBObject
     public function sizeInRange($size)
     {
         $size = strtoupper($size);
-        if (!$this->isLoaded() || !in_array($size, $this->sizes))
-        {
-            return false;
-        }
-        $sizeparts = explode('-', $this->size_range);
-        if (count($sizeparts) != 2 || !in_array($sizeparts[0], $this->sizes) || !in_array($sizeparts[0], $this->sizes))
-        {
-            return false;
-        }
-        $started = false;
-        for ($i = 0; $i < count($this->sizes); $i++)
-        {
-            $started = ((!$started && $sizeparts[0] != $this->sizes[$i]) ? false : true);
 
-            if ($size == $this->sizes[$i])
-            {
+        if (!$this->isLoaded() || !(in_array($size, $this->grownup_sizes) || in_array($size, $this->kids_sizes))) {
+            return false;
+        }
+
+        $sizeparts = explode('-', $this->size_range);
+
+        $merged_sizes = array_merge($this->grownup_sizes, $this->kids_sizes);
+
+        if (count($sizeparts) != 2 || !in_array($sizeparts[0], $merged_sizes) || !in_array($sizeparts[1], $merged_sizes)) {
+            return false;
+        }
+
+        $started = false;
+        $count   = count($merged_sizes);
+
+        for ($i = 0; $i < $count; $i++) {
+            $started = ((!$started && $sizeparts[0] != $merged_sizes[$i]) ? false : true);
+
+            if ($size == $merged_sizes[$i]) {
                 return (($started) ? true : false);
             }
-            if ($this->sizes[$i] == $sizeparts[1])
-            {
+
+            if ($merged_sizes[$i] == $sizeparts[1]) {
                 return false;
             }
+
         }
+
     }
 
     /**
@@ -173,7 +181,7 @@ class Wear extends DBObject
      */
     public function getWearSizes()
     {
-        return $this->sizes;
+        return array_merge($this->grownup_sizes, $this->kids_sizes);
     }
 
     /**
@@ -184,11 +192,11 @@ class Wear extends DBObject
      */
     public function getMinSize()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        $sizes = explode('-',$this->size_range);
+
+        $sizes = explode('-', $this->size_range);
         return $sizes[0];
     }
 
@@ -201,11 +209,11 @@ class Wear extends DBObject
      */
     public function getMaxSize()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        $sizes = explode('-',$this->size_range);
+
+        $sizes = explode('-', $this->size_range);
         return $sizes[1];
     }
 

@@ -171,22 +171,24 @@ class WearModel extends Model
      */
     public function createWear(RequestVars $post)
     {
-        $wear = $this->createEntity('Wear');
-        $size_array = $wear->getWearSizes();
+        $wear         = $this->createEntity('Wear');
+        $size_array   = $wear->getWearSizes();
         $size_flipped = array_flip($size_array);
-        if (empty($post->navn) || empty($post->min_size) || empty($post->max_size) || !in_array($post->min_size,$size_array) ||  !in_array($post->max_size,$size_array) || $size_flipped[$post->min_size] > $size_flipped[$post->max_size])
-        {
+
+        if (empty($post->navn) || empty($post->min_size) || empty($post->max_size) || !in_array($post->min_size, $size_array) ||  !in_array($post->max_size, $size_array) || $size_flipped[$post->min_size] > $size_flipped[$post->max_size]) {
             return false;
         }
-        $wear->navn = ((!empty($post->navn)) ? $post->navn : '');
-        $wear->beskrivelse = ((!empty($post->beskrivelse)) ? $post->beskrivelse : '');
-        $wear->size_range = $post->min_size . '-' .$post->max_size;
-        $wear->title_en = ((!empty($post->title_en)) ? $post->title_en : '');
+
+        $wear->navn           = ((!empty($post->navn)) ? $post->navn : '');
+        $wear->beskrivelse    = ((!empty($post->beskrivelse)) ? $post->beskrivelse : '');
+        $wear->size_range     = $post->min_size . '-' .$post->max_size;
+        $wear->title_en       = ((!empty($post->title_en)) ? $post->title_en : '');
         $wear->description_en = ((!empty($post->description_en)) ? $post->description_en : '');
-        if (!$wear->insert() || !$this->updatePrices($wear, $post))
-        {
+
+        if (!$wear->insert() || !$this->updatePrices($wear, $post)) {
             return false;
         }
+
         return $wear;
     }
 
@@ -212,10 +214,10 @@ class WearModel extends Model
             return false;
         }
 
-        $wear->navn = ((!empty($post->navn)) ? $post->navn : '');
-        $wear->beskrivelse = ((!empty($post->beskrivelse)) ? $post->beskrivelse : '');
-        $wear->size_range = $post->min_size . '-' .$post->max_size;
-        $wear->title_en = ((!empty($post->title_en)) ? $post->title_en : '');
+        $wear->navn           = ((!empty($post->navn)) ? $post->navn : '');
+        $wear->beskrivelse    = ((!empty($post->beskrivelse)) ? $post->beskrivelse : '');
+        $wear->size_range     = $post->min_size . '-' .$post->max_size;
+        $wear->title_en       = ((!empty($post->title_en)) ? $post->title_en : '');
         $wear->description_en = ((!empty($post->description_en)) ? $post->description_en : '');
 
         if (!$wear->update()) {
