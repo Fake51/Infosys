@@ -50,10 +50,10 @@ class DeltagereWear extends DBObject
      */
     public function getDeltagerWearBestillinger($deltager)
     {
-        if (!is_object($deltager) || !$deltager->isLoaded())
-        {
+        if (!is_object($deltager) || !$deltager->id) {
             return array();
         }
+
         $select = $this->getSelect();
         $select->setWhere('deltager_id', '=', $deltager->id);
         return $this->findBySelectMany($select);
@@ -67,10 +67,10 @@ class DeltagereWear extends DBObject
      */
     public function getDeltager()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->deltager_id) {
             return false;
         }
+
         return $this->createEntity('Deltagere')->findById($this->deltager_id);
     }
 
@@ -82,7 +82,7 @@ class DeltagereWear extends DBObject
      */
     public function getWearName($lang = 'da')
     {
-        if (!$this->isLoaded() || !($wearpris = $this->createEntity('WearPriser')->findById($this->wearpris_id))) {
+        if (!($wearpris = $this->createEntity('WearPriser')->findById($this->wearpris_id))) {
             return false;
         }
 
@@ -99,10 +99,10 @@ class DeltagereWear extends DBObject
      */
     public function getWearpris()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->wearpris_id) {
             return false;
         }
+
         return $this->createEntity('WearPriser')->findById($this->wearpris_id);
     }
 
@@ -114,11 +114,11 @@ class DeltagereWear extends DBObject
      */
     public function getWear()
     {
-        if (!$this->isLoaded())
-        {
+        if (!($wearpris = $this->getWearpris())) {
             return false;
         }
-        return $this->createEntity('Wear')->findById($this->getWearpris()->wear_id);
+
+        return $this->createEntity('Wear')->findById($wearpris->wear_id);
     }
 
     /**
@@ -133,14 +133,14 @@ class DeltagereWear extends DBObject
      */
     public function setBestilling($deltager, $wear, $antal, $size)
     {
-        if ($this->isLoaded() || !is_object($deltager) || !is_object($wear) || empty($antal) || empty($size) || $antal < 1)
-        {
+        if ($this->isLoaded() || !is_object($deltager) || !is_object($wear) || empty($antal) || empty($size) || $antal < 1) {
             return false;
         }
-        if (!$wear->sizeInRange($size))
-        {
+
+        if (!$wear->sizeInRange($size)) {
             return false;
         }
+
         $this->deltager_id = $deltager->id;
         $this->wearpris_id = $wear->getWearprisForDeltager($deltager)->id;
         $this->antal = $antal;
@@ -179,36 +179,33 @@ class DeltagereWear extends DBObject
      */
     public function setInfonautBestilling($deltager, $wear, $antal, $size)
     {
-        if ($this->isLoaded() || !is_object($deltager) || !is_object($wear) || empty($antal) || empty($size) || $antal < 1)
-        {
+        if ($this->isLoaded() || !is_object($deltager) || !is_object($wear) || empty($antal) || empty($size) || $antal < 1) {
             return false;
         }
-        if (!$wear->sizeInRange($size))
-        {
+
+        if (!$wear->sizeInRange($size)) {
             return false;
         }
 
         $wearpriser = $wear->getWearpriser();
         $price = null;
-        foreach ($wearpriser as $wearpris)
-        {
-            if ($this->createEntity('BrugerKategorier')->getCategoryName($wearpris->brugerkategori_id) == 'Infonaut')
-            {
+
+        foreach ($wearpriser as $wearpris) {
+            if ($this->createEntity('BrugerKategorier')->getCategoryName($wearpris->brugerkategori_id) == 'Infonaut') {
                 $price = $wearpris;
                 break;
             }
         }
 
-        if (!$price)
-        {
+        if (!$price) {
             return false;
         }
 
         $select = $this->getSelect();
         $select->setWhere('deltager_id','=',$deltager->id);
         $select->setWhere('wearpris_id','=',$price->id);
-        if ($this->createEntity('DeltagereWear')->findBySelect($select))
-        {
+
+        if ($this->createEntity('DeltagereWear')->findBySelect($select)) {
             return false;
         }
 

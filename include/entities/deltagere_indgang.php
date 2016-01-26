@@ -76,7 +76,7 @@ class DeltagereIndgang extends DBObject
      */
     public function getForParticipant(DBObject $participant)
     {
-        if (!is_object($participant) || !$participant->isLoaded()) {
+        if (!is_object($participant) || !$participant->id) {
             return array();
         }
 
@@ -84,6 +84,7 @@ class DeltagereIndgang extends DBObject
         $select->setWhere('deltager_id', '=', $participant->id);
         $entrances = $this->findBySelectMany($select);
         $result = false;
+
         if (empty($entrances)) {
             return array();
         }

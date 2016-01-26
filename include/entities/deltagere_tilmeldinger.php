@@ -52,10 +52,10 @@ class DeltagereTilmeldinger extends DBObject
      */
     public function getDeltagerTilmeldinger($deltager)
     {
-        if (!is_object($deltager) || !$deltager->isLoaded())
-        {
+        if (!is_object($deltager) || !$deltager->id) {
             return array();
         }
+
         $select = $this->getSelect();
         $select->setWhere('deltager_id','=',$deltager->id);
         $select->setFrom('afviklinger');
@@ -113,10 +113,10 @@ class DeltagereTilmeldinger extends DBObject
      */
     public function getDeltager()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->deltager_id()) {
             return false;
         }
+
         return $this->createEntity('Deltagere')->findById($this->deltager_id);
     }
 
@@ -133,7 +133,7 @@ class DeltagereTilmeldinger extends DBObject
      */
     public function setTilmelding($deltager, $afvikling, $prioritet, $tilmeldingstype)
     {
-        if (!is_object($deltager) || !is_object($afvikling) || !$deltager->isLoaded() || !$afvikling->isLoaded() || (!is_numeric($prioritet) || $prioritet < 1) || !in_array(strtolower($tilmeldingstype), $this->tilmeldingstyper)) {
+        if (!is_object($deltager) || !is_object($afvikling) || !$deltager->id || !$afvikling->id || (!is_numeric($prioritet) || $prioritet < 1) || !in_array(strtolower($tilmeldingstype), $this->tilmeldingstyper)) {
             return false;
         }
 
@@ -156,10 +156,10 @@ class DeltagereTilmeldinger extends DBObject
      */
     public function getRoleAcronym()
     {
-        if (!$this->isLoaded() || $this->tilmeldingstype != 'spilleder')
-        {
+        if (!$this->tilmeldingstype || $this->tilmeldingstype != 'spilleder') {
             return 'S';
         }
+
         return 'SL';
     }
 

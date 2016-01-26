@@ -51,22 +51,24 @@ class DeltagereGDSVagter extends DBObject
      */
     public function getDeltagerVagter($deltager)
     {
-        if (!is_object($deltager) || !$deltager->isLoaded())
-        {
+        if (!is_object($deltager) || !$deltager->id) {
             return array();
         }
+
         $select = $this->getSelect();
         $select->setWhere('deltager_id', '=', $deltager->id);
         $results = $this->findBySelectMany($select);
-        if (empty($results))
-        {
+
+        if (empty($results)) {
             return array();
         }
+
         $ids = array();
-        foreach ($results as $result)
-        {
+
+        foreach ($results as $result) {
             $ids[] = $result->gdsvagt_id;
         }
+
         $select = $this->createEntity('GDSVagter')->getSelect();
         $select->setWhere('id', 'in', $ids);
         $select->setOrder('start', 'asc');
@@ -82,10 +84,10 @@ class DeltagereGDSVagter extends DBObject
      */
     public function countDeltagerVagter($deltager)
     {
-        if (!is_object($deltager) || !$deltager->isLoaded())
-        {
+        if (!is_object($deltager) || !$deltager->id) {
             return 0;
         }
+
         $select = $this->getSelect();
         $select->setWhere('deltager_id', '=', $deltager->id);
         return $this->selectCount($select);

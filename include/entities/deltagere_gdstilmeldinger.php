@@ -147,7 +147,7 @@ class DeltagereGDSTilmeldinger extends DBObject
      */
     public function participantSignedUpForShift($deltager, $vagt)
     {
-        if (!$vagt->isLoaded()) {
+        if (!$vagt->getPeriod()) {
             return false;
         }
 

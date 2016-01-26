@@ -75,7 +75,7 @@ class DeltagereMadtider extends DBObject {
      */
     public function getForParticipant(DBObject $participant)
     {
-        if (!is_object($participant) || !$participant->isLoaded()) {
+        if (!is_object($participant) || !$participant->id) {
             return array();
         }
 
@@ -99,25 +99,27 @@ class DeltagereMadtider extends DBObject {
      */
     public function getMadtidDeltagere($madtid)
     {
-        if (!is_object($madtid) || !$madtid->isLoaded())
-        {
+        if (!is_object($madtid) || !$madtid->id) {
             return array();
         }
+
         $select = $this->getSelect();
         $select->setWhere('madtid_id','=',$madtid->id);
         $tider = $this->findBySelectMany($select);
         $result = false;
-        if (empty($tider))
-        {
+
+        if (empty($tider)) {
             return array();
         }
+
         $ids = array();
-        foreach ($tider as $tid)
-        {
+
+        foreach ($tider as $tid) {
             $ids[] = $tid->deltager_id;
         }
+
         $select = $this->createEntity('Deltagere')->getSelect();
-        $select->setWhere('id','in',$ids);
+        $select->setWhere('id', 'in', $ids);
         return $this->createEntity('Deltagere')->findBySelectMany($select);
     }
 
