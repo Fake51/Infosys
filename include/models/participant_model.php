@@ -2103,6 +2103,8 @@ SQL;
             'blockid'     => $event_id,
             'username'    => $participant->fornavn . ' ' . $participant->efternavn,
             'number'      => $phone,
+            'feetype'     => 1,
+            'feeType'     => 1,
             'email'       => $participant->email,
             'amount'      => ceil($participant->calcSignupTotal() - $participant->betalt_beloeb) * 100,
             'callbackurl' => $this->url('participant_register_payment', array('hash' => md5($participant->id . '-' . $participant->password))) . '?blob=' . $unique,
@@ -2128,6 +2130,8 @@ SQL;
         $fields = array(
             'id'      => $participant->id,
             'blockid' => $event_id,
+            'feetype'     => 1,
+            'feeType'     => 1,
         );
 
         if ($testing) {
