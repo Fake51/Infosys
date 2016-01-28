@@ -113,7 +113,7 @@ class DeltagereTilmeldinger extends DBObject
      */
     public function getDeltager()
     {
-        if (!$this->deltager_id()) {
+        if (!$this->deltager_id) {
             return false;
         }
 
