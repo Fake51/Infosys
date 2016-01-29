@@ -779,7 +779,13 @@ class ApiModel extends Model {
             foreach ($json['activity'] as $activity) {
                 $schedule = $this->createEntity('Afviklinger')->findById($activity['schedule_id']);
 
-                $deltager->setAktivitetTilmelding($schedule, $activity['priority'], $activity['type']);
+                if (intval($activity['priority']) === 4) {
+                    $deltager->setAktivitetTilmelding($schedule, 1, 'spiller');
+                    $deltager->setAktivitetTilmelding($schedule, 0, 'spilleder');
+
+                } else {
+                    $deltager->setAktivitetTilmelding($schedule, $activity['priority'], $activity['type']);
+                }
                 //$this->db->exec("INSERT INTO deltagere_tilmeldinger (deltager_id, prioritet, afvikling_id, tilmeldingstype) VALUES (?, ?, ?, ?)", $deltager->id, $activity['priority'], $activity['schedule_id'], $activity['type']);
             }
         } catch (Exception $e) {
