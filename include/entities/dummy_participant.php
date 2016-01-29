@@ -335,4 +335,9 @@ class DummyParticipant extends DBObject
         }
         return $this->createEntity('BrugerKategorier')->findById($this->brugerkategori_id)->isArrangoer();
     }
+
+    public function speaksDanish()
+    {
+        return stripos($this->sprog, 'dansk') !== false;
+    }
 }
