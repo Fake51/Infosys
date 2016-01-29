@@ -1,5 +1,6 @@
-<table class="personalDetails"><tbody>
-<tr><td colspan="2">====== PERSONLIGE OPLYSNINGER ======</td></tr>
+<table id="info-table">
+<tbody>
+<tr><th colspan="2" class="large">PERSONLIGE OPLYSNINGER</th></tr>
 <tr><td>Navn:                                  </td><td><?= e($this->participant->fornavn . ' ' . $this->participant->efternavn);?></td></tr>
 <tr><td>Adresse:                               </td><td><?= e($this->participant->adresse1 . ' ' . $this->participant->adresse2);?></td></tr>
 <tr><td>Postnr.:                               </td><td><?= e($this->participant->postnummer);?></td></tr>
@@ -14,9 +15,9 @@
 <tr><td>Køn:                                   </td><td><?= $this->participant->gender === 'm' ? 'Mand' : 'Kvinde';?></td></tr>
 <tr><td>Fødselsdato                            </td><td><?= date('d/m-Y', strtotime($this->participant->birthdate));?></td></tr>
 <tr><td>Email:                                 </td><td><?= e($this->participant->email);?></td></tr>
-<tr><td colspan="2">ALEA:</td></tr>
+<tr><td colspan="2" class="headline">ALEA:</td></tr>
 <tr><td>Vil gerne meldes ind i Alea (75kr):    </td><td><?= !empty($this->entrance['alea-membership']) ? 'Ja' : 'Nej';?></td></tr>
-<tr><td colspan="2">ANDET:</td></tr>
+<tr><td colspan="2" class="headline">ANDET:</td></tr>
 <tr><td>Arrangør:                              </td><td><?= $this->participant->isArrangoer() ? 'Ja' : 'Nej';?></td></tr>
 <?php if ($this->participant->arbejdsomraade) : ?>
 <tr><td>Mit arbejdsområde:                     </td><td><?= e($this->participant->arbejdsomraade);?></td></tr>
@@ -27,10 +28,10 @@
 <?php if ($this->participant->ungdomsskole) : ?>
 <tr><td>Ungdomsskole/gruppe:                   </td><td><?= e($this->participant->ungdomsskole);?></td></tr>
 <?php endif;?>
-</tbody></table>
-<table class="entryDetails"><tbody>
-<tr><td colspan="2">====== PRAKTISK ======</td></tr>
-<tr><td colspan="2"><strong>INDGANG:</strong></td></tr>
+</tbody>
+<tbody>
+<tr><th colspan="2" class="large">PRAKTISK</th></tr>
+<tr><td colspan="2" class="headline"><strong>INDGANG:</strong></td></tr>
 <?php if (!empty($this->entrance['entrance-partout'])) : ?>
 <tr><td colspan="2">Partout indgang (alle dage)</td></tr>
 <?php endif;?>
@@ -69,7 +70,7 @@
 <?php endif;?>
 
 <?php if (!empty($this->food)) : ?>
-<tr><td colspan="2"><strong>MAD:</strong></td></tr>
+<tr><td colspan="2" class="headline"><strong>MAD:</strong></td></tr>
     <?php foreach ($this->food as $fooditem) : ?>
         <?php $food = $fooditem->getMad();
         switch (date('d', strtotime($fooditem->dato))) {
@@ -103,7 +104,7 @@
     <?php endforeach;?>
 <?php endif;?>
 <?php if (!empty($this->entrance['otto'])) : ?>
-<tr><td colspan="2"><strong>OTTOFESTEN:</strong></td></tr>
+<tr><td colspan="2" class="headline"><strong>OTTOFESTEN:</strong></td></tr>
     <?php if (!empty($this->entrance['ottofest'])) : ?>
 <tr><td colspan="2">Jeg kommer til Ottofesten (90 kr)</td></tr>
     <?php endif; ?>
@@ -118,49 +119,46 @@
     <?php endif;?>
 <?php endif;?>
 <?php if (!empty($this->entrance['Leje af madras'])) : ?>
-<tr><td colspan="2"><strong>ANDET:</strong></td></tr>
+<tr><td colspan="2" class="headline"><strong>ANDET:</strong></td></tr>
 <tr><td colspan="2">Leje af madras (100 kr)</td></tr>
 <?php endif;?>
-</tbody></table>
-
-<div style="clear: both"></div>
-
+</tbody>
 <?php if (!empty($this->wear)) : ?>
 
-<table class="wearDetails"><tbody>
-<tr><td>===== WEAR =====</td></tr>
+<tbody>
+<tr><th class="large" colspan="2">WEAR</td></tr>
     <?php foreach ($this->wear as $order) : ?>
         <?php $price = $order->getWearpris();
       $name  = $order->getWearname();?>
-<tr><td><?= e($order->antal);?> <?= e($name);?>, str. <?= e($order->size);?> (<?= e($price->pris);?>kr.)</td></tr>
+<tr><td colspan="2"><?= e($order->antal);?> <?= e($name);?>, str. <?= e($order->size);?> (<?= e($price->pris);?>kr.)</td></tr>
     <?php endforeach;?>
-</tbody></table>
+</tbody>
 <?php endif;?>
 
 <?php if (!empty($this->gds)) : ?>
 
-<table class="gdsDetails"><tbody>
-<tr><td>===== GDS Tilmeldinger =====</td></tr>
+<tbody>
+<tr><th colspan="2" class="large">GDS Tilmeldinger</td></tr>
     <?php foreach ($this->gds as $gds_signup) : ?>
-<tr><td><?= e($gds_signup->getGDSCategory()->name_da);?> <?= e($gds_signup->getTextDescription('da'));?> - d.<?= date('d/m', strtotime($gds_signup->getDate()));?></td></tr>
+<tr><td colspan="2"><?= e($gds_signup->getGDSCategory()->name_da);?> <?= e($gds_signup->getTextDescription('da'));?> - d.<?= date('d/m', strtotime($gds_signup->getDate()));?></td></tr>
     <?php endforeach;?>
 </tbody></table>
 <?php endif;?>
 
 <?php if (!empty($this->activities)) : ?>
 
-<table class="activityDetails"><tbody>
-<tr><td>===== Aktivitets Tilmeldinger =====</td></tr>
+<tbody>
+<tr><th colspan="2" class="large">Aktivitets Tilmeldinger</td></tr>
     <?php foreach ($this->activities as $activity_signup) : ?>
         <?php $activity = $activity_signup->getActivity();
               $schedule = $activity_signup->getAfvikling();?>
-<tr><td><?= e($activity->navn);?>  d.<?= date('d/m', strtotime($schedule->start));?> - <?= $activity_signup->tilmeldingstype === 'spiller' ? e($activity_signup->prioritet) . '.prioritet' : 'Spilleder';?></td></tr>
+<tr><td colspan="2"><?= e($activity->navn);?>  d.<?= date('d/m', strtotime($schedule->start));?> - <?= $activity_signup->tilmeldingstype === 'spiller' ? e($activity_signup->prioritet) . '.prioritet' : 'Spilleder';?></td></tr>
     <?php endforeach;?>
-</tbody></table>
+</tbody>
 <?php endif;?>
 
-<table class="miscDetails"><tbody>
-<tr><td colspan="2">===== Ekstra info =====</td></tr>
+<tbody>
+<tr><td colspan="2" class="large">Ekstra info</td></tr>
 <tr><td>Maksimum antal scenarier jeg vil spille (0 er ingen grænse):  </td><td><?= e($this->participant->desired_activities);?></td></tr>
 <tr><td>Jeg er super GM:                                              </td><td><?= $this->participant->supergm === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg er super GDS:                                             </td><td><?= $this->participant->supergds === 'ja' ? 'Ja' : 'Nej';?></td></tr>
@@ -188,10 +186,10 @@
 <tr><td>Hemmelig onkel (støtter Fastaval anonymt med 300kr.)          </td><td>Ja</td></tr>
 <?php endif;?>
 <tr><td>
-</tbody></table>
+</tbody>
 
-<table class="pricingDetails"><tbody>
-<tr><td colspan="2">===== Pris =====</td></tr>
+<tbody>
+<tr><td colspan="2" class="large">Pris</td></tr>
 <tr><td>Entré                                  </td><td><?= e($this->prices['entrance']);?>kr.</td></tr>
 <tr><td>Overnatning                            </td><td><?= e($this->prices['sleeping']);?>kr.</td></tr>
 <tr><td>Alea indmeldelse                       </td><td><?= e($this->prices['alea']);?>kr.</td></tr>
