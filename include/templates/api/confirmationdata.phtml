@@ -185,11 +185,10 @@
 <?php if ($this->participant->hemmelig_onkel === 'ja') : ?>
 <tr><td>Hemmelig tante/onkel (støtter Fastaval anonymt med 300kr.)          </td><td>Ja</td></tr>
 <?php endif;?>
-<tr><td>
 </tbody>
 
 <tbody>
-<tr><td colspan="2" class="large">Pris</td></tr>
+<tr><th colspan="2" class="large">Pris</th></tr>
 <tr><td>Entré                                  </td><td><?= e($this->prices['entrance']);?>kr.</td></tr>
 <tr><td>Overnatning                            </td><td><?= e($this->prices['sleeping']);?>kr.</td></tr>
 <tr><td>Alea indmeldelse                       </td><td><?= e($this->prices['alea']);?>kr.</td></tr>
