@@ -142,7 +142,7 @@
     <?php foreach ($this->gds as $gds_signup) : ?>
 <tr><td colspan="2"><?= e($gds_signup->getGDSCategory()->name_da);?> <?= e($gds_signup->getTextDescription('da'));?> - d.<?= date('d/m', strtotime($gds_signup->getDate()));?></td></tr>
     <?php endforeach;?>
-</tbody></table>
+</tbody>
 <?php endif;?>
 
 <?php if (!empty($this->activities)) : ?>
@@ -158,7 +158,7 @@
 <?php endif;?>
 
 <tbody>
-<tr><td colspan="2" class="large">Ekstra info</td></tr>
+<tr><th colspan="2" class="large">Ekstra info</th></tr>
 <tr><td>Maksimum antal scenarier jeg vil spille (0 er ingen grænse):  </td><td><?= e($this->participant->desired_activities);?></td></tr>
 <tr><td>Jeg er super GM:                                              </td><td><?= $this->participant->supergm === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg er super GDS:                                             </td><td><?= $this->participant->supergds === 'ja' ? 'Ja' : 'Nej';?></td></tr>
@@ -180,10 +180,10 @@
 <tr><td>Andre kommentarer:                                            </td><td><?= e($this->participant->deltager_note);?></td></tr>
 <?php endif;?>
 <?php if ($this->participant->rig_onkel === 'ja') : ?>
-<tr><td>Rig onkel (støtter Fastaval med 300kr.)                       </td><td>Ja</td></tr>
+<tr><td>Rig tante/onkel (støtter Fastaval med 300kr.)                       </td><td>Ja</td></tr>
 <?php endif;?>
 <?php if ($this->participant->hemmelig_onkel === 'ja') : ?>
-<tr><td>Hemmelig onkel (støtter Fastaval anonymt med 300kr.)          </td><td>Ja</td></tr>
+<tr><td>Hemmelig tante/onkel (støtter Fastaval anonymt med 300kr.)          </td><td>Ja</td></tr>
 <?php endif;?>
 <tr><td>
 </tbody>
