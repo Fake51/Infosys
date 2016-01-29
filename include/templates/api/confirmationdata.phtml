@@ -72,28 +72,28 @@
 <tr><td colspan="2"><strong>MAD:</strong></td></tr>
     <?php foreach ($this->food as $fooditem) : ?>
         <?php $food = $fooditem->getMad();
-        switch ($fooditem->dato) {
-        case '2016-03-23':
+        switch (date('d', strtotime($fooditem->dato))) {
+        case '23':
             $day_da = 'Onsdag';
             $day_en = 'Wednesday';
             break;
 
-        case '2016-03-24':
+        case '24':
             $day_da = 'Torsdag';
             $day_en = 'Thursday';
             break;
 
-        case '2016-03-25':
+        case '25':
             $day_da = 'Fredag';
             $day_en = 'Friday';
             break;
 
-        case '2016-03-26':
+        case '26':
             $day_da = 'Lørdag';
             $day_en = 'Saturday';
             break;
 
-        case '2016-03-27':
+        case '27':
             $day_da = 'Sønddag';
             $day_en = 'Sunday';
             break;
