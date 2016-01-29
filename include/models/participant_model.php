@@ -2217,6 +2217,7 @@ SQL;
             'activities'  => 0,
             'wear'        => 0,
             'other-stuff' => 0,
+            'fees'        => 0,
             'total'       => 0,
         );
 
@@ -2250,6 +2251,9 @@ SQL;
                 $entrance['otto']     = true;
 
                 $prices['food'] += $indgang->pris;
+
+            } elseif ($indgang->isFee()) {
+                $prices['fees'] += $indgang->pris;
 
             } else {
                 $entrance[$indgang->type] = true;

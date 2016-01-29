@@ -91,6 +91,17 @@ class Indgang extends DBObject
         return $this->type == 'Ottofest';
     }
 
+    /**
+     * returns true if the type is a fee
+     *
+     * @access public
+     * @return bool
+     */
+    public function isFee()
+    {
+        return stripos($this->type, 'gebyr') !== false;
+    }
+
     public function isPartyBubbles()
     {
         if (!$this->isLoaded()) {
