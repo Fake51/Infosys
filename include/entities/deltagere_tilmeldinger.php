@@ -133,7 +133,7 @@ class DeltagereTilmeldinger extends DBObject
      */
     public function setTilmelding($deltager, $afvikling, $prioritet, $tilmeldingstype)
     {
-        if (!is_object($deltager) || !is_object($afvikling) || !$deltager->id || !$afvikling->id || (!is_numeric($prioritet) || $prioritet < 1) || !in_array(strtolower($tilmeldingstype), $this->tilmeldingstyper)) {
+        if (!is_object($deltager) || !is_object($afvikling) || !$deltager->id || !$afvikling->id || !in_array(strtolower($tilmeldingstype), $this->tilmeldingstyper)) {
             return false;
         }
 

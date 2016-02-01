@@ -1632,11 +1632,11 @@ class ParticipantController extends Controller
         $this->model->setupSignupEmail($participant, $this->page);
 
         if ($participant->speaksDanish()) {
-            $title = 'Tilmelding til Fastaval 2015';
+            $title = 'Tilmelding til Fastaval 2016';
             $this->page->setTemplate('participant/sendsignupemail');
 
         } else {
-            $title = 'Signup for Fastaval 2015';
+            $title = 'Signup for Fastaval 2016';
             $this->page->setTemplate('participant/sendsignupemailen');
         }
 
@@ -1727,11 +1727,11 @@ class ParticipantController extends Controller
         $this->model->setupPaymentReminderEmail($participant, $this->page);
 
         if ($danish) {
-            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval 2015';
+            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval 2016';
             $this->page->setTemplate('participant/' . $template . '-da');
 
         } else {
-            $title = $english_title ? $english_title : 'Reminder: payment for signup to Fastaval 2015';
+            $title = $english_title ? $english_title : 'Reminder: payment for signup to Fastaval 2016';
             $this->page->setTemplate('participant/' . $template . '-en');
         }
 
@@ -1776,7 +1776,7 @@ class ParticipantController extends Controller
         $count = 0;
 
         foreach ($participants as $participant) {
-            $this->sendPaymentReminder($participant, 'paymentreminderannulled', $participant->speaksDanish(), 'Din tilmelding til Fastaval 2015', 'Your sign up for Fastaval 2015');
+            $this->sendPaymentReminder($participant, 'paymentreminderannulled', $participant->speaksDanish(), 'Din tilmelding til Fastaval 2016', 'Your sign up for Fastaval 2016');
 
             $participant->annulled = 'ja';
             $participant->update();

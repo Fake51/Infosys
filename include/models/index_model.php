@@ -196,7 +196,6 @@ FROM
     JOIN deltagere AS d ON d.id = dw.deltager_id
 WHERE
     d.annulled = "nej"
-    AND d.betalt_beloeb > 0
 GROUP BY
     w.navn,
     dw.received

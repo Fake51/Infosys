@@ -696,13 +696,9 @@ class Deltagere extends DBObject implements AgeFulfilment
             $result  = 0;
             $pladser = $signups ? $this->getTilmeldinger() : $this->getPladser();
             foreach ($pladser as $g) {
-                if (!$signups || $g->prioritet == 1) {
-                    $result += ($g->type == 'spiller' || $g->tilmeldingstype == 'spiller') ? $g->getAktivitet()->pris : 0;
-                }
+	        $result += ($g->type == 'spiller' || $g->tilmeldingstype == 'spiller') ? $g->getAktivitet()->pris : 0;
             }
 
-            $result += $this->tilmeld_scenarieskrivning == 'ja' ? self::SCENARIO_COMPETITION : 0;
-            $result += $this->dancing_with_the_clans != 'nej' ? self::DANCING_CLANS_COST : 0;
             $this->gamesCost = $result;
         }
         return $this->gamesCost;
@@ -1260,29 +1256,11 @@ WHERE
         if ($this->email == '1@makey.biz' && $this->idAvailable(911)) {
             $this->id = 911;
 
-        } elseif ($this->email == 'ak47@762.dk' && $this->idAvailable(60)) {
-            $this->id = 60;
-
-        } elseif ($this->email == 'hex_henrik@hotmail.com' && $this->idAvailable(1)) {
-            $this->id = 1;
-
-        } elseif ($this->email == 'elias.helfer@gmail.com' && $this->idAvailable(2)) {
-            $this->id = 2;
-
-        } elseif ($this->email == 'peter.e.lind@gmail.com' && $this->idAvailable(999)) {
-            $this->id = 999;
-
-        } elseif ($this->email == 'olesofasorensen@gmail.com' && $this->idAvailable(500)) {
-            $this->id = 500;
-
         } elseif ($this->brugerkategori_id == 3) {
             $this->id = $this->getNextInRange(array(900, 929), array(911));
 
-        } elseif ($this->brugerkategori_id == 9) {
-            $this->id = $this->getNextInRange(array(930, 969));
-
         } else {
-            $this->id = $this->getNextId(array(array(900, 969), array(1, 2), array(60, 60), array(999, 999), array(500, 500)));
+            $this->id = $this->getNextId(array(array(900, 929)));
         }
     }
 
@@ -1479,7 +1457,7 @@ WHERE
 
     public function speaksDanish()
     {
-        return stripos($this->sprog, 'dansk') !== false;
+        return stripos($this->sprog, 'dansk') !== false || !$this->sprog;
     }
 
     public function getEan8Number()

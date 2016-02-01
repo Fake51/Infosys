@@ -2184,7 +2184,7 @@ SQL;
         $page->participant = $participant;
         $page->payment_remainder = $participant->calcSignupTotal() - $participant->betalt_beloeb;
         $page->payment_url = $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password)));
-        $page->payment_day = date('d/m-Y', strtotime($participant->signed_up) + 14 * 86400);
+        $page->payment_day = '28/2-2016'; //date('d/m-Y', strtotime($participant->signed_up) + 14 * 86400);
 
         return $participant;
     }
@@ -2205,7 +2205,7 @@ SQL;
         $page->activities  = $participant->getTilmeldinger();
         $page->gds         = $participant->getGDSTilmeldinger();
         $page->payment_url = $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password)));
-        $page->payment_day = date('d/m-Y', strtotime($participant->updated) + 14 * 86400);
+        $page->payment_day = '28/2-2016'; //date('d/m-Y', strtotime($participant->updated) + 14 * 86400);
         $page->food        = $participant->getMadtider();
 
         $entrance = array();

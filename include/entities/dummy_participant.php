@@ -329,15 +329,11 @@ class DummyParticipant extends DBObject
      */
     public function isArrangoer()
     {
-        if (!$this->isLoaded())
-        {
-            return false;
-        }
         return $this->createEntity('BrugerKategorier')->findById($this->brugerkategori_id)->isArrangoer();
     }
 
     public function speaksDanish()
     {
-        return stripos($this->sprog, 'dansk') !== false;
+        return stripos($this->sprog, 'dansk') !== false || !$this->sprog;
     }
 }
