@@ -57,10 +57,11 @@ class DeltagereTilmeldinger extends DBObject
         }
 
         $select = $this->getSelect();
-        $select->setWhere('deltager_id','=',$deltager->id);
+        $select->setWhere('deltager_id', '=', $deltager->id);
         $select->setFrom('afviklinger');
-        $select->setTableWhere('afviklinger.id','deltagere_tilmeldinger.afvikling_id');
-        $select->setOrder('afviklinger.start','asc');
+        $select->setTableWhere('afviklinger.id', 'deltagere_tilmeldinger.afvikling_id');
+        $select->setOrder('afviklinger.start', 'asc');
+
         return $this->findBySelectMany($select);
     }
 

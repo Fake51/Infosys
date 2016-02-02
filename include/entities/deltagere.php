@@ -362,10 +362,6 @@ class Deltagere extends DBObject implements AgeFulfilment
      */
     public function getTilmeldinger()
     {
-        if (!$this->isLoaded())
-        {
-            return array();
-        }
         return $this->createEntity('DeltagereTilmeldinger')->getDeltagerTilmeldinger($this);
     }
 

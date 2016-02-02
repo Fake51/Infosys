@@ -956,6 +956,7 @@ class ParticipantModel extends Model
         }
 
         $tilmeldinger = $deltager->getTilmeldinger();
+
         if ($post->afvikling_id && $post->type && $post->prioritet) {
             $merged = array();
 
@@ -966,17 +967,22 @@ class ParticipantModel extends Model
             if (!empty($tilmeldinger)) {
                 foreach ($tilmeldinger as $tilmelding) {
                     $delete = true;
+
                     for ($i = 0; $i < count($merged); $i++) {
                         if ($tilmelding->afvikling_id == $merged[$i]['afvikling_id']  && $tilmelding->tilmeldingstype == $merged[$i]['type']) {
                             $delete = false;
                             $merged[$i] = null;
+
                         }
+
                     }
 
                     if ($delete) {
                         $tilmelding->delete();
                     }
+
                 }
+
             }
 
             if (!empty($merged)) {
@@ -984,8 +990,11 @@ class ParticipantModel extends Model
                     if ($new) {
                         $deltager->setAktivitetTilmelding($this->createEntity('Afviklinger')->findById($new['afvikling_id']), $new['prioritet'], $new['type']);
                     }
+
                 }
+
             }
+
         } else {
             foreach ($tilmeldinger as $tilmelding) {
                 $tilmelding->delete();

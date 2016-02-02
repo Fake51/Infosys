@@ -161,10 +161,10 @@ class DBObject
      */
     public function __set($varname, $value)
     {
-        if (is_scalar($value))
-        {
+        if (is_scalar($value)) {
             $value = htmlspecialchars_decode($value, ENT_QUOTES);
         }
+
         $this->storage[$varname] = $value;
     }
 
@@ -178,7 +178,10 @@ class DBObject
      */
     public function __isset($property)
     {
-        if (isset($this->storage[$property])) return true;
+        if (isset($this->storage[$property])) {
+            return true;
+        }
+
         return false;
     }
 
@@ -190,10 +193,10 @@ class DBObject
      */
     public function getColumnInfo()
     {
-        if (empty(self::$columninfos[get_class($this)]))
-        {
+        if (empty(self::$columninfos[get_class($this)])) {
             $this->buildTableInfo();
         }
+
         return self::$columninfos[get_class($this)];
     }
 
@@ -207,12 +210,18 @@ class DBObject
      */
     public function isFieldNullable($field)
     {
-        if (!is_string($field)) return false;
-        if (empty(self::$nullable_columns[get_class($this)]))
-        {
+        if (!is_string($field)) {
+            return false;
+        }
+
+        if (empty(self::$nullable_columns[get_class($this)])) {
             $this->buildTableInfo();
         }
-        if (!isset(self::$nullable_columns[get_class($this)][$field])) return false;
+
+        if (!isset(self::$nullable_columns[get_class($this)][$field])) return {
+            false;
+        }
+
         return self::$nullable_columns[get_class($this)][$field];
     }
 
@@ -228,27 +237,28 @@ class DBObject
     public function getValidColumnValues($column)
     {
         $info = $this->getColumnInfo();
-        if (!isset($info[$column]))
-        {
+
+        if (!isset($info[$column])) {
             return array();
         }
-        if (strtolower($info[$column]) === 'text')
-        {
+
+        if (strtolower($info[$column]) === 'text') {
             return array('type' => 'text');
         }
-        if (substr(strtolower($info[$column]), 0, 3) === 'int')
-        {
+
+        if (substr(strtolower($info[$column]), 0, 3) === 'int') {
             return array('type' => 'int', 'size' => substr($info[$column], 4, -1));
         }
-        if (substr(strtolower($info[$column]), 0, 7) === 'varchar')
-        {
+
+        if (substr(strtolower($info[$column]), 0, 7) === 'varchar') {
             return array('type' => 'varchar', 'size' => substr($info[$column], 8, -1));
         }
-        if (substr(strtolower($info[$column]), 0, 4) === 'enum')
-        {
+
+        if (substr(strtolower($info[$column]), 0, 4) === 'enum') {
             $types = array_map(create_function('$a', 'return str_replace("\'", "", $a);'), explode(',', substr($info[$column], 5, -1)));
             return array('type' => 'enum', 'values' => $types);
         }
+
         // default
         return array();
     }
@@ -276,10 +286,10 @@ class DBObject
      */
     public function getPrimaryKey()
     {
-        if (empty(self::$primarykeys[get_class($this)]))
-        {
+        if (empty(self::$primarykeys[get_class($this)])) {
             $this->buildTableInfo();
         }
+
         return self::$primarykeys[get_class($this)];
     }
 
@@ -294,20 +304,24 @@ class DBObject
     {
         $DB = $this->getDB();
         $query = "DESCRIBE {$this->quoteTable($this->tablename)}";
-        if (!($results = $DB->query($query)))
-        {
+
+        if (!($results = $DB->query($query))) {
             return false;
         }
+
         $class = get_class($this);
-        foreach ($results as $result)
-        {
+
+        foreach ($results as $result) {
             self::$columninfos[$class][$result['Field']] = $result['Type'];
-            if ($result['Key'] == 'PRI')
-            {
+
+            if ($result['Key'] == 'PRI') {
                 self::$primarykeys[get_class($this)][] = $result['Field'];
             }
+
             self::$nullable_columns[$class][$result['Field']] = $result['Null'] == 'NO' ? false : true;
+
         }
+
         return true;
     }
 
@@ -614,19 +628,22 @@ class DBObject
     public function setLoaded()
     {
         $fields = $this->getPrimaryKey();
-        foreach ($fields as $field)
-        {
-            if ($this->$field === null)
-            {
+
+        foreach ($fields as $field) {
+            if ($this->$field === null) {
                 $this->invalidate();
                 return;
+
             }
+
         }
-        if (!$this->storePKVals())
-        {
+
+        if (!$this->storePKVals()) {
             $this->invalidate();
             return;
+
         }
+
         $this->has_loaded = true;
     }
 
@@ -638,18 +655,19 @@ class DBObject
      */
     protected function storePKVals()
     {
-        if (!$primary = $this->getPrimaryKey())
-        {
+        if (!$primary = $this->getPrimaryKey()) {
             return false;
         }
-        foreach ($primary as $field)
-        {
-            if ($this->$field === null)
-            {
+
+        foreach ($primary as $field) {
+            if ($this->$field === null) {
                 return false;
             }
+
             $this->pkvals[$field] = $this->$field;
+
         }
+
         return true;
     }
 
