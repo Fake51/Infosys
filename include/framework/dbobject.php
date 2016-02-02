@@ -711,17 +711,19 @@ class DBObject
      */
     public function generatePKWhere()
     {
-        $DB = $this->getDB();
+        $DB      = $this->getDB();
         $primary = $this->getPrimaryKey();
-        $where = array();
-        foreach ($primary as $field)
-        {
-            if (!$id = $this->pkvals[$field])
-            {
+        $where   = array();
+
+        foreach ($primary as $field) {
+            if (is_null($id = $this->pkvals[$field])) {
                 return false;
             }
+
             $where["{$this->quoteTable($field)} = ?"] =  $id;
+
         }
+
         return $where;
     }
 
