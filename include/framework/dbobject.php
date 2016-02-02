@@ -218,8 +218,8 @@ class DBObject
             $this->buildTableInfo();
         }
 
-        if (!isset(self::$nullable_columns[get_class($this)][$field])) return {
-            false;
+        if (!isset(self::$nullable_columns[get_class($this)][$field])) {
+            return false;
         }
 
         return self::$nullable_columns[get_class($this)][$field];
