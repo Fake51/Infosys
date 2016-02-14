@@ -83,17 +83,23 @@ class ActivityController extends Controller
         if (empty($this->vars['id']) || !($aktivitet = $this->model->findEntity('Aktiviteter', $this->vars['id']))) {
             $this->page->setTitle('Intet resultat');
             $this->page->setTemplate('noresults');
+
         } else {
             $this->page->setTitle(e($aktivitet->navn) . ' - Aktiviteter');
             $time_array = array();
+
             for ($i = 0; $i < 24; $i++) {
                 $string = (($i < 10) ? "0{$i}:00" : "{$i}:00");
                 $time_array[$string] = $i;
             }
+
             $this->page->time_array  = $time_array;
             $this->page->aktivitet   = $aktivitet;
             $this->page->afviklinger = $aktivitet->getCompleteScheduling();
             $this->page->lokaler     = $this->model->getAllRooms();
+
+            $this->page->karma_stats = $this->model->getKarmaStats();
+
         }
     }
 

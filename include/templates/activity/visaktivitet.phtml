@@ -118,10 +118,10 @@ $this->registerLateLoadJS('activity.js');
                                     $gamer_ids[$deltager->id] = true && $type === 'S';
                                     $locked                   = $deltager->activity_lock === 'ja' ? ' locked' : '';
                                 ?>
-                                    <tr class="participant p<?= e($deltager->id) . $locked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= e($deltager->rel_karma);?>" data-participant_priority="10" data-participant_gender="<?= e($deltager->gender);?>">
+                                    <tr class="participant p<?= e($deltager->id) . $locked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="10" data-participant_gender="<?= e($deltager->gender);?>">
                                         <td><?= $type;?></td>
                                         <td><a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"><?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?></a></td>
-                                        <td class="karma"><?= e($deltager->rel_karma);?></td>
+                                        <td class="karma"><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                                         <td><?= e($deltager->alder);?></td>
                                         <td><?= e($deltager->gender);?></td>
                                     </tr>
@@ -143,11 +143,11 @@ $this->registerLateLoadJS('activity.js');
                             $busy      = $this->aktivitet->tids_eksklusiv == 'ja' && empty($displayed) && $deltager->isBusyBetween($afvikling->start, $afvikling->slut) ? 'deltagerbusy' : '';
                             $locked    = $deltager->activity_lock === 'ja' ? ' locked' : '';
                         ;?>
-                                <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= e($deltager->rel_karma);?>" data-participant_priority="<?= e($tilmelding->prioritet);?>" data-participant_gender="<?= e($deltager->gender);?>">
+                                <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="<?= e($tilmelding->prioritet);?>" data-participant_gender="<?= e($deltager->gender);?>">
                                     <td><?= e($type);?></td>
                                     <td class="name"><a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"<?= ($busy ? " title='Deltageren er optaget på dette tidspunkt'" : '');?>><?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?></a></td>
                                     <td class='afviklingsbox-extras'><?= $tilmelding->prioritet;?>.pri</td>
-                                    <td class="karma""><?= $deltager->rel_karma;?></td>
+                                    <td class="karma""><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                                     <td class='afviklingsbox-extras'><?= e($deltager->alder);?></td>
                                     <td class='gender'><?= $deltager->gender;?></td>
                                 </tr>

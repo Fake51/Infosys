@@ -28,8 +28,7 @@
             <tr>
                 <th>Id</th>
                 <th>Navn</th>
-                <th>Relativ Karma</th>
-                <th>Absolut Karma</th>
+                <th>Karma</th>
                 <th>S / SL</th>
             </tr>
             <?php foreach ($this->hold->getPladser() as $plads) :
@@ -38,8 +37,7 @@
                 <tr>
                     <td><a href="<?php echo $this->url('visdeltager', array('id' => $plads->deltager_id));?>"><?php echo $plads->deltager_id;?></a></td>
                     <td><?php echo e($deltager->fornavn);?> <?php echo e($deltager->efternavn);?></td>
-                    <td><?php echo $deltager->rel_karma;?></td>
-                    <td><?php echo $deltager->abs_karma;?></td>
+                    <td><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                     <td><?php echo e($plads->type);?></td>
                 </tr>
             <?php endforeach;?>

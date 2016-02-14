@@ -91,13 +91,12 @@ class GroupsController extends Controller
      */
     public function visHold()
     {
-        if (empty($this->vars['id']) || !($hold = $this->model->findEntity('Hold', $this->vars['id'])))
-        {
+        if (empty($this->vars['id']) || !($hold = $this->model->findEntity('Hold', $this->vars['id']))) {
             $this->page->setTemplate('noResults');
-        }
-        else
-        {
+
+        } else {
             $this->page->hold = $hold;
+            $this->page->karma_stats = $this->model->getKarmaStatsForGroup($hold);
             $this->page->setTemplate('showGroup');
         }
     }
@@ -209,6 +208,7 @@ class GroupsController extends Controller
     public function ajaxScheduleParticipant()
     {
         $user = $this->model->getLoggedInUser();
+
         if (!($user->hasRole('Activity-admin') || $user->hasRole('Infonaut') || $user->hasRole('admin'))) {
             header('HTTP/1.1 403 Fail');
             echo json_encode(array('status' => 'fail', 'reason' => 'No access'));
@@ -216,6 +216,7 @@ class GroupsController extends Controller
         }
 
         $this->ajaxHeader();
+
         if (!$this->page->request->isPost()) {
             header('HTTP/1.1 500 Fail');
             echo json_encode(array('status' => 'fail', 'reason' => 'Use post'));
@@ -311,9 +312,6 @@ class GroupsController extends Controller
             $participants = $hold->getDeltagere();
 
             if ($this->model->deleteHold($hold, $this->page->request->get->override)) {
-                foreach ($participants as $participant) {
-                    $participant->refreshKarma();
-                }
 
                 $this->log("Hold #{$this->vars['id']} blev slettet af {$this->model->getLoggedInUser()->user}", 'Hold', $this->model->getLoggedInUser());
 

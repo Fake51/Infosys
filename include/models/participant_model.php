@@ -554,6 +554,7 @@ class ParticipantModel extends Model
         }
 
         $fields = $deltager->getColumns();
+
         foreach ($post as $key => $value) {
             if (in_array($key, $fields) && $key != 'karma') {
                 $deltager->$key = $value;
@@ -885,57 +886,52 @@ class ParticipantModel extends Model
      */
     public function updateAktiviteter($deltager, RequestVars $post)
     {
-        if (!is_object($deltager) || !$deltager->isLoaded())
-        {
+        if (!is_object($deltager) || !$deltager->isLoaded()) {
             return false;
         }
 
         $pladser = $deltager->getPladser();
-        if ($post->hold_id && $post->type)
-        {
+
+        if ($post->hold_id && $post->type) {
             $merged = array();
-            for ($i = 0; $i < count($post->hold_id); $i++)
-            {
+
+            for ($i = 0; $i < count($post->hold_id); $i++) {
                 $merged[] = array('hold_id' => $post->hold_id[$i], 'type' => $post->type[$i]);
             }
-            if (!empty($pladser))
-            {
-                foreach ($pladser as $plads)
-                {
+
+            if (!empty($pladser)) {
+                foreach ($pladser as $plads) {
                     $delete = true;
-                    for ($i = 0; $i < count($merged); $i++)
-                    {
-                        if ($plads->hold_id == $merged[$i]['hold_id'])
-                        {
+
+                    for ($i = 0; $i < count($merged); $i++) {
+                        if ($plads->hold_id == $merged[$i]['hold_id']) {
                             $delete = false;
                             $merged[$i] = null;
                         }
                     }
-                    if ($delete)
-                    {
+
+                    if ($delete) {
                         $plads->delete();
                     }
+
                 }
+
             }
-            if (!empty($merged))
-            {
-                foreach ($merged as $new)
-                {
-                    if ($new)
-                    {
+
+            if (!empty($merged)) {
+                foreach ($merged as $new) {
+                    if ($new) {
                         $deltager->setPlads($this->createEntity('Hold')->findById($new['hold_id']), $new['type']);
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             foreach ($pladser as $plads)
             {
                 $plads->delete();
             }
         }
-        $deltager->refreshKarma();
+
         return true;
     }
 
@@ -1001,7 +997,6 @@ class ParticipantModel extends Model
             }
         }
 
-        $deltager->refreshKarma();
         return true;
     }
 
@@ -1250,14 +1245,16 @@ class ParticipantModel extends Model
      */
     public function getKarmaAvg()
     {
-        $DB = $this->db;
-        $query = "SELECT count(id) as count, avg(rel_karma) as rel_karma, avg(abs_karma) as abs_karma, max(rel_karma) as max_rel, min(rel_karma) as min_rel, max(abs_karma) as max_abs, min(abs_karma) as min_abs FROM deltagere WHERE id IN (SELECT DISTINCT deltager_id FROM deltagere_tilmeldinger)";
-        $return = array();
-        if ($result = $DB->query($query))
-        {
-            $return = $result[0];
-        }
-        return $return;
+        $karma = $this->buildKarma();
+
+        $stats = $karma->calculate($this->createEntity('Deltagere')->findAll());
+
+        return [
+                'count' => count($stats),
+                'avg'   => array_sum($stats) / count($stats),
+                'max'   => max($stats),
+                'min'   => min($stats),
+               ];
     }
 
     public function getSMSLog()
@@ -1353,13 +1350,6 @@ SQL;
     public function getAllSleepRooms()
     {
         return $this->createEntity('Lokaler')->getSleepRooms();
-    }
-
-    public function regenerateKarma() {
-        set_time_limit(0);
-        foreach ($this->findAll() as $participant) {
-            $participant->refreshKarma();
-        }
     }
 
     public function findFromNameOrID($query) {
@@ -2416,5 +2406,20 @@ SQL;
         }
 
         $this->log("Deltager #{$participant->id} har fået registreret bankoverførsel på {$post->amount} af {$this->getLoggedInUser()->user}", 'Payment', $this->getLoggedInUser());
+    }
+
+    /**
+     * returns stats on participants karma
+     *
+     * @access public
+     * @return array
+     */
+    public function getKarmaStatsForParticipant(Deltagere $participant)
+    {
+        $karma = $this->buildKarma();
+
+        $stats = $karma->calculate($participant);
+
+        return $stats;
     }
 }

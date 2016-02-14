@@ -640,8 +640,8 @@ var FVActivity = (function() {
     };
 
     FVActivity.Participant.prototype.updateFromJson = function(json) {
-        if (json.rel_karma) {
-            this.updateKarma(json.rel_karma);
+        if (json.karma) {
+            this.updateKarma(json.karma);
         }
     };
 

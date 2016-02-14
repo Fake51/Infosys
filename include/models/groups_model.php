@@ -314,8 +314,6 @@ class GroupsModel extends Model
             $this->log("Deltager #{$participant->id} blev sat på hold #{$group->id} af {$this->getLoggedInUser()->user}", 'Hold', $this->getLoggedInUser());
         }
 
-        $participant->refreshKarma();
-
         return true;
     }
 
@@ -333,10 +331,11 @@ class GroupsModel extends Model
 
         try {
             if ($participant = $this->createEntity('Deltagere')->findById($post->participant_id)) {
+                $karma = $this->buildKarma();
+
                 $output['participant'] = array(
-                    'id'        => $participant->id,
-                    'rel_karma' => $participant->rel_karma,
-                    'abs_karma' => $participant->abs_karma,
+                    'id'    => $participant->id,
+                    'karma' => $karma->calculate($participant),
                 );
             }
 
@@ -363,5 +362,20 @@ class GroupsModel extends Model
         } catch (Exception $e) {
             return array();
         }
+    }
+
+    /**
+     * returns stats on participants karma
+     *
+     * @access public
+     * @return array
+     */
+    public function getKarmaStatsForGroup(Hold $group)
+    {
+        $karma = $this->buildKarma();
+
+        $stats = $karma->calculate($group->getDeltagere());
+
+        return $stats;
     }
 }

@@ -141,14 +141,25 @@ WHERE
      * calculates the karma for one or more
      * participants
      *
-     * @param DBObject $input Participant or array of participants
+     * @param DBObject|array $input Participant or array of participants
      *
+     * @throws Exception
      * @access public
      * @return float|array
      */
-    public function calculate(Deltagere $participant)
+    public function calculate($blob)
     {
-        $output = array_map([$this, 'calculateForParticipant'], $this->getParticipantData($participant));
+        if (is_a($blob, 'DBObject')) {
+            $participants = [$blob];
+
+        } elseif (is_array($blob)) {
+            $participants = $blob;
+
+        } else {
+            throw new Exception('Provided argument is neither array nor DBObject');
+        }
+
+        $output = array_map([$this, 'calculateForParticipant'], $this->getParticipantData($participants));
 
         return count($output) <= 1 ? array_pop($output) : $output;
     }

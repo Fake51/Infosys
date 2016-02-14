@@ -852,4 +852,19 @@ LIMIT 1
 
         return $output;
     }
+
+    /**
+     * returns stats on participants karma
+     *
+     * @access public
+     * @return array
+     */
+    public function getKarmaStats()
+    {
+        $karma = $this->buildKarma();
+
+        $stats = $karma->calculate($this->createEntity('Deltagere')->findAll());
+
+        return $stats;
+    }
 }

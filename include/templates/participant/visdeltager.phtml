@@ -106,17 +106,14 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'>Udeblevet: </td><td id='udeblevet' class='editable yesno'><?php echo $this->deltager->udeblevet;?></td>
-                    <td class='label'>Relativ karma: </td><td><?php echo $this->deltager->rel_karma;?></td>
-                    <td class='label'>Absolut karma: </td><td><?php echo $this->deltager->abs_karma;?></td>
+                    <td class='label'>Karma: </td><td><?= $this->participant_karma;?></td>
+                    <td class='label'><b>Annulleret:</b> </td><td id="annulled" class="editable yesno"><span <?php if ($this->deltager->annulled === 'ja') :?>style='color: #ffffff;background-color: #ff0000;'<?php endif; ?>><?= ucfirst($this->deltager->annulled);?></span></td>
+
                 </tr>
                 <tr>
                     <td class='label'><b>Tilmeldt:</b> </td><td><?php if ($this->late_signup) :?><span style='color: #ffffff;background-color: #ff0000;'><?php endif; echo date('Y-m-d', strtotime($this->deltager->signed_up));?></span></td>
                     <td class='label'><b>Checked in:</b> </td><td class="checkin-time"><?php echo strtotime($this->deltager->checkin_time) ? date('Y-m-d H:i', strtotime($this->deltager->checkin_time)) : 'Ikke tjekket ind';?></td>
                     <td class='label'><b>Aktivitets-låst:</b> </td><td id="activity_lock" class='editable yesno'><?= e($this->deltager->activity_lock);?></td>
-                </tr>
-                <tr>
-                    <td class='label'><b>Annulleret:</b> </td><td id="annulled" class="editable yesno"><span <?php if ($this->deltager->annulled === 'ja') :?>style='color: #ffffff;background-color: #ff0000;'<?php endif; ?>><?= ucfirst($this->deltager->annulled);?></span></td>
-                    <td colspan='4'></td>
                 </tr>
                 <tr>
                     <td colspan='6'><hr/></td>

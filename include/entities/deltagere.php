@@ -992,50 +992,6 @@ class Deltagere extends DBObject implements AgeFulfilment
     }
 
     /**
-     * calculates the persons karma and stores it
-     *
-     * @access public
-     * @return bool
-     */
-    public function refreshKarma()
-    {
-        if (!$this->isLoaded()) {
-            return false;
-        }
-
-        $wished_time = $this->getPossiblePlaytime();
-        $max_time    = $this->createEntity('Afviklinger')->max_playtime;
-
-        $playtime = 0;
-        $karma = 0;
-        foreach ($this->getPladser() as $plads) {
-            $afv = $plads->getAfvikling();
-
-            $activity = $afv->getActivity();
-
-            if ($activity->type === 'system') {
-                continue;
-            }
-
-            if ($plads->type != 'spilleder') {
-                $playtime += (strtotime($afv->slut) - strtotime($afv->start));
-
-                foreach ($afv->getMultiBlok() as $multi) {
-                    $playtime += (strtotime($multi->slut) - strtotime($multi->start));
-                }
-
-            } else {
-                $karma -= 30;
-            }
-        }
-
-        $this->rel_karma = (($wished_time) ? intval(($playtime / $wished_time) * 100 + $karma) : 0 + $karma);
-        $this->abs_karma = (($max_time) ? intval(($playtime /3600 / $max_time) * 100 + $karma) : 0 + $karma);
-        $this->update();
-        return true;
-    }
-
-    /**
      * creates a new password for a participant
      * and stores a cleartext version of it while the object lives
      *

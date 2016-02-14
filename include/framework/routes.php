@@ -127,7 +127,6 @@ class Routes
         $this->routes['visdeltager']                                = array('url' => 'deltager/visdeltager/:id:', 'controller' => 'Participant', 'method' => 'visDeltager');
         $this->routes['visprint']                                   = array('url' => 'deltager/showsignup/:id:', 'controller' => 'Participant', 'method' => 'showSignupDetails');
         $this->routes['json_showsignup']                            = array('url' => 'json/showsignup/:id:', 'controller' => 'Participant', 'method' => 'showSignupDetailsJson');
-        $this->routes['regenerate_karma']                           = array('url' => 'deltager/karma_regen/', 'controller' => 'Participant', 'method' => 'regenerateKarma');
         $this->routes['payment_interface']                          = array('url' => 'deltager/payment', 'controller' => 'Participant', 'method' => 'payment');
         $this->routes['payment_interface_ajax']                     = array('url' => 'deltager/payment/ajax', 'controller' => 'Participant', 'method' => 'paymentAjax');
         $this->routes['checkin_interface']                          = array('url' => 'deltager/checkin', 'controller' => 'Participant', 'method' => 'checkin');

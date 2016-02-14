@@ -300,19 +300,21 @@ class Hold extends DBObject
      */
     public function getDeltagere()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return array();
         }
+
         $pladser = $this->getPladser();
         $ids = array();
-        foreach ($pladser as $plads)
-        {
+
+        foreach ($pladser as $plads) {
             $ids[] = $plads->deltager_id;
         }
+
         if (empty($ids)) {
             return array();
         }
+
         $del = $this->createEntity('Deltagere');
         $select = $del->getSelect();
         $select->setWhere('id','in',$ids);

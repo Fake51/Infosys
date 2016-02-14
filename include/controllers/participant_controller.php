@@ -96,6 +96,8 @@ class ParticipantController extends Controller
             $this->page->is_read_only          = $this->model->getLoggedInUser()->hasRole('Read-only') || $this->model->getLoggedInUser()->hasRole('Read-only activity');
             $this->page->is_read_only_activity = $this->model->getLoggedInUser()->hasRole('Read-only activity');
 
+            $this->page->participant_karma = $this->model->getKarmaStatsForParticipant($this->page->deltager);
+
         } else {
             $this->page->setTemplate('noResults');
             $this->page->setTitle('Intet resultat');
@@ -1277,13 +1279,6 @@ class ParticipantController extends Controller
         {
             $this->main();
         }
-    }
-
-    public function regenerateKarma() {
-        $this->model->regenerateKarma();
-        $this->successMessage('Karmaen blev genoprettet.');
-        $this->log("{$this->model->getLoggedInUser()->user} har genopfrisket karma", 'Deltager', $this->model->getLoggedInUser());
-        $this->hardRedirect($this->url('deltagerehome'));
     }
 
     public function payment() {

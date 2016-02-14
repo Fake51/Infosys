@@ -15,10 +15,10 @@ class KarmaTest extends \PHPUnit_Framework_TestCase
     public function getRuleSet()
     {
         return [
-                new \KarmaFlatValueRule('potential', 0, -10),
-                new \KarmaDiscreteValuesRule('potential', 1, [1 => -12, 2 => -22, 3 => -30, 4 => -36, 5 => -40, 6 => -42, 7 => -44]),
-                new \KarmaDiscreteValuesRule('potential', 2, [1 => -1, 2 => -2, 3 => -3, 4 => -4]),
-                new \KarmaDiscreteValuesRule('potential', 3, [1 => -1, 2 => -2]),
+                new \KarmaFlatValueRule('potential', 0, -7),
+                new \KarmaDiscreteValuesRule('potential', 1, [1 => -12, 2 => -20, 3 => -26, 4 => -29, 5 => -32, 6 => -34, 7 => -35, 8 => -36]),
+                new \KarmaDiscreteValuesRule('potential', 2, [1 => -1, 2 => -2, 3 => -3]),
+                new \KarmaDiscreteValuesRule('potential', 3, [1 => -1]),
                 new \KarmaDiscreteValuesRule('factual', 1, [1 => 10, 2 => 20, 3 => 30, 4 => 40, 5 => 50, 6 => 60, 7 => 70, 8 => 80, 9 => 90, 10 => 100]),
                 new \KarmaDiscreteValuesRule('factual', 2, [1 => 7, 2 => 14, 3 => 21, 4 => 28, 5 => 35, 6 => 42, 7 => 49, 8 => 56, 9 => 63, 10 => 70]),
                ];
@@ -228,7 +228,7 @@ class KarmaTest extends \PHPUnit_Framework_TestCase
         $this->db->method('query')
             ->willReturn($return);
 
-        $this->assertEquals(4, $karma->calculate($participant));
+        $this->assertEquals(14, $karma->calculate($participant));
     }
 
     public function testSuperGM()
@@ -301,7 +301,7 @@ class KarmaTest extends \PHPUnit_Framework_TestCase
         $this->db->method('query')
             ->willReturn($return);
 
-        $this->assertEquals(-10, $karma->calculate($participant));
+        $this->assertEquals(-3, $karma->calculate($participant));
     }
 
     public function testBoardGamer()
@@ -508,6 +508,6 @@ class KarmaTest extends \PHPUnit_Framework_TestCase
         $this->db->method('query')
             ->willReturn($return);
 
-        $this->assertEquals(6, $karma->calculate($participant));
+        $this->assertEquals(16, $karma->calculate($participant));
     }
 }
