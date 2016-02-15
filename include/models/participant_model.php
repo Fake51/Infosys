@@ -2325,8 +2325,15 @@ SQL;
     public function filterOutPaidSignups(array $participants)
     {
         return array_filter($participants, function ($x) {
-            return !($x->original_price <= 200 && $x->betalt_beloeb > 0
-                || $x->betalt_beloeb > ($x->original_price / 2));
+            return !(($x->calcSignupTotal() <= 200 && $x->betalt_beloeb > 0)
+                || ($x->betalt_beloeb > ($x->calcSignupTotal() / 2)));
+        });
+    }
+
+    public function filterSignedUpToday(array $participants)
+    {
+        return array_filter($participants, function ($x) {
+            return strtotime($x->created) < strtotime('today');
         });
     }
 
@@ -2348,11 +2355,11 @@ SQL;
         return $participants;
     }
 
-    public function getParticipantsForPaymentReminder($days_ago)
+    public function getParticipantsForPaymentReminder()
     {
-        $participants = $this->getParticipantsSignedupDaysAgo($days_ago);
-        $participants = $this->filterOutPaidSignups($participants);
+        $participants = $this->filterOutPaidSignups($this->createEntity('Deltagere')->findAll());
         $participants = $this->filterOutTodaysReminders($participants);
+        $participants = $this->filterSignedUpToday($participants);
 
         return $participants;
     }

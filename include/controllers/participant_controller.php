@@ -1677,9 +1677,7 @@ class ParticipantController extends Controller
 
     public function sendFirstPaymentReminder()
     {
-        $days_ago = 7;
-
-        $participants = $this->model->getParticipantsForPaymentReminder($days_ago);
+        $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;
 
@@ -1698,9 +1696,7 @@ class ParticipantController extends Controller
 
     public function sendSecondPaymentReminder()
     {
-        $days_ago = 13;
-
-        $participants = $this->model->getParticipantsForPaymentReminder($days_ago);
+        $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;
 
@@ -1712,7 +1708,7 @@ class ParticipantController extends Controller
             $count++;
         }
 
-        $this->log('13 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
+        $this->log('2 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
 
         exit;
     }
@@ -1726,7 +1722,7 @@ class ParticipantController extends Controller
             $this->page->setTemplate('participant/' . $template . '-da');
 
         } else {
-            $title = $english_title ? $english_title : 'Reminder: payment for signup to Fastaval 2016';
+            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval 2016';
             $this->page->setTemplate('participant/' . $template . '-en');
         }
 
@@ -1766,10 +1762,10 @@ class ParticipantController extends Controller
     {
         $days_ago = 17;
 
-        $participants = $this->model->getParticipantsForPaymentReminder($days_ago);
+        $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;
-
+exit;
         foreach ($participants as $participant) {
             $this->sendPaymentReminder($participant, 'paymentreminderannulled', $participant->speaksDanish(), 'Din tilmelding til Fastaval 2016', 'Your sign up for Fastaval 2016');
 

@@ -1,29 +1,29 @@
 <h2>Reminder of payment for Fastaval 2016</h2>
+<p> </p>
 <p>Hi <?= e($this->participant->fornavn);?> <?= e($this->participant->efternavn);?>,</p>
-<p>&nbsp;</p>
+<p> </p>
 <p>We&#39;re writing to you because we still cannot see a payment from you for Fastaval 2016, and we thought we&#39;d take this last opportunity to remind you.</p>
 
 <p>If you already paid, please contact us at <a href="mailto:info@fastaval.dk">info@fastaval.dk</a>, so we can clear up the payment.</p>
 
-<p>If you haven&#39;t paid yet, remember that your deadline for paying is <strong><?= $this->payment_day;?></strong> (i.e. tomorrow).
-If you don&#39;t pay before this date <strong>your sign up will be canceled</strong>. You can pay here:</p>
+<p>If you haven&#39;t paid yet, remember that your deadline for paying is <strong><?= $this->payment_day;?></strong> (i.e. the day after tomorrow). If you don&#39;t pay by this date <strong>your signup will be canceled</strong>. You can pay here:</p>
 
 <p><a href="<?= $this->payment_url;?>"><?= $this->payment_url;?></a></p>
 
-<p>The amount is <?= e($this->payment_remainder);?>DKK, and payment takes place through Rollespil.dk. Note that
-they add a fee of between 3DKK and 14DKK (depending upon the amount), as well as a credit-card fee (0.75% for
-Dankort and 3.75% on non-Danish credit-cards).</p>
+<p>The amount is <?= e($this->payment_remainder);?>DKK, and payment takes place through Rollespil.dk.</p>
 
 <h4>Payment by banktransfer</h4>
-<p>If you cannot pay online, it is also possible to pay through banktransfer. It is however a bit more
-expensive, as it involves more work. Because of that, there is a fee of 10DKK on banktransfers.</p>
+<p> </p>
+<p>If you cannot pay online, it is also possible to pay through banktransfer. It is however a bit more expensive, as it involves more work. Because of that, there is a fee of 10DKK on banktransfers.</p>
 <p>To pay by banktransfer, use the information below:</p>
 <ul>
     <li>Payment due is <?= e($this->payment_remainder + 10);?>DKK (<?= e($this->payment_remainder);?>DKK + 10DKK fee)</li>
     <li>From a Danish bank: Reg.: 9314 / Account: 4573884464</li>
-    <li>Paying from a bank outside of Denmark, please contact <a href="mailto:bunker@fastaval.dk">bunker@fastaval.dk</a></li>
+    <li>Paying from a bank outside of Denmark, you should use these details: IBAN DK6693144573884464 and BIC SPNODK22</li>
+    <li>ALWAYS make sure to add your name and participant ID as message so we know who the payment was from</li>
+    <li>Contact <a href="mailto:info@fastaval.dk">info@fastaval.dk</a> to let us know that your payment is on its way, so we don&#39;t cancel your signup by mistake</li>
 </ul>
-<p>&nbsp;</p>
+<p> </p>
 <p><strong>We look forward to seeing you at Fastaval 2016!</strong></p>
 <p>Best,</p>
 <p>Fastaval</p>

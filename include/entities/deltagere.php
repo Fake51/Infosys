@@ -103,7 +103,7 @@ class Deltagere extends DBObject implements AgeFulfilment
 
     protected $calculated_age = '';
 
-    /** 
+    /**
      * returns value from $this->model_vars if they're set
      * overrides the parent __get function in order to also return
      * values from child tables
@@ -466,7 +466,7 @@ class Deltagere extends DBObject implements AgeFulfilment
     }
 
     /**
-     * signs the user up for some wear, with a given amount and size 
+     * signs the user up for some wear, with a given amount and size
      *
      * @param object $wearpris - WearPriser entity
      * @param int $antal - number of the wear to purchase
@@ -595,6 +595,7 @@ class Deltagere extends DBObject implements AgeFulfilment
 
         if (!$this->entranceTicketCost) {
             $result  = 0;
+
             foreach ($this->getIndgang() as $i) {
                 if ($i->isEntrance()) {
                     $result += $i->pris;
@@ -691,12 +692,14 @@ class Deltagere extends DBObject implements AgeFulfilment
         if (!$this->gamesCost) {
             $result  = 0;
             $pladser = $signups ? $this->getTilmeldinger() : $this->getPladser();
+
             foreach ($pladser as $g) {
-	        $result += ($g->type == 'spiller' || $g->tilmeldingstype == 'spiller') ? $g->getAktivitet()->pris : 0;
+                $result += ($g->type == 'spiller' || $g->tilmeldingstype == 'spiller') ? $g->getAktivitet()->pris : 0;
             }
 
             $this->gamesCost = $result;
         }
+
         return $this->gamesCost;
     }
 
@@ -794,17 +797,17 @@ class Deltagere extends DBObject implements AgeFulfilment
      */
     public function calcSignupTotal()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return 0;
         }
-        if (!$this->signupCost)
-        {
+
+        if (!$this->signupCost) {
             $result = 0;
             $result += $this->calcEntry() + $this->calcFood() + $this->calcActivities(true);
             $result += $this->calcWear() + $this->calcRichBastard() + $this->calcAlea() + $this->calcOtherStuff();
             $this->signupCost = $result;
         }
+
         return $this->signupCost;
     }
 
