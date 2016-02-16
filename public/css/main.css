@@ -805,6 +805,10 @@ div.afviklingsbox fieldset.afviklingsbox-signups tr.deltagerbusy, div.afviklings
     font-style: italic;
 }
 
+tr.double-booked {
+    border: 1px dashed #000;
+}
+
 tr.being-dragged {
     background-color: #ffff00;
 }

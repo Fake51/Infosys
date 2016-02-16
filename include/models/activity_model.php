@@ -384,7 +384,11 @@ class ActivityModel extends Model {
     public function getNextGamestart()
     {
         $result = $this->db->query("SELECT `start` FROM afviklinger, aktiviteter WHERE `start` > NOW() AND aktiviteter.type IN ('rolle', 'live', 'braet') AND aktiviteter.id = afviklinger.aktivitet_id ORDER BY `start` ASC LIMIT 1");
-        if ($result) return $result[0]['start'];
+
+        if ($result) {
+            return $result[0]['start'];
+        }
+
         return false;
     }
 
@@ -866,5 +870,43 @@ LIMIT 1
         $stats = $karma->calculate($this->createEntity('Deltagere')->findAll());
 
         return $stats;
+    }
+
+    /**
+     * returns double booked GMs for the activitys schedules
+     *
+     * @param \Aktiviteter $activity Activity to get double bookings for
+     *
+     * @access public
+     * @return array
+     */
+    public function getDoubleBookings(\Aktiviteter $activity)
+    {
+		$query = '
+SELECT
+    p.deltager_id,
+    p.afvikling_id
+FROM
+    deltagere_tilmeldinger AS p
+    JOIN afviklinger AS pa ON pa.id = p.afvikling_id
+    JOIN deltagere_tilmeldinger AS s ON s.deltager_id = p.deltager_id AND s.afvikling_id != p.afvikling_id
+    JOIN afviklinger AS sa ON sa.id = s.afvikling_id
+WHERE
+    p.tilmeldingstype = "spilleder"
+    AND pa.aktivitet_id = ?
+    AND (
+        (pa.start > sa.start AND pa.start < sa.slut)
+        OR (pa.start <= sa.start AND pa.slut >= sa.slut)
+        OR (pa.slut > sa.start AND pa.slut < sa.slut)
+    )
+';
+
+        $result = [];
+
+        foreach ($this->db->query($query, [$activity->id]) as $row) {
+            $result[$row['deltager_id']][$row['afvikling_id']] = true;
+        }
+
+        return $result;
     }
 }

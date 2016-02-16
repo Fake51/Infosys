@@ -98,6 +98,8 @@ class ActivityController extends Controller
             $this->page->afviklinger = $aktivitet->getCompleteScheduling();
             $this->page->lokaler     = $this->model->getAllRooms();
 
+            $this->page->double_booked_gms = $this->model->getDoubleBookings($aktivitet);
+
             $this->page->karma_stats = $this->model->getKarmaStats();
 
         }
