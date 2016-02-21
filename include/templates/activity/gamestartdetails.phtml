@@ -17,6 +17,7 @@
 ?>
     <a class="btn btn-primary" href="<?= $this->url('gamestart_master', array('time' => str_replace(' ', '_', $this->time)));?>"><?= $text;?></a>
 <?php endif;?>
+<p><a class="btn btn-primary" href="<?= $this->url('prepare_schedule_votes', array('time' => str_replace(' ', '_', $this->time)));?>" target="_blank">Print stemmesedler</a></p>
 <p>Antal aktiviteter: <?php echo count($this->gamestart_details);?></p>
 <ul>
     <?php foreach ($this->gamestart_details as $detail) :?>

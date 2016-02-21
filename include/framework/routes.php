@@ -194,6 +194,11 @@ class Routes
         $this->routes['gamestart_ajax_info'  ]     = array('url' => 'aktiviteter/gamestart/ajax/:id:/info', 'controller' => 'Activity', 'method' => 'gameStartAjaxInfo');
         $this->routes['gamestart_master_change']   = array('url' => 'aktiviteter/gamestart/master/:id:/change', 'controller' => 'Activity', 'method' => 'gameStartMasterChange');
 
+        $this->routes['prepare_schedule_votes']    = array('url' => 'aktiviteter/schedule-votes/prepare/:time:', 'controller' => 'Activity', 'method' => 'prepareScheduleVotes');
+
+        $this->routes['activity_vote']             = array('url' => 'vote', 'controller' => 'Activity', 'method' => 'specifyVote');
+        $this->routes['activity_specific_vote']    = array('url' => 'vote/:code:', 'controller' => 'Activity', 'method' => 'confirmVote');
+
         $this->routes['gamestart_queue']           = array('url' => 'activities/gamestart-queue', 'controller' => 'Activity', 'method' => 'gamestartQueue');
         $this->routes['gamestart_queue_ajax']      = array('url' => 'activities/gamestart-queue-ajax', 'controller' => 'Activity', 'method' => 'gamestartQueueAjax');
 

@@ -5,6 +5,7 @@ public/.htaccess
 public/audio/*
 public/uploads/*
 public/error_log.txt
+public/vote-barcodes/*
 include/signup-data/*
 include/scripts/*
 logs/*

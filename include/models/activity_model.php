@@ -909,4 +909,37 @@ WHERE
 
         return $result;
     }
+
+    /**
+     * returns true if votes were cast for any
+     * of the schedules given
+     *
+     * @param array $gamestartdetails Schedules to check for votes cast
+     *
+     * @access public
+     * @return bool
+     */
+    public function votesCast(array $gamestartdetails)
+    {
+        $mapper = function ($x) {
+            return intval($x['run']->id);
+        };
+
+        $schedule_ids = array_map($mapper, $gamestartdetails);
+
+        $query = '
+SELECT
+    COUNT(*) AS count
+FROM
+    schedules_votes
+WHERE
+    schedule_id IN (' . implode(', ', $schedule_ids) . ')
+    AND cast_at > "0000-00-00 00:00:00"
+';
+
+        $result = $this->db->query($query);
+        $row    = reset($result);
+
+        return !!$row['count'];
+    }
 }

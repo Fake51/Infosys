@@ -546,4 +546,72 @@ WHERE
     {
         return false;
     }
+
+    /**
+     * creates votes for the schedule
+     *
+     * @access public
+     * @return array
+     */
+    public function createVotes(Page $page)
+    {
+        require_once LIB_FOLDER . 'phpqrcode/phpqrcode.php';
+
+        $query = '
+DELETE FROM
+    schedules_votes
+WHERE
+    schedule_id = ?
+';
+
+        $this->db->exec($query, [$this->id]);
+
+        $query     = 'INSERT INTO schedules_votes (schedule_id, code, cast_at) VALUES ';
+        $values    = [];
+        $arguments = [];
+
+        foreach ($this->getParticipantsOnTeams() as $ignore) {
+            $values[] = '(?, ?, "0000-00-00 00:00:00")';
+
+            $code = $this->makeVoteCode();
+            
+            array_push($arguments, $this->id, $code);
+
+        }
+
+        $this->db->exec($query . implode(', ', $values), $arguments);
+
+        $query = 'SELECT id, code FROM schedules_votes WHERE schedule_id = ?';
+
+        foreach ($this->db->query($query, [$this->id]) as $row) {
+            $votes[] = [
+                        'id'   => $row['id'],
+                        'code' => $row['code'],
+                       ];
+
+            QRcode::png($page->url('activity_specific_vote', ['code' => $code]), PUBLIC_PATH . 'vote-barcodes/' . $row['id'] . '.png', 'M', 3);
+
+        }
+
+        return $votes;
+    }
+
+    /**
+     * creates a voting code - a random 8 character string
+     *
+     * @access public
+     * @return string
+     */
+    public function makeVoteCode()
+    {
+        $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+        $code = '';
+
+        while (strlen($code) < 8) {
+            $code .= $base[mt_rand(0, 61)];
+        }
+
+        return $code;
+    }
 }

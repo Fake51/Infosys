@@ -550,6 +550,31 @@ class ActivityController extends Controller
         exit;
     }
 
+    /**
+     * displays a page with vote markers for
+     *
+     * @access public
+     * @return void
+     */
+    public function prepareScheduleVotes()
+    {
+        $time = str_replace('_', ' ', $this->vars['time']);
+
+        if (!($this->page->gamestart_details = $this->model->getGameStartDetails($time))) {
+            $this->page->setTemplate('noresults');
+            return;
+        }
+
+        if ($this->model->votesCast($this->page->gamestart_details)) {
+            $this->page->setTemplate('novoteregeneration');
+            return;
+        }
+
+        $this->page->time = $time;
+
+        $this->page->layout_template = 'printlist.phtml';
+    }
+
     //{{{ ajax methods
     /**
      * outputs string of <option> elements containing times for an activity

@@ -2134,3 +2134,7 @@ table.accounting tbody {
     margin-right: 1.2em;
     margin-top: 1em;
 }
+
+.vote {
+    float: left;
+}

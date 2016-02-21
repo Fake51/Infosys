@@ -28,3 +28,29 @@ div.deltager-wearorder table td {
 .print-hidden {
     display:none;
 }
+
+.vote {
+    float: left;
+    text-align: center;
+    padding: 0.5em 1em;
+    border: 1px solid #000;
+    width: 10em;
+    font-size: 0.8em;
+    page-break-inside: avoid;
+}
+
+.vote-heading {
+    clear: both;
+    margin: 2em;
+}
+
+.vote-address,
+.vote-code,
+.vote-activity {
+    display: block;
+    margin: 0 auto;
+}
+
+.vote-address {
+    text-decoration: underline;
+}
