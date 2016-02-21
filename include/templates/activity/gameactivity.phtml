@@ -66,11 +66,12 @@
                         <?php foreach ($afv as $afvikling) :
                         $starthour = strtotime($afvikling->start);
                         $endhour   = strtotime($afvikling->slut);
+
                         if (($starthour - $time) > 0) :
                         ?>
                             <td <?= ($i % 2 ? "class='aktivitet-graph-alt'" : "");?> colspan="<?= floor(($starthour - $time) / 3600);?>">&nbsp;</td>
                         <?php endif;?>
-                        <td <?= ($i % 2 ? "class='aktivitet-graph-alt'" : "");?> colspan="<?= ceil(($endhour - $starthour) / 3600);?>"><p class='aktivitet-graph-in-use aktivitet-graph-<?= e($akt->type);?>' id="p-<?= $afvikling->id . '-' . $starthour;?>">T: <?= $afvikling->getSignupCount();?> (<span class="stat-display-old">S: <?= count($afvikling->getSignupGamers());?> / SL: <?= count($afvikling->getSignupGMs());?></span><span class="stat-display-new" style="display:none;">1.: <?= count($afvikling->getPrioritySignups());?> / <?= $afvikling->getAktivitet()->min_deltagere_per_hold;?></span>)
+                        <td <?= ($i % 2 ? "class='aktivitet-graph-alt'" : "");?> colspan="<?= ceil(($endhour - $starthour) / 3600);?>"><p class='aktivitet-graph-in-use aktivitet-graph-<?= e($akt->type);?>' id="p-<?= $afvikling->id . '-' . $starthour;?>">T: <?= $afvikling->getSignupCount();?> (<span class="stat-display-old">S: <?= count($afvikling->getSignupGamers());?> / SL: <?= $afvikling->getSignupGmCount();?></span><span class="stat-display-new" style="display:none;">1.: <?= count($afvikling->getPrioritySignups());?> / <?= $afvikling->getAktivitet()->min_deltagere_per_hold;?></span>)
                                     <span id='span-<?= $afvikling->id . '-' . $starthour;?>' class='pop-up'>
                                     <?php foreach ($afvikling->getHold() as $hold) :
                                         $needs_gamers   = $hold->needsGamers();

@@ -1096,18 +1096,19 @@ class ParticipantModel extends Model
     {
         $activities = (($result = $this->createEntity('Aktiviteter')->findAll()) ? $result : array());
         $result = array();
-        foreach ($activities as $activity)
-        {
-            if (!$activity->needsSpilleder())
-            {
+
+        foreach ($activities as $activity) {
+            if (!$activity->needsSpilleder()) {
                 continue;
             }
-            foreach ($activity->getAfviklinger() as $afvikling)
-            {
-                $result[$activity->id][$afvikling->id]['signups'] = $afvikling->getSignupGMs();
+
+            foreach ($activity->getAfviklinger() as $afvikling) {
+                $result[$activity->id][$afvikling->id]['signups']  = $afvikling->getSignupGMs();
                 $result[$activity->id][$afvikling->id]['assigned'] = $afvikling->getAssignedGMs();
+
             }
         }
+
         return $result;
     }
 

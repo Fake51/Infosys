@@ -174,6 +174,65 @@ class Afviklinger extends DBObject
      * @access public
      * @return array
      */
+    public function getSignupGmCount()
+    {
+		$query = '
+SELECT
+    COUNT(*) AS count,
+    "entire" AS type
+FROM
+    deltagere_tilmeldinger AS p
+WHERE
+    p.tilmeldingstype = "spilleder"
+    AND p.afvikling_id = ?
+
+UNION
+
+SELECT
+    COUNT(*) AS count,
+    "doubles" AS type
+FROM
+    deltagere_tilmeldinger AS p
+    JOIN afviklinger AS pa ON pa.id = p.afvikling_id
+    JOIN deltagere_tilmeldinger AS s ON s.deltager_id = p.deltager_id AND s.afvikling_id != p.afvikling_id
+    JOIN afviklinger AS sa ON sa.id = s.afvikling_id
+WHERE
+    p.tilmeldingstype = "spilleder"
+    AND pa.id = ?
+    AND s.tilmeldingstype = "spilleder"
+    AND (
+        (pa.start > sa.start AND pa.start < sa.slut)
+        OR (pa.start <= sa.start AND pa.slut >= sa.slut)
+        OR (pa.slut > sa.start AND pa.slut < sa.slut)
+    )
+';
+
+        $max = $min = 0;
+
+        foreach ($this->db->query($query, [$this->id, $this->id]) as $row) {
+            if ($row['type'] === 'entire') {
+                $max += $row['count'];
+                $min += $row['count'];
+
+            } elseif ($row['type'] === 'doubles') {
+                $min -= $row['count'];
+            }
+
+        }
+
+        if ($min === $max) {
+            return $min;
+        }
+
+        return $min . ' - ' . $max;
+    }
+
+    /**
+     * returns array of tilmeldinger for the afvikling
+     *
+     * @access public
+     * @return array
+     */
     public function getSignupGMs()
     {
         return $this->getSignupByType('spilleder');
