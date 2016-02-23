@@ -942,4 +942,113 @@ WHERE
 
         return !!$row['count'];
     }
+
+    /**
+     * attempts to fetch a vote given a code
+     *
+     * @param string $code Code to search by
+     *
+     * @access public
+     * @return string|false
+     */
+    public function fetchVoteCode($code)
+    {
+        $query = '
+SELECT
+    code
+FROM
+    schedules_votes
+WHERE
+    code = ?
+';
+
+        $result = $this->db->query($query, [$code]);
+
+        if (empty($result)) {
+            return false;
+        }
+
+        return $result[0]['code'];
+    }
+
+    /**
+     * attempts to fetch a vote given a code
+     *
+     * @param string $code Code to search by
+     *
+     * @access public
+     * @return string|false
+     */
+    public function fetchVote($code)
+    {
+        $query = '
+SELECT
+    id,
+    schedule_id,
+    cast_at
+FROM
+    schedules_votes
+WHERE
+    code = ?
+';
+
+        $result = $this->db->query($query, [$code]);
+
+        if (empty($result)) {
+            return false;
+        }
+
+        return $result[0];
+    }
+
+    /**
+     * returns activity given schedule id
+     *
+     * @param int $schedule_id ID of schedule to load activity for
+     *
+     * @access public
+     * @return DbObject
+     */
+    public function fetchVoteActivity($schedule_id)
+    {
+        $schedule = $this->createEntity('Afviklinger')->findById($schedule_id);
+
+        if (!$schedule) {
+            return false;
+        }
+
+        return $schedule->getActivity();
+    }
+
+    /**
+     * marks a vote as cast
+     *
+     * @param  $vote_id ID of vote to mark cast
+     *
+     * @access public
+     * @return bool
+     */
+    public function markVoteCast($vote_id)
+    {
+        $query = '
+SELECT
+    id
+FROM
+    schedules_votes
+WHERE
+    id = ?
+';
+
+        $result = $this->db->query($query, [$vote_id]);
+
+        if (!$result) {
+            return false;
+        }
+
+        $query = '
+UPDATE schedules_votes SET cast_at = NOW() WHERE id = ?
+';
+
+        return $this->db->exec($query, [$vote_id]);
+    }
 }

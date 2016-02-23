@@ -197,6 +197,9 @@ class Routes
         $this->routes['prepare_schedule_votes']    = array('url' => 'aktiviteter/schedule-votes/prepare/:time:', 'controller' => 'Activity', 'method' => 'prepareScheduleVotes');
 
         $this->routes['activity_vote']             = array('url' => 'vote', 'controller' => 'Activity', 'method' => 'specifyVote');
+        $this->routes['activity_vote_post']        = array('url' => 'vote/post', 'controller' => 'Activity', 'method' => 'specifyVotePosted');
+        $this->routes['cast_vote']                 = array('url' => 'vote/cast', 'controller' => 'Activity', 'method' => 'castVote');
+        $this->routes['voting_done']               = array('url' => 'vote/done', 'controller' => 'Activity', 'method' => 'votingDone');
         $this->routes['activity_specific_vote']    = array('url' => 'vote/:code:', 'controller' => 'Activity', 'method' => 'confirmVote');
 
         $this->routes['gamestart_queue']           = array('url' => 'activities/gamestart-queue', 'controller' => 'Activity', 'method' => 'gamestartQueue');

@@ -38,7 +38,7 @@ class ActivityController extends Controller
 {
 
     protected $prerun_hooks = array(
-        array('method' => 'checkUser', 'exclusive' => true, 'methodlist' => array('gamestartQueue', 'gamestartQueueAjax')),
+        array('method' => 'checkUser', 'exclusive' => true, 'methodlist' => array('gamestartQueue', 'gamestartQueueAjax', 'specifyVote', 'specifyVotePosted', 'confirmVote', 'castVote', 'votingDone')),
     );
 
     /**
@@ -573,6 +573,98 @@ class ActivityController extends Controller
         $this->page->time = $time;
 
         $this->page->layout_template = 'printlist.phtml';
+    }
+
+    /**
+     * allows for inputting a code for voting
+     *
+     * @access public
+     * @return void
+     */
+    public function specifyVote()
+    {
+        $this->page->layout_template = 'external.phtml';
+    }
+
+    /**
+     * post from specifyVote
+     *
+     * @access public
+     * @return void
+     */
+    public function specifyVotePosted()
+    {
+        if (!$this->page->request->isPost()) {
+            $this->hardRedirect($this->url('activity_vote'));
+        }
+
+        if (!($code = $this->model->fetchVoteCode($this->page->request->post->code))) {
+            $this->errorMessage('No such code found / Kunne ikke finde koden');
+            $this->hardRedirect($this->url('activity_vote'));
+        }
+
+        $this->hardRedirect($this->url('activity_specific_vote', ['code' => $code]));
+    }
+
+    /**
+     * displays details for vote and yes/no form
+     *
+     * @access public
+     * @return void
+     */
+    public function confirmVote()
+    {
+        if (!($vote = $this->model->fetchVote($this->vars['code']))) {
+            $this->errorMessage('No such code found / Kunne ikke finde koden');
+            $this->hardRedirect($this->url('activity_vote'));
+        }
+
+        $this->page->activity = $this->model->fetchVoteActivity($vote['schedule_id']);
+
+        if (!$this->page->activity) {
+            $this->errorMessage('No such code found / Kunne ikke finde koden');
+            $this->hardRedirect($this->url('activity_vote'));
+        }
+
+        if ($vote['cast_at'] !== '0000-00-00 00:00:00') {
+            $this->errorMessage('Vote already cast once / Stemme allerede brugt en gang');
+            $this->hardRedirect($this->url('activity_vote'));
+        }
+
+        $this->page->layout_template = 'external.phtml';
+
+        $this->page->vote = $vote;
+    }
+
+    /**
+     * records casting of a vote
+     *
+     * @access public
+     * @return void
+     */
+    public function castVote()
+    {
+        if (!$this->page->request->isPost()) {
+            $this->hardRedirect($this->url('activity_vote'));
+        }
+
+        if (!($this->model->markVoteCast($this->page->request->post->id))) {
+            $this->errorMessage('No such code found / Kunne ikke finde koden');
+            $this->hardRedirect($this->url('activity_vote'));
+        }
+
+        $this->hardRedirect($this->url('voting_done'));
+    }
+
+    /**
+     * shows thank you screen after cast vote
+     *
+     * @access public
+     * @return void
+     */
+    public function votingDone()
+    {
+        $this->page->layout_template = 'external.phtml';
     }
 
     //{{{ ajax methods

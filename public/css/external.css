@@ -139,3 +139,9 @@ a:hover {
 a:active {
     color: #777;
 }
+
+.votingModule {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}

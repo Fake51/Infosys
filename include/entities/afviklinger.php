@@ -667,6 +667,8 @@ WHERE
 
         $code = '';
 
+        mt_srand(time());
+
         while (strlen($code) < 8) {
             $code .= $base[mt_rand(0, 61)];
         }
