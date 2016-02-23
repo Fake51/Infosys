@@ -136,6 +136,7 @@ class ParticipantController extends Controller
 
         $session = $this->dic->get('Session');
         $search = $session->search;
+
         if ($search && isset($search['wildcardsearch']) && (empty($search['wildcardhash']) || md5($search['wildcardsearch']) != $search['wildcardhash'])) {
             $ids = $this->model->createWildcardSearchBase($search['wildcardsearch']);
 
@@ -152,6 +153,7 @@ class ParticipantController extends Controller
         $get->iDisplayLength = 25;
         $get->iDisplayStart  = 0;
         $this->page->model   = $this->model;
+
         list($this->page->row_count, $result_length, $this->page->users) = $this->model->getAjaxListData($get);
     }
 
@@ -795,24 +797,7 @@ class ParticipantController extends Controller
      */
     public function karmaList()
     {
-        $direction = ((!empty($this->vars['direction'])) ? $this->vars['direction'] : 'asc');
-        $deltagere = $this->model->findSortedByField('rel_karma', $direction);
-
-        if (empty($deltagere)) {
-            $this->page->setTemplate('noResults');
-
-        } else {
-            $this->page->deltagere = $deltagere;
-            $this->page->sortedby = 'Karma';
-            $get = $this->page->request->get;
-            $this->page->columns = ((!empty($get->multideltagerfields)) ? $get->multideltagerfields :  array('id', 'navn', 'rel_karma','abs_karma'));
-            $this->page->show_helpers = false;
-            $this->page->sorted = '- Sorteret efter relativ karma ';
-            $this->page->form_url = $this->page->url('deltagere_karmalist');
-            $this->page->model = $this->model;
-            $this->page->setTemplate('visAlle');
-        }
-
+        $this->page->data = $this->model->getKarmaSortedData();
     }
 
     /**

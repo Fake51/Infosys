@@ -66,6 +66,7 @@ class ParticipantModel extends Model
         $search['wildcardhash'] = md5($query);
 
         $search['ids'] = array();
+
         if ($result = $this->miniWildCardSearch(explode(' ', $query))) {
             $search['ids'] = array_map(create_function('$a', 'return $a->id;'), $result);
         }
@@ -1656,7 +1657,7 @@ SQL;
      */
     public function getAjaxListData(RequestVars $get)
     {
-        $columns     = array('id', 'navn');
+        $columns = array('id', 'navn');
 
         if ($get->no_search_term) {
             $session         = $this->dic->get('Session');
@@ -1666,23 +1667,29 @@ SQL;
         if (isset($get->extra_columns)) {
             $extra_columns = explode(',', $get->extra_columns);
 
-            $valid_columns = $this->getDisplayColumns();
+            $valid_columns = array_diff($this->getDisplayColumns(), 'karma');
+
             foreach ($extra_columns as $column) {
                 if (isset($valid_columns[$column])) {
                     array_push($columns, $column);
                 }
+
             }
+
         }
 
         $limit = "";
+
         if (isset($get->iDisplayStart) && $get->iDisplayLength != '-1') {
             $limit = "LIMIT " . intval($get->iDisplayStart) . ", " .
             intval($get->iDisplayLength);
         }
 
         $order = '';
+
         if (isset($get->iSortCol_0)) {
             $order = "ORDER BY ";
+
             for ($i = 0, $max = intval($get->iSortingCols); $i < $max ; $i++ ) {
                 if ($get->{'bSortable_' . intval($get->{'iSortCol_' . $i})} == "true" ) {
                     $sort_dir = strtolower($get->{'sSortDir_' . $i}) == 'desc' ? 'DESC' : 'ASC';
@@ -1698,6 +1705,7 @@ SQL;
         }
     
         $where = '';
+
         if ($get->sSearch != "") {
             $where = "WHERE (";
             for ($i = 0, $max = count($columns); $i < $max; $i++) {
@@ -1714,6 +1722,7 @@ SQL;
         }
 
         $session = $this->dic->get('Session');
+
         if ($session->search) {
             if (!empty($session->search['ids']) && is_array($session->search['ids'])) {
                 $id_clause = 'deltagere.id IN (' . implode(', ', array_map(create_function('$a', 'return intval($a);'), $session->search['ids'])) . ')';
@@ -1853,7 +1862,7 @@ SQL;
     public function getDisplayColumns()
     {
         $filter_out = array('id', 'krigslive_bus', 'password', 'ovelokale_id', 'ny_alea', 'er_alea', 'adresse1', 'adresse2', 'alder', 'rabat', 'deltaget_i_fastaval', 'sovelokale_id');
-        $columns = array_diff($this->createEntity('Deltagere')->getColumns(), $filter_out);
+        $columns    = array_diff($this->createEntity('Deltagere')->getColumns(), $filter_out);
 
         $readable_columns = $this->createEntity('Deltagere')->getHumanReadableFieldNames();
         $result           = array();
@@ -1862,7 +1871,9 @@ SQL;
             if (isset($readable_columns[$column])) {
                 $result[$column] = $readable_columns[$column];
             }
+
         }
+
         asort($result);
 
         return $result;
@@ -2429,5 +2440,30 @@ SQL;
         $stats = $karma->calculate($participant);
 
         return $stats;
+    }
+
+    /**
+     * returns data on karma for all participants
+     *
+     * @access public
+     * @return array
+     */
+    public function getKarmaSortedData()
+    {
+        $participants = $this->createEntity('Deltagere')->findAll();
+
+        $karma = $this->buildKarma();
+
+        $stats = $karma->calculate($this->createEntity('Deltagere')->findAll());
+
+        $mapper = function ($x) use ($stats) {
+            return [
+                    'id'    => $x->id,
+                    'name'  => $x->fornavn . ' ' . $x->efternavn,
+                    'karma' => isset($stats[$x->id]) ? $stats[$x->id] : 0,
+                   ];
+        };
+
+        return array_map($mapper, $participants);
     }
 }

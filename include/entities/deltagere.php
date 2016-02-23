@@ -46,7 +46,6 @@ class Deltagere extends DBObject implements AgeFulfilment
     protected $human_readable_fieldnames = array(
         'id'                            => 'Id',
         'gcm_id'                        => 'GCM ID',
-        'abs_karma'                     => 'Absolut karma',
         'admin_note'                    => 'Admin note',
         'arbejdsomraade'                => 'Arbejdsområde',
         'arrangoer_naeste_aar'          => 'Arrangør igen',
@@ -81,7 +80,6 @@ class Deltagere extends DBObject implements AgeFulfilment
         'postnummer'                    => 'Postnummer',
         'ready_mandag'                  => 'Mandags-hjælp - opsætning',
         'ready_tirsdag'                 => 'Tirsdags-hjælp - opsætning',
-        'rel_karma'                     => 'Relativ karma',
         'rig_onkel'                     => 'Rig onkel',
         'scenarie'                      => 'Scenarie',
         'sovesal'                       => 'Arrangør sovesal',
