@@ -87,6 +87,10 @@ class Karma
 
         $id_string = implode(', ', array_map($sanitizer, $input));
 
+        if (!$id_string) {
+            return [];
+        }
+
         $query = '
 SELECT
     p.deltager_id,
