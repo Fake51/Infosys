@@ -404,6 +404,7 @@ XML;
             <li><a href='{$this->url('vis_alle_aktiviteter')}'>Alle aktiviteter</a></li>
             <li><a href='{$this->url('activities_graphed')}'>Grafisk oversigt</a></li>
             <li><a href='{$this->url('opret_aktivitet')}'>Opret aktivitet</a></li>
+            <li><a href='{$this->url('show_vote_stats')}'>Afstemnings-statistik</a></li>
             <li><hr/></li>
             <li><a href='{$this->url('holdhome')}'>Hold</a></li>
             <li><a href='{$this->url('vis_alle_hold')}'>Alle hold</a></li>

@@ -667,6 +667,17 @@ class ActivityController extends Controller
         $this->page->layout_template = 'external.phtml';
     }
 
+    /**
+     * shows voting statistics
+     *
+     * @access public
+     * @return void
+     */
+    public function showVotingStats()
+    {
+        $this->page->stats = $this->model->collectVotingStats();
+    }
+
     //{{{ ajax methods
     /**
      * outputs string of <option> elements containing times for an activity

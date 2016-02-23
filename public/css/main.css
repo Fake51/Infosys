@@ -2138,3 +2138,18 @@ table.accounting tbody {
 .vote {
     float: left;
 }
+
+.votingStats-title {
+    text-align: left;
+    padding: 1.5em 0 0.3em;
+}
+
+.votingStats-potential,
+.votingStats-votes {
+    padding: 0.5em 1em;
+    background-color: #eee;
+}
+
+.votingStats-stats {
+    text-align: center;
+}

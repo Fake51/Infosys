@@ -1051,4 +1051,58 @@ UPDATE schedules_votes SET cast_at = NOW() WHERE id = ?
 
         return $this->db->exec($query, [$vote_id]);
     }
+
+    /**
+     * returns voting stats
+     *
+     * @access public
+     * @return array
+     */
+    public function collectVotingStats()
+    {
+        $query = '
+SELECT
+    ak.navn,
+    sv1.votes_cast,
+    sv2.votes_potential
+FROM
+    aktiviteter AS ak
+    JOIN (
+        SELECT
+            af1.aktivitet_id,
+            COUNT(*) AS votes_cast
+        FROM
+            afviklinger AS af1
+            JOIN schedules_votes AS sv1 ON sv1.schedule_id = af1.id
+        WHERE
+            sv1.cast_at > "0000-00-00 00:00:00"
+        GROUP BY
+            af1.aktivitet_id
+    ) AS sv1 ON sv1.aktivitet_id = ak.id
+    JOIN (
+        SELECT
+            af1.aktivitet_id,
+            COUNT(*) AS votes_potential
+        FROM
+            afviklinger AS af1
+            JOIN schedules_votes AS sv1 ON sv1.schedule_id = af1.id
+        GROUP BY
+            af1.aktivitet_id
+    ) AS sv2 ON sv2.aktivitet_id = ak.id
+GROUP BY
+    ak.navn
+';
+
+        $stats = [];
+
+        foreach ($this->db->query($query) as $row) {
+            $stats[$row['navn']] = [
+                                    'cast'      => $row['votes_cast'],
+                                    'potential' => $row['votes_potential'],
+                                   ];
+
+        }
+
+        return $stats;
+    }
 }

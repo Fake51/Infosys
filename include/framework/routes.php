@@ -195,6 +195,7 @@ class Routes
         $this->routes['gamestart_master_change']   = array('url' => 'aktiviteter/gamestart/master/:id:/change', 'controller' => 'Activity', 'method' => 'gameStartMasterChange');
 
         $this->routes['prepare_schedule_votes']    = array('url' => 'aktiviteter/schedule-votes/prepare/:time:', 'controller' => 'Activity', 'method' => 'prepareScheduleVotes');
+        $this->routes['show_vote_stats']           = array('url' => 'aktiviteter/voting/stats', 'controller' => 'Activity', 'method' => 'showVotingStats');
 
         $this->routes['activity_vote']             = array('url' => 'vote', 'controller' => 'Activity', 'method' => 'specifyVote');
         $this->routes['activity_vote_post']        = array('url' => 'vote/post', 'controller' => 'Activity', 'method' => 'specifyVotePosted');
