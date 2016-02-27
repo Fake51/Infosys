@@ -1667,7 +1667,7 @@ SQL;
         if (isset($get->extra_columns)) {
             $extra_columns = explode(',', $get->extra_columns);
 
-            $valid_columns = array_diff($this->getDisplayColumns(), 'karma');
+            $valid_columns = $this->getDisplayColumns();
 
             foreach ($extra_columns as $column) {
                 if (isset($valid_columns[$column])) {
@@ -2338,7 +2338,7 @@ SQL;
     {
         return array_filter($participants, function ($x) {
             return !(($x->calcSignupTotal() <= 200 && $x->betalt_beloeb > 0)
-                || ($x->betalt_beloeb > ($x->calcSignupTotal() / 2)));
+                || ($x->betalt_beloeb > 200));
         });
     }
 
