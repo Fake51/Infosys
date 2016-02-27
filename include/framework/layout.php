@@ -409,6 +409,8 @@ XML;
             <li><a href='{$this->url('holdhome')}'>Hold</a></li>
             <li><a href='{$this->url('vis_alle_hold')}'>Alle hold</a></li>
             <li><a href='{$this->url('opret_hold')}'>Opret hold</a></li>
+            <li><hr/></li>
+            <li><a href='{$this->url('gamemaster_list_export')}'>Eksporter GM liste</a></li>
         </ul>
     </li>
     <li class='topmenu-item'>

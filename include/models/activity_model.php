@@ -1105,4 +1105,73 @@ GROUP BY
 
         return $stats;
     }
+
+    /**
+     * creates an excel spreadsheet with gm data
+     *
+     * @access public
+     * @return PHPExcel
+     */
+    public function getGmSpreadsheet()
+    {
+        $query = '
+SELECT
+    ak.navn AS titel,
+    af.start,
+    CONCAT(d.fornavn, " ", d.efternavn) AS navn,
+    d.email,
+    d.mobiltlf
+FROM
+    aktiviteter AS ak
+    JOIN afviklinger AS af ON af.aktivitet_id = ak.id
+    JOIN hold AS h on h.afvikling_id = af.id
+    JOIN pladser AS p ON p.hold_id = h.id
+    JOIN deltagere AS d ON d.id = p.deltager_id
+WHERE
+    p.type = "spilleder"
+    AND ak.type NOT IN ("system", "workshop", "ottoviteter")
+ORDER BY
+    titel,
+    start,
+    navn
+';
+
+        $output = [
+                   [
+                    'Titel',
+                    'Start',
+                    'Navn',
+                    'email',
+                    'mobiltlf',
+                   ],
+                  ];
+
+        foreach ($this->db->query($query) as $row) {
+            $output[] = [
+                         $row['titel'],
+                         $row['start'],
+                         $row['navn'],
+                         $row['email'],
+                         $row['mobiltlf'],
+                        ];
+        }
+
+        include_once LIB_FOLDER . 'PHPExcel/Classes/PHPExcel.php';
+
+        $excel = new PHPExcel();
+        $sheet = $excel->getActiveSheet();
+
+        foreach ($output as $row_index => $row) {
+            foreach ($row as $column_index => $column) {
+                $sheet->getCellByColumnAndRow($column_index, $row_index + 1)->setValue($column);
+            }
+
+        }
+
+        foreach (range(0, 4) as $index) {
+            $sheet->getColumnDimensionByColumn($index)->setAutoSize(true);
+        }
+
+        return new PHPExcel_Writer_Excel2007($excel);
+    }
 }

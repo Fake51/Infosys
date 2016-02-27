@@ -678,6 +678,26 @@ class ActivityController extends Controller
         $this->page->stats = $this->model->collectVotingStats();
     }
 
+    /**
+     * creates a spreadsheet and outputs it,
+     * containing information about GMs
+     *
+     * @access public
+     * @return void
+     */
+    public function exportGameList()
+    {
+        $excelwriter = $this->model->getGmSpreadsheet();
+
+        header('HTTP/1.1 200 Done');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename=spilledere.xlsx');
+
+        $excelwriter->save('php://output');
+
+        exit;
+    }
+
     //{{{ ajax methods
     /**
      * outputs string of <option> elements containing times for an activity
