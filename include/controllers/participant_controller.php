@@ -98,6 +98,8 @@ class ParticipantController extends Controller
 
             $this->page->participant_karma = $this->model->getKarmaStatsForParticipant($this->page->deltager);
 
+            $this->page->sleep_data = $this->model->getSleepDataForParticipant($this->page->deltager);
+
         } else {
             $this->page->setTemplate('noResults');
             $this->page->setTitle('Intet resultat');
@@ -1766,5 +1768,41 @@ exit;
         $this->log('Annulment check done. Sent emails to ' . $count . ' participants', 'Payment', null);
 
         exit;
+    }
+
+    /**
+     * updates the participants sleeping arrangement for fastaval
+     *
+     * @access public
+     * @return void
+     */
+    public function updateParticipantSleeping()
+    {
+        $this->page->sleeping_rooms = $this->model->findAvailableSleepingRooms();
+        $this->page->participant_id = $this->vars['id'];
+
+        $this->page->starts = date('Y-m-d 22:00:00', strtotime($this->config->get('con.start')));
+        $this->page->ends   = date('Y-m-d 10:00:00', strtotime($this->config->get('con.end')));
+    }
+
+    /**
+     * handles updates to participants sleeping arrangements
+     *
+     * @access public
+     * @return void
+     */
+    public function updateParticipantSleepingData()
+    {
+        if (!$this->page->request->isPost()) {
+            $this->hardRedirect($this->url('visdeltager', ['id' => $this->vars['id']]));
+        }
+
+        $this->model->removeParticipantSleepData($this->vars['id']);
+
+        if ($this->page->request->post->data) {
+            $this->model->updateSleepingData($this->vars['id'], $this->page->request->post->data);
+        }
+
+        $this->hardRedirect($this->url('visdeltager', ['id' => $this->vars['id']]));
     }
 }

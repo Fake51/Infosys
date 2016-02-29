@@ -193,6 +193,27 @@ $this->registerLateLoadJS('participant.js');
             </table>
         </fieldset>
     </div>
+    <div id='sleeping'>
+        <fieldset>
+            <legend>Soveplads - <a href="<?php echo $this->url('update_participant_sleeping', array('id' => $this->deltager->id));?>">Ret/slet</a></legend>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tidsrum</th>
+                        <th>Sted</th>
+                    </tr>
+                </thead>
+                <tbody>
+<?php foreach ($this->sleep_data as $row) : ?>
+                    <tr>
+                        <td><?= e($row['starts']);?> -&gt; <?= e($row['ends']);?></td>
+                        <td><?= e($row['room']->beskrivelse);?></td>
+                    </tr>
+<?php endforeach;?>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
     <div id='wear_info'>
         <fieldset>
             <legend>Wear - <a href="<?php echo $this->url('update_deltager_madwear', array('id' => $this->deltager->id));?>">Ret/slet</a></legend>

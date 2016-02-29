@@ -120,6 +120,8 @@ class Routes
         $this->routes['update_deltager_gdstilmeldinger']            = array('url' => 'deltager/updategdstilmeldinger/:id:', 'controller' => 'Participant', 'method' => 'updateGDSTilmeldinger');
         $this->routes['update_deltager_madwear']                    = array('url' => 'deltager/updatemadwear/:id:', 'controller' => 'Participant', 'method' => 'updateMadWear');
         $this->routes['update_deltager_note']                       = array('url' => 'deltager/updatenote/:textfield:/:id:', 'controller' => 'Participant', 'method' => 'updateDeltagerNote');
+        $this->routes['update_participant_sleeping']                = array('url' => 'deltager/updatesleeping/:id:', 'controller' => 'Participant', 'method' => 'updateParticipantSleeping');
+        $this->routes['update_participant_sleeping_post']           = array('url' => 'deltager/persistsleepingdata/:id:', 'controller' => 'Participant', 'method' => 'updateParticipantSleepingData');
         $this->routes['vis_alle_deltagere']                         = array('url' => 'deltager/visalle', 'controller' => 'Participant', 'method' => 'visAlle');
         $this->routes['show_search_result']                         = array('url' => 'deltager/search_result', 'controller' => 'Participant', 'method' => 'showSearchResult');
         $this->routes['vis_spilledere']                             = array('url' => 'deltager/visgms/', 'controller' => 'Participant', 'method' => 'listGMs');
@@ -219,6 +221,8 @@ class Routes
         $this->routes['lokale_brug']         = array('url' => 'lokaler/lokalebrug/:day:','controller' => 'Rooms', 'method' => 'roomUse');
         $this->routes['image_upload']        = array('url' => 'rooms/upload-images/:id:','controller' => 'Rooms', 'method' => 'uploadImages');
         $this->routes['room_image_overview'] = array('url' => 'rooms/image-overview','controller' => 'Rooms', 'method' => 'imageOverview');
+
+        $this->routes['sleep_statistics']    = array('url' => 'rooms/sleepstatistics', 'controller' => 'Rooms', 'method' => 'sleepStatistics');
 
         // wear routes
         $this->routes['wearhome']                     = array('url' => 'wear/', 'controller' => 'Wear', 'method' => 'main');

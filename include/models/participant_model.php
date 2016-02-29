@@ -1349,11 +1349,6 @@ SQL;
         return $this->db->query($query);
     }
 
-    public function getAllSleepRooms()
-    {
-        return $this->createEntity('Lokaler')->getSleepRooms();
-    }
-
     public function findFromNameOrID($query) {
         $return = array();
         if ($results = $this->miniWildCardSearch(explode(' ', $query), true)) {
@@ -2465,5 +2460,170 @@ SQL;
         };
 
         return array_map($mapper, $participants);
+    }
+
+    /**
+     * returns array of available rooms
+     *
+     * @access public
+     * @return array
+     */
+    public function findAvailableSleepingRooms()
+    {
+        $queries = [];
+
+        $start = date('Y-m-d 22:00:00', strtotime($this->config->get('con.start')));
+        $ends  = date('Y-m-d 10:00:00', strtotime($start) + 86400);
+
+        $nights = 0;
+        $starts = [];
+
+        $rooms = $this->createEntity('Lokaler')->findAll();
+
+        $map = function ($x) {
+            return $x->id;
+        };
+
+        $rooms = array_combine(array_map($map, $rooms), $rooms);
+
+        while (strtotime($start) < strtotime($this->config->get('con.end'))) {
+            $starts[] = $start;
+            $middle   = date('Y-m-d 23:59:00', strtotime($start));
+
+            $query = '
+SELECT
+    r.id,
+    r.sovekapacitet - COUNT(*) AS capacity,
+    "' . $start . '" AS starts,
+    "' . $ends . '" AS ends
+FROM
+    lokaler AS r
+    LEFT JOIN participants_sleepingplaces AS ps ON ps.room_id = r.id AND ps.starts <= "' . $middle . '" AND ps.ends >= "' . $middle . '"
+GROUP BY
+    r.id,
+    r.sovekapacitet
+HAVING
+    capacity > 0
+';
+
+            $queries[] = $query;
+
+            $start = date('Y-m-d 22:00:00', strtotime($start) + 86400);
+            $ends  = date('Y-m-d 10:00:00', strtotime($start) + 86400);
+
+            $nights++;
+        }
+
+        $empty_rooms = $places = [];
+
+        foreach ($this->db->query(implode(' UNION ', $queries)) as $row) {
+            $empty_rooms[$row['id']][$row['starts']] = $row['capacity'];
+        }
+
+        $filter = function ($x) use ($nights) {
+            return count($x) === $nights;
+        };
+
+        $places['allthrough'] = array_filter($empty_rooms, $filter);
+
+        foreach ($starts as $start) {
+            $filter = function ($x) use ($start) {
+                return isset($x[$start]);
+            };
+
+            $places[$start] = array_filter($empty_rooms, $filter);
+
+        }
+
+        foreach ($places as $id => $place) {
+            foreach (array_keys($place) as $room_id) {
+                $places[$id][$room_id] = $rooms[$room_id];
+            }
+
+        }
+
+        return $places;
+    }
+
+    /**
+     * removes all participants sleep data
+     *
+     * @param int $participant_id Id of participant to update
+     *
+     * @access public
+     * @return ParticipantModel
+     */
+    public function removeParticipantSleepData($participant_id)
+    {
+        $query = '
+DELETE FROM participants_sleepingplaces WHERE participant_id = ?
+';
+
+        $this->db->exec($query, [$participant_id]);
+
+        return $this;
+    }
+
+    /**
+     * updates participants sleeping data
+     *
+     * @param int   $participant_id Id of participant to update
+     * @param array $data           Data to use for update
+     *
+     * @access public
+     * @return ParticipantModel
+     */
+    public function updateSleepingData($participant_id, array $data)
+    {
+        foreach ($data as $row) {
+            if (empty($row['room_id'])) {
+                continue;
+            }
+
+            $query = '
+INSERT INTO participants_sleepingplaces SET participant_id = ?, room_id = ?, starts = ?, ends = ?
+';
+
+            $this->db->exec($query, [$participant_id, $row['room_id'], $row['starts'], $row['ends']]);
+
+        }
+
+        return $this;
+    }
+
+    /**
+     * returns data on sleep areas for the participant
+     *
+     * @param DBObject $participant Participant to get data for
+     *
+     * @access public
+     * @return array
+     */
+    public function getSleepDataForParticipant(DBObject $participant)
+    {
+        $query = '
+SELECT
+    room_id,
+    starts,
+    ends
+FROM
+    participants_sleepingplaces
+WHERE
+    participant_id = ?
+ORDER BY
+    starts
+';
+
+        $data = [];
+
+        foreach ($this->db->query($query, [$participant->id]) as $row) {
+            $data[] = [
+                       'room'   => $this->createEntity('Lokaler')->findById($row['room_id']),
+                       'starts' => date('l, j/n', strtotime($row['starts'])),
+                       'ends'   => date('l, j/n', strtotime($row['ends'])),
+                      ];
+        }
+
+        return $data;
     }
 }

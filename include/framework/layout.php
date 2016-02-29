@@ -419,6 +419,7 @@ XML;
             <li><a href='{$this->url('vis_alle_lokaler')}'>Alle lokaler</a></li>
             <li><a href='{$this->url('lokale_brug', array('day' => 0))}'>Lokalebrug</a></li>
             <li><a href='{$this->url('opret_lokale')}'>Opret lokale</a></li>
+            <li><a href='{$this->url('sleep_statistics')}'>Sovestatistik</a></li>
         </ul>
     </li>
     <li class='topmenu-item'>

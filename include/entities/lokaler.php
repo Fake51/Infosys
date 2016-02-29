@@ -174,11 +174,4 @@ class Lokaler extends DBObject
         $select->setWhere('sovelokale_id', '=', $this->id);
         return $d->findBySelectMany($select);
     }
-
-    public function getSleepRooms()
-    {
-        $select = $this->getSelect();
-        $select->setWhere('sovelokale', '=', 'ja');
-        return $this->findBySelectMany($select);
-    }
 }

@@ -21,6 +21,9 @@ echo $this->getMessagesHtml();
         <div>
             <span class='label'>Kan bookes:</span> <span class='detail'><?php echo e($this->lokale->kan_bookes);?></span> 
         </div>
+        <div>
+            <span class="label">Sove kapacitet:</span> <span class="detail"><?= intval($this->lokale->sovekapacitet);?></span>
+        </div>
     </fieldset>
     <fieldset>
         <legend>Lokalebilleder</legend>

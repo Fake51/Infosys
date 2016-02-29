@@ -186,6 +186,17 @@ class RoomsController extends Controller
         $this->page->public_uri  = $this->config->get('app.public_uri');
     }
 
+    /**
+     * prints room sleep capacity statistics
+     *
+     * @access public
+     * @return void
+     */
+    public function sleepStatistics()
+    {
+        list($this->page->nights, $this->page->statistics) = $this->model->gatherSleepingStatistics();
+    }
+
     //{{{ ajax methods
     /**
      * get available rooms for a given time slot

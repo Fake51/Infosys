@@ -309,4 +309,71 @@ ORDER BY temp.start;", array($date, $date)))
 
         return $rooms;
     }
+
+    /**
+     * returns detailed information about sleep capacities
+     *
+     * @access public
+     * @return array
+     */
+    public function gatherSleepingStatistics()
+    {
+        $queries = [];
+
+        $start = date('Y-m-d 22:00:00', strtotime($this->config->get('con.start')));
+        $ends  = date('Y-m-d 10:00:00', strtotime($start) + 86400);
+
+        $nights = 0;
+        $starts = [];
+
+        $rooms = $this->createEntity('Lokaler')->findAll();
+
+        $map = function ($x) {
+            return $x->id;
+        };
+
+        $rooms = array_combine(array_map($map, $rooms), $rooms);
+
+        while (strtotime($start) < strtotime($this->config->get('con.end'))) {
+            $starts[] = $start;
+            $middle   = date('Y-m-d 23:59:00', strtotime($start));
+
+            $query = '
+SELECT
+    r.id,
+    r.beskrivelse,
+    r.sovekapacitet AS maximum,
+    r.sovekapacitet - COUNT(*) AS capacity,
+    "' . $start . '" AS starts,
+    "' . $ends . '" AS ends
+FROM
+    lokaler AS r
+    LEFT JOIN participants_sleepingplaces AS ps ON ps.room_id = r.id AND ps.starts <= "' . $middle . '" AND ps.ends >= "' . $middle . '"
+GROUP BY
+    r.id,
+    r.beskrivelse,
+    r.sovekapacitet
+HAVING
+    capacity >= 0
+';
+
+            $queries[] = $query;
+
+            $start = date('Y-m-d 22:00:00', strtotime($start) + 86400);
+            $ends  = date('Y-m-d 10:00:00', strtotime($start) + 86400);
+
+            $nights++;
+        }
+
+        $empty_rooms = $places = [];
+
+        foreach ($this->db->query(implode(' UNION ', $queries)) as $row) {
+            $empty_rooms[$row['id']][$row['beskrivelse']][$row['maximum']][$row['starts']] = $row['capacity'];
+        }
+
+        return [
+                $starts,
+                $empty_rooms,
+               ];
+    }
 }

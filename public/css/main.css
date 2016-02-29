@@ -318,7 +318,7 @@ div#topboxes div#personal_info {
     width: 700px;
 }
 
-div#topboxes div#indgang_mad_info, div#topboxes div#wear_info, div.middleboxes div.gdsbox, div#topboxes div#prisbreakdown {
+div#sleeping, div#topboxes div#indgang_mad_info, div#topboxes div#wear_info, div.middleboxes div.gdsbox, div#topboxes div#prisbreakdown {
     margin-left: 10px;
     width: 500px;
 }
@@ -2152,4 +2152,47 @@ table.accounting tbody {
 
 .votingStats-stats {
     text-align: center;
+}
+
+.manageSleeping {
+    margin: 0 auto;
+    width: 40%;
+    background: #eee;
+    border-radius: 1em;
+    padding: 1em 0;
+}
+
+.manageSleeping-option {
+    border: 1px solid #ddd;
+    border-radius: 1em;
+    padding: 1em;
+    margin: 1em
+}
+
+.manageSleeping-chooseBoxLabel {
+    display: inline-block;
+    vertical-align: text-top;
+}
+
+.manageSleeping-settings {
+    display: none;
+}
+
+.manageSleeping-update {
+    margin-left: 1em;
+}
+
+.manageSleeping-cancel {
+    float: right;
+    margin-right: 1em;
+}
+
+.sleepingStats {
+    border-collapse: collapse;
+    border: 1px solid #000;
+}
+
+.sleepingStats th, .sleepingStats td {
+    border: 1px solid #000;
+    padding: 1em 2em;
 }
