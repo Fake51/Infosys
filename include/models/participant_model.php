@@ -2332,7 +2332,10 @@ SQL;
     public function filterOutPaidSignups(array $participants)
     {
         return array_filter($participants, function ($x) {
-            return !(($x->calcSignupTotal() <= 200 && $x->betalt_beloeb > 0)
+            $signup_total = $x->calcSignupTotal();
+
+            return !($signup_total === 0
+                || ($x->calcSignupTotal() <= 200 && $x->betalt_beloeb >= 0)
                 || ($x->betalt_beloeb > 200));
         });
     }
