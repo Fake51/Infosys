@@ -46,7 +46,7 @@ class ParticipantController extends Controller
      * @var array
      */
     protected $prerun_hooks = array(
-        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array('displayParticipantInfo', 'showSignupDetails', 'showSignupDetailsJson', 'listAssignedGMs', 'ean8SmallBarcode', 'ean8Barcode', 'ean8Badge', 'processPayment', 'registerPayment', 'showPaymentDone', 'resetParticipantPassword', 'sendFirstPaymentReminder', 'sendSecondPaymentReminder', 'cancelParticipantSignup')),
+        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array('displayParticipantInfo', 'showSignupDetails', 'showSignupDetailsJson', 'listAssignedGMs', 'ean8SmallBarcode', 'ean8Barcode', 'ean8Badge', 'processPayment', 'registerPayment', 'showPaymentDone', 'resetParticipantPassword', 'sendFirstPaymentReminder', 'sendSecondPaymentReminder', 'sendLastPaymentReminder', 'cancelParticipantSignup')),
     );
 
     /**
@@ -1696,6 +1696,25 @@ class ParticipantController extends Controller
         }
 
         $this->log('2 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
+
+        exit;
+    }
+
+    public function sendLastPaymentReminder()
+    {
+        $participants = $this->model->getParticipantsForPaymentReminder();
+
+        $count = 0;
+
+        foreach ($participants as $participant) {
+            $this->sendPaymentReminder($participant, 'lastpaymentreminder', $participant->speaksDanish());
+
+            $this->log('System sent payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
+
+            $count++;
+        }
+
+        $this->log('Last payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
 
         exit;
     }
