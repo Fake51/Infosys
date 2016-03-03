@@ -193,10 +193,10 @@ class Pladser extends DBObject
      * returns next usable pladsnummer in the team
      *
      * @param object $hold - Hold entity to get next pladsnummer for
-     * @access private
+     * @access public
      * @return int
      */
-    private function getNextPladsnummer($hold)
+    public function getNextPladsnummer($hold)
     {
         $select = $this->getSelect();
         $select->setWhere('hold_id','=',$hold->id);

@@ -209,6 +209,7 @@ class Routes
         $this->routes['gamestart_queue_ajax']      = array('url' => 'activities/gamestart-queue-ajax', 'controller' => 'Activity', 'method' => 'gamestartQueueAjax');
 
         $this->routes['gamemaster_list_export']    = array('url' => 'activities/gm-assignment-list', 'controller' => 'Activity', 'method' => 'exportGameList');
+        $this->routes['create_gm_briefings']       = array('url' => 'activities/create-gm-briefings', 'controller' => 'Activity', 'method' => 'createGmBriefings');
 
         // lokaler routes
         $this->routes['lokalerhome']         = array('url' => 'lokaler/', 'controller' => 'Rooms', 'method' => 'main');

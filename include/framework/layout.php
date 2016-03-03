@@ -406,6 +406,8 @@ XML;
             <li><a href='{$this->url('opret_aktivitet')}'>Opret aktivitet</a></li>
             <li><a href='{$this->url('show_vote_stats')}'>Afstemnings-statistik</a></li>
             <li><hr/></li>
+            <li><a href='{$this->url('create_gm_briefings')}'>Opret spilleder briefings</a></li>
+            <li><hr/></li>
             <li><a href='{$this->url('holdhome')}'>Hold</a></li>
             <li><a href='{$this->url('vis_alle_hold')}'>Alle hold</a></li>
             <li><a href='{$this->url('opret_hold')}'>Opret hold</a></li>

@@ -1174,4 +1174,325 @@ ORDER BY
 
         return new PHPExcel_Writer_Excel2007($excel);
     }
+
+    /**
+     * creates/refreshes Gm briefings
+     *
+     * @access public
+     * @return ParticipantModel
+     */
+    public function createGmBriefings()
+    {
+        // 1. get all roleplay activities
+        // 2. create or find related briefing activities
+        $activity_data = $this->getBriefingActivities($this->getActivitiesByType('rolle'));
+
+        // 3. create or find related schedules, 30 minutes prior
+        $briefing_schedules = $this->getBriefingSchedules($activity_data);
+
+        //4. create a group for each schedule
+        $groups = $this->getBriefingGroups($briefing_schedules);
+
+        //5. add all gamemasters from original schedules, to newly created group
+        $this->addGmsToBriefingGroups($briefing_schedules, $groups);
+    }
+
+    /**
+     * returns activities fetched by type
+     *
+     * @param string $type Type to search by
+     *
+     * @access public
+     * @return array
+     */
+    public function getActivitiesByType($type)
+    {
+        $select = $this->createEntity('Aktiviteter')->getSelect();
+
+        $select->setWhere('type', '=', $type)
+            ->setWhere('spilledere_per_hold', '>', 0);
+
+        return $this->createEntity('Aktiviteter')->findBySelectMany($select);
+    }
+
+    /**
+     * fetches or creates briefing activities
+     *
+     * @param array $activities Base set of activities
+     *
+     * @access public
+     * @return array
+     */
+    public function getBriefingActivities(array $activities)
+    {
+        $mapper = function ($x) {
+            return 'Spillederbriefing for ' . $x->navn;
+        };
+
+        $names = array_map($mapper, $activities);
+
+        $originals = array_combine($names, $activities);
+
+        $select = $this->createEntity('Aktiviteter')->getSelect();
+
+        $select->setWhere('navn', 'IN', $names);
+
+        $existing_briefings = $this->createEntity('Aktiviteter')->findBySelectMany($select);
+
+        $name_mapper = function ($x) {
+            return $x->navn;
+        };
+
+        $existing_names = array_unique(array_map($name_mapper, $existing_briefings));
+
+        $existing_briefings = array_combine($existing_names, $existing_briefings);
+
+        foreach (array_diff($names, $existing_names) as $name) {
+            $activity = $this->createEntity('Aktiviteter');
+
+            $activity->type = 'system';
+            $activity->navn = $name;
+            $activity->kan_tilmeldes = 'nej';
+            $activity->varighed_per_afvikling = 0.5;
+            $activity->min_deltagere_per_hold = 0;
+            $activity->max_deltagere_per_hold = 0;
+            $activity->spilledere_per_hold = 0;
+            $activity->lokale_eksklusiv = 'ja';
+            $activity->title_en = 'Gamemaster briefing for ' . $originals[$name]->title_en;
+            $activity->tids_eksklusiv = 'ja';
+            $activity->sprog = $originals[$name]->sprog;
+            $activity->hidden = 'ja';
+            $activity->wp_link = 0;
+            $activity->teaser_dk = $activity->teaser_en = $activity->description_en = '';
+            $activity->updated = date('Y-m-d H:i:s');
+            $activity->insert();
+
+            $existing_briefings[$name] = $activity;
+
+        }
+
+        $output = [];
+
+        foreach ($names as $name) {
+            $output[$name] = [
+                              'original' => $originals[$name],
+                              'briefing' => $existing_briefings[$name],
+                             ];
+        }
+
+        return $output;
+    }
+
+    /**
+     * fetches/creates schedules for the briefing activities
+     *
+     * @param array $activity_data Original and briefing activities
+     *
+     * @access public
+     * @return array
+     */
+    public function getBriefingSchedules(array $activity_data)
+    {
+        $original_id_mapper = function ($x) {
+            return intval($x['original']->id);
+        };
+
+        $case_mapper = function ($x) {
+            return 'WHEN a1.aktivitet_id = ' . intval($x['original']->id) . ' THEN ' . intval($x['briefing']->id);
+        };
+
+        $clause_mapper = function ($x) {
+            return '(a1.aktivitet_id = ' . intval($x['original']->id) . ' AND a2.aktivitet_id = ' . intval($x['briefing']->id) . ')';
+        };
+
+        $ids = array_map($original_id_mapper, $activity_data);
+
+        $query = '
+SELECT
+    a1.id AS original_id,
+    a1.aktivitet_id,
+    CASE ' . implode(' ', array_map($case_mapper, $activity_data)) . ' END AS briefing_id,
+    a1.start - INTERVAL 30 MINUTE AS start,
+    a1.start AS slut,
+    a1.lokale_id,
+    a2.id
+FROM
+    afviklinger AS a1
+    LEFT JOIN afviklinger AS a2 ON a2.start = a1.start - INTERVAL 30 MINUTE AND a2.slut = a1.start AND (' . implode(' OR ', array_map($clause_mapper, $activity_data)) . ')
+WHERE
+    a1.aktivitet_id IN (' . implode(', ', $ids) . ')
+';
+
+        $schedules = $original_ids = $to_load = $schedule_map = [];
+
+        foreach ($this->db->query($query) as $row) {
+            $original_ids[] = $row['original_id'];
+
+            if (!empty($row['id'])) {
+                $schedule_map[$row['original_id']] = $row['id'];
+                $to_load[] = $row['id'];
+                continue;
+
+            }
+
+            $schedule               = $this->createEntity('Afviklinger');
+            $schedule->aktivitet_id = $row['briefing_id'];
+            $schedule->start        = $row['start'];
+            $schedule->slut         = $row['slut'];
+            $schedule->lokale_id    = $row['lokale_id'];
+            $schedule->note         = '';
+            $schedule->insert();
+
+            $schedule_map[$row['original_id']] = $schedule->id;
+
+            $schedules[] = $schedule;
+
+        }
+
+        if ($to_load) {
+            $select = $this->createEntity('Afviklinger')->getSelect();
+
+            $select->setWhere('id', 'IN', $to_load);
+
+            $schedules = array_merge($schedules, $this->createEntity('Afviklinger')->findBySelectMany($select));
+
+        }
+
+        $select = $this->createEntity('Afviklinger')->getSelect();
+
+        $select->setWhere('id', 'IN', $original_ids);
+
+        $originals = $this->createEntity('Afviklinger')->findBySelectMany($select);
+
+        return [
+                'original_schedules' => $originals,
+                'briefing_schedules' => $schedules,
+                'schedule_id_map'    => $schedule_map,
+               ];
+    }
+
+    /**
+     * fetches/creates all briefing groups
+     *
+     * @param array $schedule_data Data on original and briefing schedules
+     *
+     * @access public
+     * @return array
+     */
+    public function getBriefingGroups(array $schedule_data)
+    {
+        $groups = [];
+
+        foreach ($schedule_data['briefing_schedules'] as $schedule) {
+            if ($schedule_groups = $schedule->getHold()) {
+                $groups[$schedule->id] = reset($schedule_groups);
+                continue;
+            }
+
+            if (!$schedule->lokale_id) {
+                continue;
+            }
+
+            $group = $this->createEntity('Hold');
+
+            $group->afvikling_id = $schedule->id;
+            $group->holdnummer   = 1;
+            $group->lokale_id    = $schedule->lokale_id;
+            $group->insert();
+
+            $groups[$schedule->id] = $group;
+
+        }
+
+        return $groups;
+    }
+
+    /**
+     * adds gms to briefing groups
+     *
+     * @param array $schedule_data Data about original and briefing schedules
+     * @param array $group_data    Schedule indexed groups
+     *
+     * @access public
+     * @return ActivityModel
+     */
+    public function addGmsToBriefingGroups(array $schedule_data, array $group_data)
+    {
+        $query = '
+SELECT
+    h.afvikling_id,
+    p.deltager_id
+FROM
+    hold AS h
+    JOIN pladser AS p ON p.hold_id = h.id
+WHERE
+    h.afvikling_id IN (' . implode(', ', array_keys($schedule_data['schedule_id_map'])) . ')
+    AND p.type = "spilleder"
+';
+
+        foreach ($this->db->query($query) as $row) {
+            $gms[$row['afvikling_id']][] = $row['deltager_id'];
+        }
+
+        $cases = [];
+
+        foreach ($schedule_data['schedule_id_map'] as $original_id => $briefing_id) {
+            $cases[] = 'WHEN h.afvikling_id = ' . intval($briefing_id) . ' THEN ' . intval($original_id);
+        }
+
+        $query = '
+SELECT
+    CASE ' . implode(' ', $cases) . ' END AS afvikling_id,
+    p.deltager_id
+FROM
+    hold AS h
+    JOIN pladser AS p ON p.hold_id = h.id
+WHERE
+    h.afvikling_id IN (' . implode(', ', $schedule_data['schedule_id_map']) . ')
+';
+
+        $assigned = [];
+
+        foreach ($this->db->query($query) as $row) {
+            $assigned[$row['afvikling_id']][] = $row['deltager_id'];
+        }
+
+        foreach ($gms as $schedule_id => $group) {
+            if (!empty($assigned[$schedule_id])) {
+                $gms[$schedule_id] = array_diff($group, $assigned[$schedule_id]);
+            }
+
+        }
+
+        $participants = [];
+
+        $inserts = [];
+
+        foreach ($gms as $schedule_id => $group) {
+            foreach ($group as $participant_id) {
+                $group = $group_data[$schedule_data['schedule_id_map'][$schedule_id]];
+
+                if (empty($place_numbers[$group->id])) {
+                    $number = $place_numbers[$group->id] = $this->createEntity('Pladser')->getNextPladsnummer($group);
+
+                } else {
+                    $number = ++$place_numbers[$group->id];
+                }
+
+                $inserts[] = '(' . intval($group->id) . ', ' . intval($number) . ', "spiller", ' . intval($participant_id) . ')';
+
+            }
+
+        }
+
+        if ($inserts) {
+            $query = 'INSERT INTO pladser (hold_id, pladsnummer, type, deltager_id) VALUES ' . implode(', ', $inserts);
+
+            $this->db->exec($query);
+
+        }
+
+        return $this;
+    }
+
 }

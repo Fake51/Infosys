@@ -698,6 +698,19 @@ class ActivityController extends Controller
         exit;
     }
 
+    /**
+     * creates GM briefings
+     *
+     * @access public
+     * @return void
+     */
+    public function createGmBriefings()
+    {
+        $this->model->createGmBriefings();
+
+        $this->hardRedirect($this->url('vis_alle_aktiviteter'));
+    }
+
     //{{{ ajax methods
     /**
      * outputs string of <option> elements containing times for an activity
