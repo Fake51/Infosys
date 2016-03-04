@@ -675,6 +675,13 @@ class ActivityController extends Controller
      */
     public function showVotingStats()
     {
+        $user = $this->model->getLoggedInUser();
+
+        if (!in_array($user->user, ['peter.e.lind@gmail.com', 'urkraften@gmail.com', 'simonsteen@yahoo.dk'])) {
+            $this->hardRedirect($this->url('no_access'));
+
+        }
+
         $this->page->stats = $this->model->collectVotingStats();
     }
 
@@ -706,6 +713,13 @@ class ActivityController extends Controller
      */
     public function createGmBriefings()
     {
+        $user = $this->model->getLoggedInUser();
+
+        if (!($user->hasRole('Infonaut') || $user->hasRole('admin'))) {
+            $this->hardRedirect($this->url('no_access'));
+
+        }
+
         $this->model->createGmBriefings();
 
         $this->hardRedirect($this->url('vis_alle_aktiviteter'));
