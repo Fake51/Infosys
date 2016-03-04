@@ -616,6 +616,8 @@ WHERE
     {
         require_once LIB_FOLDER . 'phpqrcode/phpqrcode.php';
 
+        mt_srand(time() . $this->id);
+
         $query = '
 DELETE FROM
     schedules_votes
@@ -628,6 +630,7 @@ WHERE
         $query     = 'INSERT INTO schedules_votes (schedule_id, code, cast_at) VALUES ';
         $values    = [];
         $arguments = [];
+        $votes     = [];
 
         foreach ($this->getParticipantsOnTeams() as $ignore) {
             $values[] = '(?, ?, "0000-00-00 00:00:00")';
@@ -638,17 +641,20 @@ WHERE
 
         }
 
-        $this->db->exec($query . implode(', ', $values), $arguments);
+        if ($values) {
+            $this->db->exec($query . implode(', ', $values), $arguments);
 
-        $query = 'SELECT id, code FROM schedules_votes WHERE schedule_id = ?';
+            $query = 'SELECT id, code FROM schedules_votes WHERE schedule_id = ?';
 
-        foreach ($this->db->query($query, [$this->id]) as $row) {
-            $votes[] = [
-                        'id'   => $row['id'],
-                        'code' => $row['code'],
-                       ];
+            foreach ($this->db->query($query, [$this->id]) as $row) {
+                $votes[] = [
+                            'id'   => $row['id'],
+                            'code' => $row['code'],
+                           ];
 
-            QRcode::png($page->url('activity_specific_vote', ['code' => $code]), PUBLIC_PATH . 'vote-barcodes/' . $row['id'] . '.png', 'M', 3);
+                QRcode::png($page->url('activity_specific_vote', ['code' => $code]), PUBLIC_PATH . 'vote-barcodes/' . $row['id'] . '.png', 'M', 3);
+
+            }
 
         }
 
@@ -666,8 +672,6 @@ WHERE
         $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
         $code = '';
-
-        mt_srand(time());
 
         while (strlen($code) < 8) {
             $code .= $base[mt_rand(0, 61)];
