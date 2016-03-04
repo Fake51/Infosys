@@ -1,4 +1,7 @@
 <?= $this->getMessagesHtml();?>
+<?php
+$this->registerLateLoadJS('gamestartdetails.js');
+?>
 <h1>Detaljer for spilstart: <?php echo danishDayNames(date('l H:i', strtotime($this->time)));?></h1>
 <?php if ($this->can_run_gamestart) :
     switch ($this->gamestart->status) {
@@ -17,7 +20,7 @@
 ?>
     <a class="btn btn-primary" href="<?= $this->url('gamestart_master', array('time' => str_replace(' ', '_', $this->time)));?>"><?= $text;?></a>
 <?php endif;?>
-<p><a class="btn btn-primary" href="<?= $this->url('prepare_schedule_votes', array('time' => str_replace(' ', '_', $this->time)));?>" target="_blank">Print stemmesedler</a></p>
+<p><a class="btn btn-primary prepareVotes <?= $this->gamestart_votes_already_printed ? 'hasVotes' : '';?>" href="<?= $this->url('prepare_schedule_votes', array('time' => str_replace(' ', '_', $this->time)));?>" target="_blank">Print stemmesedler</a></p>
 <p>Antal aktiviteter: <?php echo count($this->gamestart_details);?></p>
 <ul>
     <?php foreach ($this->gamestart_details as $detail) :?>

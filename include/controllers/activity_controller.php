@@ -344,6 +344,8 @@ class ActivityController extends Controller
 
         $this->page->gamestart         = $this->model->getGameStartByTime($time);
         $this->page->can_run_gamestart = $this->model->canRunGameStart($time);
+
+        $this->page->gamestart_votes_already_printed = $this->model->haveVotesBeenPrinted($this->page->gamestart);
     }
 
     /**

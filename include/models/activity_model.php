@@ -1495,4 +1495,39 @@ WHERE
         return $this;
     }
 
+    /**
+     * returns true if votes exist for this gamestart
+     *
+     * @param array $gamestart Array of gamestart details to check
+     *
+     * @access public
+     * @return bool
+     */
+    public function haveVotesBeenPrinted(GameStart $gamestart)
+    {
+        $id_mapper = function ($x) {
+            return intval($x->id);
+        };
+
+        $ids = array_map($id_mapper, $gamestart->getGamestartSchedules());
+
+        if (!$ids) {
+            return false;
+        }
+
+        $query = '
+SELECT
+    COUNT(*) AS count
+FROM
+    schedules_votes
+WHERE
+    schedule_id IN (' . implode(', ', $ids) . ')
+';
+
+        $result = $this->db->query($query);
+
+        $row = reset($result);
+
+        return !empty($row['count']);
+    }
 }
