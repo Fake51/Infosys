@@ -209,7 +209,7 @@ class ApiModel extends Model {
                         foreach ($multiblok as $multi) {
                             if ($multi->afvikling_id == $afvikling->id) {
                                 $time = array(
-                                    'afvikling_id' => intval($afvikling->id) . '-' . intval($multi->id),
+                                    'afvikling_id' => intval($multi->id) . '00' . intval($afvikling->id),
                                     'aktivitet_id' => intval($res->id),
                                     'lokale_id'    => $lokale ? $lokale->id : '',
                                     'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
@@ -287,7 +287,7 @@ class ApiModel extends Model {
                         foreach ($multiblok as $multi) {
                             if ($multi->afvikling_id == $afvikling->id) {
                                 $time = array(
-                                    'afvikling_id' => intval($afvikling->id) . '-' . intval($multi->id),
+                                    'afvikling_id' => intval($multi->id) . '00' . intval($afvikling->id),
                                     'aktivitet_id' => intval($res->id),
                                     'lokale_id'    => $lokale ? $lokale->id : '',
                                     'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
