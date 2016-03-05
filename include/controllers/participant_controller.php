@@ -1766,9 +1766,7 @@ class ParticipantController extends Controller
 
     public function cancelParticipantSignup()
     {
-        $days_ago = 17;
-
-        $participants = $this->model->getParticipantsForPaymentReminder();
+        $participants = $this->model->getParticipantsForPaymentReminderNoVolunteers($this->model->getParticipantsForPaymentReminder());
 
         $count = 0;
 exit;

@@ -2334,9 +2334,22 @@ SQL;
         return array_filter($participants, function ($x) {
             $signup_total = $x->calcSignupTotal();
 
-            return !($signup_total === 0
-                || ($x->calcSignupTotal() <= 200 && $x->betalt_beloeb >= 0)
-                || ($x->betalt_beloeb > 200));
+            return !($signup_total === 0 || $x->betalt_beloeb > 0);
+        });
+    }
+
+    /**
+     * filters out big groups that pay together, late
+     *
+     * @param array $participants Participants to filter out
+     *
+     * @access public
+     * @return array
+     */
+    public function filterOutGroups(array $participants)
+    {
+        return array_filter($participants, function ($x) {
+            return trim($x->email) !== 'viborg.ungdomsskole.rollespil@gmail.com';
         });
     }
 
@@ -2365,9 +2378,26 @@ SQL;
         return $participants;
     }
 
+    /**
+     * returns participants for cancellation/payment reminders
+     * with volunteers filtered out
+     *
+     * @param array $participants Participants to filter
+     *
+     * @access public
+     * @return array
+     */
+    public function getParticipantsForPaymentReminderNoVolunteers(array $participants)
+    {
+        return array_filter($participants, function ($x) {
+            return !$x->isArrangoer();
+        });
+    }
+
     public function getParticipantsForPaymentReminder()
     {
         $participants = $this->filterOutPaidSignups($this->createEntity('Deltagere')->findAll());
+        $participants = $this->filterOutGroups($participants);
         $participants = $this->filterOutTodaysReminders($participants);
         $participants = $this->filterSignedUpToday($participants);
 
