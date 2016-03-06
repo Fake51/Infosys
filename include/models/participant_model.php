@@ -1369,8 +1369,9 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode = new Image_Barcode;
+
         foreach ($participants as $participant) {
-            $img = $barcode->draw(numberToEAN13($participant->id), 'ean13', 'png', false);
+            $img = @$barcode->draw(numberToEAN13($participant->id), 'ean13', 'png', false);
             $width = imagesx($img);
             $height = imagesy($img);
             $new_width = round($width * 1.7);
@@ -1435,7 +1436,7 @@ SQL;
         $hash = md5('EAN8Sheet_' . $participant_id);
         $filename = PUBLIC_PATH . 'barcodes/' . $hash . '.png';
 
-        if (file_exists(PUBLIC_PATH . 'barcodes/' . $hash)) {
+        if (file_exists($filename)) {
             return $filename;
         }
 
@@ -1447,7 +1448,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = @$barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = 134;
