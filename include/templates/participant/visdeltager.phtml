@@ -10,7 +10,7 @@ $this->registerLateLoadJS('participant.js');
 </script>
 <div class="prev-next-buttons">
         <a class="btn btn-danger" href="<?php echo $this->url('spillersedler', array('id_range' => $this->deltager->id));?>" target="_blank">Print spillerseddel</a>
-    <?php if ($this->allow_checkin && !strtotime($this->deltager->checkin_time) && $this->deltager->annulled === 'nej') :?>
+    <?php if ($this->allow_checkin && $this->deltager->checkin_time === '0000-00-00 00:00:00' && $this->deltager->annulled === 'nej') :?>
         <a id="checkin" class="btn btn-primary" href="javascript:void(0);">Check in</a>
         <a id="checkin-print" class="btn" href="javascript:void(0);">Check in &amp; print</a>
     <?php endif;?>

@@ -71,6 +71,7 @@ var checkin_interface = {
     update_result_box: function(msg, type) {
         switch (type) {
             case 'success':
+            case 'success money':
             case 'error':
                 var content = "<div class='" + type + "'>" + msg + "</div>";
                 break;
@@ -113,7 +114,7 @@ var checkin_interface = {
                 timeout: 3000,
                 success: function(data, textStatus, jqXHR) {
                     that.show_undo_box();
-                    that.update_result_box(data, 'success');
+                    that.update_result_box(data, 'success' + (data.search(/<span/) !== -1 ? ' money' : ''));
                     that.checkin_in_progress = false;
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

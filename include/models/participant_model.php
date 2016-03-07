@@ -1579,9 +1579,11 @@ SQL;
      */
     public function markCheckedin(RequestVars $post) {
         $deltager = $this->ajaxWearCrud($post);
-        if (strtotime($deltager->checkin_time)) {
+
+        if ($deltager->checkin_time !== '0000-00-00 00:00:00') {
             throw new FrameworkException("<strong>Fejl:</strong> deltageren (ID: {$deltager->id}) er allerede tjekket ind.");
         }
+
         $deltager->checkin_time = date('Y-m-d H:i:s');
         $deltager->udeblevet = 'nej';
         $deltager->update();
@@ -1589,6 +1591,7 @@ SQL;
         $text = e($deltager->getName()) . " (ID: {$deltager->id}) er nu tjekket ind - hvis det er en fejl, så tryk på Undo-knappen.";
 
         $bill = $deltager->calcRealTotal();
+
         if ($deltager->betalt_beloeb != $bill) {
             if ($deltager->betalt_beloeb < $bill) {
                 $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skylder at betale <strong>' . ($bill - $deltager->betalt_beloeb) . ' kr.</strong></span>';

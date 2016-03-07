@@ -1255,6 +1255,10 @@ div#food-handout-container div.success, div#wear-handout-container div.success, 
     background-color: #44ff44;
 }
 
+div#checkin-interface-container div.success.money {
+    background-color: #fff644;
+}
+
 div#food-handout-container fieldset#stats-fieldset {
     background-color: #eeeeee;
     padding: 10px;
