@@ -145,6 +145,7 @@ class Routes
         $this->routes['ean8_sheet']                                 = array('url' => 'participant/ean8sheet/:participant_id:', 'controller' => 'Participant', 'method' => 'ean8Sheet');
         $this->routes['email_list']                                 = array('url' => 'participant/email-list', 'controller' => 'Participant', 'method' => 'displayEmailList');
         $this->routes['participant_signup_email']                   = array('url' => 'participant/send-signup-email/:id:', 'controller' => 'Participant', 'method' => 'sendSignupEmail');
+        $this->routes['participant_check_for_voucher']              = array('url' => 'participant/has-vouchers/:participant_id:', 'controller' => 'Participant', 'method' => 'checkForVouchers');
 
         $this->routes['participant_reset_password']                 = array('url' => 'participant/reset-password/:hash:', 'controller' => 'Participant', 'method' => 'resetParticipantPassword');
 

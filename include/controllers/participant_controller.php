@@ -1822,4 +1822,22 @@ exit;
 
         $this->hardRedirect($this->url('visdeltager', ['id' => $this->vars['id']]));
     }
+
+    /**
+     * returns number of vouchers participant should get
+     *
+     * @access public
+     * @return void
+     */
+    public function checkForVouchers()
+    {
+        $vouchers = $this->model->checkParticipantsForVouchers($this->vars['participant_id']);
+
+        header('HTTP/1.1 200 done');
+        header('Content-Type: application/json; charset=UTF-8');
+
+        echo json_encode(['vouchers' => $vouchers]);
+
+        exit;
+    }
 }

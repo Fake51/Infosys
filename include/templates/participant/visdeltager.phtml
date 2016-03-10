@@ -436,16 +436,18 @@ $this->registerLateLoadJS('participant.js');
 <!-- todo: add url for bank payment registration -->
 <script type='text/javascript'>
     var infosys_data = {
-        participant_editable_url:   '<?= $this->url('participant_editable_url', array('id' => $this->deltager->id));?>',
-        ajax_get_user_types_url:    '<?= $this->url('ajax_get_user_types');?>',
-        checkin_url:                '<?= $this->url('checkin_interface_ajax');?>',
-        register_bank_transfer_url: '<?= $this->url('participant_register_bank_payment', array('id' => $this->deltager->id));?>'
+        participant_editable_url:    '<?= $this->url('participant_editable_url', array('id' => $this->deltager->id));?>',
+        ajax_get_user_types_url:     '<?= $this->url('ajax_get_user_types');?>',
+        ajax_check_for_vouchers_url: '<?= $this->url('participant_check_for_voucher', array('participant_id' => $this->deltager->id));?>',
+        checkin_url:                 '<?= $this->url('checkin_interface_ajax');?>',
+        register_bank_transfer_url:  '<?= $this->url('participant_register_bank_payment', array('id' => $this->deltager->id));?>'
     };
 </script>
 <script type="text/template" id="checkin-template">
 <div class="inner">
     <p>Deltageren har et udestående med Fastaval.</p>
     <h2>:money:,-</h2>
+    <h2>:vouchers: voucher(s)</h2>
     <hr/>
     <a class="btn btn-success continue" href="javascript:void(0);">Marker betalt og fortsæt</a>
     <a class="btn btn-danger cancel" href="javascript:void(0);">Fortryd</a>

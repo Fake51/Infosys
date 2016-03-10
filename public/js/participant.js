@@ -71,7 +71,7 @@ $(function() {
 
         }
 
-        function createPaymentDialog(difference, callback) {
+        function createPaymentDialog(difference, vouchers, callback) {
             var dialog   = $('<div class="payment-dialog"></div>'),
                 template = $('#checkin-template').text(),
                 cover    = $('<div class="payment-cover"></div>'),
@@ -86,7 +86,7 @@ $(function() {
                     cover.remove();
                 };
 
-            dialog.html(template.replace(/:money:/, difference));
+            dialog.html(template.replace(/:money:/, difference).replace(/:vouchers:/, vouchers));
 
             cover.css('opacity', 0.3);
 
@@ -102,11 +102,18 @@ $(function() {
                 checkInRequest(callback);
             }
 
-            if (difference) {
-                createPaymentDialog(difference, makeCheckIn);
-            } else {
-                makeCheckIn();
-            }
+            $.ajax({
+                url: window.infosys_data.ajax_check_for_vouchers_url,
+                type: 'GET',
+                success: function (data) {
+                    if (difference || data.vouchers) {
+                        createPaymentDialog(difference, data.vouchers, makeCheckIn);
+                    } else {
+                        makeCheckIn();
+                    }
+                }
+            });
+
         }
 
         function checkInPrint() {

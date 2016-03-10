@@ -2663,4 +2663,28 @@ ORDER BY
 
         return $data;
     }
+
+    /**
+     * returns number of vouchers the participant should get
+     *
+     * @param int $participant_id ID of participant to check
+     *
+     * @access public
+     * @return int
+     */
+    public function checkParticipantsForVouchers($participant_id)
+    {
+        $participant = $this->createEntity('Deltagere')->findById($participant_id);
+
+        $vouchers = 0;
+
+        foreach ($participant->getPladser() as $spot) {
+            if ($spot->type === 'spilleder') {
+                $vouchers++;
+            }
+
+        }
+
+        return $vouchers + $participant->extra_vouchers;
+    }
 }
