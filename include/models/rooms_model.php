@@ -343,18 +343,24 @@ SELECT
     r.id,
     r.beskrivelse,
     r.sovekapacitet AS maximum,
-    r.sovekapacitet - COUNT(*) AS capacity,
+    CASE WHEN temp.in_use IS NULL THEN r.sovekapacitet ELSE r.sovekapacitet - temp.in_use END AS capacity,
     "' . $start . '" AS starts,
     "' . $ends . '" AS ends
 FROM
     lokaler AS r
-    LEFT JOIN participants_sleepingplaces AS ps ON ps.room_id = r.id AND ps.starts <= "' . $middle . '" AND ps.ends >= "' . $middle . '"
-GROUP BY
-    r.id,
-    r.beskrivelse,
-    r.sovekapacitet
-HAVING
-    capacity >= 0
+    LEFT JOIN (
+        SELECT
+            ps.room_id,
+            COUNT(*) AS in_use
+        FROM
+            participants_sleepingplaces AS ps
+        WHERE
+            ps.starts <= "' . $middle . '" AND ps.ends >= "' . $middle . '"
+        GROUP BY
+            ps.room_id
+    ) AS temp ON temp.room_id = r.id
+WHERE
+    r.sovekapacitet > 0
 ';
 
             $queries[] = $query;

@@ -17,7 +17,7 @@
         <?php foreach ($max_data as $max => $dates) : ?>
             <td><?= e($max)?>
             <?php foreach ($this->nights as $date) : ?>
-            <td><?= isset($dates[$date]) ? intval($dates[$date]) : 0;?></td>
+            <td><?= isset($dates[$date]) ? (intval($max) - intval($dates[$date])) . ' (' . intval($dates[$date]) . ')' : 0;?></td>
             <?php endforeach;?>
         <?php endforeach;?>
     <?php endforeach;?>
