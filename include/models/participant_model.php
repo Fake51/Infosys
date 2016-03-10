@@ -1586,20 +1586,35 @@ SQL;
 
         $deltager->checkin_time = date('Y-m-d H:i:s');
         $deltager->udeblevet = 'nej';
-        $deltager->update();
+
         $this->log("Deltager #{$deltager->id} blev checked ind af {$this->getLoggedInUser()->user}", 'Deltager', $this->getLoggedInUser());
         $text = e($deltager->getName()) . " (ID: {$deltager->id}) er nu tjekket ind - hvis det er en fejl, så tryk på Undo-knappen.";
 
         $bill = $deltager->calcRealTotal();
 
+        $vouchers = $this->checkParticipantsForVouchers($deltager->id);
+
         if ($deltager->betalt_beloeb != $bill) {
             if ($deltager->betalt_beloeb < $bill) {
-                $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skylder at betale <strong>' . ($bill - $deltager->betalt_beloeb) . ' kr.</strong></span>';
+                $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skylder at betale <strong>' . ($bill - $deltager->betalt_beloeb) . ' kr.</strong><input type="hidden" class="previously-paid" value="' . intval($deltager->betalt_beloeb) . '"/></span>';
 
             } else {
-                $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skal have <strong>' . ($deltager->betalt_beloeb - $bill) . ' kr. tilbage.</strong></span>';
+                $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skal have <strong>' . ($deltager->betalt_beloeb - $bill) . ' kr. tilbage.</strong><input type="hidden" class="previously-paid" value="' . intval($deltager->betalt_beloeb) . '"/></span>';
             }
+
+            $deltager->betalt_beloeb = $bill;
+
         }
+
+        if ($vouchers) {
+            if ($vouchers) {
+                $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skal have <strong>' . $vouchers . ' voucher(s).</strong></span>';
+
+            }
+
+        }
+
+        $deltager->update();
 
         return $text;
     }
@@ -1637,9 +1652,15 @@ SQL;
      */
     public function undoCheckedin(RequestVars $post) {
         $deltager = $this->ajaxWearCrud($post);
+
         if (!strtotime($deltager->checkin_time)) {
             throw new FrameworkException("<strong>Fejl:</strong> deltageren (ID: {$deltager->id}) er ikke tjekket ind.");
         }
+
+        if (strlen($post->previously_paid)) {
+            $deltager->betalt_beloeb = intval($post->previously_paid);
+        }
+
         $deltager->checkin_time = '0000-00-00 00:00:00';
         $deltager->update();
         $this->log("Deltager #{$deltager->id} blev markeret ikke-checked ind af {$this->getLoggedInUser()->user}", 'Deltager', $this->getLoggedInUser());

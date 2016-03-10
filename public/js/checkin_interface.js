@@ -200,7 +200,7 @@ var checkin_interface = {
 
         jQuery.ajax(this.ajax_uri, {
             type: 'post',
-            data: {action: 'undo-checkedin', user_id: that.last_user},
+            data: {action: 'undo-checkedin', user_id: that.last_user, previously_paid: jQuery('input.previously-paid').val()},
             timeout: 3000,
             success: function(data, textStatus, jqXHR) {
                 that.undo_in_progress = false;
