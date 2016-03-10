@@ -1250,21 +1250,22 @@ ORDER BY
         foreach (array_diff($names, $existing_names) as $name) {
             $activity = $this->createEntity('Aktiviteter');
 
-            $activity->type = 'system';
-            $activity->navn = $name;
-            $activity->kan_tilmeldes = 'nej';
+            $activity->type                   = 'system';
+            $activity->navn                   = $name;
+            $activity->kan_tilmeldes          = 'nej';
             $activity->varighed_per_afvikling = 0.5;
             $activity->min_deltagere_per_hold = 0;
             $activity->max_deltagere_per_hold = 0;
-            $activity->spilledere_per_hold = 0;
-            $activity->lokale_eksklusiv = 'ja';
-            $activity->title_en = 'Gamemaster briefing for ' . $originals[$name]->title_en;
-            $activity->tids_eksklusiv = 'ja';
-            $activity->sprog = $originals[$name]->sprog;
-            $activity->hidden = 'ja';
-            $activity->wp_link = 0;
-            $activity->teaser_dk = $activity->teaser_en = $activity->description_en = '';
-            $activity->updated = date('Y-m-d H:i:s');
+            $activity->spilledere_per_hold    = 0;
+            $activity->lokale_eksklusiv       = 'ja';
+            $activity->title_en               = 'Gamemaster briefing for ' . $originals[$name]->title_en;
+            $activity->tids_eksklusiv         = 'ja';
+            $activity->sprog                  = $originals[$name]->sprog;
+            $activity->hidden                 = 'ja';
+            $activity->wp_link                = 0;
+            $activity->pris                   = 0;
+            $activity->teaser_dk              = $activity->teaser_en = $activity->description_en = '';
+            $activity->updated                = date('Y-m-d H:i:s');
             $activity->insert();
 
             $existing_briefings[$name] = $activity;
