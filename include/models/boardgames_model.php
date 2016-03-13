@@ -70,7 +70,7 @@ SELECT DATE(timestamp) AS date, COUNT(*) AS count FROM boardgameevents WHERE TYP
         }
 
         $query = '
-SELECT b.name, COUNT(*) AS count FROM boardgames AS b JOIN boardgameevents AS be ON be.boardgame_id = b.id GROUP BY b.name ORDER BY count DESC LIMIT 3;
+SELECT b.name, COUNT(*) AS count FROM boardgames AS b JOIN boardgameevents AS be ON be.boardgame_id = b.id WHERE type = "borrowed" GROUP BY b.name ORDER BY count DESC LIMIT 3;
 ';
 
         $index = 1;
@@ -99,6 +99,51 @@ SELECT be.type, be.boardgame_id, be.timestamp FROM boardgameevents AS be WHERE b
 
         $return['Samlet udlånstid i timer'] = $time;
 
+        $query = '
+SELECT
+    COUNT(*) as count
+FROM
+    boardgames
+';
+
+        foreach ($this->db->query($query) as $row) {
+            $return['Samlet antal spil'] = $row['count'];
+        }
+
+        $query = '
+SELECT
+    bge.boardgame_id,
+    COUNT(*) AS count
+FROM
+    boardgameevents AS bge
+    JOIN (
+        SELECT
+            boardgame_id,
+            type
+        FROM (
+            SELECT
+                boardgame_id,
+                type
+            FROM
+                boardgameevents
+            WHERE
+                type IN ("borrowed", "returned")
+            ORDER BY
+                boardgame_id,
+                timestamp DESC
+        ) AS temped
+        GROUP BY
+            boardgame_id
+    ) AS temp ON temp.boardgame_id = bge.boardgame_id
+WHERE
+    bge.boardgame_id NOT IN (SELECT boardgame_id FROM boardgameevents WHERE type = "finished")
+    AND temp.type = "borrowed"
+GROUP BY
+    bge.boardgame_id
+';
+
+        $return['Udlån lige nu'] = count($this->db->query($query));
+
         return $return;
     }
 
@@ -114,14 +159,17 @@ SELECT be.type, be.boardgame_id, be.timestamp FROM boardgameevents AS be WHERE b
 
         $output = array();
 
+        $borrowed_stats = $this->fetchBorrowingStats();
+
         foreach ($games as $game) {
             $details = array(
-                'id'      => intval($game->id),
-                'barcode' => $game->barcode,
-                'name'    => $game->name,
-                'owner'   => $game->owner,
-                'comment' => $game->comment,
-                'log'     => $game->getLog(),
+                'id'             => intval($game->id),
+                'barcode'        => $game->barcode,
+                'name'           => $game->name,
+                'owner'          => $game->owner,
+                'comment'        => $game->comment,
+                'log'            => $game->getLog(),
+                'borrowed_count' => isset($borrowed_stats[$game->id]) ? $borrowed_stats[$game->id] : 0,
             );
 
             if ($game->isBorrowed()) {
@@ -133,9 +181,38 @@ SELECT be.type, be.boardgame_id, be.timestamp FROM boardgameevents AS be WHERE b
             }
 
             $output[] = $details;
+
         }
 
         return $output;
+    }
+
+    /**
+     * fetches stats on game borrowing
+     *
+     * @access protected
+     * @return array
+     */
+    protected function fetchBorrowingStats()
+    {
+        $query = '
+SELECT
+    boardgame_id,
+    COUNT(*) AS stat
+FROM
+    boardgameevents
+WHERE
+    type = "borrowed"
+GROUP BY
+    boardgame_id';
+
+        $stats = [];
+
+        foreach ($this->db->query($query) as $row) {
+            $stats[$row['boardgame_id']] = $row['stat'];
+        }
+
+        return $stats;
     }
 
     public function fetchPartipantData()

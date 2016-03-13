@@ -325,6 +325,7 @@ var BSCafe = (function ($, window) {
 
             html = template.replace(/:name:/, name)
                 .replace(/<attendee>(.*)<\/attendee>/m, attendeeItems)
+                .replace(/:count:/g, length)
                 .replace(/:time:/g, timestamp);
 
             module.elements.$activityList.append(html);
@@ -441,6 +442,7 @@ var BSCafe = (function ($, window) {
                 .replace(/:owner:/g, game.owner)
                 .replace(/:comment:/g, game.comment || '')
                 .replace(/:barcode:/g, game.barcode)
+                .replace(/:borrowed:/g, game.borrowed_count)
                 .replace(/:game-status:/g, status);
 
             if (toReplace) {
@@ -549,7 +551,9 @@ var BSCafe = (function ($, window) {
                 participantString = module.elements.$borrower.val(),
                 comment           = module.elements.$borrowingComment.val(),
                 updateHandler = function () {
-                    var game = module.getGame(gameId);
+                    var game = module.getGame(gameId),
+                        $gameItem,
+                        $counter;
 
                     game.borrowed = {comment: comment, name: participantString, timestamp: module.formatDateTime(new Date())};
 
@@ -559,9 +563,15 @@ var BSCafe = (function ($, window) {
 
                     module.gamesBorrowed.push(gameId);
 
-                    module.elements.$registeredGamesList.find('li[data-id=' + gameId + ']')
-                        .removeClass('available')
+                    $gameItem = module.elements.$registeredGamesList.find('li[data-id=' + gameId + ']');
+
+                    $gameItem.removeClass('available')
                         .addClass('borrowed');
+
+                    $counter = $gameItem.find('.borrowed-count');
+                    $counter.text(
+                        Number($counter.text().replace(/[^0-9]+/g, '')) + 1
+                    );
 
                     module.listBorrowedGame(module.getGame(gameId), participantId ? module.getParticipant(participantId) : participantString, comment, module.getTime());
 

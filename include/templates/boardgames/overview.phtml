@@ -78,14 +78,14 @@
     <script type="text/template" id="activity-template">
 <li class="activity" data-sort=":time:">
     <span class="time">:time:</span><span class="title">:name:</span> <div class="attendees">
-        <h3>Deltagere</h3>
+        <h3>Deltagere (:count:)</h3>
         <attendee><span class="attendee">:attendee-name:</span></attendee>
     </div>
 </li>
     </script>
     <script type="text/template" id="registered-game-template">
 <li class="registered-game :game-status:" data-id=":data-id:" data-sort=":title:">
-    <span class="title"><span class="text">:title: (ID: :data-id:)<span class="popup-details"><span class="title">Ejer: <span class="name">:owner:</span></span><span class="log"></span></span></span></span>
+    <span class="title"><span class="text">:title: (ID: :data-id:) <em class="borrowed-count">(:borrowed:)</em><span class="popup-details"><span class="title">Ejer: <span class="name">:owner:</span></span><span class="log"></span></span></span></span>
     <div class="editing">
         <label>Spil titel
         <input type="text" name="game" placeholder="Navn..." value=":title:" data-original=":title:"/></label>
