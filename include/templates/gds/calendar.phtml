@@ -27,7 +27,7 @@
                     $part_ids     = $this->extractIds($participants);
                     ?>
                         <tr class='gds_<?= $shift->gds_id;?> gds-shift-row'>
-                            <td><?php if ($shift->start == $prev_time) :?><span style='color: #888888;'><?php endif;?><?= date('H:i', strtotime($shift->start));?><?php if ($shift->start == $prev_time) :?></span><?php endif;?></td>
+                            <td><?php if ($shift->start !== $prev_time) :?><?= date('H:i', strtotime($shift->start));?></span><?php endif;?></td>
                             <td>
                                 <span class='gds-shift-popupdetails' id='gds-shift-details-<?= $shift->id;?>' style='display: none'>
                                     <div class='gds-popuptable' data-shift="<?= e($shift->id);?>">
