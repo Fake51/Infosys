@@ -635,7 +635,7 @@ WHERE
         $activity = $this->getActivity();
         $teams    = $this->getHold();
 
-        for ($i = 0; $i < $activity->max_deltagere_per_hold * count($teams); $i++) {
+        for ($i = 0; $i < ($activity->max_deltagere_per_hold + $activity->spilledere_per_hold) * count($teams); $i++) {
             $values[] = '(?, ?, "0000-00-00 00:00:00")';
 
             $code = $this->makeVoteCode();
