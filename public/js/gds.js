@@ -360,6 +360,12 @@ var gds_object = {
             .remove();
     },
 
+    handleSearchShiftParticipants: function (event) {
+        var url = gds_object.shift_search_uri.replace(/:shift_id:/, this.getAttribute('data-shift-id'));
+
+        window.open(url);
+    },
+
     handleAssignToShiftEvent: function(event) {
         var self           = $(this),
             span           = self.siblings('span'),
@@ -535,6 +541,8 @@ var gds_object = {
             'click', 'input.gds-search-button', this.handleAjaxSearch
         ).on(
             'click', 'tr.show-rest', this.handleShowRemainingSuggestionsEvent
+        ).on(
+            'click', 'img[data-role="shift-search"]', this.handleSearchShiftParticipants
         ).on(
             'keydown', 'input.gds-search-box', function(e) {
                 if (e.keyCode && e.keyCode == 13) {

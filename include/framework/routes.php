@@ -284,6 +284,7 @@ class Routes
         $this->routes['gds_sms_team']           = array('url' => 'gds/smsteam/:shift_id:', 'controller' => 'Participant', 'method' => 'smsTeamMembers');
         $this->routes['list_all_shifts']        = array('url' => 'gds/listshifts/:id:', 'controller' => 'Gds', 'method' => 'listShifts');
         $this->routes['get_gds_suggestions']    = array('url' => 'gds/shift-suggestions/:shift_id:', 'controller' => 'Gds', 'method' => 'getShiftSuggestions');
+        $this->routes['gds_shift_participants'] = array('url' => 'gds/show-shift-participants/:shift_id:', 'controller' => 'Gds', 'method' => 'showShiftParticipants');
 
         // hold routes
         $this->routes['holdhome']                  = array('url' => 'hold/', 'controller' => 'Groups', 'method' => 'main');

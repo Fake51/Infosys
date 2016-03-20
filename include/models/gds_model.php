@@ -400,4 +400,19 @@ SQL;
 
         return array();
     }
+
+    /**
+     * returns participants for a gds shift 
+     *
+     * @param int $shift_id ID of shift to get participants for
+     *
+     * @access public
+     * @return array
+     */
+    public function getParticipantsForShift($shift_id)
+    {
+        $shift = $this->createEntity('GDSVagter')->findById($shift_id);
+
+        return $shift->getParticipants();
+    }
 }

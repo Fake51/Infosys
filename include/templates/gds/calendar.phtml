@@ -98,7 +98,7 @@
                                         </div>
                                     </div>
                                 </span>
-                                <a href='#' class='gds-shift-link' id='gds-shift-<?= $shift->id;?>'><?= $shift->getGDSName();?></a> (<span id='gds-shift-live-count-<?= $shift->id;?>'><?= $shift->getParticipantCount();?></span> / <?= $shift->antal_personer;?>)
+                                <a href='#' class='gds-shift-link' id='gds-shift-<?= $shift->id;?>'><?= $shift->getGDSName();?></a> (<span id='gds-shift-live-count-<?= $shift->id;?>'><?= $shift->getParticipantCount();?></span> / <?= $shift->antal_personer;?>) <img src="/img/search.png" alt="" data-role="shift-search" data-shift-id="<?= e($shift->id);?>"/>
                             </td>
                             <td> </td>
                         </tr>
@@ -110,5 +110,6 @@
 <script type='text/javascript' src="<?= $this->JSLink('gds.js');?>"></script>
 <script type='text/javascript'>
 gds_object.public_uri = '<?= $this->public_uri;?>';
+gds_object.shift_search_uri = '<?= $this->url('gds_shift_participants');?>';
 gds_object.setup();
 </script>

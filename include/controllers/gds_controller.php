@@ -435,4 +435,21 @@ class GdsController extends Controller
 
         exit;
     }
+
+    /**
+     * picks out participants for shift and save as search
+     * then redirect
+     *
+     * @access public
+     * @return void
+     */
+    public function showShiftParticipants()
+    {
+        $participants = $this->model->getParticipantsForShift($this->vars['shift_id']);
+
+        $participant_model = new ParticipantModel($this->dic->get('DB'), $this->config, $this->dic);
+        $participant_model->setSearchBaseIds($participants);
+
+        $this->hardRedirect($this->url('show_search_result'));
+    }
 }
