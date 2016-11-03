@@ -1487,7 +1487,7 @@ WHERE
         }
 
         if ($inserts) {
-            $query = 'INSERT INTO pladser (hold_id, pladsnummer, type, deltager_id) VALUES ' . implode(', ', $inserts);
+            $query = 'INSERT INTO pladser (hold_id, pladsnummer, type, deltager_id) VALUES ' . implode(', ', $inserts) . ' ON DUPLICATE KEY UPDATE deltager_id = VALUES(deltager_id)';
 
             $this->db->exec($query);
 

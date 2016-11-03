@@ -1780,6 +1780,7 @@ exit;
             $this->log('Participant (ID: ' . $participant->id . ') signup marked annulled', 'Payment', null);
 
             $count++;
+
         }
 
         $this->log('Annulment check done. Sent emails to ' . $count . ' participants', 'Payment', null);

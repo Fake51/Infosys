@@ -25,3 +25,21 @@
  */
 
 require realpath(dirname(__FILE__) . '/../include/') . '/bootstrap.php';
+
+$infosys = createInfosys()
+    ->setup();
+
+if ($infosys->getConfig()->isSetupRequired()) {
+    $infosys->doAppSetup(getDbTester());
+
+} else {
+    if ($infosys->isMigrationNeeded()) {
+        $infosys->runMigrations();
+
+    }
+
+    $infosys->ensureDatabaseVersion()
+        ->handleRequest();
+
+}
+

@@ -6,7 +6,7 @@ Din tilmelding er nu registreret - med deltagernummer <?= $this->participant->id
 <h2>Betaling</h2>
 <p>
     <?php if ($this->participant->betalt_beloeb == 0) : ?>
-Din tilmelding beløber sig til <?= $this->prices['total'];?>kr. der bedes betales senest d. 28/2.
+Din tilmelding beløber sig til <?= $this->prices['total'];?>kr. der bedes betales senest d. <?= $this->payment_day;?>.
     <?php else : ?>
 Du har allerede betalt <?= $this->participant->betalt_beloeb;?>kr men det ser ud til at du stadig skylder <?= ($this->prices['total'] - $this->participant->betalt_beloeb);?>kr.
 Du kan betale nu via online-betalingen eller bankoverførsel, eller når du ankommer til Fastaval.

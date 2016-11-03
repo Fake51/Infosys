@@ -2212,10 +2212,16 @@ SQL;
      */
     public function setupPaymentReminderEmail(Deltagere $participant, Page $page)
     {
+        $paytime = strtotime($participant->signed_up) + 86400;
+
+        if ($paytime < time()) {
+            $paytime = time() + 86400;
+        }
+
         $page->participant = $participant;
         $page->payment_remainder = $participant->calcSignupTotal() - $participant->betalt_beloeb;
         $page->payment_url = $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password)));
-        $page->payment_day = '29/2-2016'; //date('d/m-Y', strtotime($participant->signed_up) + 14 * 86400);
+        $page->payment_day = date('d/m-Y', $paytime);
 
         return $participant;
     }
@@ -2231,12 +2237,18 @@ SQL;
      */
     public function setupSignupEmail(DBObject $participant, Page $page)
     {
+        $paytime = strtotime($participant->signed_up) + 86400;
+
+        if ($paytime < time()) {
+            $paytime = time() + 86400;
+        }
+
         $page->participant = $participant;
         $page->wear        = $participant->getWear();
         $page->activities  = $participant->getTilmeldinger();
         $page->gds         = $participant->getGDSTilmeldinger();
         $page->payment_url = $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password)));
-        $page->payment_day = '29/2-2016'; //date('d/m-Y', strtotime($participant->updated) + 14 * 86400);
+        $page->payment_day = date('d/m-Y', $paytime);
         $page->food        = $participant->getMadtider();
 
         $entrance = array();
@@ -2359,7 +2371,7 @@ SQL;
         return array_filter($participants, function ($x) {
             $signup_total = $x->calcSignupTotal();
 
-            return !($signup_total === 0 || $x->betalt_beloeb > 0);
+            return !(intval($signup_total) === 0 || $x->betalt_beloeb > 0);
         });
     }
 
@@ -2374,7 +2386,7 @@ SQL;
     public function filterOutGroups(array $participants)
     {
         return array_filter($participants, function ($x) {
-            return trim($x->email) !== 'viborg.ungdomsskole.rollespil@gmail.com';
+            return !(trim($x->email) === 'viborg.ungdomsskole.rollespil@gmail.com' || trim($x->ungdomsskole) === 'Viborg Ungdomsskole');
         });
     }
 

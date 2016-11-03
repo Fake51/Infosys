@@ -6,7 +6,7 @@ Your signup has been registered - with participant ID <?= $this->participant->id
 <h2>Payment</h2>
 <p>
     <?php if ($this->participant->betalt_beloeb == 0) : ?>
-Your payment amounts to <?= $this->prices['total'];?>kr. - deadline for payment is 28th February.
+Your payment amounts to <?= $this->prices['total'];?>kr. - deadline for payment is <?= $this->payment_day;?>.
     <?php else : ?>
 You have already paid <?= $this->participant->betalt_beloeb;?>kr. but it seems that you owe <?= ($this->prices['total'] - $this->participant->betalt_beloeb);?>kr. on your signup.
 You can pay via the online-payment functionality, by bank transfer or upon arriving at Fastaval.

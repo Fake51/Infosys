@@ -43,23 +43,6 @@ require FRAMEWORK_FOLDER . 'dic.php';
 require FRAMEWORK_FOLDER . 'exception.php';
 require FRAMEWORK_FOLDER . 'autoloader.php';
 
-$infosys = createInfosys()
-    ->setup();
-
-if ($infosys->getConfig()->isSetupRequired()) {
-    $infosys->doAppSetup(getDbTester());
-
-} else {
-    if ($infosys->isMigrationNeeded()) {
-        $infosys->runMigrations();
-
-    }
-
-    $infosys->ensureDatabaseVersion()
-        ->handleRequest();
-
-}
-
 /**
  * creates a DbSetupTester with required objects
  *
