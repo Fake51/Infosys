@@ -16,7 +16,7 @@ CREATE TABLE `loanevents` (
   PRIMARY KEY (`id`),
   KEY `loanitem` (`loanitem_id`),
   CONSTRAINT `loanevents_ibfk_1` FOREIGN KEY (`loanitem_id`) REFERENCES `loanitems` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
  ALTER TABLE notes MODIFY COLUMN  area ENUM('shop', 'boardgames', 'loans') NOT NULL;
 
