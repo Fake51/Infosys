@@ -82,6 +82,7 @@ class EntityFactory
         'GDSVagter'                 => 'GDSVagter',
         'Hold'                      => 'Hold',
         'Indgang'                   => 'Indgang',
+        'Loanitem'                  => 'Loanitem',
         'LogItem'                   => 'LogItem',
         'Lokaler'                   => 'Lokaler',
         'Mad'                       => 'Mad',

@@ -498,6 +498,14 @@ HTML;
 HTML;
         }
 
+        if ($this->user && ($this->user->hasRole('Infonaut') || $this->user->hasRole('Admin'))) {
+            $return .= <<<HTML
+    <li class='topmenu-item'>
+        <a href='{$this->url('loans_overview')}'>Udlån</a>
+    </li>
+HTML;
+        }
+
         $return .= <<<HTML
     <li class='topmenu-item'>
         <a href='{$this->url('log')}'>Log</a>

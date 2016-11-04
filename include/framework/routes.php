@@ -376,6 +376,15 @@ class Routes
         $this->routes['boardgames_parse']            = array('url' => 'boardgames/parse', 'controller' => 'Boardgames', 'method' => 'parseSpreadsheet');
         $this->routes['boardgames_update_note']      = array('url' => 'boardgames/update-note', 'controller' => 'Boardgames', 'method' => 'updateNote');
 
+        // loans
+        $this->routes['loans_overview']         = array('url' => 'loans', 'controller' => 'Loans', 'method' => 'overview');
+        $this->routes['loans_data']             = array('url' => 'loans/data', 'controller' => 'Loans', 'method' => 'fetchData');
+        $this->routes['loans_create']           = array('url' => 'loans/create', 'controller' => 'Loans', 'method' => 'createItem');
+        $this->routes['loans_update']           = array('url' => 'loans/update', 'controller' => 'Loans', 'method' => 'updateItem');
+        $this->routes['loans_edit']             = array('url' => 'loans/edit', 'controller' => 'Loans', 'method' => 'editItem');
+        $this->routes['loans_parse']            = array('url' => 'loans/parse', 'controller' => 'Loans', 'method' => 'parseSpreadsheet');
+        $this->routes['loans_update_note']      = array('url' => 'loans/update-note', 'controller' => 'Loans', 'method' => 'updateNote');
+
     }
 
     /**
