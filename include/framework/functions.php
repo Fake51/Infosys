@@ -331,6 +331,9 @@ function tt($type)
     case 'magic':
         return 'Magic: The Gathering';
 
+    case 'junior':
+        return 'Fastaval Junior';
+
     default:
         return $type;
     }
