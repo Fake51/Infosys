@@ -81,7 +81,7 @@ class ViewHelper extends Common
 
                     <tr>
                         <td><b>ID:</b> <input type='text' name='deltager_search[id]' value=""/></td>
-                        <td><b>Køn:</b> {$this->view->genSelect('deltager_search[gender]', array('', 'm','k'))}</td>
+                        <td><b>Køn:</b> {$this->view->genSelect('deltager_search[gender]', array('', 'Mand' => 'm', 'Kvinde' => 'k', 'Andet' => 'a'))}</td>
                         <td><b>Fødselsdato:</b> <input type='text' value='' name='deltager_search[birthdate]' /></td>
                     </tr>
                     <tr>

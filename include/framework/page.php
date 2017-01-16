@@ -311,10 +311,12 @@ class Page
     {
         $class  = (($class) ? " class='{$class}'" : '');
         $string = "<select name='{$name}' id='{$name}'{$class}>";
+
         foreach ($values as $key => $value) {
             $sel     = (($value == $selected) ? ' selected' : '');
             $key     = ((is_string($key)) ? $key : $value);
             $string .= "<option value='{$value}'{$sel}>{$key}</option>";
+
         }
 
         $string .= "</select>\n";
