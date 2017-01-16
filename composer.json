@@ -11,5 +11,7 @@
             "email": "peter.e.lind@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "guzzlehttp/guzzle": "^6.2"
+    }
 }

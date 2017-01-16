@@ -149,6 +149,17 @@ class Routes
 
         $this->routes['participant_reset_password']                 = array('url' => 'participant/reset-password/:hash:', 'controller' => 'Participant', 'method' => 'resetParticipantPassword');
 
+        // photo stuff
+        $this->routes['photo_upload_form']                          = ['url' => 'photo/form/:identifier:', 'controller' => 'Photo', 'method' => 'showUploadForm'];
+        $this->routes['photo_upload_original']                      = ['url' => 'photo/upload/original/:identifier:', 'controller' => 'Photo', 'method' => 'storeOriginal'];
+        $this->routes['photo_upload_cropped']                       = ['url' => 'photo/upload/cropped/:identifier:', 'controller' => 'Photo', 'method' => 'storeCropped'];
+
+        // id template stuff
+        $this->routes['template_editing']                           = ['url' => 'id-templates', 'controller' => 'IdTemplate', 'method' => 'showEdit'];
+        $this->routes['create_template']                            = ['url' => 'id-templates/create-template', 'controller' => 'IdTemplate', 'method' => 'createTemplate'];
+        $this->routes['delete_template']                            = ['url' => 'id-templates/delete-template/:id:', 'controller' => 'IdTemplate', 'method' => 'deleteTemplate'];
+        $this->routes['update_template']                            = ['url' => 'id-templates/update-template/:id:', 'controller' => 'IdTemplate', 'method' => 'updateTemplate'];
+
         // online payment
         $this->routes['participant_post_payment']                   = array('url' => 'participant/payment/done', 'controller' => 'Participant', 'method' => 'showPaymentDone');
         $this->routes['participant_payment']                        = array('url' => 'participant/payment/:hash:', 'controller' => 'Participant', 'method' => 'processPayment');

@@ -1,0 +1,5 @@
+
+.icon-floppy:before { content: '\e800'; } /* '' */
+.icon-plus-circled:before { content: '\e801'; } /* '' */
+.icon-minus-circled:before { content: '\e802'; } /* '' */
+.icon-docs:before { content: '\f0c5'; } /* '' */

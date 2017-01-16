@@ -1,0 +1,20 @@
+<div id="image-cropper">
+  <div class="cropit-preview"></div>
+  
+  <div class="cropit-rotate-buttons">
+    <span class="cropit-rotate-ccw"></span>
+    <span class="cropit-rotate-cw"></span>
+  </div>
+  <input type="range" class="cropit-image-zoom-input" />
+  
+  <input type="file" class="cropit-image-input" />
+  <div class="select-image-btn">Select new image</div>
+  <div class="upload-image-btn">Upload image</div>
+</div>
+
+<script type="text/javascript">
+infosysExportWidth = <?= e($this->photo_width);?>;
+infosysExportHeight = <?= e($this->photo_height);?>;
+infosysCropUrl = "<?= $this->url('photo_upload_cropped', ['identifier' => $this->identifier]);?>";
+infosysOriginalUrl = "<?= $this->url('photo_upload_original', ['identifier' => $this->identifier]);?>";
+</script>

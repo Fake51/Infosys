@@ -43,6 +43,8 @@ require FRAMEWORK_FOLDER . 'dic.php';
 require FRAMEWORK_FOLDER . 'exception.php';
 require FRAMEWORK_FOLDER . 'autoloader.php';
 
+require '../vendor/autoload.php';
+
 /**
  * creates a DbSetupTester with required objects
  *

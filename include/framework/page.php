@@ -207,6 +207,21 @@ class Page
     }
 
     /**
+     * wrapper for Layout::setBodyRendering
+     *
+     * @param  $flag Description
+     *
+     * @access public
+     * @return self
+     */
+    public function setBodyRendering($flag)
+    {
+        $this->layout->setBodyRendering($flag);
+
+        return $this;
+    }
+
+    /**
      * sets the controller that's rendering for the request
      *
      * @param Controller $controller Instance of Controller
@@ -396,6 +411,17 @@ class Page
         if (is_file($this->getPublicPath() . 'js/' . $filename)) {
             $this->earlyload_js[] = $filename;
         }
+    }
+
+    /**
+     * clears the early load js stack
+     *
+     * @access public
+     * @return void
+     */
+    public function clearEarlyLoadJs()
+    {
+        $this->earlyload_js = [];
     }
 
     /**

@@ -85,6 +85,13 @@ class Layout
      */
     protected $page;
 
+    /**
+     * flag controlling if a http body is sent
+     *
+     * @var bool
+     */
+    private $skip_body_rendering;
+
     protected $routes;
     protected $config;
 
@@ -229,6 +236,32 @@ class Layout
     }
 
     /**
+     * return true if no body will be rendered
+     *
+     * @access public
+     * @return bool
+     */
+    public function skipBodyRendering()
+    {
+        return $this->skip_body_rendering;
+    }
+
+    /**
+     * sets the flag on body rendering
+     *
+     * @param bool $flag False to skip body rendering
+     *
+     * @access public
+     * @return self
+     */
+    public function setBodyRendering($flag)
+    {
+        $this->skip_body_rendering = !$flag;
+
+        return $this;
+    }
+
+    /**
      * renders the page, by outputing layout plus content
      *
      * @access public
@@ -246,6 +279,10 @@ class Layout
         }
 
         $this->page->sendHeaders();
+
+        if ($this->skipBodyRendering()) {
+            return;
+        }
 
         if (!$this->getDocType()) {
             $doctype = <<<XML
@@ -395,6 +432,16 @@ XML;
             <li><a href='{$this->url('opret_deltager')}'>Opret deltager</a></li>
             <li><a href='{$this->url('checkin_interface')}'>Checkin registrering</a></li>
             <li><a href='{$this->url('edit_participant_types')}'>Rediger deltagertyper</a></li>
+HTML;
+
+            if ($this->user->hasRole('Infonaut') || $this->user->hasRole('Admin')) {
+                $return .= <<<HTML
+            <li><a href='{$this->url('template_editing')}'>ID skabeloner</a></li>
+HTML;
+            }
+
+            $return .= <<<HTML
+
         </ul>
     </li>
     <li class='topmenu-item'>
