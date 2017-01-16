@@ -54,7 +54,7 @@
                 <tr>
                     <td><b>SuperGDS:</b> <?php echo $this->genSelect('deltager[supergds]',array('nej','ja'), $this->deltager->supergds);?></td>
                     <td><b>Flere GDSVagter:</b> <?php echo $this->genSelect('deltager[flere_gdsvagter]',array('nej','ja'), $this->deltager->flere_gdsvagter);?></td>
-                    <td><b>SuperGM:</b> <?php echo $this->genSelect('deltager[supergm]',array('nej','ja'), $this->deltager->supergm);?></td>
+                    <td><b>Pakkeløsning:</b> <?php echo $this->genSelect('deltager[package_gds]',array('Nej' => '0', 'Ja' => '1'), $this->deltager->package_gds);?></td>
                 </tr>
                 <tr>
                     <td><b>Arr. sovesal:</b> <?php echo $this->genSelect('deltager[sovesal]',array('nej','ja'), $this->deltager->sovesal);?></td>
@@ -79,7 +79,7 @@
                 <tr>
                     <td><b>Udeblevet:</b> <?php echo $this->genSelect('deltager[udeblevet]',array('nej','ja'), $this->deltager->udeblevet);?></td>
                     <td><b>Annulleret:</b> <?php echo $this->genSelect('deltager[annulled]',array('nej','ja'), $this->deltager->annulled);?></td>
-                    <td>&nbsp;</td>
+                    <td><b>SuperGM:</b> <?php echo $this->genSelect('deltager[supergm]',array('nej','ja'), $this->deltager->supergm);?></td>
                 </tr>
                 <tr><td colspan='3'><b>Ungdomsskole:</b> <input class='tripleinput' type='text' value='<?php echo e($this->deltager->ungdomsskole);?>' name='deltager[ungdomsskole]' /></td></tr>
                 <tr><td colspan='3'><b>Arrangørområde:</b> <input class='tripleinput' type='text' value='<?php echo e($this->deltager->arbejdsomraade);?>' name='deltager[arbejdsomraade]' /></td></tr>

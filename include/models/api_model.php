@@ -665,6 +665,7 @@ class ApiModel extends Model {
         $deltager->alder             = 0;
         $deltager->birthdate         = '0000-00-00';
         $deltager->annulled          = 'nej';
+        $deltager->package_gds       = 0;
         $deltager->insert();
 
         return array('id' => $deltager->id, 'password' => $deltager->password, 'payment_url' => $this->url('participant_payment', array('hash' => md5($deltager->id . '-' . $deltager->password))));
@@ -1029,6 +1030,7 @@ class ApiModel extends Model {
             'medical_note',
             'interpreter',
             'skills',
+            'package_gds',
         );
 
         foreach ($fields as $field) {
@@ -1346,6 +1348,7 @@ class ApiModel extends Model {
             'fornavn' => $participant->fornavn,
             'efternavn' => $participant->efternavn,
             'gender' => $participant->gender,
+            'package_gds' => $participant->package_gds,
             'birthdate' => $participant->birthdate,
             'alder' => $participant->alder,
             'email' => $participant->email,

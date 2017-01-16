@@ -56,7 +56,7 @@
                 <tr>
                     <td><b>SuperGDS:</b> <?php echo $this->genSelect('deltager[supergds]',array('nej','ja'));?></td>
                     <td><b>Flere GDSVagter:</b> <?php echo $this->genSelect('deltager[flere_gdsvagter]',array('nej','ja'));?></td>
-                    <td><b>SuperGM:</b> <?php echo $this->genSelect('deltager[supergm]', array('nej','ja'));?></td>
+                    <td><b>Pakkeløsning:</b> <?php echo $this->genSelect('deltager[package_gds]',array('Nej' => '0', 'Ja' => '1'), $this->deltager->package_gds);?></td>
                 </tr>
 
                 <tr>
@@ -81,8 +81,7 @@
                 </tr>
                 <tr>
                     <td><b>Udeblevet:</b> <?php echo $this->genSelect('deltager[udeblevet]',array('nej','ja'));?></td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td><b>SuperGM:</b> <?php echo $this->genSelect('deltager[supergm]', array('nej','ja'));?></td>
                 </tr>
                 <tr><td colspan='3'><b>Ungdomsskole:</b> <input class='tripleinput' type='text' value='' name='deltager[ungdomsskole]' /></td></tr>
                 <tr><td colspan='3'><b>Arrangørområde:</b> <input class='tripleinput' type='text' value='' name='deltager[arbejdsomraade]' /></td></tr>

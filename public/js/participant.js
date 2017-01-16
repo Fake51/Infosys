@@ -150,25 +150,28 @@ $(function() {
 
         $('td.editable.gender').editable(window.infosys_data.participant_editable_url, {
             type: 'select',
-            data: '{"m": "m", "k": "k"}',
+            data: '{"m": "m", "k": "k", "a": "a"}',
             submit: "Ok",
             indicator: 'Saving ...',
             tooltip: 'Click to edit',
             onerror: updateError
+        });
+
+        $('.editable.package_gds').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: '{"0":"Nej","1":"Ja"}',
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError,
+            callback: function(value) {
+                $(this).text(Number(value) ? 'Ja' : 'Nej');
+            }
         });
 
         $('td.editable.usertype').editable(window.infosys_data.participant_editable_url, {
             type: 'select',
             loadurl: window.infosys_data.ajax_get_user_types_url,
-            submit: "Ok",
-            indicator: 'Saving ...',
-            tooltip: 'Click to edit',
-            onerror: updateError
-        });
-
-        $('td.editable.clans').editable(window.infosys_data.participant_editable_url, {
-            type: 'select',
-            data: '{"nej": "nej", "Brujah": "Brujah", "Gangrel": "Gangrel", "Malkavian": "Malkavian", "Nosferatu": "Nosferatu", "Toreador": "Toreador", "Tremere": "Tremere", "Ventrue": "Ventrue"}',
             submit: "Ok",
             indicator: 'Saving ...',
             tooltip: 'Click to edit',

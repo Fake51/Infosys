@@ -392,6 +392,7 @@ class ParticipantController extends Controller
                                                 'may_contact' => '',
                                                 'ny_alea' => '',
                                                 'er_alea' => '',
+                                                'package_gds' => '',
                                                 ),
                         'mad_search' => array(),
                         'indgang_search' => array(),
