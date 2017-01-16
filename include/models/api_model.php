@@ -1243,7 +1243,7 @@ class ApiModel extends Model {
                 continue;
             }
 
-            $activity->$column = isset($data[$column]) ? $data[$column] : '';
+            $activity->$column = isset($data[$column]) ? str_replace(chr(0xc2) . chr(0xa0), ' ', $data[$column]) : '';
         }
 
         $activity->updated = date('Y-m-d H:i:s');
