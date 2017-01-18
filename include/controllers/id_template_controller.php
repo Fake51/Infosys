@@ -69,7 +69,7 @@ class IdTemplateController extends Controller
         $this->page->includeCss('bootstrap-responsive.min.css');
         $this->page->includeCss('main-print.css', 'print');
         $this->page->includeCss('idtemplate.css');
-        $this->page->includeCss('fontello-f83cc2db/css/idtemplate.css');
+        $this->page->includeCss('fontello-ca56566b/css/idtemplate.css');
 
         $this->page->setTemplate('idtemplate/showedit');
 

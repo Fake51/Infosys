@@ -65,6 +65,8 @@ class PhotoModel extends Model
             return false;
         }
 
+        $this->removeExisting($upload_type, $identifier);
+
         try {
             $datauri = new \DataUri($request->post->image);
 
@@ -85,10 +87,55 @@ class PhotoModel extends Model
                 return false;
             }
 
-            return !!file_put_contents(PUBLIC_PATH . 'uploads/photo-' . $upload_type . '-' . $identifier . '.' . $suffix, $datauri->getContent());
+            return !!file_put_contents(PUBLIC_PATH . 'uploads/photo-' . $upload_type . '-' . mb_strtolower($identifier) . '.' . $suffix, $datauri->getContent());
 
         } catch (FrameworkException $e) {
             return false;
         }
+    }
+
+    /**
+     * removes existing versions of image
+     *
+     * @param string $upload_type
+     * @param string $identifier
+     *
+     * @access protected
+     * @return self
+     */
+    protected function removeExisting($upload_type, $identifier)
+    {
+        $iterator = new DirectoryIterator(PUBLIC_PATH . 'uploads/');
+
+        foreach ($iterator as $file) {
+            if (strpos($file->getFilename(), 'photo-' . $upload_type . '-' . mb_strtolower($identifier)) === 0) {
+                unlink($file->getPathname());
+            }
+
+        }
+
+        return $this;
+    }
+
+    /**
+     * returns filename and webpath of exitsing image if possible
+     *
+     * @param string $identifier Photo identifier to check with
+     *
+     * @access public
+     * @return string
+     */
+    public function getExistingImage($identifier)
+    {
+        $iterator = new DirectoryIterator(PUBLIC_PATH . 'uploads/');
+
+        foreach ($iterator as $file) {
+            if (strpos($file->getFilename(), 'photo-original-' . mb_strtolower($identifier)) === 0) {
+                return '/uploads/' . $file->getFilename();
+            }
+
+        }
+
+        return '';
     }
 }
