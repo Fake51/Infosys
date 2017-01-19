@@ -127,10 +127,37 @@ class PhotoModel extends Model
      */
     public function getExistingImage($identifier)
     {
+        return $this->getExisting($identifier, 'original');
+    }
+
+    /**
+     * returns filename and webpath of exitsing image if possible
+     *
+     * @param string $identifier Photo identifier to check with
+     *
+     * @access public
+     * @return string
+     */
+    public function getExistingCroppedImage($identifier)
+    {
+        return $this->getExisting($identifier, 'cropped');
+    }
+
+    /**
+     * returns path to existing image, if found
+     *
+     * @param string $identifier Identifier to search by
+     * @param string $type       Type of image
+     *
+     * @access protected
+     * @return string
+     */
+    protected function getExisting($identifier, $type)
+    {
         $iterator = new DirectoryIterator(PUBLIC_PATH . 'uploads/');
 
         foreach ($iterator as $file) {
-            if (strpos($file->getFilename(), 'photo-original-' . mb_strtolower($identifier)) === 0) {
+            if (strpos($file->getFilename(), 'photo-' . $type . '-' . mb_strtolower($identifier)) === 0) {
                 return '/uploads/' . $file->getFilename();
             }
 

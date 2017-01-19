@@ -100,6 +100,11 @@ class ParticipantController extends Controller
 
             $this->page->sleep_data = $this->model->getSleepDataForParticipant($this->page->deltager);
 
+            $this->page->cropped_photo = $this->model->fetchCroppedPhoto($this->page->deltager);
+
+            $this->page->participant_photo_upload_link = $this->model->getPhotoUploadLink($this->page->deltager);
+            $this->page->participant_id_card_link      = $this->url('id_card_render') . '?ids=' . $this->page->deltager->id;
+
         } else {
             $this->page->setTemplate('noResults');
             $this->page->setTitle('Intet resultat');

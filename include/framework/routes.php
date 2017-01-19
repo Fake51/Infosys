@@ -160,6 +160,8 @@ class Routes
         $this->routes['delete_template']                            = ['url' => 'id-templates/delete-template/:id:', 'controller' => 'IdTemplate', 'method' => 'deleteTemplate'];
         $this->routes['update_template']                            = ['url' => 'id-templates/update-template/:id:', 'controller' => 'IdTemplate', 'method' => 'updateTemplate'];
 
+        $this->routes['id_card_render']                             = ['url' => 'id-card/render', 'controller' => 'IdTemplate', 'method' => 'renderIdCards'];
+
         // online payment
         $this->routes['participant_post_payment']                   = array('url' => 'participant/payment/done', 'controller' => 'Participant', 'method' => 'showPaymentDone');
         $this->routes['participant_payment']                        = array('url' => 'participant/payment/:hash:', 'controller' => 'Participant', 'method' => 'processPayment');

@@ -77,10 +77,8 @@
         };
 
     // todo
-    // use uploaded photo in participant template
     // create id templating output
     // set used id template per participant
-    // remove all uploaded images before new upload
 
     $(init);
 }());

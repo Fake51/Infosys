@@ -2720,4 +2720,65 @@ ORDER BY
 
         return $vouchers + $participant->extra_vouchers;
     }
+
+    /**
+     * fetches or creates a photo upload link
+     *
+     * @param \Deltagere $participant Participant to generate link for
+     *
+     * @access public
+     * @return string
+     */
+    public function getPhotoUploadLink(\Deltagere $participant)
+    {
+        $query = '
+SELECT identifier
+FROM participantphotoidentifiers
+WHERE participant_id = ?
+';
+
+        $result = $this->db->query($query, [$participant->id]);
+
+        if (empty($result)) {
+            $identifier = makeRandomString(32);
+
+            $query = '
+INSERT INTO participantphotoidentifiers SET participant_id = ?, identifier = ?
+';
+
+            $this->db->exec($query, [$participant->id, $identifier]);
+
+        } else {
+            $identifier = $result[0]['identifier'];
+        }
+
+        return $this->url('photo_upload_form', ['identifier' => $identifier]);
+    }
+
+    /**
+     * returns public uri for participants cropped photo, if it exists
+     *
+     * @param Deltagere $participant Participant to find cropped photo
+     *
+     * @access public
+     * @return string
+     */
+    public function fetchCroppedPhoto(\Deltagere $participant)
+    {
+        $query = '
+SELECT identifier
+FROM participantphotoidentifiers
+WHERE participant_id = ?
+';
+
+        $result = $this->db->query($query, [$participant->id]);
+
+        if (empty($result)) {
+            return '';
+        }
+
+        $photo_model = $this->factory('Photo');
+
+        return $photo_model->getExistingCroppedImage($result[0]['identifier']);
+    }
 }

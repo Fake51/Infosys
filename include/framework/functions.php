@@ -363,3 +363,35 @@ function get_url_domain($url)
 {
     return preg_replace('#^(https?://)?([^/]+)/.*#i', '$1', $url);
 }
+
+/**
+ * generates a semirandom string of the given length
+ *
+ * @param int $length Length of string wanted
+ *
+ * @return string
+ */
+function makeRandomString($length)
+{
+    $string = '';
+    $strlen = 0;
+
+    while ($strlen < $length) {
+
+        $rand = mt_rand(1, 62);
+
+        if ($rand <= 10) {
+            $string .= chr($rand + 0x2f);
+
+        } elseif ($rand <= 36) {
+            $string .= chr($rand + 0x40 - 10);
+
+        } else {
+            $string .= chr($rand + 0x60 - 36);
+        }
+
+        $strlen++;
+    }
+
+    return $string;
+}

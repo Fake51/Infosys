@@ -285,7 +285,23 @@ div.middleboxes {
     margin-top: 5px;
 }
 
-div#topboxes div, div.middleboxes div {
+#topboxes {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+#id-card-content img {
+    display: block;
+}
+
+#id-card-content .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+div.middleboxes div {
     float: left;
     margin: 5px 0px 5px 5px;
     padding: 0px;
