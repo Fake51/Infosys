@@ -2111,25 +2111,23 @@ SQL;
 
         $payment_module = $factory->build();
 
-
-
-        $unique = uniqid();
-
-        $participant->paid_note = $participant->paid_note . PHP_EOL . 'Payment: ' . $unique;
-        $participant->update();
-
         $price = ceil($participant->calcSignupTotal() - $participant->betalt_beloeb) * 100;
 
-        $api = $this->factory('Api');
+        $hash = $this->factory('Api')->getParticipantPaymentHash($participant);
 
         $links = [
-            'callback_url' => $this->url('participant_register_payment', array('hash' => $api->getParticipantPaymentHash($participant))),
+            'callback_url' => $this->url('participant_register_payment', array('hash' => $hash)),
             'success_url'  => $this->url('participant_post_payment'),
             'cancel_url'   => 'http://www.fastaval.dk/',
         ];
 
         try {
-            return $payment_module->generateOutput($participant, $price, $links);
+            $url = $payment_module->generateOutput($participant, $price, $links);
+
+            $participant->paid_note = $participant->paid_note . PHP_EOL . 'Payment: ' . $hash;
+            $participant->update();
+
+            return $url;
 
         } catch (FrameworkException $e) {
             return '';
