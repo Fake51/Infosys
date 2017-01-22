@@ -2191,9 +2191,16 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         $api = $this->factory('Api');
 
+        try {
+            $hash = $api->getParticipantPaymentHash($participant);
+        
+        } catch (FrameworkException $e) {
+            $hash = $api->setParticipantPaymentHash($participant);
+        }
+
         $page->participant = $participant;
         $page->payment_remainder = $participant->calcSignupTotal() - $participant->betalt_beloeb;
-        $page->payment_url = $this->url('participant_payment', array('hash' => $api->getParticipantPaymentHash($participant)));
+        $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
         $page->payment_day = date('d/m-Y', $paytime);
 
         return $participant;
@@ -2218,11 +2225,18 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         $api = $this->factory('Api');
 
+        try {
+            $hash = $api->getParticipantPaymentHash($participant);
+        
+        } catch (FrameworkException $e) {
+            $hash = $api->setParticipantPaymentHash($participant);
+        }
+
         $page->participant = $participant;
         $page->wear        = $participant->getWear();
         $page->activities  = $participant->getTilmeldinger();
         $page->gds         = $participant->getGDSTilmeldinger();
-        $page->payment_url = $this->url('participant_payment', array('hash' => $api->getParticipantPaymentHash($participant)));
+        $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
         $page->payment_day = date('d/m-Y', $paytime);
         $page->food        = $participant->getMadtider();
 

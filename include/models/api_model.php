@@ -668,6 +668,21 @@ class ApiModel extends Model {
         $deltager->package_gds       = 0;
         $deltager->insert();
 
+        $this->setParticipantPaymentHash($deltager);
+
+        return array('id' => $deltager->id, 'password' => $deltager->password, 'payment_url' => $this->url('participant_payment', array('hash' => $hash)));
+    }
+
+    /**
+     * creates a payment hash
+     *
+     * @param \Deltagere $participant Participant to set hash for
+     *
+     * @access public
+     * @return string
+     */
+    public function setParticipantPaymentHash(\Deltagere $participant)
+    {
         $query = '
 INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICATE KEY UPDATE hash = ?
 ';
@@ -676,7 +691,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
         $this->db->exec($query, [$deltager->id, $hash, $hash]);
 
-        return array('id' => $deltager->id, 'password' => $deltager->password, 'payment_url' => $this->url('participant_payment', array('hash' => $hash)));
+        return $hash;
     }
 
     public function addWear(array $json, $deltager = null) {
