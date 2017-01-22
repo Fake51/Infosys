@@ -2152,7 +2152,7 @@ SQL;
         $parsed_data = $factory->build()->parseCallbackRequest($request);
 
         if (!$parsed_data) {
-            return false
+            return false;
         }
 
         $participant->betalt_beloeb = $participant->betalt_beloeb ? $participant->betalt_beloeb + ($parsed_data['amount'] / 100) : $parsed_data['amount'] / 100;
@@ -2166,7 +2166,7 @@ INSERT INTO paymentfritidlog
 SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 ';
 
-        $this->db->exec($query, [$participant->id, $parsed_data['amount'], $parsed_data['cost'], $parsed_data['fees']);
+        $this->db->exec($query, [$participant->id, $parsed_data['amount'], $parsed_data['cost'], $parsed_data['fees']]);
 
         return true;
     }
