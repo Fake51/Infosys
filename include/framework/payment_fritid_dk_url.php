@@ -62,16 +62,30 @@ class PaymentFritidDkUrl implements PaymentUrl
      *
      * @param Deltagere $participant  Participant to generate payment url for
      * @param int       $price        Price to pay in Ears
+     * @param array     $conneection_links Links into the system, for success, callback and cancel
      * @param string    $payment_text Optional text for button/links to initiate payment
      *
      * @throws Exception
      * @access public
      * @return string
      */
-    public function generateOutput(Deltagere $participant, $price, $payment_text = 'Betal nu')
+    public function generateOutput(Deltagere $participant, $price, array $conneection_links, $payment_text = 'Betal nu')
     {
-        $data = $this->api_module->createTicket($participant, $price);
+        $data = $this->api_module->createTicket($participant, $price, $conneection_links);
 
-        return $data['data']['url'];
+        return $data['url'];
+    }
+
+    /**
+     * parses request data from payment callback
+     *
+     * @param \Request $request Request data
+     *
+     * @access public
+     * @return array|false
+     */
+    public function parseCallbackRequest(\Request $request)
+    {
+        return $this->api_module->parseCallbackRequest($request);
     }
 }

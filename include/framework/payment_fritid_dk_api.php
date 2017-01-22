@@ -70,17 +70,18 @@ class PaymentFritidDkApi
      * @access public
      * @return string
      */
-    public function createTicket(Deltagere $participant, $price)
+    public function createTicket(Deltagere $participant, $price, array $connection_links)
     {
+        if (empty($connection_links['success_url']) || empty($connection_links['success_url']) || empty($connection_links['success_url'])) {
+            throw new FrameworkException('Setup data lacks connection links: success, cancel, callback');
+        }
+
         $data = [
             'fritid_key'   => $this->api_key,
             'price'        => intval($price),
-            'success_url'  => '1',
-            'callback_url' => '2',
-            'cancel_url'   => '3',
         ];
 
-        $response = $this->http_helper->request('POST', self::APIURL, ['json' => $data]);
+        $response = $this->http_helper->request('POST', self::APIURL, ['json' => array_merge($data, $connection_links)]);
 
         if ($response->getStatusCode() !== 200) {
             throw new FrameworkException('Could not create ticket at fritid.dk');
@@ -93,5 +94,35 @@ class PaymentFritidDkApi
         }
 
         return $data;
+    }
+
+    /**
+     * parses request data from payment callback
+     *
+     * @param \Request $request Request data
+     *
+     * @access public
+     * @return array|false
+     */
+    public function parseCallbackRequest(\Request $request)
+    {
+        $get_data = $request->get;
+
+        if (empty($get_data->cost) || empty($get_data->fees)) {
+            return false;
+        }
+
+        $cost = intval($get_data->cost);
+        $fees = intval($get_data->fees);
+
+        if (!$cost || !$fees) {
+            return false;
+        }
+
+        return [
+            'amount' => $cost + $fees,
+            'cost'   => $cost,
+            'fees'   => $fees,
+        ];
     }
 }

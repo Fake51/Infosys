@@ -156,7 +156,8 @@ class Infosys
             ->addReusableObject(new Request($this->dic->get('Routes'), $this->config))
             ->addReusableObject(new Page($this->dic->get('Request'), $this->dic->get('Layout'), $this->dic->get('Messages'), $this->config->get('app.public_uri'), $this->config))
             ->addReusableObject(new SMSSender($this->dic->get('EntityFactory'), $this->config))
-            ->addReusableObject(new LogSender($this->dic->get('EntityFactory'), $this->config));
+            ->addReusableObject(new LogSender($this->dic->get('EntityFactory'), $this->config))
+            ->addReusableObject(new PaymentFactory($this->config));
 
         FrameworkException::setLog($this->dic->get('Log'));
 

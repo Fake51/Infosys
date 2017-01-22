@@ -40,13 +40,24 @@ interface PaymentConnector
      * generates html output that can be embedded in a webpage and will
      * transfer the user to a payment site
      *
-     * @param Deltagere $deltagere    Participant object
-     * @param int       $price        Price to pay in Ears
-     * @param string    $payment_text Optional text for button/links to initiate payment
+     * @param Deltagere $deltagere         Participant object
+     * @param int       $price             Price to pay in Ears
+     * @param array     $conneection_links Links into the system, for success, callback and cancel
+     * @param string    $payment_text      Optional text for button/links to initiate payment
      *
      * @throws Exception
      * @access public
      * @return string
      */
-    public function generateOutput(\Deltagere $deltagere, $price, $payment_text = 'Betail nu');
+    public function generateOutput(\Deltagere $deltagere, $price, array $connection_links, $payment_text = 'Betail nu');
+
+    /**
+     * parses request data from payment callback
+     *
+     * @param \Request $request Request data
+     *
+     * @access public
+     * @return array|false
+     */
+    public function parseCallbackRequest(\Request $request);
 }

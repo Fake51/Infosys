@@ -2051,12 +2051,12 @@ SQL;
      */
     public function getParticipantFromPaymentHash($hash)
     {
-        $query = "SELECT id FROM deltagere WHERE MD5(CONCAT(id, '-', password)) = ?";
+        $query = "SELECT participant_id FROM participantpaymenthashes WHERE hash = ?";
 
         $participant = null;
 
         if ($results = $this->db->query($query, array($hash))) {
-            $participant = $this->createEntity('Deltagere')->findById($results[0]['id']);
+            $participant = $this->createEntity('Deltagere')->findById($results[0]['participant_id']);
         }
 
         return $participant;
@@ -2107,95 +2107,66 @@ SQL;
      */
     public function generatePaymentUrl(Deltagere $participant)
     {
-        $sic         = $this->config->get('payment.sic');
-        $freehash    = $this->config->get('payment.freehash');
-        $event_id    = $this->config->get('payment.event_id');
-        $ticket_url  = $this->config->get('payment.ticket_url');
-        $payment_url = $this->config->get('payment.pay_url');
-        $public_uri  = $this->config->get('app.public_uri');
-        $testing     = $this->config->get('payment.testing');
+        $factory = $this->dic->get('PaymentFactory');
 
-        if (empty($participant->id) || empty($event_id)) {
-            return '';
-        }
+        $payment_module = $factory->build();
+
+
 
         $unique = uniqid();
 
         $participant->paid_note = $participant->paid_note . PHP_EOL . 'Payment: ' . $unique;
         $participant->update();
 
-        $phone = trim(preg_replace('/[^0-9]/', '', $participant->mobiltlf));
+        $price = ceil($participant->calcSignupTotal() - $participant->betalt_beloeb) * 100;
 
-        if (empty($phone)) {
-            $phone = '00000000';
-        }
+        $api = $this->factory('Api');
 
-        $fields = array(
-            'blockid'     => $event_id,
-            'username'    => $participant->fornavn . ' ' . $participant->efternavn,
-            'number'      => $phone,
-            'feetype'     => 1,
-            'feeType'     => 1,
-            'email'       => $participant->email,
-            'amount'      => ceil($participant->calcSignupTotal() - $participant->betalt_beloeb) * 100,
-            'callbackurl' => $this->url('participant_register_payment', array('hash' => md5($participant->id . '-' . $participant->password))) . '?blob=' . $unique,
-            'returnuser'  => $this->url('participant_post_payment'),
-            'ticketname'  => 'Fastaval billet',
-            'userid'      => $participant->id,
-        );
+        $links = [
+            'callback_url' => $this->url('participant_register_payment', array('hash' => $api->getParticipantPaymentHash($participant))),
+            'success_url'  => $this->url('participant_post_payment'),
+            'cancel_url'   => 'http://www.fastaval.dk/',
+        ];
 
-        $post_data = http_build_query($fields);
+        try {
+            return $payment_module->generateOutput($participant, $price, $links);
 
-        $ch = curl_init($ticket_url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        curl_setopt($ch, CURLOPT_REFERER, $public_uri);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = curl_exec ($ch);
-        curl_close($ch);
-
-        if (substr($response, 0, 1) !== '4') {
+        } catch (FrameworkException $e) {
             return '';
         }
-
-        $fields = array(
-            'id'      => $participant->id,
-            'blockid' => $event_id,
-            'feetype'     => 1,
-            'feeType'     => 1,
-        );
-
-        if ($testing) {
-            $fields['testing']  = 1;
-            $fields['sic']      = $sic;
-            $fields['freehash'] = $freehash;
-        }
-
-        return $payment_url . '?' . http_build_query($fields);
     }
 
     /**
      * checks the posted vars from the online payment
      *
-     * @param Deltagere   $participant Participant to register payment for
-     * @param RequestVars $post        Posted vars from online payment gateway
+     * @param Deltagere $participant Participant to register payment for
+     * @param Request   $request     Request data
      *
      * @access public
      * @return bool
      */
-    public function registerParticipantPayment($participant, RequestVars $post)
+    public function registerParticipantPayment(Deltagere $participant, Request $request)
     {
-        $event_id = $this->config->get('payment.event_id');
+        $factory = $this->dic->get('PaymentFactory');
 
-        if (!$post->status == 1 || empty($_GET['blob']) || strpos($participant->paid_note, 'Payment: ' . $_GET['blob']) === false || $post->userid != $participant->id || $post->blockid != $event_id) {
-            return false;
+        $parsed_data = $factory->build()->parseCallbackRequest($request);
+
+        if (!$parsed_data) {
+            return false
         }
 
-        $participant->betalt_beloeb = $participant->betalt_beloeb ? $participant->betalt_beloeb + ($post->amount / 100) : $post->amount / 100;
+        $participant->betalt_beloeb = $participant->betalt_beloeb ? $participant->betalt_beloeb + ($parsed_data['amount'] / 100) : $parsed_data['amount'] / 100;
 
-        $participant->paid_note .= PHP_EOL . 'Online payment of ' . ($post->amount / 100) . ' on ' . date('Y-m-d H:i:s');
+        $participant->paid_note .= PHP_EOL . 'Online payment of ' . ($parsed_data['amount'] / 100) . ' on ' . date('Y-m-d H:i:s');
 
         $participant->update();
+
+        $query = '
+INSERT INTO paymentfritidlog
+SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
+';
+
+        $this->db->exec($query, [$participant->id, $parsed_data['amount'], $parsed_data['cost'], $parsed_data['fees']);
 
         return true;
     }
@@ -2218,9 +2189,11 @@ SQL;
             $paytime = time() + 86400;
         }
 
+        $api = $this->factory('Api');
+
         $page->participant = $participant;
         $page->payment_remainder = $participant->calcSignupTotal() - $participant->betalt_beloeb;
-        $page->payment_url = $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password)));
+        $page->payment_url = $this->url('participant_payment', array('hash' => $api->getParticipantPaymentHash($participant)));
         $page->payment_day = date('d/m-Y', $paytime);
 
         return $participant;
@@ -2243,11 +2216,13 @@ SQL;
             $paytime = time() + 86400;
         }
 
+        $api = $this->factory('Api');
+
         $page->participant = $participant;
         $page->wear        = $participant->getWear();
         $page->activities  = $participant->getTilmeldinger();
         $page->gds         = $participant->getGDSTilmeldinger();
-        $page->payment_url = $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password)));
+        $page->payment_url = $this->url('participant_payment', array('hash' => $api->getParticipantPaymentHash($participant)));
         $page->payment_day = date('d/m-Y', $paytime);
         $page->food        = $participant->getMadtider();
 

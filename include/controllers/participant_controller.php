@@ -1562,17 +1562,8 @@ class ParticipantController extends Controller
             exit;
         }
 
-        if (!$this->page->request->isPost()) {
-            header('HTTP/1.1 400 Bad request');
-
-            $this->log("Received payment callback for participant " . $participant->id . ". No POST vars received.", 'Payment', null);
-            exit;
-        }
-
-        if (!$this->model->registerParticipantPayment($participant, $this->page->request->post)) {
+        if (!$this->model->registerParticipantPayment($participant, $this->page->request)) {
             $this->log("Failed to register payment for participant " . $participant->id . ". Posted to error log" , 'Payment', null);
-
-            error_log("Failed payment. " . print_r($this->page->request->post, true));
             exit;
         }
 

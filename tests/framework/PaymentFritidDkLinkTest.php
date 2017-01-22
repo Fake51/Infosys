@@ -23,9 +23,15 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
         $data = [
             'fritid_key'   => 'test-key',
             'price'        => 100,
-            'success_url'  => '1',
-            'callback_url' => "2",
-            'cancel_url'   => '3',
+            'success_url'  => 'success',
+            'callback_url' => "callback",
+            'cancel_url'   => 'cancel',
+        ];
+
+        $links = [
+            'success_url'  => 'success',
+            'callback_url' => "callback",
+            'cancel_url'   => 'cancel',
         ];
 
         $response = $this->getMockBuilder('GuzzleHttp\\Psr7\\Response')
@@ -45,7 +51,7 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
             ->method('getBody')
             ->willReturn('{"data":{"message": "success", "url":"http://dev.fritid.dk/service/QJwedWk7tq3b"}}');
 
-        $this->assertEquals('<a href="http://dev.fritid.dk/service/QJwedWk7tq3b" class="paymentFritidDk">Betal nu</a>', $payment->generateOutput($participant, 100));
+        $this->assertEquals('<a href="http://dev.fritid.dk/service/QJwedWk7tq3b" class="paymentFritidDk">Betal nu</a>', $payment->generateOutput($participant, 100, $links));
     }
 
     public function testGenerateOutput_wrongStatus()
@@ -65,9 +71,15 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
         $data = [
             'fritid_key'   => 'test-key',
             'price'        => 100,
-            'success_url'  => '1',
-            'callback_url' => "2",
-            'cancel_url'   => '3',
+            'success_url'  => 'success',
+            'callback_url' => "callback",
+            'cancel_url'   => 'cancel',
+        ];
+
+        $links = [
+            'success_url'  => 'success',
+            'callback_url' => "callback",
+            'cancel_url'   => 'cancel',
         ];
 
         $response = $this->getMockBuilder('GuzzleHttp\\Psr7\\Response')
@@ -85,7 +97,7 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('FrameworkException', 'Could not create ticket at fritid.dk');
 
-        $payment->generateOutput($participant, 100);
+        $payment->generateOutput($participant, 100, $links);
     }
 
     public function testGenerateOutput_badResponse()
@@ -105,9 +117,15 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
         $data = [
             'fritid_key'   => 'test-key',
             'price'        => 100,
-            'success_url'  => '1',
-            'callback_url' => "2",
-            'cancel_url'   => '3',
+            'success_url'  => 'success',
+            'callback_url' => "callback",
+            'cancel_url'   => 'cancel',
+        ];
+
+        $links = [
+            'success_url'  => 'success',
+            'callback_url' => "callback",
+            'cancel_url'   => 'cancel',
         ];
 
         $response = $this->getMockBuilder('GuzzleHttp\\Psr7\\Response')
@@ -129,6 +147,28 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('FrameworkException', 'Data from fritid.dk makes no sense: ');
 
-        $payment->generateOutput($participant, 100);
+        $payment->generateOutput($participant, 100, $links);
+    }
+
+    public function testGenerateOutput_lackingLinks()
+    {
+        $http = $this->getMockBuilder('GuzzleHttp\\Client')
+            ->setMethods(['request'])
+            ->getMock();
+
+        $participant = $this->getMockBuilder('Deltagere')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $payment = new \PaymentFritidDkLink(new \PaymentFritidDkApi('test-key', $http));
+
+        $url = \PaymentFritidDkApi::APIURL;
+
+        $http->expects($this->never())
+            ->method('request');
+
+        $this->setExpectedException('FrameworkException', 'Setup data lacks connection links: success, cancel, callback');
+
+        $payment->generateOutput($participant, 100, []);
     }
 }

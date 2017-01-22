@@ -668,7 +668,15 @@ class ApiModel extends Model {
         $deltager->package_gds       = 0;
         $deltager->insert();
 
-        return array('id' => $deltager->id, 'password' => $deltager->password, 'payment_url' => $this->url('participant_payment', array('hash' => md5($deltager->id . '-' . $deltager->password))));
+        $query = '
+INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICATE KEY UPDATE hash = ?
+';
+
+        $hash = makeRandomString(32);
+
+        $this->db->exec($query, [$deltager->id, $hash, $hash]);
+
+        return array('id' => $deltager->id, 'password' => $deltager->password, 'payment_url' => $this->url('participant_payment', array('hash' => $hash)));
     }
 
     public function addWear(array $json, $deltager = null) {
@@ -1386,7 +1394,7 @@ class ApiModel extends Model {
             'interpreter' => $participant->interpreter,
             'skills' => $participant->skills,
             'brugerkategori' => $participant->getBrugerKategori()->navn,
-            'payment_url' => $this->url('participant_payment', array('hash' => md5($participant->id . '-' . $participant->password))),
+            'payment_url' => $this->url('participant_payment', array('hash' => $this->getParticipantPaymentHash($participant))),
             'id' => $participant->id,
             'session' => '',
         );
@@ -1396,6 +1404,30 @@ class ApiModel extends Model {
         }
 
         return $return;
+    }
+
+    /**
+     * returns the payment hash for a participant
+     *
+     * @param Deltagere $participant Participant to get hash for
+     *
+     * @throws FrameworkException
+     * @access public
+     * @return string
+     */
+    public function getParticipantPaymentHash(Deltagere $participant)
+    {
+        $query = '
+SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
+';
+
+        $result = $this->db->query($query, [$participant->id]);
+
+        if (empty($result)) {
+            throw new FrameworkException('No payment hash available for participant');
+        }
+
+        return $result[0]['hash'];
     }
 
     /**
