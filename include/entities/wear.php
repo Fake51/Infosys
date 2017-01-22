@@ -41,7 +41,7 @@ class Wear extends DBObject
      */
     protected $tablename = 'wear';
 
-    private $grownup_sizes = array('XS', 'S', 'M', 'L', 'XL','2XL', '3XL','4XL','5XL','6XL');
+    private $grownup_sizes = array('XXS', 'XS', 'S', 'M', 'L', 'XL','2XL', '3XL','4XL','5XL','6XL');
 
     private $kids_sizes = array('92CM', '98CM', '104CM', '110CM', '116CM', '122CM', '128CM', '134CM', '140CM', '146CM', '152CM');
 
