@@ -689,7 +689,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
         $hash = makeRandomString(32);
 
-        $this->db->exec($query, [$deltager->id, $hash, $hash]);
+        $this->db->exec($query, [$participant->id, $hash, $hash]);
 
         return $hash;
     }
