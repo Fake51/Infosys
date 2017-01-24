@@ -819,8 +819,7 @@ class Deltagere extends DBObject implements AgeFulfilment
      */
     public function isArrangoer()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
         return $this->createEntity('BrugerKategorier')->findById($this->brugerkategori_id)->isArrangoer();

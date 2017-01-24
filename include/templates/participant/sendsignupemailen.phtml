@@ -13,7 +13,7 @@ You can pay via the online-payment functionality, by bank transfer or upon arriv
     <?php endif;?>
 </p>
 <p>
-You can pay online via the online payment solution at Rollespil.dk: <a href="<?= $this->payment_url;?>"><?= $this->payment_url;?></a>.
+You can pay online via the online payment solution at fritid.dk: <a href="<?= $this->payment_url;?>"><?= $this->payment_url;?></a>.
 </p>
 <p>
 Alternatively you can by bank transfer - please note that there is a fee on bank transfer amounting to 10 kr. (which makes the amount to pay <?= ($this->prices['total'] - $this->participant->betalt_beloeb + 10);?> kr.)<br/>
@@ -25,8 +25,15 @@ Alternatively you can by bank transfer - please note that there is a fee on bank
 When using the bank transfer option, REMEMBER to CLEARLY state NAME and PARTICIPANT ID (<?= $this->participant->id;?>)
 </p>
 <?php endif;?>
+<?php if ($this->participant_photo_upload_link) : ?>
+<p>As a volunteer/writer/designer you will receive a <strong>Fastaval ID card</strong>. Please use the following link to <strong>upload a photo</strong> for it: <a href="<?= $this->participant_photo_upload_link;?>"><?= $this->participant_photo_upload_link;?></a>
+</p>
+<?php endif;?>
 <p>
-<b>See you at Fastaval 2017!</b>
+<strong>Please note </strong>that you can change your signup details through the signup at www.fastaval.dk, up until <?= $this->end_signup_changes_date;?>. All you need is your e-mail address and this code: <?= $this->participant->password;?>
+</p>
+<p>
+<b>See you at Fastaval <?= $this->con_year;?>!</b>
 </p>
 <div>
 <table style="float: left; max-width: 49%;"><tbody>
@@ -188,7 +195,7 @@ case 'a':
 <tr><td>I want to play scenarios in Danish:                                   </td><td><?= strpos($this->participant->sprog, 'dansk') !== false ? 'Yes' : 'No';?></td></tr>
 <tr><td>I want to play scenarios in English:                                  </td><td><?= strpos($this->participant->sprog, 'engelsk') !== false ? 'Yes' : 'No';?></td></tr>
 <tr><td>I want to play scenarios in Scandinavian:                             </td><td><?= strpos($this->participant->sprog, 'skandinavisk') !== false ? 'Yes' : 'No';?></td></tr>
-<tr><td>I want to help make Fastaval 2017:                                    </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Yes' : 'No';?></td></tr>
+<tr><td>I want to help make Fastaval <?= $this->next_year;?>:                                    </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I want to help prep Fastaval from Monday:                             </td><td><?= $this->participant->ready_mandag === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I want to help prep Fastaval from Tuesday:                            </td><td><?= $this->participant->ready_tirsdag === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I want to help with interpreting at Fastaval:                         </td><td><?= $this->participant->interpreter === 'ja' ? 'Yes' : 'No';?></td></tr>

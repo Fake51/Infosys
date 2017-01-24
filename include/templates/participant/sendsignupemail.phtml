@@ -13,7 +13,7 @@ Du kan betale nu via online-betalingen eller bankoverførsel, eller når du anko
     <?php endif;?>
 </p>
 <p>
-Du kan betale online via betalingsløsningen hos Rollespil.dk: <a href="<?= $this->payment_url;?>"><?= $this->payment_url;?></a>.
+Du kan betale online via betalingsløsningen hos fritid.dk: <a href="<?= $this->payment_url;?>"><?= $this->payment_url;?></a>.
 </p>
 <p>
 Alternativt kan du betale via indbetalingskort eller bankoverførsel - bemærk at der er et gebyr på bankoverførsel på 10 kr (og betalingen bliver derfor <?= ($this->prices['total'] - $this->participant->betalt_beloeb + 10);?> kr.)<br/>
@@ -26,8 +26,15 @@ Alternativt kan du betale via indbetalingskort eller bankoverførsel - bemærk a
 Ved alle muligheder skal du HUSKE at anføre dit NAVN og DELTAGERNUMMER (<?= $this->participant->id;?>)
 </p>
 <?php endif;?>
+<?php if ($this->participant_photo_upload_link) : ?>
+<p>Som arrangør/forfatter/designer får du et <strong>Fastaval ID kort</strong>. Brug venligst dette link til at <strong>uploade et billede</strong> til det: <a href="<?= $this->participant_photo_upload_link;?>"><?= $this->participant_photo_upload_link;?></a>
+</p>
+<?php endif;?>
 <p>
-<b>Vi ses på Fastaval 2017!</b>
+<strong>Læg mærke til</strong> at du via tilmeldingen på www.fastaval.dk kan loade og ændre din tilmelding, helt frem til <?= $this->end_signup_changes_date;?>. Du skal bare bruge din email og denne kode: <?= $this->participant->password;?>
+</p>
+<p>
+<b>Vi ses på Fastaval <?= $this->con_year;?>!</b>
 </p>
 <div>
 <table style="float: left; max-width: 49%;"><tbody>
@@ -193,7 +200,7 @@ case 'a':
 <tr><td>Jeg vil spille på dansk:                                      </td><td><?= strpos($this->participant->sprog, 'dansk') !== false ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på engelsk:                                    </td><td><?= strpos($this->participant->sprog, 'engelsk') !== false ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på skandinavisk:                               </td><td><?= strpos($this->participant->sprog, 'skandinavisk') !== false ? 'Ja' : 'Nej';?></td></tr>
-<tr><td>Vil gerne med-arrangere Fastaval 2017:                        </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Ja' : 'Nej';?></td></tr>
+<tr><td>Vil gerne med-arrangere Fastaval <?= $this->next_year;?>:                        </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Klargøre skolen fra mandag:                                   </td><td><?= $this->participant->ready_mandag === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Klargøre skolen fra tirsdag:                                  </td><td><?= $this->participant->ready_tirsdag === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil være simultantolk:                                    </td><td><?= $this->participant->interpreter === 'ja' ? 'Ja' : 'Nej';?></td></tr>

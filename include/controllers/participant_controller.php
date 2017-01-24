@@ -1610,14 +1610,19 @@ class ParticipantController extends Controller
     {
         $this->model->setupSignupEmail($participant, $this->page);
 
+        $year = date('Y', strtotime($this->config->get('con.start')));
+
         if ($participant->speaksDanish()) {
-            $title = 'Tilmelding til Fastaval 2017';
+            $title = 'Tilmelding til Fastaval ' . $year;
             $this->page->setTemplate('participant/sendsignupemail');
 
         } else {
-            $title = 'Signup for Fastaval 2017';
+            $title = 'Signup for Fastaval ' . $year;
             $this->page->setTemplate('participant/sendsignupemailen');
         }
+
+        $this->page->con_year  = $year;
+        $this->page->next_year = $year + 1;
 
         $mail = new Mail();
 

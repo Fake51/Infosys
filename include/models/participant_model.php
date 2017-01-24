@@ -2235,7 +2235,13 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $page->activities  = $participant->getTilmeldinger();
         $page->gds         = $participant->getGDSTilmeldinger();
         $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
-        $page->payment_day = date('d/m-Y', $paytime);
+
+        if ($participant->speaksDanish()) {
+            $page->payment_day = date('d/m-Y', $paytime);
+        } else {
+            $page->payment_day = date('M d, Y', $paytime);
+        }
+
         $page->food        = $participant->getMadtider();
 
         $entrance = array();
@@ -2325,6 +2331,16 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         $page->entrance = $entrance;
         $page->prices   = $prices;
+
+        if ($participant->isArrangoer()) {
+            $page->participant_photo_upload_link = $this->getPhotoUploadLink($participant);
+        }
+
+        if ($participant->speaksDanish()) {
+            $page->end_signup_changes_date = date('d/m-Y', $paytime - 86400);
+        } else {
+            $page->end_signup_changes_date = date('M d, Y', $paytime - 86400);
+        }
 
         return $participant;
     }
