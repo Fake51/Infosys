@@ -25,7 +25,7 @@
  * @link      http://www.github.com/Fake51/Infosys
  */
 
-/** 
+/**
  * handles all data fetching for the participant MVC
  *
  * @category Infosys
@@ -99,7 +99,7 @@ class ParticipantModel extends Model
     }
 
     /**
-     * returns 
+     * returns
      *
      * @access public
      * @return array
@@ -441,7 +441,7 @@ class ParticipantModel extends Model
     }
 
     /**
-     * returns all bruger kategorier 
+     * returns all bruger kategorier
      *
      * @access public
      * @return bool|array
@@ -452,7 +452,7 @@ class ParticipantModel extends Model
     }
 
     /**
-     * returns all bruger kategorier 
+     * returns all bruger kategorier
      *
      * @access public
      * @return bool|array
@@ -474,7 +474,7 @@ class ParticipantModel extends Model
     }
 
     /**
-     * returns all bruger kategorier 
+     * returns all bruger kategorier
      *
      * @access public
      * @return bool|array
@@ -820,7 +820,7 @@ class ParticipantModel extends Model
             }
         }
     }
-    
+
     /**
      * updates a deltagers GDS aktiviteter
      *
@@ -1717,13 +1717,13 @@ SQL;
                         " . $sort_dir . ", ";
                 }
             }
-            
+
             $order = substr_replace($order, "", -2);
             if ($order == "ORDER BY") {
                 $order = "";
             }
         }
-    
+
         $where = '';
 
         if ($get->sSearch != "") {
@@ -2191,7 +2191,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         try {
             $hash = $api->getParticipantPaymentHash($participant);
-        
+
         } catch (FrameworkException $e) {
             $hash = $api->setParticipantPaymentHash($participant);
         }
@@ -2223,18 +2223,22 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         $api = $this->factory('Api');
 
-        try {
-            $hash = $api->getParticipantPaymentHash($participant);
-        
-        } catch (FrameworkException $e) {
-            $hash = $api->setParticipantPaymentHash($participant);
-        }
-
         $page->participant = $participant;
         $page->wear        = $participant->getWear();
         $page->activities  = $participant->getTilmeldinger();
         $page->gds         = $participant->getGDSTilmeldinger();
-        $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
+
+        if ($participant->id) {
+            try {
+                $hash = $api->getParticipantPaymentHash($participant);
+
+            } catch (FrameworkException $e) {
+                $hash = $api->setParticipantPaymentHash($participant);
+            }
+
+            $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
+
+        }
 
         if ($participant->speaksDanish()) {
             $page->payment_day = date('d/m-Y', $paytime);
