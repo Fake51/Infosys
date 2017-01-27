@@ -317,6 +317,12 @@ class ApiController extends Controller
             $birthdate_timestamp = strtotime($this->page->request->get->birthdate);
         }
 
+        $participant_type = null;
+
+        if ($this->page->request->get->brugertype) {
+            $participant_type = $this->model->parseParticipantType($this->page->request->get->brugertype);
+        }
+
         if (preg_match('/\\d{4}-\\d{2}-\\d{2}/', $this->vars['id'])) {
             $this->jsonOutput($this->model->getActivityDataForDay($this->vars['id'], !empty($this->vars['all']), false, $timestamp));
         } elseif ($this->vars['id'] === '*') {
@@ -327,7 +333,7 @@ class ApiController extends Controller
             $ids = explode(',', $this->vars['id']);
         }
 
-        $this->jsonOutput($this->model->getActivityData($ids, !empty($this->vars['all']), false, $timestamp, 1, $birthdate_timestamp));
+        $this->jsonOutput($this->model->getActivityData($ids, !empty($this->vars['all']), false, $timestamp, 1, $birthdate_timestamp, $participant_type));
     }
 
     /**

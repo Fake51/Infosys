@@ -94,15 +94,16 @@ class ApiModel extends Model {
      * build the activity structure for the
      * JSON api call to get details of activities
      *
-     * @param array $ids        IDs of activities to return data for
-     * @param bool  $all        True to include activities that cant be signed up for
-     * @param bool  $app_output True if creating output for mobile app
-     * @param int   $timestamp  Timestamp to fetch changes after
+     * @param array    $ids              IDs of activities to return data for
+     * @param bool     $all              True to include activities that cant be signed up for
+     * @param bool     $app_output       True if creating output for mobile app
+     * @param int      $timestamp        Timestamp to fetch changes after
+     * @param DBObject $participant_type Type of participant to find activities for
      *
      * @access public
      * @return array
      */
-    public function getActivityData(array $ids, $all = false, $app_output = false, $timestamp = 0, $version = 1, $birthdate_timestamp = null) {
+    public function getActivityData(array $ids, $all = false, $app_output = false, $timestamp = 0, $version = 1, $birthdate_timestamp = null, $participant_type = null) {
         $select = $this->createEntity('Aktiviteter')
             ->getSelect();
 
@@ -112,6 +113,10 @@ class ApiModel extends Model {
 
         if ($timestamp) {
             $select->setWhere('updated', '>', date('Y-m-d H:i:s', $timestamp));
+        }
+
+        if ($participant_type && $participant_type->navn === 'Juniordeltager') {
+            $select->setWhere('type', '=', 'junior');
         }
 
         $result = $this->createEntity('Aktiviteter')->findBySelectMany($select);
@@ -543,6 +548,26 @@ class ApiModel extends Model {
         }
         return $return;
     }
+
+    /**
+     * attempts to parse a text string to a participant category
+     *
+     * @param string $type String indicating type
+     *
+     * @access public
+     * @return BrugerKategorier|false
+     */
+    public function parseParticipantType($type)
+    {
+        $select = $this->createEntity('BrugerKategorier')
+            ->getSelect()
+            ->setWhere('navn', '=', str_replace('arrangoer', 'arrangør', $type));
+
+        $usertype_obj = $this->createEntity('BrugerKategorier')->findBySelect($select);
+
+        return $usertype_obj && $usertype_obj->id ? $usertype_obj : false;
+    }
+
 
     /**
      * build the wear structure for the
