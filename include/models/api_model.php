@@ -681,7 +681,7 @@ class ApiModel extends Model {
      * @access public
      * @return string
      */
-    public function setParticipantPaymentHash(\Deltagere $participant)
+    public function setParticipantPaymentHash(DBObject $participant)
     {
         $query = '
 INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICATE KEY UPDATE hash = ?
@@ -992,7 +992,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
      * @access protected
      * @return void
      */
-    protected function cleanParticipantSignup(Deltagere $participant)
+    protected function cleanParticipantSignup(DBObject $participant)
     {
         $this->db->exec('DELETE FROM deltagere_tilmeldinger WHERE deltager_id = ?', $participant->id);
         $this->db->exec('DELETE FROM deltagere_madtider WHERE deltager_id = ?', $participant->id);
@@ -1430,7 +1430,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
      * @access public
      * @return string
      */
-    public function getParticipantPaymentHash(Deltagere $participant)
+    public function getParticipantPaymentHash(DBObject $participant)
     {
         $query = '
 SELECT hash FROM participantpaymenthashes WHERE participant_id = ?

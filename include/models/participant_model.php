@@ -2732,7 +2732,7 @@ ORDER BY
      * @access public
      * @return string
      */
-    public function getPhotoUploadLink(\Deltagere $participant)
+    public function getPhotoUploadLink(DBObject $participant)
     {
         $query = '
 SELECT identifier
@@ -2766,7 +2766,7 @@ INSERT INTO participantphotoidentifiers SET participant_id = ?, identifier = ?
      * @access public
      * @return string
      */
-    public function fetchCroppedPhoto(\Deltagere $participant)
+    public function fetchCroppedPhoto(DBObject $participant)
     {
         $query = '
 SELECT identifier
