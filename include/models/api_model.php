@@ -115,8 +115,8 @@ class ApiModel extends Model {
             $select->setWhere('updated', '>', date('Y-m-d H:i:s', $timestamp));
         }
 
-        if ($participant_type && $participant_type->navn === 'Juniordeltager') {
-            $select->setWhere('type', '=', 'junior');
+        if ($participant_type && $participant_type->navn !== 'Juniordeltager') {
+            $select->setWhere('type', '!=', 'junior');
         }
 
         $result = $this->createEntity('Aktiviteter')->findBySelectMany($select);
@@ -132,7 +132,12 @@ class ApiModel extends Model {
             $age_at_con_start = date('Y', strtotime($this->config->get('con.start'))) - date('Y', $birthdate_timestamp);
 
             $filter = function ($x) use ($age_at_con_start) {
-                return !(($x->getMinAge() && $age_at_con_start < $x->getMinAge()) || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start));
+                return !(
+                    ($x->getMinAge() && $age_at_con_start < $x->getMinAge())
+                    || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
+                    || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
+                    || ($age_at_con_start < 13 && $x->type !== 'junior')
+                );
             };
 
             $result = array_filter($result, $filter);
