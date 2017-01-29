@@ -213,4 +213,140 @@ class Aktiviteter extends DBObject
             return 'Ingen';
         }
     }
+
+    /**
+     * returns minimum required age for the activity, if any
+     *
+     * @access public
+     * @return int|false
+     */
+    public function getMinAge()
+    {
+        return $this->getAgeRequirement('min');
+    }
+
+    /**
+     * returns maximum required age for the activity, if any
+     *
+     * @access public
+     * @return Int|false
+     */
+    public function getMaxAge()
+    {
+        return $this->getAgeRequirement('max');
+    }
+
+    /**
+     * returns age requirement
+     *
+     * @param string $type Type of requirement
+     *
+     * @access protected
+     * @return int|false
+     */
+    protected function getAgeRequirement($type)
+    {
+        $query = '
+SELECT age
+FROM activityageranges
+WHERE
+    activity_id = ?
+    AND requirementtype = ?
+';
+
+        $result = $this->db->query($query, [$this->id, $type]);
+
+        if (count($result)) {
+            return intval($result[0]['age']);
+        }
+
+        return false;
+    }
+
+    /**
+     * removes a max age requirement
+     *
+     * @access public
+     * @return self
+     */
+    public function removeMaxAge()
+    {
+        return $this->removeAgeRequirement('max');
+    }
+
+    /**
+     * removes a max age requirement
+     *
+     * @access public
+     * @return self
+     */
+    public function removeMinAge()
+    {
+        return $this->removeAgeRequirement('min');
+    }
+
+    /**
+     * removes an age requirement
+     *
+     * @param string $type Type of requirement to remove
+     *
+     * @access protected
+     * @return self
+     */
+    protected function removeAgeRequirement($type)
+    {
+        $query = '
+DELETE FROM activityageranges WHERE activity_id = ? AND requirementtype = ?
+';
+
+        $this->db->exec($query, [$this->id, $type]);
+
+        return $this;
+    }
+
+    /**
+     * sets a max age requirement
+     *
+     * @param int $age Age to set
+     *
+     * @access public
+     * @return self
+     */
+    public function setMaxAge($age)
+    {
+        return $this->setAgeRequirement('max', $age);
+    }
+
+    /**
+     * sets a min age requirement
+     *
+     * @param int $age Age to set
+     *
+     * @access public
+     * @return self
+     */
+    public function setMinAge($age)
+    {
+        return $this->setAgeRequirement('min', $age);
+    }
+
+    /**
+     * sets an age requirement
+     *
+     * @param string $type Type of requirement to set
+     * @param int    $age  Age to set
+     *
+     * @access protected
+     * @return self
+     */
+    protected function setAgeRequirement($type, $age)
+    {
+        $query = '
+INSERT INTO activityageranges SET activity_id = ?, requirementtype = ?, age = ? ON DUPLICATE KEY UPDATE age = ?
+';
+
+        $this->db->exec($query, [$this->id, $type, $age, $age]);
+
+        return $this;
+    }
 }

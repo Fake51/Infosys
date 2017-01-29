@@ -859,6 +859,10 @@ div#aktivitetbox form#aktivitet-edit fieldset input.aktivitet-title {
     width: 750px;
 }
 
+#aktivitet-edit label {
+    display: inline;
+}
+
 span.group-status span.needs {
     background-color: #f03333;
     padding: 0px 5px 0px 5px;

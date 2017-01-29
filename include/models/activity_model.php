@@ -105,7 +105,25 @@ class ActivityModel extends Model {
         $activity->varighed_per_afvikling = str_replace(',', '.', $activity->varighed_per_afvikling);
         $activity->updated                = date('Y-m-d H:i:s');
 
-        return $activity->update();
+        if (!$activity->update()) {
+            return false;
+        }
+
+        if (empty($post->max_age)) {
+            $activity->removeMaxAge();
+
+        } else {
+            $activity->setMaxAge($post->max_age);
+        }
+
+        if (empty($post->min_age)) {
+            $activity->removeMinAge();
+
+        } else {
+            $activity->setMinAge($post->min_age);
+        }
+
+        return true;
     }
 
     /**

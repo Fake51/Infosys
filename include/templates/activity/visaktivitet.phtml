@@ -26,49 +26,52 @@ $this->registerLateLoadJS('activity.js');
             <legend>Aktivitet - <a href="<?= $this->url('edit_aktivitet', array('id' => $this->aktivitet->id));?>"><i>Ret/slet</i></a> - <a id='popup_creator_link' href='#'><i>Opret afvikling</i></a></legend>
             <table>
                 <tr>
-                    <td colspan='3'><b>Id:</b> <i><?= $this->aktivitet->id;?></i></td>
+                    <td colspan='3'><strong>Id:</strong> <i><?= $this->aktivitet->id;?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Titel:</b> <i><?= e($this->aktivitet->navn);?></i></td>
+                    <td colspan='3'><strong>Titel:</strong> <i><?= e($this->aktivitet->navn);?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Engelsk titel:</b> <i><?= e($this->aktivitet->title_en);?></i></td>
+                    <td colspan='3'><strong>Engelsk titel:</strong> <i><?= e($this->aktivitet->title_en);?></i></td>
                 </tr>
                 <tr>
                     <td colspan='3'><strong>Forfatter(e):</strong> <i><?= e($this->aktivitet->author);?></i></td>
                 </tr>
                 <tr>
-                    <td><b>WP Id:</b> <i><?= $this->aktivitet->wp_link;?></i></td>
-                    <td><b>Spiltype:</b> <i><?= e($this->aktivitet->type);?></i></td>
-                    <td><b>Varighed:</b> <i><?= e($this->aktivitet->varighed_per_afvikling);?> timer</i></td>
+                    <td><strong>WP Id:</strong> <i><?= $this->aktivitet->wp_link;?></i></td>
+                    <td><strong>Spiltype:</strong> <i><?= e($this->aktivitet->type);?></i></td>
+                    <td><strong>Varighed:</strong> <i><?= e($this->aktivitet->varighed_per_afvikling);?> timer</i></td>
                 </tr>
                 <tr>
-                    <td><b>Min Spillere:</b> <i id="min-gamers"><?= e($this->aktivitet->min_deltagere_per_hold);?></i></td>
-                    <td><b>Max Spillere:</b> <i id="max-gamers"><?= e($this->aktivitet->max_deltagere_per_hold);?></i></td>
-                    <td><b>Spilledere:</b> <i id="gms-required"><?= e($this->aktivitet->spilledere_per_hold);?></i></td>
+                    <td><strong>Min Spillere:</strong> <i id="min-gamers"><?= e($this->aktivitet->min_deltagere_per_hold);?></i></td>
+                    <td><strong>Max Spillere:</strong> <i id="max-gamers"><?= e($this->aktivitet->max_deltagere_per_hold);?></i></td>
+                    <td><strong>Spilledere:</strong> <i id="gms-required"><?= e($this->aktivitet->spilledere_per_hold);?></i></td>
                 </tr>
                 <tr>
-                    <td><b>Pris:</b> <i><?= e($this->aktivitet->pris);?></i></td>
-                    <td><b>Kan tilmeldes:</b> <i><?= $this->aktivitet->kan_tilmeldes;?></i></td>
-                    <td><b>Fylder lokale:</b> <i><?= $this->aktivitet->lokale_eksklusiv;?></i></td>
+                    <td><strong>Pris:</strong> <i><?= e($this->aktivitet->pris);?></i></td>
+                    <td><strong>Kan tilmeldes:</strong> <i><?= $this->aktivitet->kan_tilmeldes;?></i></td>
+                    <td><strong>Fylder lokale:</strong> <i><?= $this->aktivitet->lokale_eksklusiv;?></i></td>
                 </tr>
                 <tr>
-                    <td><b>Sprog:</b> <i><?= e($this->aktivitet->sprog);?></i></td>
-                    <td><b>Udelukker samtidige aktiviteter:</b> <i><?= $this->aktivitet->tids_eksklusiv;?></i></td>
-                    <td><b>Kan spilles flere gange:</b> <i><?= e($this->aktivitet->replayable);?></i></td>
+                    <td><strong>Sprog:</strong> <i><?= e($this->aktivitet->sprog);?></i></td>
+                    <td><strong>Udelukker samtidige aktiviteter:</strong> <i><?= $this->aktivitet->tids_eksklusiv;?></i></td>
+                    <td><strong>Kan spilles flere gange:</strong> <i><?= e($this->aktivitet->replayable);?></i></td>
                 </tr>
                 <tr>
-                    <td><b>Skjult:</b> <i><?= e($this->aktivitet->hidden);?></i></td>
-                    <td><b>Karmatype:</b> <i><?= e($this->aktivitet->getMeaningfulKarmatype());?></i></td>
+                    <td><strong>Skjult:</strong> <i><?= e($this->aktivitet->hidden);?></i></td>
+                    <td><strong>Karmatype:</strong> <i><?= e($this->aktivitet->getMeaningfulKarmatype());?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Note:</b> <i><?= nl2br(htmlspecialchars($this->aktivitet->note, ENT_QUOTES));?></i></td>
+                    <td colspan="2"><strong>Aldersbegrænsning:</strong> Min: <strong><?= e($this->aktivitet->getMinAge());?></strong>,  max: <strong><?= e($this->aktivitet->getMaxAge());?></strong></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Foromtale:</b> <i><?= nl2br(htmlspecialchars($this->aktivitet->foromtale, ENT_QUOTES));?></i></td>
+                    <td colspan='3'><strong>Note:</strong> <i><?= nl2br(htmlspecialchars($this->aktivitet->note, ENT_QUOTES));?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Engelsk foromtale:</b> <i><?= nl2br(htmlspecialchars($this->aktivitet->description_en, ENT_QUOTES));?></i></td>
+                    <td colspan='3'><strong>Foromtale:</strong> <i><?= nl2br(htmlspecialchars($this->aktivitet->foromtale, ENT_QUOTES));?></i></td>
+                </tr>
+                <tr>
+                    <td colspan='3'><strong>Engelsk foromtale:</strong> <i><?= nl2br(htmlspecialchars($this->aktivitet->description_en, ENT_QUOTES));?></i></td>
                 </tr>
             </table>
         </fieldset>
