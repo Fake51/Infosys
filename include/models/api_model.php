@@ -137,6 +137,7 @@ class ApiModel extends Model {
                     || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
                     || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
                     || ($age_at_con_start < 13 && $x->type !== 'junior')
+                    || ($age_at_con_start > 15 && $x->type === 'junior')
                 );
             };
 
