@@ -129,10 +129,10 @@ class ApiModel extends Model {
         }
 
         if ($birthdate_timestamp) {
-            $filter = function ($x) use ($birthdate_timestamp) {
-                return date('Y', strtotime('2016-03-23')) - date('Y', $birthdate_timestamp) < 13 && in_array($x->id, [247, 238])
-                    || date('Y', strtotime('2016-03-23')) - date('Y', $birthdate_timestamp) >= 15 && !in_array($x->id, [247])
-                    || date('Y', strtotime('2016-03-23')) - date('Y', $birthdate_timestamp) >= 13 && date('Y', strtotime('2016-03-23')) - date('Y', $birthdate_timestamp) < 15;
+            $age_at_con_start = date('Y', strtotime($this->config->get('con.start'))) - date('Y', $birthdate_timestamp);
+
+            $filter = function ($x) use ($age_at_con_start) {
+                return !(($x->getMinAge() && $age_at_con_start < $x->getMinAge()) || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start));
             };
 
             $result = array_filter($result, $filter);
