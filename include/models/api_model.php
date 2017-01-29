@@ -129,7 +129,9 @@ class ApiModel extends Model {
         }
 
         if ($birthdate_timestamp) {
-            $age_at_con_start = date('Y', strtotime($this->config->get('con.start'))) - date('Y', $birthdate_timestamp);
+            $time_diff = (new DateTime($this->config->get('con.start')))->diff(new DateTime(date('Y-m-d', $birthdate_timestamp)));
+
+            $age_at_con_start = $time_diff->y;
 
             $filter = function ($x) use ($age_at_con_start) {
                 return !(
