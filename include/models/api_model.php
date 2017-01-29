@@ -115,7 +115,7 @@ class ApiModel extends Model {
             $select->setWhere('updated', '>', date('Y-m-d H:i:s', $timestamp));
         }
 
-        if ($participant_type && $participant_type->navn !== 'Juniordeltager') {
+        if (!$participant_type || $participant_type->navn !== 'Juniordeltager') {
             $select->setWhere('type', '!=', 'junior');
         }
 
