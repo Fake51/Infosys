@@ -2336,7 +2336,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $page->entrance = $entrance;
         $page->prices   = $prices;
 
-        if ($participant->isArrangoer()) {
+        if ($participant->id && $participant->isArrangoer()) {
             $page->participant_photo_upload_link = $this->getPhotoUploadLink($participant);
         }
 
