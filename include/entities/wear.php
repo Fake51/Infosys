@@ -43,7 +43,7 @@ class Wear extends DBObject
 
     private $grownup_sizes = array('XXS', 'XS', 'S', 'M', 'L', 'XL','2XL', '3XL','4XL','5XL','6XL');
 
-    private $kids_sizes = array('2ÅR', '4/6ÅR', '8/10ÅR', '12/14ÅR');
+    private $kids_sizes = array('2ÅR', '4/6ÅR', '8/10ÅR', '12/14ÅR', 'JuniorXS');
 
     /**
      * checks if a given size is within the sizerange of this wear-object
