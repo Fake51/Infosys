@@ -2262,6 +2262,10 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         );
 
         foreach ($participant->getIndgang() as $indgang) {
+            if (!$indgang) {
+                continue;
+            }
+
             if ($indgang->isAleaMembership()) {
                 $entrance['alea-membership'] = true;
                 $prices['alea']              = $indgang->pris;
