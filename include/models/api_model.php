@@ -701,7 +701,7 @@ class ApiModel extends Model {
         $deltager->package_gds       = 0;
         $deltager->insert();
 
-        $this->setParticipantPaymentHash($deltager);
+        $hash = $this->setParticipantPaymentHash($deltager);
 
         return array('id' => $deltager->id, 'password' => $deltager->password, 'payment_url' => $this->url('participant_payment', array('hash' => $hash)));
     }
