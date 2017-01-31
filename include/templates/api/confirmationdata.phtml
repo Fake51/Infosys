@@ -2,9 +2,6 @@
 <tbody>
 <tr><th colspan="2" class="large">PERSONLIGE OPLYSNINGER</th></tr>
 <tr><td>Navn:                                  </td><td><?= e($this->participant->fornavn . ' ' . $this->participant->efternavn);?></td></tr>
-<tr><td>Adresse:                               </td><td><?= e($this->participant->adresse1 . ' ' . $this->participant->adresse2);?></td></tr>
-<tr><td>Postnr.:                               </td><td><?= e($this->participant->postnummer);?></td></tr>
-<tr><td>By:                                    </td><td><?= e($this->participant->by);?></td></tr>
 <tr><td>Land:                                  </td><td><?= e($this->participant->land);?></td></tr>
 <?php if ($this->participant->mobiltlf) : ?>
 <tr><td>Mobil (SMS-service under Fastaval):    </td><td><?= e($this->participant->mobiltlf);?> (<?= $this->participant->medbringer_mobil === 'ja' ? 'Ja' : 'Nej';?>)</td></tr>
