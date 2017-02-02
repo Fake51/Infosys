@@ -2181,7 +2181,10 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
      */
     public function setupPaymentReminderEmail(Deltagere $participant, Page $page)
     {
-        $paytime = strtotime($participant->signed_up) + 86400;
+        $pay_by_time  = strtotime($this->config->get('con.paymentlimit'));
+        $signup_time = strtotime($participant->signed_up) + 86400;
+
+        $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
 
         if ($paytime < time()) {
             $paytime = time() + 86400;
@@ -2215,10 +2218,10 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
      */
     public function setupSignupEmail(DBObject $participant, Page $page)
     {
-        $signup_end  = strtotime($this->config->get('con.signupend'));
+        $pay_by_time  = strtotime($this->config->get('con.paymentlimit'));
         $signup_time = strtotime($participant->signed_up) + 86400;
 
-        $paytime = $signup_end > $signup_time ? $signup_end : $signup_time;
+        $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
 
         if ($paytime < time()) {
             $paytime = time() + 86400;
