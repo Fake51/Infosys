@@ -2215,7 +2215,10 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
      */
     public function setupSignupEmail(DBObject $participant, Page $page)
     {
-        $paytime = strtotime($participant->signed_up) + 86400;
+        $signup_end  = strtotime($this->config->get('con.signupend'));
+        $signup_time = strtotime($participant->signed_up) + 86400;
+
+        $paytime = $signup_end > $signup_time ? $signup_end : $signup_time;
 
         if ($paytime < time()) {
             $paytime = time() + 86400;
