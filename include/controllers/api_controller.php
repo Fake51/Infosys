@@ -719,7 +719,7 @@ class ApiController extends Controller
 
         $lang = !empty($this->page->request->get->lang) ? $this->page->request->get->lang : '';
 
-        if ($lang === 'en' || !$participant->speaksDanish()) {
+        if ($lang === 'en' || !$this->page->participant->speaksDanish()) {
             $this->page->setTemplate('confirmationdataen');
 
         } else {
