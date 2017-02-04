@@ -717,7 +717,7 @@ class ApiController extends Controller
 
         $this->page->participant = $this->model->parseSignupConfirmation($this->json);
 
-        $lang = !empty($this->page->request->get->lang) ? $this->page->request->get->lang : '';
+        $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
 
         if ($lang === 'en' || !$this->page->participant->speaksDanish()) {
             $this->page->setTemplate('confirmationdataen');

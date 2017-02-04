@@ -1612,7 +1612,7 @@ class ParticipantController extends Controller
 
         $year = date('Y', strtotime($this->config->get('con.start')));
 
-        $lang = !empty($this->page->request->get->lang) ? $this->page->request->get->lang : '';
+        $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
 
         if ($lang === 'en' || !$participant->speaksDanish()) {
             $title = 'Signup for Fastaval ' . $year;
@@ -1642,7 +1642,7 @@ class ParticipantController extends Controller
             $this->hardRedirect('/');
         }
 
-        $lang = !empty($this->page->request->get->lang) ? $this->page->request->get->lang : '';
+        $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
 
         $this->page->participant = $participant;
         $this->page->danish      = $participant->speaksDanish() && $lang !== 'en';

@@ -2246,7 +2246,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         }
 
-        $lang = !empty($page->request->get->lang) ? $page->request->get->lang : '';
+        $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
 
         if ($participant->speaksDanish() && $lang !== 'en') {
             $page->payment_day = date('d/m-Y', $paytime);
