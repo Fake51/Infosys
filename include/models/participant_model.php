@@ -2246,7 +2246,9 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         }
 
-        if ($participant->speaksDanish()) {
+        $lang = !empty($page->request->get->lang) ? $page->request->get->lang : '';
+
+        if ($participant->speaksDanish() && $lang !== 'en') {
             $page->payment_day = date('d/m-Y', $paytime);
         } else {
             $page->payment_day = date('M d, Y', $paytime);
@@ -2350,7 +2352,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             $page->participant_photo_upload_link = $this->getPhotoUploadLink($participant);
         }
 
-        if ($participant->speaksDanish()) {
+        if ($participant->speaksDanish() && $lang !== 'en') {
             $page->end_signup_changes_date = date('d/m-Y', $paytime - 86400);
         } else {
             $page->end_signup_changes_date = date('M d, Y', $paytime - 86400);

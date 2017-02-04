@@ -831,7 +831,6 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             }
 
             $deltager->removeActivitySignups();
-            //$this->db->exec("DELETE FROM deltagere_tilmeldinger WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['activity'] as $activity) {
                 $schedule = $this->createEntity('Afviklinger')->findById($activity['schedule_id']);
@@ -843,7 +842,6 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
                 } else {
                     $deltager->setAktivitetTilmelding($schedule, $activity['priority'], $activity['type']);
                 }
-                //$this->db->exec("INSERT INTO deltagere_tilmeldinger (deltager_id, prioritet, afvikling_id, tilmeldingstype) VALUES (?, ?, ?, ?)", $deltager->id, $activity['priority'], $activity['schedule_id'], $activity['type']);
             }
         } catch (Exception $e) {
             $e->logException();
