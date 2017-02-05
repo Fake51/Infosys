@@ -79,6 +79,7 @@ class PaymentFritidDkApi
         $data = [
             'fritid_key'   => $this->api_key,
             'price'        => intval($price),
+            'email'        => $participant->email,
         ];
 
         $response = $this->http_helper->request('POST', self::APIURL, ['json' => array_merge($data, $connection_links)]);

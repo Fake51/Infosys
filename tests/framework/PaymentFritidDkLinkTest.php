@@ -14,7 +14,12 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
 
         $participant = $this->getMockBuilder('Deltagere')
             ->disableOriginalConstructor()
+            ->setMethods(['__get'])
             ->getMock();
+
+        $participant->method('__get')
+            ->with('email')
+            ->willReturn('test@example.com');
 
         $payment = new \PaymentFritidDkLink(new \PaymentFritidDkApi('test-key', $http));
 
@@ -26,6 +31,7 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
             'success_url'  => 'success',
             'callback_url' => "callback",
             'cancel_url'   => 'cancel',
+            'email'        => 'test@example.com',
         ];
 
         $links = [
@@ -62,7 +68,12 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
 
         $participant = $this->getMockBuilder('Deltagere')
             ->disableOriginalConstructor()
+            ->setMethods(['__get'])
             ->getMock();
+
+        $participant->method('__get')
+            ->with('email')
+            ->willReturn('test@example.com');
 
         $payment = new \PaymentFritidDkLink(new \PaymentFritidDkApi('test-key', $http));
 
@@ -74,6 +85,7 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
             'success_url'  => 'success',
             'callback_url' => "callback",
             'cancel_url'   => 'cancel',
+            'email'        => 'test@example.com',
         ];
 
         $links = [
@@ -108,7 +120,12 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
 
         $participant = $this->getMockBuilder('Deltagere')
             ->disableOriginalConstructor()
+            ->setMethods(['__get'])
             ->getMock();
+
+        $participant->method('__get')
+            ->with('email')
+            ->willReturn('test@example.com');
 
         $payment = new \PaymentFritidDkLink(new \PaymentFritidDkApi('test-key', $http));
 
@@ -120,6 +137,7 @@ class PaymentFritidDkLinkTest extends \PHPUnit_Framework_TestCase
             'success_url'  => 'success',
             'callback_url' => "callback",
             'cancel_url'   => 'cancel',
+            'email'        => 'test@example.com',
         ];
 
         $links = [
