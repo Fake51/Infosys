@@ -205,8 +205,11 @@ WHERE
             }
 
         }
-var_dump($ids);
-exit;
 
+        $select = $this->createEntity('Deltagere')->getSelect();
+
+        $select->setWhere('id', 'in', $ids);
+
+        return $this->createEntity('Deltagere')->findBySelectMany($select);
     }
 }
