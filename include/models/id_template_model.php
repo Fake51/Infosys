@@ -231,4 +231,63 @@ DELETE FROM idtemplates_items WHERE template_id = ?
 
         }, $this->createEntity('IdTemplate')->findAll());
     }
+
+    /**
+     * returns user category template data
+     *
+     * @access public
+     * @return array
+     */
+    public function fetchCategoryData()
+    {
+        $connections = array_reduce($this->db->query('SELECT category_id, template_id FROM brugerkategorier_idtemplates'), function ($agg, $next) {
+            $agg[$next['category_id']] = $next['template_id'];
+
+            return $agg;
+        }, []);
+
+        $category_map = function ($x) use ($connections) {
+            return [
+                    'id'          => intval($x->id),
+                    'name'        => ucfirst($x->navn),
+                    'template_id' => isset($connections[$x->id]) ? intval($connections[$x->id]) : 0,
+                   ];
+        };
+
+        return array_map($category_map, $this->createEntity('BrugerKategorier')->findAll());
+    }
+
+    /**
+     * updates the user category template relationship
+     *
+     * @param int $category_id ID of category to update
+     * @param int $template_id ID of template to update
+     *
+     * @access public
+     * @return bool
+     */
+    public function updateCategoryTemplate($category_id, $template_id)
+    {
+        if (!$template_id) {
+            $query = 'DELETE FROM brugerkategorier_idtemplates WHERE category_id = ?';
+
+            try {
+                $this->db->exec($query, [$category_id]);
+                return true;
+            
+            } catch (FrameworkException $e) {
+                return false;
+            }
+        }
+
+        $query = 'INSERT INTO brugerkategorier_idtemplates SET category_id = ?, template_id = ? ON DUPLICATE KEY UPDATE template_id = ?';
+
+        try {
+            $this->db->exec($query, [$category_id, $template_id, $template_id]);
+            return true;
+        
+        } catch (FrameworkException $e) {
+            return false;
+        }
+    }
 }

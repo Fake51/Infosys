@@ -75,6 +75,8 @@ class IdTemplateController extends Controller
 
         $this->page->template_data = $this->model->fetchTemplateData();
 
+        $this->page->category_data = $this->model->fetchCategoryData();
+
         $this->page->layout_template = 'noincludes.phtml';
     }
 
@@ -158,6 +160,33 @@ class IdTemplateController extends Controller
 
         if (!$this->model->updateTemplate(intval($this->vars['id']), $data)) {
             $this->page->setStatus(500, 'Failed to update template');
+            return;
+        }
+    }
+
+    /**
+     * updates a category template relationship, if possible
+     *
+     * @access public
+     * @return void
+     */
+    public function updateCategoryTemplate()
+    {
+        $this->page->setTemplate('generic/json');
+        $this->page->layout_template = 'contentonly.phtml';
+
+        if (empty($this->vars['id'])) {
+            $this->page->setStatus(400, 'Lacking id of category to update');
+            return;
+        }
+
+        if (!$this->page->request->isPost()) {
+            $this->page->setStatus(400, 'Lacking update data');
+            return;
+        }
+
+        if (!$this->model->updateCategoryTemplate(intval($this->vars['id']), intval($this->page->request->post->template_id))) {
+            $this->page->setStatus(500, 'Failed to update category');
             return;
         }
     }

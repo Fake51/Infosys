@@ -69,6 +69,7 @@
                 },
                 success: function () {
                     syncListItemName(appState[activeTemplateIndex].id, appState[activeTemplateIndex].name);
+                    updateCategoryList();
                 },
                 error: function () {
                     alert('Failed to save template');
@@ -165,6 +166,45 @@
                 }
             }
         },
+        updateCategoryList = function () {
+            var options = appState.reduce(function (agg, item) {
+                    agg[item.id] = item.name;
+
+                    return agg;
+                }, {});
+
+            elements.$categoryList.find('select').each(function () {
+                var self = $(this),
+                    selected = self.val(),
+                    tempOptions = _.assign({}, options);
+
+                self.children().each(function () {
+                    if (this.value) {
+                        if (!tempOptions[this.value]) {
+                            if (selected === this.value) {
+                                this.parentNode.selectedIndex = 0;
+                                categoryTemplateChangeHandler.call(this.parentNode);
+                            }
+
+                            this.parentNode.removeChild(this);
+
+                        } else {
+                            if (this.value && this.textContent !== tempOptions[this.value]) {
+                                this.textContent = tempOptions[this.value];
+                            }
+
+                            delete tempOptions[this.value];
+                        }
+                    }
+                });
+
+                _.forEach(tempOptions, function (item, key) {
+                    self.append('<option value="' + key + '">' + item + '</option>');
+                });
+            });
+            // step through all categories and update
+            // if update affects selected option, fire off change trigger
+        },
         updateTemplateHandler = function () {
             var newName = elements.$editTemplateName.val(),
                 update = false;
@@ -180,6 +220,7 @@
 
             if (update) {
                 persistTemplateChanges();
+
             }
         },
         midPoint = function (start, size) {
@@ -425,6 +466,7 @@
             elements.$templatesList     = $('.idTemplate_templatesList');
             elements.$editTemplateName  = $('.idTemplate_edit_templateName_input');
             elements.$renderSize        = $('.idTemplate_edit_templateName_renderSize');
+            elements.$categoryList      = $('.idTemplate_categoryTemplates');
 
             newTemplateTemplate = $('#idTemplate_templateItem').text();
 
@@ -474,6 +516,8 @@
             });
 
             setPreviewBackground(appState[activeTemplateIndex]);
+
+            return id;
         },
         updateTemplateNameEdit = function (template) {
             elements.$editTemplateName.val(template.name);
@@ -560,6 +604,7 @@
                 .then(addTemplateItem.bind(null, name))
                 .then(fillInTemplate.bind(null, original))
                 .then(finalizeAddingTemplate.bind(null, name))
+                .then(updateCategoryList)
                 .catch(function (e) {
                     alert('Failed to copy template');
                 });
@@ -580,6 +625,7 @@
             requestTemplateCreation(name)
                 .then(addTemplateItem.bind(null, name))
                 .then(finalizeAddingTemplate.bind(null, name))
+                .then(updateCategoryList)
                 .catch(function () {
                     alert('Failed to create new template');
                 });
@@ -637,10 +683,21 @@
             if (confirm('Er du sikker på at slette denne skabelon?')) {
                 requestTemplateDeletion(id)
                     .then(removeTemplateItem.bind(null, id, $item))
+                    .then(updateCategoryList)
                     .catch(function () {
                         alert('Failed to remove template');
                     });
             }
+        },
+        categoryTemplateChangeHandler = function () {
+            var self = $(this),
+                id   = self.closest('li').attr('data-id');
+
+            $.ajax({
+                url: infosysUpdateCategoryTemplate.replace(/:id:/, id),
+                type: 'POST',
+                data: {template_id: self.val()}
+            });
         },
         setupFilereader = function () {
             $('.idTemplate_edit, .idTemplate_edit_setTemplate').fileReaderJS(fileReaderOptions);
@@ -663,6 +720,8 @@
             elements.$svg.on('mousedown', _.debounce(dragStartHandler, 100));
             elements.$addTemplate.click(_.debounce(addTemplateHandler, 200));
             elements.$addTemplateName.keyup(_.debounce(addTemplateHandler, 200));
+
+            elements.$categoryList.on('change', 'select', categoryTemplateChangeHandler);
 
             $('body').on('mousemove', dragHandler)
                 .on('mouseup', _.debounce(dragEndHandler, 100));

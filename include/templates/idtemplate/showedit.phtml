@@ -63,14 +63,27 @@
         <ul class="idTemplate_templatesList">
             <li class="idTemplate_templatesList_addTemplate"><input type="text" class="idTemplate_templatesList_name"/><i class="icon-plus-circled idTemplate_templatesList_addTemplate_button"></i></li>
         </ul>
+        <p>Kategori-skabeloner</p>
+        <ul class="idTemplate_categoryTemplates">
+<?php foreach ($this->category_data as $category) : ?>
+            <li data-id="<?= e($category['id']);?>"><?= e($category['name']);?>
+            <select>
+                <option value=""></option>
+            <?php foreach ($this->template_data as $template) : ?>
+                <option value="<?= e($template['id']);?>"<?= $category['template_id'] === $template['id'] ? ' selected' : '';?>><?= e($template['name']);?></option>
+            <?php endforeach;?>
+            </select>
+            </li>
+<?php endforeach;?>
+        </ul>
     </div>
 
     <script>
-    var infosysCreateTemplateUrl = '<?= $this->url('create_template');?>';
-    var infosysDeleteTemplateUrl = '<?= $this->url('delete_template');?>';
-    var infosysUpdateTemplateUrl = '<?= $this->url('update_template');?>';
-
-    var infosysTemplateData = <?= json_encode($this->template_data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>;
+    var infosysCreateTemplateUrl = '<?= $this->url('create_template');?>',
+        infosysDeleteTemplateUrl = '<?= $this->url('delete_template');?>',
+        infosysUpdateTemplateUrl = '<?= $this->url('update_template');?>',
+        infosysUpdateCategoryTemplate = '<?= $this->url('update_category_template');?>',
+        infosysTemplateData = <?= json_encode($this->template_data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>;
     </script>
 
     <script type="text/template" id="idTemplate_templateItem">
