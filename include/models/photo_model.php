@@ -197,11 +197,10 @@ WHERE
         foreach ($this->db->query($query) as $row) {
             if (!glob(PUBLIC_PATH . 'uploads/photo-cropped-' . $row['identifier'] . '*')) {
                 $diff = $now->diff(new DateTime($row['signed_up']));
-echo "<pre>";
-var_dump($diff);
-echo "</pre>";
-exit;
-                $ids[] = $row['id'];
+
+                if ($diff->d && $diff->d % $days === 0) {
+                    $ids[] = $row['id'];
+                }
 
             }
 
