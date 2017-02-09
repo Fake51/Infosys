@@ -154,6 +154,8 @@ class Routes
         $this->routes['photo_upload_original']                      = ['url' => 'photo/upload/original/:identifier:', 'controller' => 'Photo', 'method' => 'storeOriginal'];
         $this->routes['photo_upload_cropped']                       = ['url' => 'photo/upload/cropped/:identifier:', 'controller' => 'Photo', 'method' => 'storeCropped'];
 
+        $this->routes['send_photo_upload_reminders']                = ['url' => 'photo/send-reminders', 'controller' => 'Photo', 'method' => 'sendUploadReminders'];
+
         // id template stuff
         $this->routes['template_editing']                           = ['url' => 'id-templates', 'controller' => 'IdTemplate', 'method' => 'showEdit'];
         $this->routes['create_template']                            = ['url' => 'id-templates/create-template', 'controller' => 'IdTemplate', 'method' => 'createTemplate'];

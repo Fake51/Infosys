@@ -36,6 +36,8 @@
  */
 class PhotoController extends Controller
 {
+    const REMINDER_DAYS = 7;
+
     protected $prerun_hooks = array(
         array('method' => 'checkUser', 'exclusive' => false, 'methodList' => ['showUploadForm']),
     );
@@ -133,5 +135,21 @@ class PhotoController extends Controller
         $this->page->setTemplate('generic/notfound');
         $this->page->layout_template = 'external.phtml';
         return;
+    }
+
+    /**
+     * sends photo upload reminders to to people who
+     * have not yet uploaded but should
+     *
+     * @access public
+     * @return void
+     */
+    public function sendUploadReminders()
+    {
+        foreach ($this->model->fetchParticipantsToRemind(self::REMINDER_DAYS) as $participant) {
+            var_dump($participant->id);
+        }
+
+        exit;
     }
 }

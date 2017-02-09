@@ -165,4 +165,49 @@ class PhotoModel extends Model
 
         return '';
     }
+
+    /**
+     * fetches participants that should have but haven't yet
+     * uploaded a photo
+     *
+     * @param int $days How many days between reminders
+     *
+     * @access public
+     * @return array
+     */
+    public function fetchParticipantsToRemind($days)
+    {
+        $query = '
+SELECT
+    d.id,
+    ppi.identifier,
+    d.signed_up
+FROM
+    deltagere AS d
+    JOIN brugerkategorier AS k ON k.id = d.brugerkategori_id
+    JOIN participantphotoidentifiers AS ppi ON ppi.participant_id = d.id
+WHERE
+    k.arrangoer = "ja"
+';
+
+        $ids = [];
+
+        $now = new DateTime();
+
+        foreach ($this->db->query($query) as $row) {
+            if (!glob(PUBLIC_PATH . 'uploads/photo-cropped-' . $row['identifier'] . '*')) {
+                $diff = $now->diff(new DateTime($row['signed_up']));
+echo "<pre>";
+var_dump($diff);
+echo "</pre>";
+exit;
+                $ids[] = $row['id'];
+
+            }
+
+        }
+var_dump($ids);
+exit;
+
+    }
 }
