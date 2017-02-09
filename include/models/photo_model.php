@@ -206,6 +206,10 @@ WHERE
 
         }
 
+        if (empty($ids)) {
+            return [];
+        }
+
         $select = $this->createEntity('Deltagere')->getSelect();
 
         $select->setWhere('id', 'in', $ids);
