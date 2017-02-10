@@ -146,8 +146,34 @@ class PhotoController extends Controller
      */
     public function sendUploadReminders()
     {
+        $participant_model = $this->model->factory('Photo');
+
+        // loop over participants, get photo upload link, render email, send, log, done
         foreach ($this->model->fetchParticipantsToRemind(self::REMINDER_DAYS) as $participant) {
-            var_dump($participant->id);
+            $this->page->participant = $participant;
+            $this->page->link        = $participant_model->getPhotoUploadLink($participant);
+
+            if (!$participant->speaksDanish()) {
+                $title = 'Fastaval: photo upload reminder';
+                $this->page->setTemplate('photo/sendphotouploadreminderen');
+
+            } else {
+                $title = 'Fastaval: foto upload reminder';
+                $this->page->setTemplate('photo/sendphotouploadreminderda');
+
+            }
+
+            $mail = new Mail();
+
+            $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+                ->setRecipient($participant->email)
+                ->setSubject($title)
+                ->setBodyFromPage($this->page);
+
+            $mail->send();
+
+            $this->log('Sent photo upload reminder email to ' . $participant->email, 'Photo email reminder', null);
+
         }
 
         exit;
