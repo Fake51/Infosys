@@ -192,11 +192,11 @@ WHERE
 
         $ids = [];
 
-        $now = new DateTime(date('Y-m-d'));
+        $now = new DateTime(date('Y-m-d') . ' 00:00:00');
 
         foreach ($this->db->query($query) as $row) {
             if (!glob(PUBLIC_PATH . 'uploads/photo-cropped-' . $row['identifier'] . '*')) {
-                $diff = $now->diff(new DateTime($row['signed_up']));
+                $diff = $now->diff(new DateTime($row['signed_up'] . ' 00:00:00'));
 
                 if ($diff->d && $diff->d % $days === 0) {
                     $ids[] = $row['id'];
