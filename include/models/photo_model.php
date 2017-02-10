@@ -181,7 +181,7 @@ class PhotoModel extends Model
 SELECT
     d.id,
     ppi.identifier,
-    DATE(d.signed_up)
+    DATE(d.signed_up) AS signed_up
 FROM
     deltagere AS d
     JOIN brugerkategorier AS k ON k.id = d.brugerkategori_id
