@@ -146,7 +146,7 @@ class PhotoController extends Controller
      */
     public function sendUploadReminders()
     {
-        $participant_model = $this->model->factory('Photo');
+        $participant_model = $this->model->factory('Participant');
 
         // loop over participants, get photo upload link, render email, send, log, done
         foreach ($this->model->fetchParticipantsToRemind(self::REMINDER_DAYS) as $participant) {

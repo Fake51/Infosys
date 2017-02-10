@@ -181,7 +181,7 @@ class PhotoModel extends Model
 SELECT
     d.id,
     ppi.identifier,
-    d.signed_up
+    DATE(d.signed_up)
 FROM
     deltagere AS d
     JOIN brugerkategorier AS k ON k.id = d.brugerkategori_id
@@ -192,7 +192,7 @@ WHERE
 
         $ids = [];
 
-        $now = new DateTime();
+        $now = new DateTime(date('Y-m-d'));
 
         foreach ($this->db->query($query) as $row) {
             if (!glob(PUBLIC_PATH . 'uploads/photo-cropped-' . $row['identifier'] . '*')) {
