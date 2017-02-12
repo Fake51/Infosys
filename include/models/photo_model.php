@@ -195,7 +195,7 @@ WHERE
         $now = new DateTime(date('Y-m-d') . ' 00:00:00');
 
         foreach ($this->db->query($query) as $row) {
-            if (!glob(PUBLIC_PATH . 'uploads/photo-cropped-' . $row['identifier'] . '*')) {
+            if (!glob(PUBLIC_PATH . 'uploads/photo-cropped-' . mb_strtolower($row['identifier']) . '*')) {
                 $diff = $now->diff(new DateTime($row['signed_up'] . ' 00:00:00'));
 
                 if ($diff->d && $diff->d % $days === 0) {
