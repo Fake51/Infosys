@@ -87,7 +87,9 @@ class PhotoController extends Controller
 
         if (!$this->model->handlePhotoUpload($this->vars['identifier'], 'original', $this->page->request)) {
             $this->page->setStatus('500', 'Upload failed');
-            return;
+
+        } else {
+            $this->log('Deltager #' . $this->model->getParticipantIdFromIdentifier($this->vars['identifier']) . ' har uploadet originalt billede', 'Photo', null);
         }
     }
 
@@ -107,7 +109,9 @@ class PhotoController extends Controller
 
         if (!$this->model->handlePhotoUpload($this->vars['identifier'], 'cropped', $this->page->request)) {
             $this->page->setStatus('500', 'Upload failed');
-            return;
+
+        } else {
+            $this->log('Deltager #' . $this->model->getParticipantIdFromIdentifier($this->vars['identifier']) . ' har uploadet tilpasset billede', 'Photo', null);
         }
     }
 

@@ -44,9 +44,22 @@ class PhotoModel extends Model
      */
     public function identifierExists($identifier)
     {
+        return !is_bool($this->getParticipantIdFromIdentifier($identifier));
+    }
+
+    /**
+     * returns participant id given an identifier, if it exists
+     *
+     * @param  $identifier Identifier to look up with
+     *
+     * @access public
+     * @return int|false
+     */
+    public function getParticipantIdFromIdentifier($identifier)
+    {
         $result = $this->db->query('SELECT participant_id FROM participantphotoidentifiers WHERE identifier = ?', $identifier);
 
-        return !!count($result);
+        return count($result) ? intval($result[0]['participant_id']) : false;
     }
 
     /**
