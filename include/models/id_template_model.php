@@ -290,4 +290,129 @@ DELETE FROM idtemplates_items WHERE template_id = ?
             return false;
         }
     }
+
+    /**
+     * fetches template for a participant
+     *
+     * @param Deltagere $participant Participant to get template for
+     *
+     * @access protected
+     * @return IdTemplate|false
+     */
+    protected function getParticipantTemplate(Deltagere $participant)
+    {
+        $query = '
+SELECT
+    template_id
+FROM
+    participantidtemplates
+WHERE
+    participant_id = ?';
+
+        $row = $this->db->query($query, [$participant->id]);
+
+        if ($row) {
+            return $this->loadIdTemplate($row[0]['template_id']);
+        }
+
+        $category = $participant->getUserCategory();
+
+        if (!$category) {
+            return false;
+        }
+
+        $query = '
+SELECT
+    template_id
+FROM
+    brugerkategorier_idtemplates
+WHERE
+    category_id = ?';
+
+        $row = $this->db->query($query, [$category->id]);
+
+        if ($row) {
+            return $this->loadIdTemplate($row[0]['template_id']);
+        }
+
+        return false;
+    }
+
+    /**
+     * loads an id template
+     *
+     * @param int $template_id Id of template to load
+     *
+     * @access protected
+     * @return IdTemplate|false
+     */
+    protected function loadIdTemplate($template_id)
+    {
+        $query = '
+SELECT
+    i.name,
+    i.background
+FROM
+    idtemplates AS i
+WHERE
+    id = ?
+';
+
+        $row = $this->db->query($query, [$template_id]);
+
+        if (!$row) {
+            return false;
+        }
+
+        $query = '
+SELECT
+    ii.itemtype,
+    ii.x,
+    ii.y,
+    ii.width,
+    ii.height,
+    ii.rotation,
+    ii.datasource
+FROM
+    idtemplates_items AS ii
+WHERE
+    ii.template_id = ?
+';
+
+        return new IdTemplate($row[0]['name'], $row[0]['background'], $this->db->query($query, [$template_id]));
+    }
+
+    /**
+     * fetches id card rendering data
+     *
+     * @param RequestVars $get GET data from request
+     *
+     * @access public
+     * @return array
+     */
+    public function fetchIdCardData(RequestVars $get)
+    {
+        if (!$get->ids) {
+            return [];
+        }
+
+        return array_map(function ($data) {
+            return new IdTemplateRenderer($data['participant'], $data['template']);
+
+        }, array_filter(array_map(function ($x) {
+            $id = intval($x);
+
+            $participant = $this->createEntity('Deltagere')->findById($id);
+
+            return [
+                    'participant' => $participant ?: false,
+                    'template'    => $participant ? $this->getParticipantTemplate($participant) : false,
+            ];
+
+        }, explode('-', $get->ids)), function ($participant) {
+            return !empty($participant['participant']) && !empty($participant['template']);
+
+        }));
+
+    }
 }

@@ -1,0 +1,10 @@
+.idCardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify: space-between;
+}
+
+.idCardContainer_card {
+    margin: 5px;
+    border: 1px solid #000;
+}

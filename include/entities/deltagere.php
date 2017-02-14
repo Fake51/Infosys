@@ -345,11 +345,22 @@ class Deltagere extends DBObject implements AgeFulfilment
      */
     public function getBrugerKategori()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
+
         return $this->createEntity('BrugerKategorier')->getDeltagerCategory($this);
+    }
+
+    /**
+     * wrapper for getBrugerKategori
+     *
+     * @access public
+     * @return BrugerKategorier|false
+     */
+    public function getUserCategory()
+    {
+        return $this->getBrugerKategori();
     }
 
     /**
@@ -1476,5 +1487,37 @@ WHERE
     public function isOlderThan($limit, DateTime $at_time = null)
     {
         return !$this->isYoungerThan($limit, $at_time);
+    }
+
+    /**
+     * returns path to participants uploaded photo, if available
+     *
+     * @access public
+     * @return string|false
+     */
+    public function getCroppedPhotoPath()
+    {
+        $query = '
+SELECT
+    identifier
+FROM
+    participantphotoidentifiers
+WHERE
+    participant_id = ?
+';
+
+        $row = $this->db->query($query, [$this->id]);
+
+        if (!$row) {
+            return false;
+        }
+
+        $results = glob(PUBLIC_PATH . 'uploads/photo-cropped-' . mb_strtolower($row[0]['identifier']) . '*');
+
+        if (!$results) {
+            return false;
+        }
+
+        return $results[0];
     }
 }

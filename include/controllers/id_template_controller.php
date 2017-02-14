@@ -190,4 +190,19 @@ class IdTemplateController extends Controller
             return;
         }
     }
+
+    /**
+     * renders ID cards onto a page
+     *
+     * @access public
+     * @return void
+     */
+    public function renderIdCards()
+    {
+        $this->page->setTemplate('idtemplate/renderidcards');
+        $this->page->layout_template = 'minimal.phtml';
+        $this->page->includeCSS('idcards.css');
+
+        $this->page->id_card_entities = $this->model->fetchIdCardData($this->page->request->get);
+    }
 }
