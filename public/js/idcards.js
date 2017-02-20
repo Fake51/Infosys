@@ -43,8 +43,8 @@
             });
         };
 
-    CardCanvas.prototype.CANVAS_WIDTH = 2244;
-    CardCanvas.prototype.CANVAS_HEIGHT = 3272;
+    CardCanvas.prototype.CANVAS_WIDTH = 2480;
+    CardCanvas.prototype.CANVAS_HEIGHT = 3508;
 
     CardCanvas.prototype.getContext = function () {
         return this.context;
