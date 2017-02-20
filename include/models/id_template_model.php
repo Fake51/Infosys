@@ -397,7 +397,7 @@ WHERE
         }
 
         return array_map(function ($data) {
-            return new IdTemplateRenderer($data['participant'], $data['template']);
+            return new IdTemplateRenderer($data['participant'], $data['template'], $this->factory('Participant'));
 
         }, array_filter(array_map(function ($x) {
             $id = intval($x);

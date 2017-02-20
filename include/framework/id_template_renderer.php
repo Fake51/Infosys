@@ -36,9 +36,25 @@
  */
 class IdTemplateRenderer
 {
+    const FONT_SIZE = 20;
+
     // todo:
     // caching
     // cache invalidation
+
+    /**
+     * participant to render template of
+     *
+     * @var Deltagere
+     */
+    private $participant;
+
+    /**
+     * template to render
+     *
+     * @var IdTemplate
+     */
+    private $template;
 
     /**
      * public constructor
@@ -48,10 +64,11 @@ class IdTemplateRenderer
      *
      * @access public
      */
-    public function __construct(Deltagere $participant, IdTemplate $template)
+    public function __construct(Deltagere $participant, IdTemplate $template, ParticipantModel $model)
     {
         $this->participant = $participant;
         $this->template    = $template;
+        $this->model       = $model;
     }
 
     /**
@@ -130,6 +147,27 @@ class IdTemplateRenderer
      * @access protected
      * @return resource
      */
+    protected function addBarcodeElement($image, array $item, Deltagere $participant)
+    {
+        $path = $this->model->generateEan8Barcode($participant->id);
+
+        $photo = $this->loadImage($path);
+
+        imagecopyresampled($image, $photo, $item['x'], $item['y'], 0, 0, $item['width'], $item['height'], imagesx($photo), imagesy($photo));
+
+        return $image;
+    }
+
+    /**
+     * adds a photo template element
+     *
+     * @param resource  $image       GD image resource
+     * @param array     $item        Template item
+     * @param Deltagere $participant Participant to render for
+     *
+     * @access protected
+     * @return resource
+     */
     protected function addPhotoElement($image, array $item, Deltagere $participant)
     {
         $photo_path = $participant->getCroppedPhotoPath();
@@ -141,6 +179,77 @@ class IdTemplateRenderer
         $photo = $this->loadImage($photo_path);
 
         imagecopyresampled($image, $photo, $item['x'], $item['y'], 0, 0, $item['width'], $item['height'], imagesx($photo), imagesy($photo));
+
+        return $image;
+    }
+
+    /**
+     * adds a text bit to the template
+     *
+     * @param resource  $image       Image to modify
+     * @param array     $item        Template item
+     * @param Deltagere $participant Participant to use
+     *
+     * @access protected
+     * @return resource
+     */
+    protected function addTextElement($image, array $item, Deltagere $participant)
+    {
+        switch ($item['datasource']) {
+        case 'name':
+            $string = $participant->getName();
+            break;
+
+        case 'doctorname':
+            $string = 'Dr. ' . $participant->getName();
+            break;
+
+        case 'id':
+            $string = $participant->id;
+            break;
+
+        case 'workarea':
+            $string = $participant->arbejdsomraade;
+            break;
+
+        default:
+            return $image;
+        }
+
+        $y_offset = 0;
+
+        do {
+            $bounding_box = imagettfbbox(self::FONT_SIZE, $item['rotation'] * -1, PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $string);
+            $width        = abs($bounding_box[4] - $bounding_box[0]);
+
+            if ($width <= $item['width']) {
+                $rendered_string = $string;
+                $string = '';
+
+                $x_offset = ($item['width'] / 2) - ($width / 2);
+
+            } else {
+                $strings = explode("\n", wordwrap($string, floor($item['width'] / $width * mb_strlen($string))));
+
+                $rendered_string = array_shift($strings);
+                $string = trim(implode(' ', $strings));
+
+                $bounding_box = imagettfbbox(self::FONT_SIZE, $item['rotation'] * -1, PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $rendered_string);
+                $width        = abs($bounding_box[4] - $bounding_box[0]);
+                $x_offset     = ($item['width'] / 2) - ($width / 2);
+
+            }
+
+            imagettftext($image, self::FONT_SIZE, $item['rotation'] * -1, $item['x'] + $x_offset, $item['y'] + $y_offset, imagecolorallocate($image, 0, 0, 0), PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $rendered_string);
+
+            $y_offset    += 25;
+
+        } while ($string);
+
+        // while bounding box exceeds width
+        // chop up string
+        // print as much as you can
+        // continue with smaller string
 
         return $image;
     }
@@ -159,6 +268,12 @@ class IdTemplateRenderer
         switch ($item['itemtype']) {
         case 'photo':
             return $this->addPhotoElement($agg, $item, $this->participant);
+
+        case 'text':
+            return $this->addTextElement($agg, $item, $this->participant);
+
+        case 'barcode':
+            return $this->addBarcodeElement($agg, $item, $this->participant);
 
         default:
             return $agg;
