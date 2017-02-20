@@ -36,8 +36,7 @@
  */
 class IdTemplateRenderer
 {
-    const FONT_SIZE = 20;
-    const ID_FONT_SIZE = 30;
+    const FONT_SIZE = 30;
 
     // todo:
     // caching
@@ -199,22 +198,18 @@ class IdTemplateRenderer
         switch ($item['datasource']) {
         case 'name':
             $string = $participant->getName();
-            $font_size = self::FONT_SIZE;
             break;
 
         case 'doctorname':
             $string = 'Dr. ' . $participant->getName();
-            $font_size = self::FONT_SIZE;
             break;
 
         case 'id':
             $string = $participant->id;
-            $font_size = self::ID_FONT_SIZE;
             break;
 
         case 'workarea':
             $string = $participant->arbejdsomraade;
-            $font_size = self::FONT_SIZE;
             break;
 
         default:
@@ -224,7 +219,7 @@ class IdTemplateRenderer
         $y_offset = 0;
 
         do {
-            $bounding_box = imagettfbbox($font_size, $item['rotation'] * -1, PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $string);
+            $bounding_box = imagettfbbox(self::FONT_SIZE, $item['rotation'] * -1, PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $string);
             $width        = abs($bounding_box[4] - $bounding_box[0]);
 
             if ($width <= $item['width']) {
@@ -239,13 +234,13 @@ class IdTemplateRenderer
                 $rendered_string = array_shift($strings);
                 $string = trim(implode(' ', $strings));
 
-                $bounding_box = imagettfbbox($font_size, $item['rotation'] * -1, PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $rendered_string);
+                $bounding_box = imagettfbbox(self::FONT_SIZE, $item['rotation'] * -1, PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $rendered_string);
                 $width        = abs($bounding_box[4] - $bounding_box[0]);
                 $x_offset     = ($item['width'] / 2) - ($width / 2);
 
             }
 
-            imagettftext($image, $font_size, $item['rotation'] * -1, $item['x'] + $x_offset, $item['y'] + $y_offset, imagecolorallocate($image, 0, 0, 0), PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $rendered_string);
+            imagettftext($image, self::FONT_SIZE, $item['rotation'] * -1, $item['x'] + $x_offset, $item['y'] + $y_offset, imagecolorallocate($image, 0, 0, 0), PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $rendered_string);
 
             $y_offset    += 25;
 
