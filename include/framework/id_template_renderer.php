@@ -242,7 +242,7 @@ class IdTemplateRenderer
 
             imagettftext($image, self::FONT_SIZE, $item['rotation'] * -1, $item['x'] + $x_offset, $item['y'] + $y_offset, imagecolorallocate($image, 0, 0, 0), PUBLIC_PATH . 'fonts/Atlanta Demi.ttf', $rendered_string);
 
-            $y_offset    += 25;
+            $y_offset    += 35;
 
         } while ($string);
 
