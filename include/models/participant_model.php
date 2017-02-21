@@ -1480,11 +1480,15 @@ SQL;
             return $filename;
         }
 
+        if (!($participant = $this->createEntity('Deltagere')->findById($participant_id))) {
+            throw new FrameworkException('No such participant');
+        }
+
         require_once 'PEAR.php';
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw(numberToEAN8($participant_id), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = round($width * 2);
