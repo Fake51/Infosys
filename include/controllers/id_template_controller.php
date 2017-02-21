@@ -205,6 +205,7 @@ class IdTemplateController extends Controller
 
         $this->page->registerLateLoadJS('bluebird.min.js');
         $this->page->registerLateLoadJS('lodash.min.js');
+        $this->page->registerLateLoadJS('jspdf.min.js');
         $this->page->registerLateLoadJS('idcards.js');
 
         $this->page->id_card_entities = $this->model->fetchIdCardData($this->page->request->get);

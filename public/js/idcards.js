@@ -27,6 +27,11 @@
             return container;
         },
         init = function () {
+            var doc = new jsPDF(),
+                containers,
+                i,
+                length;
+
             Array.prototype.forEach.call(document.getElementsByTagName('img'), function (image) {
                 if (!currentCanvas) {
                     currentCanvas = new CardCanvas();
@@ -37,6 +42,20 @@
                     currentCanvas.addImageToCanvas(image);
                 }
             });
+
+            containers = document.getElementsByTagName('canvas');
+
+            for (i = 0, length = containers.length; i < length; i++) {
+                if (i > 0) {
+                    doc.addPage();
+                }
+
+                doc.addImage(containers[i].toDataURL('image/png'), 'png', 7, 10, 203, 286);
+            }
+
+            if (containers.length) {
+                doc.save('idcards.pdf');
+            }
         };
 
     CardCanvas.prototype.CANVAS_WIDTH = 2310;
@@ -77,9 +96,9 @@
         this.context.closePath();
         this.context.stroke();
 
-        this.context.drawImage(image, this.xOffset + 50, this.yOffset + 50);
+        this.context.drawImage(image, this.xOffset + 30, this.yOffset + 30);
 
-        this.xOffset += requiredWidth + 50;
+        this.xOffset += requiredWidth + 30;
 
         return true;
     };
