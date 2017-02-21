@@ -178,6 +178,18 @@ $(function() {
             onerror: updateError
         });
 
+        $('.id-card-content-template-selected').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: window.infosys_data.id_template_data,
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError,
+            callback: function(value) {
+                $(this).text(window.infosys_data.id_template_data[Number(value)]);
+            }
+        });
+
         function makeActivityDialogTable(source_row, dialog) {
             var new_table    = $('<table class="activity-dialog-table"><tbody><tr></tr></tbody></table>'),
                 tbody        = new_table.find('tbody'),

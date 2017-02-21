@@ -301,6 +301,18 @@ div.middleboxes {
     margin-top: 1rem;
 }
 
+.id-card-content-template {
+    margin-top: 1rem;
+}
+
+.id-card-content-template-selected {
+    float: right;
+}
+
+.id-card-content-template-selected select {
+    width: auto;
+}
+
 div.middleboxes div {
     float: left;
     margin: 5px 0px 5px 5px;

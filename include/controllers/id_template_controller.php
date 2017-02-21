@@ -209,4 +209,5 @@ class IdTemplateController extends Controller
 
         $this->page->id_card_entities = $this->model->fetchIdCardData($this->page->request->get);
     }
+
 }

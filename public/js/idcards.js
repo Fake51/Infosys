@@ -2,10 +2,6 @@
 
 (function () {
     'use strict';
-/*
-210 x 297 = 2480 x 3508
-190 x 277 = 2244 x 3272
-*/
 
     var images,
         currentCanvas,
@@ -43,20 +39,20 @@
             });
         };
 
-    CardCanvas.prototype.CANVAS_WIDTH = 2480;
-    CardCanvas.prototype.CANVAS_HEIGHT = 3508;
+    CardCanvas.prototype.CANVAS_WIDTH = 2310;
+    CardCanvas.prototype.CANVAS_HEIGHT = 3258;
 
     CardCanvas.prototype.getContext = function () {
         return this.context;
     };
 
     CardCanvas.prototype.addImageToCanvas = function (image) {
-        var requiredWidth  = image.width + 100,
-            requiredHeight = image.height + 100;
+        var requiredWidth  = image.width + 60,
+            requiredHeight = image.height + 60;
 
         // determine space needed for image
         if (this.CANVAS_WIDTH - this.xOffset < requiredWidth) {
-            this.yOffset += requiredHeight + 50;
+            this.yOffset += requiredHeight + 30;
             this.xOffset  = 0;
 
         }
@@ -66,17 +62,17 @@
         }
 
         this.context.beginPath();
-        this.context.moveTo(this.xOffset, this.yOffset + 49);
-        this.context.lineTo(this.xOffset + image.width + 100, this.yOffset + 49);
+        this.context.moveTo(this.xOffset, this.yOffset + 29);
+        this.context.lineTo(this.xOffset + image.width + 60, this.yOffset + 29);
 
-        this.context.moveTo(this.xOffset + 49, this.yOffset);
-        this.context.lineTo(this.xOffset + 49, this.yOffset + 100 + image.height);
+        this.context.moveTo(this.xOffset + 29, this.yOffset);
+        this.context.lineTo(this.xOffset + 29, this.yOffset + 60 + image.height);
 
-        this.context.moveTo(this.xOffset, this.yOffset + 51 + image.height);
-        this.context.lineTo(this.xOffset + image.width + 100, this.yOffset + 51 + image.height);
+        this.context.moveTo(this.xOffset, this.yOffset + 31 + image.height);
+        this.context.lineTo(this.xOffset + image.width + 60, this.yOffset + 31 + image.height);
 
-        this.context.moveTo(this.xOffset + 51 + image.width, this.yOffset);
-        this.context.lineTo(this.xOffset + 51 + image.width, this.yOffset + 100 + image.height);
+        this.context.moveTo(this.xOffset + 31 + image.width, this.yOffset);
+        this.context.lineTo(this.xOffset + 31 + image.width, this.yOffset + 60 + image.height);
 
         this.context.closePath();
         this.context.stroke();

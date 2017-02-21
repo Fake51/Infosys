@@ -1844,6 +1844,10 @@ SQL;
             $participant->brugerkategori_id = $category->id;
             break;
 
+        case 'participant-template':
+            $this->updateParticipantIdTemplate($participant, intval($post->value));
+            break;
+
         default:
             $participant->{$post->id} = $post->value;
         }
@@ -1852,6 +1856,36 @@ SQL;
 
         $participant->update();
         return $return_value;
+    }
+
+    /**
+     * updates a participants template override
+     *
+     * @param Deltagere $participant Participant to update
+     * @param int       $template_id Id of template to set, zero to remove
+     *
+     * @access protected
+     * @return self
+     */
+    protected function updateParticipantIdTemplate(Deltagere $participant, $template_id)
+    {
+        if (!$template_id) {
+            $query = '
+DELETE FROM participantidtemplates WHERE participant_id = ?
+';
+            $args = [$participant->id];
+
+        } else {
+            $query = '
+INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DUPLICATE KEY UPDATE template_id = ?
+';
+            $args = [$template_id, $participant->id, $template_id];
+
+        }
+
+        $this->db->exec($query, $args);
+
+        return $this;
     }
 
     /**
@@ -2799,5 +2833,84 @@ WHERE participant_id = ?
         $photo_model = $this->factory('Photo');
 
         return $photo_model->getExistingCroppedImage($result[0]['identifier']);
+    }
+
+    /**
+     * returns the id template set for the participant, if
+     * one is set to override the default
+     *
+     * @param Deltagere $participant Participant to fetch template for
+     *
+     * @access public
+     * @return IdTemplate|false
+     */
+    public function getParticipantIdTemplate(Deltagere $participant)
+    {
+        $query = '
+SELECT
+    template_id
+FROM
+    participantidtemplates
+WHERE
+    participant_id = ?
+';
+
+        $result = $this->db->query($query, [$participant->id]);
+
+        if (!$result) {
+            return false;
+        }
+
+        return $this->createEntity('IdTemplate')->findById($result[0]['template_id']);
+    }
+
+    /**
+     * returns the template for the category, if one is set
+     *
+     * @param BrugerKategorier $category Category to fetch for
+     *
+     * @access public
+     * @return IdTemplate|false
+     */
+    public function getCategoryIdTemplate(BrugerKategorier $category)
+    {
+        $query = '
+SELECT
+    template_id
+FROM
+    brugerkategorier_idtemplates
+WHERE
+    category_id = ?
+';
+
+        $result = $this->db->query($query, [$category->id]);
+
+        if (!$result) {
+            return false;
+        }
+
+        return $this->createEntity('IdTemplate')->findById($result[0]['template_id']);
+    }
+
+    /**
+     * returns data suitable for an editable array for
+     * selecting id template override
+     *
+     * @param IdTemplate $category_template Template default for user category, if available
+     *
+     * @access public
+     * @return array
+     */
+    public function fetchTemplateSelectData($category_template)
+    {
+        $data = [
+            '0' => 'Default (' . ($category_template ? e($category_template->name) : 'ingen') . ')'
+        ];
+
+        foreach ($this->createEntity('IdTemplate')->findAll() as $template) {
+            $data[(string) $template->id] = e($template->name);
+        }
+
+        return $data;
     }
 }

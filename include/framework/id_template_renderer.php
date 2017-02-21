@@ -212,6 +212,14 @@ class IdTemplateRenderer
             $string = $participant->arbejdsomraade;
             break;
 
+        case 'group':
+            $string = $participant->ungdomsskole;
+            break;
+
+        case 'scenario':
+            $string = $participant->scenarie;
+            break;
+
         default:
             return $image;
         }

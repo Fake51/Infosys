@@ -105,6 +105,11 @@ class ParticipantController extends Controller
             $this->page->participant_photo_upload_link = $this->model->getPhotoUploadLink($this->page->deltager);
             $this->page->participant_id_card_link      = $this->url('id_card_render') . '?ids=' . $this->page->deltager->id;
 
+            $this->page->id_template      = $this->model->getParticipantIdTemplate($this->page->deltager);
+            $this->page->default_template = $this->model->getCategoryIdTemplate($this->page->deltager->getUserCategory());
+
+            $this->page->id_template_select_data = $this->model->fetchTemplateSelectData($this->page->default_template);
+
         } else {
             $this->page->setTemplate('noResults');
             $this->page->setTitle('Intet resultat');
