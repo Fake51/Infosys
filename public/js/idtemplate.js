@@ -108,52 +108,96 @@
             elements.$renderSize.text('Render size (at 300 DPI): width ' + widthCm + ' cm / ' + widthMm + ' mm, height ' + heightCm + ' cm / ' + heightMm + ' mm');
         },
         setPreviewBackground = function (template) {
-            var image = new Image();
+            return new Promise(function (resolve, reject) {
+                var image = new Image();
 
-            if (!template.background) {
-                return;
-            }
+                if (!template.background) {
+                    reject();
+                    return;
+                }
 
-            image.onload = function () {
-                previewDimensions.width = image.width;
-                previewDimensions.height = image.height;
+                image.onload = function () {
+                    previewDimensions.width = image.width;
+                    previewDimensions.height = image.height;
 
-                updateSizeIndicator(previewDimensions.width, previewDimensions.height);
+                    updateSizeIndicator(previewDimensions.width, previewDimensions.height);
 
-                elements.$canvas.attr('height', previewDimensions.height);
-                elements.$canvas.attr('width', previewDimensions.width);
-                elements.$svg.attr('height', previewDimensions.height);
-                elements.$svg.attr('width', previewDimensions.width);
+                    elements.$canvas.attr('height', previewDimensions.height);
+                    elements.$canvas.attr('width', previewDimensions.width);
+                    elements.$svg.attr('height', previewDimensions.height);
+                    elements.$svg.attr('width', previewDimensions.width);
 
-                context.drawImage(this, 0, 0);
+                    context.drawImage(this, 0, 0);
 
-                enableElementAddControls();
-            };
+                    enableElementAddControls();
 
-            if (template.background.dataUrl) {
-                image.src = template.background.dataUrl;
+                    resolve(template);
+                };
 
-            } else if (template.background.src) {
-                image.src = template.background.src;
+                if (template.background.dataUrl) {
+                    image.src = template.background.dataUrl;
 
-            } else {
-                disableElementAddControls();
-                elements.$canvas.attr('height', 0);
-                elements.$canvas.attr('width', 0);
-                elements.$svg.attr('height', 0);
-                elements.$svg.attr('width', 0);
-            }
+                } else if (template.background.src) {
+                    image.src = template.background.src;
+
+                } else {
+                    disableElementAddControls();
+                    elements.$canvas.attr('height', 0);
+                    elements.$canvas.attr('width', 0);
+                    elements.$svg.attr('height', 0);
+                    elements.$svg.attr('width', 0);
+                    resolve(template);
+                }
+            });
+        },
+        constrainTemplateElements = function (template) {
+            var height = elements.$canvas.attr('height'),
+                width  = elements.$canvas.attr('width');
+
+            template.elements.forEach(function (item) {
+                if (item.width + item.x > width) {
+                    item.x -= item.width + item.x - width;
+                }
+
+                if (item.x < 0) {
+                    item.width += item.x;
+                    item.x = 0;
+                }
+
+                if (item.height + item.y > height) {
+                    item.y -= item.height + item.y - height;
+                }
+
+                if (item.y < 0) {
+                    item.height += item.y;
+                    item.y = 0;
+                }
+
+                updateAttributes(item);
+            });
+
+            return template;
+        },
+        addEditingElements = function (template) {
+            template.elements.forEach(function (item) {
+                item.element = createRect();
+                item.element.InfosysOwner = item;
+
+                updateAttributes(item);
+            });
         },
         handleFileLoad = function (e) {
             resetPreview();
 
-            appState[activeTemplateIndex].elements = [];
-
             appState[activeTemplateIndex].background.dataUrl = e.target.result;
 
-            setPreviewBackground(appState[activeTemplateIndex]);
+            setPreviewBackground(appState[activeTemplateIndex])
+                .then(constrainTemplateElements)
+                .then(addEditingElements);
 
             persistTemplateChanges();
+
+            elements.$backgroundInput.val('');
         },
         fileReaderOptions = {
             accept: 'image/*',
@@ -467,6 +511,7 @@
             elements.$editTemplateName  = $('.idTemplate_edit_templateName_input');
             elements.$renderSize        = $('.idTemplate_edit_templateName_renderSize');
             elements.$categoryList      = $('.idTemplate_categoryTemplates');
+            elements.$backgroundInput   = $('.idTemplate_edit_setTemplate');
 
             newTemplateTemplate = $('#idTemplate_templateItem').text();
 
@@ -651,12 +696,7 @@
             elements.$editTemplateName.val(appState[activeTemplateIndex].name);
             setPreviewBackground(appState[activeTemplateIndex]);
 
-            appState[activeTemplateIndex].elements.forEach(function (item) {
-                item.element = createRect();
-                item.element.InfosysOwner = item;
-
-                updateAttributes(item);
-            });
+            addEditingElements(appState[activeTemplateIndex]);
 
             enablePreview();
         },
