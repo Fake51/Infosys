@@ -47,14 +47,14 @@
 
             for (i = 0, length = containers.length; i < length; i++) {
                 if (i > 0) {
-                    doc.addPage();
+                    //doc.addPage();
                 }
 
-                doc.addImage(containers[i].toDataURL('image/png'), 'png', 7, 10, 203, 286, null, 'FAST');
+                //doc.addImage(containers[i].toDataURL('image/png'), 'png', 7, 10, 203, 286, null, 'FAST');
             }
 
             if (containers.length) {
-                doc.save('idcards.pdf');
+                //doc.save('idcards.pdf');
             }
         };
 
@@ -71,8 +71,8 @@
 
         // determine space needed for image
         if (this.CANVAS_WIDTH - this.xOffset < requiredWidth) {
-            this.yOffset += requiredHeight + 30;
-            this.xOffset  = 0;
+            this.yOffset = this.nextLine;
+            this.xOffset = 0;
 
         }
 
@@ -99,6 +99,10 @@
         this.context.drawImage(image, this.xOffset + 30, this.yOffset + 30);
 
         this.xOffset += requiredWidth + 30;
+
+        if (this.yOffset + requiredHeight + 30 > this.nextLine) {
+            this.nextLine = this.yOffset + requiredHeight + 30;
+        }
 
         return true;
     };
