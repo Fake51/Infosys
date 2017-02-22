@@ -8,6 +8,7 @@ public/error_log.txt
 public/vote-barcodes/*
 include/signup-data/*
 include/scripts/*
+include/cache/*
 logs/*
 tags
 index.json

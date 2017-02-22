@@ -143,6 +143,7 @@ function bootstrap_setup_path_constants() {
      * Define various folder
      */
     define('FRAMEWORK_FOLDER', INCLUDE_PATH . 'framework/');
+    define('CACHE_FOLDER', INCLUDE_PATH . 'cache/');
     define('LOGS_FOLDER', INCLUDE_PATH . 'logs/');
     define('CONTROLLER_FOLDER', INCLUDE_PATH . 'controllers/');
     define('MODEL_FOLDER', INCLUDE_PATH . 'models/');

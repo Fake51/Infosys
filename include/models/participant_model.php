@@ -556,6 +556,8 @@ class ParticipantModel extends Model
 
         $fields = $deltager->getColumns();
 
+        $this->factory('IdTemplate')->cleanIdTemplateParticipantCache($deltager);
+
         foreach ($post as $key => $value) {
             if (in_array($key, $fields) && $key != 'karma') {
                 $deltager->$key = $value;
@@ -1823,6 +1825,8 @@ SQL;
         }
 
         $return_value = $post->value;
+
+        $this->factory('IdTemplate')->cleanIdTemplateParticipantCache($participant);
 
         switch ($post->id) {
         case 'birthdate':

@@ -64,7 +64,7 @@ class IdTemplateRenderer
      *
      * @access public
      */
-    public function __construct(Deltagere $participant, IdTemplate $template, ParticipantModel $model)
+    public function __construct(Deltagere $participant, IdTemplateData $template, ParticipantModel $model)
     {
         $this->participant = $participant;
         $this->template    = $template;
@@ -127,12 +127,12 @@ class IdTemplateRenderer
     /**
      * creates a base image from the template background
      *
-     * @param IdTemplate $template Template to process
+     * @param IdTemplateData $template Template to process
      *
      * @access protected
      * @return resource
      */
-    protected function createBackground(IdTemplate $template)
+    protected function createBackground(IdTemplateData $template)
     {
         return $this->loadImage(PUBLIC_PATH . $template->getBackground());
     }
@@ -310,6 +310,17 @@ class IdTemplateRenderer
     }
 
     /**
+     * returns a filepath for the cache version of the id card
+     *
+     * @access protected
+     * @return string
+     */
+    protected function getCachePath()
+    {
+        return CACHE_FOLDER . 'idcard_' . $this->template->id . '_' . $this->participant->id;
+    }
+
+    /**
      * fetches template as base64 encoded string, either from
      * cache or from processing it
      *
@@ -318,7 +329,11 @@ class IdTemplateRenderer
      */
     protected function fetchTemplateData()
     {
-        return $this->processTemplate();
+        if (!file_exists($this->getCachePath())) {
+            file_put_contents($this->getCachePath(), $this->processTemplate());
+        }
+
+        return file_get_contents($this->getCachePath());
     }
 
     /**

@@ -34,19 +34,21 @@
  * @license  http://www.gnu.org/licenses/gpl.html GPL 3
  * @link     http://www.github.com/Fake51/Infosys
  */
-class IdTemplate
+class IdTemplateData
 {
     /**
      * public constructor
      *
+     * @param int    $id         ID of template
      * @param string $name       Name of template
      * @param string $background Background of template
      * @param array  $items      Items to render in the template
      *
      * @access public
      */
-    public function __construct($name, $background, array $items)
+    public function __construct($id, $name, $background, array $items)
     {
+        $this->id         = $id;
         $this->name       = $name;
         $this->background = $background;
         $this->items      = $items;

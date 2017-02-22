@@ -50,7 +50,7 @@
                     doc.addPage();
                 }
 
-                doc.addImage(containers[i].toDataURL('image/png'), 'png', 7, 10, 203, 286);
+                doc.addImage(containers[i].toDataURL('image/png'), 'png', 7, 10, 203, 286, null, 'FAST');
             }
 
             if (containers.length) {

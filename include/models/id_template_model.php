@@ -50,6 +50,8 @@ class IdTemplateModel extends Model
             return false;
         }
 
+        $this->cleanIdTemplateCache($template);
+
         return $template->delete();
     }
 
@@ -90,6 +92,8 @@ class IdTemplateModel extends Model
         if (!$template || !$template->id) {
             return false;
         }
+
+        $this->cleanIdTemplateCache($template);
 
         $template->name = $data['template']['name'];
 
@@ -350,6 +354,7 @@ WHERE
     {
         $query = '
 SELECT
+    i.id,
     i.name,
     i.background
 FROM
@@ -379,7 +384,7 @@ WHERE
     ii.template_id = ?
 ';
 
-        return new IdTemplate($row[0]['name'], $row[0]['background'], $this->db->query($query, [$template_id]));
+        return new IdTemplateData($row[0]['id'], $row[0]['name'], $row[0]['background'], $this->db->query($query, [$template_id]));
     }
 
     /**
@@ -414,5 +419,39 @@ WHERE
 
         }));
 
+    }
+
+    /**
+     * cleans out cache data for a template
+     *
+     * @param Idtemplate $template Template to clean
+     *
+     * @access public
+     * @return self
+     */
+    public function cleanIdTemplateCache(Idtemplate $template)
+    {
+        foreach (glob(CACHE_FOLDER . 'idcard_' . $template->id . '_*') as $filename) {
+            unlink($filename);
+        }
+
+        return $this;
+    }
+
+    /**
+     * cleans out cache data for a template
+     *
+     * @param Deltagere $participant Participant to clean cache for
+     *
+     * @access public
+     * @return self
+     */
+    public function cleanIdTemplateParticipantCache(Deltagere $participant)
+    {
+        foreach (glob(CACHE_FOLDER . 'idcard_*_' . $participant->id) as $filename) {
+            unlink($filename);
+        }
+
+        return $this;
     }
 }
