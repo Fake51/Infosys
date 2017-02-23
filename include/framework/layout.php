@@ -452,6 +452,7 @@ HTML;
             <li><a href='{$this->url('activities_graphed')}'>Grafisk oversigt</a></li>
             <li><a href='{$this->url('opret_aktivitet')}'>Opret aktivitet</a></li>
             <li><a href='{$this->url('show_vote_stats')}'>Afstemnings-statistik</a></li>
+            <li><a href='{$this->url('priority_signup_statistics')}'>Tilmeldings-statistik</a></li>
             <li><hr/></li>
             <li><a href='{$this->url('create_gm_briefings')}'>Opret spilleder briefings</a></li>
             <li><hr/></li>

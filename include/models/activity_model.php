@@ -318,7 +318,7 @@ class ActivityModel extends Model {
     }
 
     /**
-     * returns array with activitites scheduled for the given dates
+     * returns array with activities scheduled for the given dates
      *
      * @param array $dates - the dates to get scheduled activities for
      * @access public
@@ -1549,4 +1549,131 @@ WHERE
 
         return !empty($row['count']);
     }
+
+    /**
+     * calculates priority statistics
+     *
+     * @access public
+     * @return array
+     */
+    public function calculateSignupStatistics()
+    {
+        $query = '
+SELECT
+    ak.id AS activity_id,
+    ak.navn,
+    ak.type,
+    af.id AS schedule_id,
+    COUNT(*) AS signups
+FROM
+    aktiviteter AS ak
+    JOIN afviklinger AS af ON af.aktivitet_id = ak.id
+    JOIN deltagere_tilmeldinger AS dt ON dt.afvikling_id = af.id
+WHERE
+    dt.prioritet = 1
+GROUP BY
+    ak.id,
+    ak.navn,
+    af.id
+ORDER BY
+    ak.type,
+    ak.navn
+';
+
+        $data = [];
+
+        foreach ($this->db->query($query) as $row) {
+            if (!isset($data[$row['type']])) {
+                $data[$row['type']] = [];
+            }
+
+            if (!isset($data[$row['type']][$row['activity_id']])) {
+                $data[$row['type']][$row['activity_id']] = [
+                                                            'name'     => $row['navn'],
+                                                            'data'     => [],
+                                                            'distinct' => 0,
+                                                           ];
+
+            }
+
+            $data[$row['type']][$row['activity_id']]['data'][$row['schedule_id']] = [
+                                                                                     'signed_up' => $row['signups'],
+                                                                                     'distinct'  => 0,
+                                                                                    ];
+
+        }
+
+        $query_data = [];
+
+        foreach ($data as $type => $activities) {
+            foreach ($activities as $id => $activity) {
+                if (count($activity['data']) === 1) {
+                    $key = key($activity['data']);
+                    $data[$type][$id]['data'][$key]['distinct'] = $data[$type][$id]['distinct'] = $activity['data'][$key]['signed_up'];
+
+                } else {
+                    $ids = array_keys($activity['data']);
+
+                    $query_data = array_merge($query_data, array_map(function ($item) use ($ids, $type, $id) {
+                        return [
+                                'type' => $type,
+                                'activity_id' => $id,
+                                'schedule_id' => $item,
+                                'mask_ids'    => array_diff($ids, [$item]),
+                               ];
+                    }, $ids));
+
+                }
+
+            }
+
+        }
+
+        $clauses = $arguments = [];
+
+        foreach ($query_data as $index => $row) {
+            $clauses[] = str_replace('MASK', implode(', ', array_fill(0, count($row['mask_ids']), '?')), '
+SELECT
+    ? AS type,
+    ? AS activity_id,
+    dt.afvikling_id,
+    COUNT(*) AS signups
+FROM
+    deltagere_tilmeldinger AS dt
+WHERE
+    afvikling_id = ?
+    AND dt.prioritet = 1
+    AND dt.deltager_id NOT IN (
+        SELECT
+            dt.deltager_id
+        FROM
+            deltagere_tilmeldinger AS dt
+        WHERE
+            dt.afvikling_id IN (MASK)
+            AND dt.prioritet = 1
+    )
+');
+
+            $arguments = array_merge($arguments, [$row['type'], $row['activity_id'], $row['schedule_id']], $row['mask_ids']);
+
+        }
+
+        $query = implode("\nUNION\n", $clauses);
+
+        foreach ($this->db->query($query, $arguments) as $row) {
+            $data[$row['type']][$row['activity_id']]['data'][$row['afvikling_id']]['distinct'] = $row['signups'];
+        }
+
+        foreach ($data as $type => $activities) {
+            foreach ($activities as $activity_id => $activity_data) {
+                $data[$type][$activity_id]['distinct'] = array_sum(array_map(function ($x) {
+                    return $x['distinct'];
+                }, $activity_data['data']));
+            }
+        }
+
+        return $data;
+
+    }
+
 }

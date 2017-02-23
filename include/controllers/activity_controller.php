@@ -727,6 +727,18 @@ class ActivityController extends Controller
         $this->hardRedirect($this->url('vis_alle_aktiviteter'));
     }
 
+    /**
+     * shows distinct signups for activities
+     *
+     * @access public
+     * @return void
+     */
+    public function showPrioritySignupStatistics()
+    {
+        $this->page->setTitle('Tilmeldings-statistik');
+        $this->page->activity_data = $this->model->calculateSignupStatistics();
+    }
+
     //{{{ ajax methods
     /**
      * outputs string of <option> elements containing times for an activity
