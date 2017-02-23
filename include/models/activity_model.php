@@ -1571,9 +1571,11 @@ FROM
     JOIN deltagere_tilmeldinger AS dt ON dt.afvikling_id = af.id
 WHERE
     dt.prioritet = 1
+    AND dt.tilmeldingstype = "spiller"
 GROUP BY
     ak.id,
     ak.navn,
+    ak.type,
     af.id
 ORDER BY
     ak.type,
@@ -1643,6 +1645,7 @@ FROM
 WHERE
     afvikling_id = ?
     AND dt.prioritet = 1
+    AND dt.tilmeldingstype = "spiller"
     AND dt.deltager_id NOT IN (
         SELECT
             dt.deltager_id
@@ -1651,6 +1654,7 @@ WHERE
         WHERE
             dt.afvikling_id IN (MASK)
             AND dt.prioritet = 1
+            AND dt.tilmeldingstype = "spiller"
     )
 ');
 
@@ -1664,16 +1668,35 @@ WHERE
             $data[$row['type']][$row['activity_id']]['data'][$row['afvikling_id']]['distinct'] = $row['signups'];
         }
 
-        foreach ($data as $type => $activities) {
-            foreach ($activities as $activity_id => $activity_data) {
-                $data[$type][$activity_id]['distinct'] = array_sum(array_map(function ($x) {
-                    return $x['distinct'];
-                }, $activity_data['data']));
-            }
+        $query = '
+SELECT
+    t.activity_id,
+    t.type,
+    COUNT(*) AS count
+FROM (
+    SELECT
+        DISTINCT
+        ak.id AS activity_id,
+        ak.type,
+        dt.deltager_id
+    FROM
+        aktiviteter AS ak
+        JOIN afviklinger AS af ON af.aktivitet_id = ak.id
+        JOIN deltagere_tilmeldinger AS dt ON dt.afvikling_id = af.id
+    WHERE
+        dt.prioritet = 1
+        AND dt.tilmeldingstype = "spiller"
+) AS t
+GROUP BY
+    t.activity_id,
+    t.type
+';
+
+        foreach ($this->db->query($query) as $row) {
+            $data[$row['type']][$row['activity_id']]['distinct'] = $row['count'];
         }
 
         return $data;
-
     }
 
 }
