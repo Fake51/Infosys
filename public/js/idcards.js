@@ -47,14 +47,14 @@
 
             for (i = 0, length = containers.length; i < length; i++) {
                 if (i > 0) {
-                    //doc.addPage();
+                    doc.addPage();
                 }
 
-                //doc.addImage(containers[i].toDataURL('image/png'), 'png', 7, 10, 203, 286, null, 'FAST');
+                doc.addImage(containers[i].toDataURL('image/png'), 'png', 7, 10, 203, 286, null, 'FAST');
             }
 
             if (containers.length) {
-                //doc.save('idcards.pdf');
+                doc.save('idcards.pdf');
             }
         };
 

@@ -142,4 +142,17 @@ $(function() {
 
         window.open(address.replace(/id_range/, range.join('-')));
     });
+
+    $('.id-cards').click(function(e) {
+        var range   = [],
+            address = $(this).attr('href');
+
+        e.preventDefault();
+
+        $('table.data-table tbody tr').each(function() {
+            range.push($(this).children().first().text());
+        });
+
+        window.open(address.replace(/id_range/, range.join('-')));
+    });
 });
