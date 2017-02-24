@@ -775,7 +775,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
                 $deltager = $this->createEntity('Deltagere')->findById($json['id']);
             }
 
-            if (empty($json['gds']) || !is_array($json['gds'])) {
+            if (!isset($json['gds']) || !is_array($json['gds'])) {
                 throw new FrameworkException('No data available');
             }
 
@@ -789,10 +789,6 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
                 //$this->db->exec("INSERT INTO deltagere_gdstilmeldinger (deltager_id, category_id, period) VALUES (?, ?, ?)", $deltager->id, $gds['kategori_id'], $gds['period']);
             }
         } catch (Exception $e) {
-            echo "<pre>";
-            var_dump($e);
-            echo "</pre>";
-            exit;
             return 'Failed to add gds choices for participant';
         }
     }
@@ -803,7 +799,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
                 $deltager = $this->createEntity('Deltagere')->findById($json['id']);
             }
 
-            if (empty($json['food']) || !is_array($json['food'])) {
+            if (!isset($json['food']) || !is_array($json['food'])) {
                 throw new FrameworkException('No data available');
             }
 
@@ -908,10 +904,16 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
         if (!empty($data['wear']) && is_array($data['wear'])) {
             $errors[] = $this->addWear($data, $participant);
+
+        } else {
+            $errors[] = $this->addWear(['wear' => []], $participant);
         }
 
         if (!empty($data['activity']) && is_array($data['activity'])) {
             $errors[] = $this->addActivity($data, $participant);
+
+        } else {
+            $errors[] = $this->addActivity(['activity' => []], $participant);
         }
 
         if (!empty($data['entrance']) && is_array($data['entrance'])) {
@@ -920,10 +922,14 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
         if (!empty($data['gds']) && is_array($data['gds'])) {
             $errors[] = $this->addGDS($data, $participant);
+        } else {
+            $errors[] = $this->addGDS(['gds' => []], $participant);
         }
 
         if (!empty($data['food']) && is_array($data['food'])) {
             $errors[] = $this->addFood($data, $participant);
+        } else {
+            $errors[] = $this->addFood(['food' => []], $participant);
         }
 
         return array_filter($errors);
