@@ -733,9 +733,8 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
                 $deltager = $this->createEntity('Deltagere')->findById($json['id']);
             }
 
-            if (empty($json['wear']) || !is_array($json['wear'])) {
-                header("HTTP/1.1 403 Bad data - Wear");
-                exit;
+            if (!isset($json['wear']) || !is_array($json['wear'])) {
+                throw new FrameworkException('No data available ');
             }
 
             $deltager->removeAllWear();
@@ -822,7 +821,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
                 $deltager = $this->createEntity('Deltagere')->findById($json['id']);
             }
 
-            if (empty($json['activity']) || !is_array($json['activity'])) {
+            if (!isset($json['activity']) || !is_array($json['activity'])) {
                 throw new FrameworkException('No data available ');
             }
 
@@ -851,7 +850,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
                 $deltager = $this->createEntity('Deltagere')->findById($json['id']);
             }
 
-            if (empty($json['entrance']) || !is_array($json['entrance'])) {
+            if (!isset($json['entrance']) || !is_array($json['entrance'])) {
                 throw new FrameworkException('No data available');
             }
 
@@ -922,12 +921,14 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
         if (!empty($data['gds']) && is_array($data['gds'])) {
             $errors[] = $this->addGDS($data, $participant);
+
         } else {
             $errors[] = $this->addGDS(['gds' => []], $participant);
         }
 
         if (!empty($data['food']) && is_array($data['food'])) {
             $errors[] = $this->addFood($data, $participant);
+
         } else {
             $errors[] = $this->addFood(['food' => []], $participant);
         }
