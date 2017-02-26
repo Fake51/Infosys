@@ -40,6 +40,11 @@ Ved alle muligheder skal du huske at anføre dit navn og deltagernummer (<?= $th
 <table style="float: left; max-width: 49%;"><tbody>
 <tr><td colspan="2">====== PERSONLIGE OPLYSNINGER ======</td></tr>
 <tr><td>Navn:                                  </td><td><?= $this->participant->fornavn . ' ' . $this->participant->efternavn;?></td></tr>
+<?php if ($this->participant->adresse1) : ?>
+<tr><td>Adresse:                               </td><td><?= $this->participant->adresse1 . ' ' . $this->participant->adresse2;?></td></tr>
+<tr><td>Postnr.:                               </td><td><?= $this->participant->postnummer;?></td></tr>
+<tr><td>By:                                    </td><td><?= $this->participant->by;?></td></tr>
+<?php endif;?>
 <tr><td>Land:                                  </td><td><?= $this->participant->land;?></td></tr>
 <?php if ($this->participant->mobiltlf) : ?>
 <tr><td>Mobil (SMS-service under Fastaval):    </td><td><?= $this->participant->mobiltlf;?> (<?= $this->participant->medbringer_mobil === 'ja' ? 'Ja' : 'Nej';?>)</td></tr>
