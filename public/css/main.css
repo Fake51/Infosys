@@ -1279,6 +1279,16 @@ div#food-handout-container div#registration-result div, div#wear-handout-contain
     padding: 10px;
 }
 
+#registration-result {
+    font-size: 1.3rem;
+}
+
+#registration-result div span {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.2rem;
+}
+
 div#food-handout-container div.error, div#wear-handout-container div.error, div#checkin-interface-container div.error {
     background-color: #ff4444;
 }

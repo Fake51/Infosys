@@ -110,6 +110,10 @@ class ParticipantController extends Controller
 
             $this->page->id_template_select_data = $this->model->fetchTemplateSelectData($this->page->default_template);
 
+            if ($this->page->deltager->getAge(new DateTime($this->config->get('con.start'))) < 18) {
+                $this->page->includeCSS('youngster.css');
+            }
+
         } else {
             $this->page->setTemplate('noResults');
             $this->page->setTitle('Intet resultat');

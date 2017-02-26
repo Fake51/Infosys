@@ -1620,6 +1620,10 @@ SQL;
 
         }
 
+        if ($deltager->getAge(new DateTime($this->config->get('con.start'))) < 18) {
+            $text .= '<br/><span style="background-color: palegoldenrod; color: #000;">Deltageren <strong>er under 18 år.</strong></span>';
+        }
+
         $deltager->update();
 
         return $text;
