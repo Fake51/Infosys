@@ -14,10 +14,10 @@
 
 <h4>Payment by banktransfer</h4>
 <p> </p>
-<p>If you cannot pay online, it is also possible to pay through banktransfer. It is however a bit more expensive, as it involves more work. Because of that, there is a fee of 10DKK on banktransfers.</p>
+<p>If you cannot pay online, it is also possible to pay through banktransfer. It is however a bit more expensive, as it involves more work. Because of that, there is a fee of <?= e($this->banking_fee);?>DKK on banktransfers.</p>
 <p>To pay by banktransfer, use the information below:</p>
 <ul>
-    <li>Payment due is <?= e($this->payment_remainder + 10);?>DKK (<?= e($this->payment_remainder);?>DKK + 10DKK fee)</li>
+    <li>Payment due is <?= e($this->payment_remainder + floatval($this->banking_fee));?>DKK (<?= e($this->payment_remainder);?>DKK + <?= e($this->banking_fee);?>DKK fee)</li>
     <li>From a Danish bank: Reg.: 9314 / Account: 4573884464</li>
     <li>Paying from a bank outside of Denmark, you should use these details:
         <ul>

@@ -1682,6 +1682,7 @@ class ParticipantController extends Controller
         $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;
+        $this->page->banking_fee = $this->model->findBankingFee();
 
         foreach ($participants as $participant) {
             $this->sendPaymentReminder($participant, 'firstpaymentreminder', $participant->speaksDanish());
@@ -1701,6 +1702,7 @@ class ParticipantController extends Controller
         $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;
+        $this->page->banking_fee = $this->model->findBankingFee();
 
         foreach ($participants as $participant) {
             $this->sendPaymentReminder($participant, 'secondpaymentreminder', $participant->speaksDanish());
