@@ -415,4 +415,61 @@ SQL;
 
         return $shift->getParticipants();
     }
+
+    /**
+     * fethches signups for a diy shift
+     *
+     * @param $shift_id Id of shift to fetch signups for
+     *
+     * @access public
+     * @return array
+     */
+    public function fetchDiyShiftSignups($shift_id)
+    {
+        $vagt = $this->findEntity('GDSVagter', $shift_id);
+
+        if (!$vagt) {
+            return [];
+        }
+
+        $deltagere = $vagt->getSignups();
+        $on_shift  = $vagt->getParticipants();
+
+        for ($i = 0; $i < count($on_shift); $i++) {
+            $on_shift[$i] = $on_shift[$i]->id;
+        }
+
+        $output = array();
+
+        $date = new DateTime($this->config->get('con.start'));
+
+        foreach ($deltagere as $d) {
+            if (in_array($d->id, $on_shift)) {
+                continue;
+            }
+
+            $disabled  = 'false';
+            $maxshifts = 'false';
+
+            if ($d->isBusyBetween($vagt->start, $vagt->slut)) {
+                $disabled = 'true';
+            }
+
+            if ($d->hasMaxShifts()) {
+                $maxshifts = 'true';
+            }
+
+            $output[] = [
+                'id'             => $d->id,
+                'navn'           => e($d->fornavn) . ' ' . e($d->efternavn) . ($d->getAge($date) < 18 ? ' (u18)' : ''),
+                'mobil'          => e($d->mobiltlf),
+                'disabled'       => $disabled,
+                'maxshifts'      => $maxshifts,
+                'assignedShifts' => count($d->getGDSVagter()),
+               ];
+
+        }
+
+        return $output;
+    }
 }

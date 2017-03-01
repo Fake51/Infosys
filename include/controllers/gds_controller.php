@@ -219,40 +219,12 @@ class GdsController extends Controller
     public function ajaxGetSignups()
     {
         $this->ajaxHeader();
-        if (empty($this->vars['vagt_id']) || !($vagt = $this->model->findEntity('GDSVagter', $this->vars['vagt_id']))) {
+
+        if (empty($this->vars['vagt_id'])) {
             exit;
         }
 
-        $deltagere = $vagt->getSignups();
-        $on_shift  = $vagt->getParticipants();
-        for ($i = 0; $i < count($on_shift); $i++) {
-            $on_shift[$i] = $on_shift[$i]->id;
-        }
-
-        $output = array();
-        foreach ($deltagere as $d) {
-            if (in_array($d->id, $on_shift)) {
-                continue;
-            }
-
-            $disabled  = 'false';
-            $maxshifts = 'false';
-
-            if ($d->isBusyBetween($vagt->start, $vagt->slut)) {
-                $disabled = 'true';
-            }
-
-            if ($d->hasMaxShifts()) {
-                $maxshifts = 'true';
-            }
-
-            $output[] = array(
-                'id'        => $d->id,
-                'navn'      => "{$d->fornavn} {$d->efternavn}",
-                'mobil'     => $d->mobiltlf,
-                'disabled'  => $disabled,
-                'maxshifts' => $maxshifts);
-        }
+        $output = $this->model->fetchDiyShiftSignups($this->vars['vagt_id']);
 
         echo json_encode($output);
 

@@ -335,12 +335,20 @@ var gds_object = {
         if (user.disabled == 'false') {
             box = row.find('input');
             box.addClass('gds-remove-participant-' + user.id);
+
             if (user.maxshifts == 'true') {
                 box.addClass('gds-busy-box');
+
                 if (!override) {
                     box.hide();
                 }
+
             }
+
+        }
+
+        if (user.assignedShifts > 0) {
+            row.addClass('gds-already-assigned');
         }
 
         return row;

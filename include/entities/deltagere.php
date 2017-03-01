@@ -273,10 +273,10 @@ class Deltagere extends DBObject implements AgeFulfilment
     public function getGDSVagter()
     {
 
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return array();
         }
+
         return $this->createEntity('DeltagereGDSVagter')->getDeltagerVagter($this);
     }
 
