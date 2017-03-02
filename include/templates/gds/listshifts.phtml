@@ -1,11 +1,11 @@
 <?php echo $this->getMessagesHtml();?>
 <h1>Vagter for <?php echo e($this->gds->navn);?> (<?php echo e($this->gds->title_en);?>)</h1>
-<ul>
+<ul class="diyShiftList">
     <?php foreach ($this->shifts as $shift) :?>
-        <li><?php echo danishDayNames(date('l, H:i', strtotime($shift->start)));?>
-            <ul>
+        <li class="diyShiftList_timeSlot"><?php echo danishDayNames(date('l, H:i', strtotime($shift->start)));?>
+            <ul class="diyShiftList_timeSlot_participants">
                 <?php foreach ($shift->getParticipants() as $participant) :?>
-                    <li><?php echo e($participant->getName());?> - Mobil: <?php echo e($participant->mobiltlf);?></li>
+                    <li class="diyShiftList_timeSlot_participant"><span class="diyShiftList_timeSlot_participant_checkbox"></span> <?php echo e($participant->getName());?> - Mobil: <?php echo e($participant->mobiltlf);?></li>
                 <?php endforeach;?>
             </ul>
         </li>

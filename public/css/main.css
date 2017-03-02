@@ -1205,6 +1205,29 @@ div#gds-calendar table#gds-calendar-table div.gds-popuptable td.gds-isbusy a:hov
     background-color: #f0f0f0;
 }
 
+.gds-already-assigned.gds-signup-row.gds-altern a {
+    color: blue;
+}
+
+.gds-already-assigned.gds-signup-row.gds-altern {
+    background: lawngreen;
+    color: blue;
+}
+
+.diyShiftList_timeSlot_participants {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+.diyShiftList_timeSlot_participant_checkbox {
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 1px solid black;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
 /* }}} */
 
 /* {{{ indgang styles */
