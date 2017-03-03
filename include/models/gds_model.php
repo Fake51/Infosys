@@ -459,13 +459,19 @@ SQL;
                 $maxshifts = 'true';
             }
 
+            $age = $d->getAge($date);
+
             $output[] = [
                 'id'             => $d->id,
-                'navn'           => e($d->fornavn) . ' ' . e($d->efternavn) . ($d->getAge($date) < 18 ? ' (u18)' : ''),
+                'navn'           => e($d->fornavn) . ' ' . e($d->efternavn) . ($age < 18 ? ' (u18)' : ''),
                 'mobil'          => e($d->mobiltlf),
                 'disabled'       => $disabled,
                 'maxshifts'      => $maxshifts,
                 'assignedShifts' => count($d->getGDSVagter()),
+                'email'          => e($d->email),
+                'note'           => e($d->deltager_note),
+                'medical_note'   => e($d->medical_note),
+                'age'            => $age,
                ];
 
         }

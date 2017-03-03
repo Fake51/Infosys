@@ -107,6 +107,26 @@
         </tbody>
     </table>
 </div>
+<script type="text/template" id="gds-participant-popup-template">
+<div class="gds-participant-popup">
+<dl>
+    <dt>Id</dt>
+    <dd>{{id}}</dd>
+    <dt>Navn</dt>
+    <dd>{{name}}</dd>
+    <dt>Alder</dt>
+    <dd>{{age}}</dd>
+    <dt>Mobil</dt>
+    <dd>{{phone}}</dd>
+    <dt>Email</dt>
+    <dd>{{email}}</dd>
+    <dt>Note</dt>
+    <dd>{{note}}</dd>
+    <dt>Medical note</dt>
+    <dd>{{medical-note}}</dd>
+</dl>
+</div>
+</script>
 <script type='text/javascript' src="<?= $this->JSLink('gds.js');?>"></script>
 <script type='text/javascript'>
 gds_object.public_uri = '<?= $this->public_uri;?>';

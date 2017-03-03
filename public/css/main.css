@@ -1228,6 +1228,19 @@ div#gds-calendar table#gds-calendar-table div.gds-popuptable td.gds-isbusy a:hov
     margin-right: 0.5rem;
 }
 
+.gds-participant-popup {
+    position: absolute;
+    background-color: #fff;
+    min-width: 15rem;
+    max-width: 30rem;
+    border: 1px solid black;
+    padding: 0.6rem;
+}
+
+.gds-participant-popup dl {
+    margin: 0;
+}
+
 /* }}} */
 
 /* {{{ indgang styles */

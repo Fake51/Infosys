@@ -318,6 +318,7 @@ var gds_object = {
             row = this.createRow(json_array[i], override, shift_id);
             row.addClass(row_class);
             tbody.append(row);
+
             if (!(i % 2)) {
                 row.addClass('gds-altern');
             }
@@ -325,7 +326,7 @@ var gds_object = {
     },
 
     createRow: function(user, override, shift_id){
-        var row = $('<tr><td class="gds-checkbox-cell"><input type="checkbox"/></td><td class="name"><a href="' + gds_object.public_uri + 'deltager/visdeltager/' + user.id + '">' + user.navn + '</a></td><td>' + user.mobil + '</td><td class="hidden noshow"><input type="checkbox" class="no-show" data-participant="' + user.id + '" data-shift="' + shift_id + '"/></td></tr>'),
+        var row = $('<tr data-name="' + user.navn + '" data-email="' + user.email + '" data-note="' + user.note + '" data-medical-note="' + user.medical_note + '" data-id="' + user.id + '" data-phone="' + user.mobil + '" data-age="' + user.age + '"><td class="gds-checkbox-cell"><input type="checkbox"/></td><td class="name"><a href="' + gds_object.public_uri + 'deltager/visdeltager/' + user.id + '">' + user.navn + '</a></td><td>' + user.mobil + '</td><td class="hidden noshow"><input type="checkbox" class="no-show" data-participant="' + user.id + '" data-shift="' + shift_id + '"/></td></tr>'),
             box;
 
         if (user.disabled == 'true' || user.maxshifts =='true') {
@@ -515,6 +516,93 @@ var gds_object = {
         });
     },
 
+    makeParticipantHoverHandler: function () {
+        var displayPopupTimeout = null,
+            $popup = null,
+            template = document.getElementById('gds-participant-popup-template').textContent,
+            removePopup = function () {
+                $popup.remove();
+                $popup = null;
+            },
+            makeElement = function ($row) {
+                return ['id', 'name', 'note', 'medical-note', 'phone', 'email', 'age'].reduce(function (agg, next) {
+                    return agg.replace('{{' + next + '}}', $row.attr('data-' + next));
+                }, template).replace(/\n/, '');
+            },
+            makeParticipantPopup = function ($row, x, y) {
+                var popupHeight = 0,
+                    top = y - 30;
+
+                $popup = $(makeElement($row));
+
+                $popup.attr('data-id', $row.attr('data-id'));
+
+                $popup.css({
+                    top: 0,
+                    left: 0,
+                    'z-index': -1
+                });
+
+                $popup.appendTo('body');
+                popupHeight = $popup.height();
+
+                if (popupHeight + top > document.body.scrollHeight) {
+                    top = document.body.scrollHeight - popupHeight - 20;
+                }
+
+                $popup.css({
+                    top: top + 'px',
+                    left: (x + 10) + 'px',
+                    'z-index': 1
+                });
+            };
+
+        return function (e) {
+            var $element = $(document.elementFromPoint(e.clientX, e.clientY)),
+                $row = $element.closest('.gds-signup-row');
+
+            if (displayPopupTimeout) {
+                clearTimeout(displayPopupTimeout);
+                displayPopupTimeout = null;
+
+            }
+
+            if ($row.length) {
+                if ($popup) {
+                    if ($popup.attr('data-id') === $row.attr('data-id')) {
+                        return;
+                    }
+
+                    removePopup();
+                }
+
+                displayPopupTimeout = setTimeout(makeParticipantPopup.bind(null, $row, e.pageX, e.pageY), 300);
+
+                return;
+            }
+
+            if ($popup) {
+                removePopup();
+            }
+        };
+    },
+
+    debounce: function (callback, time) {
+        var waitPeriod = null;
+
+        return function (e) {
+            if (waitPeriod) {
+                return;
+            }
+
+            waitPeriod = setTimeout(function () {
+                waitPeriod = null;
+            }, time);
+
+            return callback(e);
+        };
+    },
+
     setup: function() {
         var that = this;
         // setup event handlers for all links that need it
@@ -523,43 +611,29 @@ var gds_object = {
             'click', 'a.gds-category-link', this.handleCategoryLinkClick
         );
 
-        $('table#gds-calendar-table').on(
-            'click', 'a.gds-shift-link', this.handleShiftLinkClick
-        ).on(
-            'click', 'a.gds-close-popup', function(e) {
+        $('#gds-calendar-table').on('click', 'a.gds-shift-link', this.handleShiftLinkClick)
+            .on('click', 'a.gds-close-popup', function(e) {
                 e.preventDefault();
                 that.normaliseShiftLinks();
                 $('span.gds-shift-popupdetails').hide();
-            }
-        ).on(
-            'click', 'input.no-show', this.handleNoshowEvent
-        ).on(
-            'click', 'a.gds-remove-participants', this.handleRemoveParticipants
-        ).on(
-            'click', 'a.gds-add-signups', this.handleAddSignups
-        ).on(
-            'click', 'a.gds-add-randoms', this.handleAddSignups
-        ).on(
-            'click', 'a.find-suggestions', this.handleFindSuggestionsEvent
-        ).on(
-            'click', 'i.assign-to-shift', this.handleAssignToShiftEvent
-        ).on(
-            'click', 'i.mark-contacted', this.handleMarkContactedEvent
-        ).on(
-            'click', 'input.gds-search-button', this.handleAjaxSearch
-        ).on(
-            'click', 'tr.show-rest', this.handleShowRemainingSuggestionsEvent
-        ).on(
-            'click', 'img[data-role="shift-search"]', this.handleSearchShiftParticipants
-        ).on(
-            'keydown', 'input.gds-search-box', function(e) {
+            })
+            .on('mousemove', '.gds-popuptable', this.debounce(this.makeParticipantHoverHandler(), 100))
+            .on('click', 'input.no-show', this.handleNoshowEvent)
+            .on('click', 'a.gds-remove-participants', this.handleRemoveParticipants)
+            .on('click', 'a.gds-add-signups', this.handleAddSignups)
+            .on('click', 'a.gds-add-randoms', this.handleAddSignups)
+            .on('click', 'a.find-suggestions', this.handleFindSuggestionsEvent)
+            .on('click', 'i.assign-to-shift', this.handleAssignToShiftEvent)
+            .on('click', 'i.mark-contacted', this.handleMarkContactedEvent)
+            .on('click', 'input.gds-search-button', this.handleAjaxSearch)
+            .on('click', 'tr.show-rest', this.handleShowRemainingSuggestionsEvent)
+            .on('click', 'img[data-role="shift-search"]', this.handleSearchShiftParticipants)
+            .on('keydown', 'input.gds-search-box', function(e) {
                 if (e.keyCode && e.keyCode == 13) {
                     that.handleAjaxSearch.call(this, e);
                 }
-            }
-        ).on(
-            'change', 'input.gds-override', this.flipInactiveRows
-        );
+            })
+            .on('change', 'input.gds-override', this.flipInactiveRows);
 
     }
 
