@@ -183,7 +183,7 @@ case 'a':
     <?php foreach ($this->activities as $activity_signup) : ?>
         <?php $activity = $activity_signup->getActivity();
               $schedule = $activity_signup->getAfvikling();?>
-<tr><td><?= $activity->title_en;?> <?= date('M j', strtotime($schedule->start));?> - <?= $activity_signup->tilmeldingstype === 'spiller' ? $activity_signup->prioritet . '. priority' : 'Gamemaster';?></td></tr>
+<tr><td><?= $activity->title_en;?> <?= date('M j, H:i', strtotime($schedule->start));?> - <?= $activity_signup->tilmeldingstype === 'spiller' ? $activity_signup->prioritet . '. priority' : 'Gamemaster';?></td></tr>
     <?php endforeach;?>
 </tbody></table>
 <?php endif;?>
