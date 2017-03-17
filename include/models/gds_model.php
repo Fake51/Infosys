@@ -448,6 +448,10 @@ SQL;
                 continue;
             }
 
+            if ($d->isSingleDayParticipant()) {
+                continue;
+            }
+
             $disabled  = 'false';
             $maxshifts = 'false';
 
@@ -463,7 +467,7 @@ SQL;
 
             $output[] = [
                 'id'             => $d->id,
-                'navn'           => e($d->fornavn) . ' ' . e($d->efternavn) . ($age < 18 ? ' (u18)' : ''),
+                'navn'           => e($d->getName()) . ($age < 18 ? ' (u18)' : ''),
                 'mobil'          => e($d->mobiltlf),
                 'disabled'       => $disabled,
                 'maxshifts'      => $maxshifts,
@@ -472,6 +476,7 @@ SQL;
                 'note'           => e($d->deltager_note),
                 'medical_note'   => e($d->medical_note),
                 'age'            => $age,
+                'isGamemaster'   => $d->isGamemaster(),
                ];
 
         }

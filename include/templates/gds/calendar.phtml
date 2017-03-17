@@ -49,7 +49,7 @@
                                                         $class = $d->signedUpForGDSShift($shift) ? $class . ' gds-signup-row' : $class;
                                                         $noshow = $shift->participantWasNoshow($d);
                                                     ?>
-                                                        <tr class="<?= $class;?>">
+                                                        <tr class="<?= $class;?>" data-name="<?= e($d->getName());?>" data-phone="<?= e($d->mobiltlf);?>" data-email="<?= e($d->email);?>" data-note="" data-medical-note="" data-age="">
                                                             <td class='gds-checkbox-cell'><input type='checkbox' class='gds-remove-participant-<?= $d->id;?>'/></td>
                                                             <td><a href="<?= $this->url('visdeltager',array('id' => $d->id));?>"><?= $d->fornavn;?> <?= $d->efternavn;?></a></td>
                                                             <td><?= $d->mobiltlf;?></td>
@@ -124,6 +124,10 @@
     <dd>{{note}}</dd>
     <dt>Medical note</dt>
     <dd>{{medical-note}}</dd>
+    <dt>Tildelte vagter</dt>
+    <dd>{{assigned-shifts}}</dd>
+    <dt>Spilleder</dt>
+    <dd>{{gamemaster}}</dd>
 </dl>
 </div>
 </script>

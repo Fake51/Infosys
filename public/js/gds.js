@@ -326,7 +326,7 @@ var gds_object = {
     },
 
     createRow: function(user, override, shift_id){
-        var row = $('<tr data-name="' + user.navn + '" data-email="' + user.email + '" data-note="' + user.note + '" data-medical-note="' + user.medical_note + '" data-id="' + user.id + '" data-phone="' + user.mobil + '" data-age="' + user.age + '"><td class="gds-checkbox-cell"><input type="checkbox"/></td><td class="name"><a href="' + gds_object.public_uri + 'deltager/visdeltager/' + user.id + '">' + user.navn + '</a></td><td>' + user.mobil + '</td><td class="hidden noshow"><input type="checkbox" class="no-show" data-participant="' + user.id + '" data-shift="' + shift_id + '"/></td></tr>'),
+        var row = $('<tr data-name="' + user.navn + '" data-email="' + user.email + '" data-note="' + user.note + '" data-medical-note="' + user.medical_note + '" data-id="' + user.id + '" data-phone="' + user.mobil + '" data-age="' + user.age + '" data-gamemaster="' + (user.isGamemaster ? 'yes' : 'no') + '" data-assigned-shifts="' + user.assignedShifts + '"><td class="gds-checkbox-cell"><input type="checkbox"/></td><td class="name"><a href="' + gds_object.public_uri + 'deltager/visdeltager/' + user.id + '">' + user.navn + '</a></td><td>' + user.mobil + '</td><td class="hidden noshow"><input type="checkbox" class="no-show" data-participant="' + user.id + '" data-shift="' + shift_id + '"/></td></tr>'),
             box;
 
         if (user.disabled == 'true' || user.maxshifts =='true') {
@@ -350,6 +350,10 @@ var gds_object = {
 
         if (user.assignedShifts > 0) {
             row.addClass('gds-already-assigned');
+        }
+
+        if (user.isGamemaster) {
+            row.addClass('gds-is-gamemaster');
         }
 
         return row;
@@ -525,7 +529,7 @@ var gds_object = {
                 $popup = null;
             },
             makeElement = function ($row) {
-                return ['id', 'name', 'note', 'medical-note', 'phone', 'email', 'age'].reduce(function (agg, next) {
+                return ['id', 'name', 'note', 'medical-note', 'phone', 'email', 'age', 'gamemaster', 'assigned-shifts'].reduce(function (agg, next) {
                     return agg.replace('{{' + next + '}}', $row.attr('data-' + next));
                 }, template).replace(/\n/, '');
             },

@@ -1209,9 +1209,22 @@ div#gds-calendar table#gds-calendar-table div.gds-popuptable td.gds-isbusy a:hov
     color: blue;
 }
 
-.gds-already-assigned.gds-signup-row.gds-altern {
+.gds-already-assigned.gds-signup-row, .gds-already-assigned.gds-signup-row.gds-altern {
     background: lawngreen;
     color: blue;
+}
+
+.gds-is-gamemaster.gds-signup-row.gds-altern a {
+    color: blue;
+}
+
+.gds-is-gamemaster.gds-signup-row, .gds-is-gamemaster.gds-signup-row.gds-altern {
+    background: coral;
+    color: blue;
+}
+
+.gds-already-assigned.gds-is-gamemaster.gds-signup-row, .gds-already-assigned.gds-is-gamemaster.gds-signup-row.gds-altern {
+    background: gold;
 }
 
 .diyShiftList_timeSlot_participants {

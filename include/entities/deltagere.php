@@ -1520,4 +1520,48 @@ WHERE
 
         return $results[0];
     }
+
+    /**
+     * returns true if the participant takes a turn as a gamemaster
+     *
+     * @access public
+     * @return bool
+     */
+    public function isGamemaster()
+    {
+        if (!$this->id) {
+            return false;
+        }
+
+        $query = '
+SELECT
+    COUNT(*) AS turns
+FROM
+    pladser AS p
+WHERE
+    p.deltager_id = ?
+    AND p.type = "spilleder"
+';
+
+        $result = $this->db->query($query, [$this->id]);
+
+        return intval($result[0]['turns']) > 0;
+    }
+
+    /**
+     * returns true if the participant only has entrance
+     * to the convention for a single day
+     *
+     * @access public
+     * @return bool
+     */
+    public function isSingleDayParticipant()
+    {
+        return false;
+        return count(array_filter($this->getIndgang(), function ($x) {
+            return $x->isDayTicket() && $x->isEntrance();
+        })) <= 1 && count(array_filter($this->getIndgang(), function ($x) {
+            return $x->isEntrance() && !$x->isDayTicket();
+        })) === 0;
+    }
 }

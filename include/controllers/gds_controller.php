@@ -86,23 +86,24 @@ class GdsController extends Controller
     public function viewDay($date = null)
     {
         $dates = $this->model->getGDSDates();
-        if (empty($this->vars['date']) && !$date)
-        {
+
+        if (empty($this->vars['date']) && !$date) {
             $date = $dates[0];
-        }
-        else
-        {
+
+        } else {
             $date = (($date) ? $date : $this->vars['date']);
-            if (!in_array($date, $dates))
-            {
+
+            if (!in_array($date, $dates)) {
                 $date = $dates[0];
             }
         }
+
         $this->page->gds_dates = $dates;
         $this->page->selected_date = $date;
         $this->page->gds_categories = $this->model->getGDSCategories();
         $this->page->shifts = $this->model->getGDSShiftsForDate($date);
         $this->page->setTemplate('calendar');
+        $this->page->con_start = new DateTime($this->config->get('con.start'));
     }
 
     /**
