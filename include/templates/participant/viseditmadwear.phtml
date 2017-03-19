@@ -103,6 +103,7 @@
 <script src="<?php echo $this->JSLink('imwedit.js');?>" type='text/javascript'></script>
 <script type='text/javascript'>
 madwearedit.public_uri = '<?php echo $this->public_uri;?>';
+madwearedit.wearSizes  = <?= json_encode($this->wear_sizes);?>;
 madwearedit.setupIndgang();
 madwearedit.setupMad();
 madwearedit.setupWear();

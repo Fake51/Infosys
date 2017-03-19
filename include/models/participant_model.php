@@ -2925,4 +2925,15 @@ WHERE
 
         return $data;
     }
+
+    /**
+     * returns available wear sizes
+     *
+     * @access public
+     * @return array
+     */
+    public function getWearSizes()
+    {
+        return $this->createEntity('Wear')->getWearSizes();
+    }
 }

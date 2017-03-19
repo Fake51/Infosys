@@ -583,10 +583,13 @@ class ParticipantController extends Controller
         }
         if (!$this->page->request->isPost()) {
             $this->page->setTitle('Rediger indgang, mad og wear');
-            $this->page->deltager = $deltager;
+            $this->page->deltager      = $deltager;
             $this->page->deltager_info = $this->model->findDeltagerInfo($deltager);
+            $this->page->model         = $this->model;
+            $this->page->wear_sizes    = $this->model->getWearSizes();
+
             $this->page->setTemplate('visEditMadWear');
-            $this->page->model = $this->model;
+
         } else {
             $this->model->updateIMW($deltager, $this->page->request->post) ? $this->successMessage('Deltageren blev opdateret.') : $this->errorMessage('Kunne ikke opdatere deltageren.');
 

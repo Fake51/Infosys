@@ -455,25 +455,21 @@ var madwearedit = {
     },
 
     prepareSecondWearArray: function(sizerange){
-        var final_array = [];
-        var size_array = ['XS', 'S', 'M', 'L', 'XL','2XL','3XL','4XL','5XL','6XL'];
-        var sizeparts = sizerange.split('-');
-        var started = false;
-        var ii = 0;
-        for (var i = 0; i < size_array.length; i++)
-        {
-            started = ((!started && sizeparts[0] != size_array[i]) ? false : true);
+        var sizeparts = sizerange.split('-'),
+            start     = this.wearSizes.indexOf(sizeparts[0]),
+            end       = this.wearSizes.indexOf(sizeparts[1]);
 
-            if (started)
-            {
-                final_array[ii] = {value: size_array[i], text: size_array[i]};
-                ii++;
-            }
-            if (size_array[i] == sizeparts[1])
-            {
-                return final_array;
-            }
+        if (start === -1 || end === -1) {
+            return [];
         }
+
+        return this.wearSizes.slice(start, end)
+            .map(function (item) {
+                return {
+                    value: item,
+                    text: item
+                };
+            });
     },
 
     blankSelect: function(select_id){
