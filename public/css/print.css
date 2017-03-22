@@ -51,6 +51,10 @@ div.deltager-wearorder table td {
     margin: 0 auto;
 }
 
+.vote-code {
+    font-family: "Lucida Console", Monaco, "Courier New", "Nimbus Mono L", monospace;
+}
+
 .vote-address {
     text-decoration: underline;
 }

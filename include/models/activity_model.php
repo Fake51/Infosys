@@ -980,7 +980,7 @@ WHERE
     code = ?
 ';
 
-        $result = $this->db->query($query, [$code]);
+        $result = $this->db->query($query, [mb_strtolower($code)]);
 
         if (empty($result)) {
             return false;

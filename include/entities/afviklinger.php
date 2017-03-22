@@ -672,12 +672,13 @@ WHERE
      */
     public function makeVoteCode()
     {
-        $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $base = 'abcdefghjkmnpqrstuvwxyz23456789';
+        $length = strlen($base);
 
         $code = '';
 
         while (strlen($code) < 8) {
-            $code .= $base[mt_rand(0, 61)];
+            $code .= $base[mt_rand(0, $length - 1)];
         }
 
         return $code;
