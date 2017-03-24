@@ -655,7 +655,7 @@ WHERE
                             'code' => $row['code'],
                            ];
 
-                QRcode::png($page->url('activity_specific_vote', ['code' => $code]), PUBLIC_PATH . 'vote-barcodes/' . $row['id'] . '.png', 'M', 3);
+                QRcode::png($page->url('activity_specific_vote', ['code' => $row['code']]), PUBLIC_PATH . 'vote-barcodes/' . $row['id'] . '.png', 'M', 3);
 
             }
 
