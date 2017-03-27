@@ -1090,10 +1090,10 @@ class Deltagere extends DBObject implements AgeFulfilment
      */
     public function getSoveplads()
     {
-        if (!$this->isLoaded() || !$this->sovelokale_id || !($lokale = $this->createEntity('Lokaler')->findById($this->sovelokale_id)))
-        {
+        if (!$this->isLoaded() || !$this->sovelokale_id || !($lokale = $this->createEntity('Lokaler')->findById($this->sovelokale_id))) {
             return false;
         }
+
         return $lokale;
     }
 

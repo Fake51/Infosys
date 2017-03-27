@@ -1521,30 +1521,46 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
 
         $category = $participant->getBrugerKategori();
 
+        $participant_model = $this->factory('Participant');
+        $sleep_data        = $participant_model->getSleepDataForParticipant($participant);
+
         if (intval($version) >= 3) {
+            $access = 0;
+
             switch ($sleep) {
             case 1:
-                $name = 'Store sovesal';
+                $name    = 'Store sovesal';
                 $area_id = 68;
+                $access  = 1;
                 break;
 
             case 2:
-                $name = 'Arrangørsovesal';
+                $name    = 'Arrangørsovesal';
                 $area_id = 66;
+                $access  = 1;
                 break;
 
             default:
-                $name = '';
+                $name    = '';
                 $area_id = 0;
             }
 
+            if ($sleep_data) {
+                $room_data = reset($sleep_data);
+                $access    = 1;
+                $name      = $room_data['room']->beskrivelse;
+                $area_id   = $room_data['room']->id;
+
+            }
+
             $sleep = array(
-                'id' => 1,
-                'access' => $name ? 1 : 0,
-                'mattress' => $mattress,
+                'id'        => 1,
+                'access'    => $access,
+                'mattress'  => $mattress,
                 'area_name' => $name,
-                'area_id' => 'R' . $area_id,
+                'area_id'   => 'R' . $area_id,
             );
+
         }
 
         $return = array(
