@@ -1802,7 +1802,7 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
      */
     public function unregisterApp(DBObject $participant)
     {
-        $participant->gcm_id = '';
+        $participant->gcm_id = $participant->apple_id = '';
         $participant->update();
     }
 
