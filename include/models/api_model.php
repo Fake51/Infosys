@@ -1709,10 +1709,64 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
      */
     public function registerApp(DBObject $participant, $json)
     {
-        if (empty($json['gcm_id'])) {
-            throw new FrameworkException('Lacking gcm_id in post');
+        if (empty($json['gcm_id']) && empty($json['apple_id'])) {
+            throw new FrameworkException('Lacking device id in post');
         }
 
+        if (!empty($json['gcm_id'])) {
+            return $this->handleGcmRegistration($participant, $json);
+        }
+
+        if (!empty($json['apple_id'])) {
+            return $this->handleAppleRegistration($participant, $json);
+        }
+    }
+
+    /**
+     * handles apple device registration
+     *
+     * @param DBObject $participant Participant to register id for
+     * @param array    $json        Data from request
+     *
+     * @access protected
+     * @return self
+     */
+    protected function handleAppleRegistration(DBObject $participant, $json)
+    {
+        if ($participant->apple_id === $json['apple_id']) {
+            return $this;
+        }
+
+        $participant->apple_id = $json['apple_id'];
+        $participant->update();
+
+        if ($participant->speaksDanish()) {
+            $message = 'Du vil fremover modtage notifikationer via Fastaval appen';
+            $title   = 'Fastaval notifikation';
+
+        } else {
+            $message = 'You will from now on receive notification via the Fastaval App';
+            $title   = 'Fastaval app notification';
+        }
+
+        //list($code, $data, $return) = $participant->sendAppleMessage($this->config->get('gcm.server_api_key'), $message, $title);
+
+        //$this->log('Sent apple notification to participant #' . $participant->id . '. Result: ' . $return, 'App', null);
+
+        return $this;
+    }
+
+    /**
+     * handles GCM/google registration
+     *
+     * @param DBObject $participant Participant to register id for
+     * @param array    $json        Data from request
+     *
+     * @access protected
+     * @return self
+     */
+    protected function handleGcmRegistration(DBObject $participant, $json)
+    {
         if ($participant->gcm_id === $json['gcm_id']) {
             return $this;
         }
@@ -1725,7 +1779,7 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
             $title   = 'Fastavappen notifikation';
 
         } else {
-            $message = 'You now from now on receive notification via the Fastaval App';
+            $message = 'You will from now on receive notification via the Fastaval App';
             $title   = 'Fastaval app notification';
         }
 
