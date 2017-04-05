@@ -1676,16 +1676,16 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
             $diy = $shift->getGDS();
 
             $return['scheduling'][] = array(
-                'type' => 'gds',
+                'type'          => 'gds',
                 'activity_type' => 'gds',
-                'id'    => $diy->id,
-                'schedule_id'    => $shift->id,
-                'title_da' => $diy->navn,
-                'title_en' => $diy->title_en,
-                'room_da' => $diy->moedested,
-                'room_en' => $diy->moedested_en,
-                'start' => strtotime($shift->start),
-                'stop' => strtotime($shift->slut),
+                'id'            => $diy->id,
+                'schedule_id'   => $shift->id,
+                'title_da'      => $diy->navn,
+                'title_en'      => $diy->title_en,
+                'room_da'       => $diy->moedested,
+                'room_en'       => $diy->moedested_en,
+                'start'         => strtotime($shift->start),
+                'stop'          => strtotime($shift->slut),
             );
 
         }
