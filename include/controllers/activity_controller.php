@@ -679,7 +679,7 @@ class ActivityController extends Controller
     {
         $user = $this->model->getLoggedInUser();
 
-        if (!in_array($user->user, ['peter.e.lind@gmail.com', 'urkraften@gmail.com', 'simonsteen@yahoo.dk'])) {
+        if (!in_array($user->user, ['peter.e.lind@gmail.com', 'appleofdisorder@gmail.com', 'ponsgaard@gmail.com'])) {
             $this->hardRedirect($this->url('no_access'));
 
         }

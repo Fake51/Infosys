@@ -2936,4 +2936,57 @@ WHERE
     {
         return $this->createEntity('Wear')->getWearSizes();
     }
+
+    /**
+     * returns double booked participants, if any are found
+     *
+     * @access public
+     * @return array
+     */
+    public function findDoubleBookedParticipants()
+    {
+        $query = '
+SELECT
+    DISTINCT d.id
+FROM (
+    SELECT
+        p.deltager_id AS id,
+        COUNT(*) AS activities
+	FROM
+        pladser AS p
+    GROUP BY
+        p.deltager_id
+    HAVING activities >= 2
+    ) AS d
+JOIN pladser AS p1 ON p1.deltager_id = d.id
+JOIN hold AS h1 ON h1.id = p1.hold_id
+JOIN afviklinger AS a1 ON a1.id = h1.afvikling_id
+JOIN aktiviteter AS ak1 ON ak1.id = a1.aktivitet_id
+JOIN pladser AS p2 ON p1.deltager_id = p2.deltager_id AND p1.hold_id != p2.hold_id
+JOIN hold AS h2 ON h2.id = p2.hold_id
+JOIN afviklinger AS a2 ON a2.id = h2.afvikling_id
+JOIN aktiviteter AS ak2 ON ak2.id = a2.aktivitet_id
+WHERE (
+    (a1.start >= a2.start AND a1.start < a2.slut)
+    OR (a1.slut > a2.start AND a1.slut <= a2.slut)
+    OR (a1.start <= a2.start AND a1.slut >= a2.slut)
+    )
+    AND ak1.tids_eksklusiv = "ja"
+    AND ak2.tids_eksklusiv = "ja"
+';
+
+        $participants = [];
+
+        foreach ($this->db->query($query) as $row) {
+            $participants[] = $row['id'];
+        }
+
+        $mapper = function ($id) {
+            return $this->createEntity('Deltagere')->findById($id);
+        };
+
+        $participants = array_map($mapper, $participants);
+
+        return $participants;
+    }
 }

@@ -1862,4 +1862,15 @@ exit;
 
         exit;
     }
+
+    /**
+     * check for double bookings
+     *
+     * @access public
+     * @return void
+     */
+    public function checkForDoubleBookings()
+    {
+        $this->page->double_booked_participants = $this->model->findDoubleBookedParticipants();
+    }
 }

@@ -432,6 +432,7 @@ XML;
             <li><a href='{$this->url('opret_deltager')}'>Opret deltager</a></li>
             <li><a href='{$this->url('checkin_interface')}'>Checkin registrering</a></li>
             <li><a href='{$this->url('edit_participant_types')}'>Rediger deltagertyper</a></li>
+            <li><a href='{$this->url('show_double_bookings')}'>Tjek for dobbelt-bookinger</a></li>
 HTML;
 
             if ($this->user->hasRole('Infonaut') || $this->user->hasRole('Admin')) {
