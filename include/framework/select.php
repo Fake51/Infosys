@@ -359,27 +359,27 @@ class Select
             return false;
         }
         $field = $this->fixField($field, $quote);
-        switch (strtoupper($match))
-        {
+        switch (strtoupper($match)) {
             case 'NOT IN':
             case 'IN':
-                if ($value instanceof Select)
-                {
+                if ($value instanceof Select) {
                     $value = '(' . $value->assemble() . ')';
                     break;
                 }
-                if (!is_array($value))
-                {
+
+                if (!is_array($value)) {
                     return false;
                 }
-                foreach ($value as &$val)
-                {
-                    if (!is_scalar($val))
-                    {
+
+                foreach ($value as &$val) {
+                    if (!is_scalar($val)) {
                         return false;
                     }
+
                     $val = '?';
+
                 }
+
                 $value = " (" . implode(',',$value) . ")";
                 break;
             case 'IS NULL':
@@ -387,14 +387,19 @@ class Select
                 $value = '';
                 break;
             default:
-                if (trim($value) == '' || !isset($value) || !is_scalar($value))
-                {
+                if (!isset($value) || !is_scalar($value)) {
                     return false;
                 }
+
                 $value = " ?";
                 break;
         }
-        return array('field' => $field, 'match' => $match, 'value' => $value);
+
+        return array(
+            'field' => $field,
+            'match' => $match,
+            'value' => $value,
+        );
     }
 
     /**
