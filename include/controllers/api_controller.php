@@ -579,7 +579,7 @@ class ApiController extends Controller
             exit;
         }
 
-        $pass = $this->page->request->post->pass ? $this->page->request->post->pass : $this->page->request->get->pass;
+        $pass = isset($this->page->request->post->pass) ? $this->page->request->post->pass : $this->page->request->get->pass;
 
         if (!$pass || $participant->password != $pass) {
             header('HTTP/1.1 403 No access');
