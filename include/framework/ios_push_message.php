@@ -4,8 +4,6 @@ class IosPushMessage
     const SEND_SUCCESS = 1;
     const SEND_FAIL    = -1;
 
-    private $url = 'https://android.googleapis.com/gcm/send';
-
     private $certificate_path;
 
     private $device_key;
@@ -41,7 +39,7 @@ class IosPushMessage
 
         // Open a connection to the APNS server
         $fp = stream_socket_client(
-        'ssl://gateway.sandbox.push.apple.com:2195', $err,
+        'ssl://gateway.push.apple.com:2195', $err,
         $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
 
         if (!$fp) {
