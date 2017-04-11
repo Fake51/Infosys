@@ -2071,7 +2071,7 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
                 $result = $receiver->sendIosMessage($this->config->get('ios.certificate_path'), $post->sms_besked, 'Fastaval message');
                 $this->log('Sent iOS notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
 
-                $status[] = intval($code === IosPushMessage::SEND_SUCCESS);
+                $status[] = intval($result === IosPushMessage::SEND_SUCCESS);
 
             } elseif ($receiver->gcm_id) {
                 list($code, $data, $return) = $receiver->sendGcmMessage($this->config->get('gcm.server_api_key'), $post->sms_besked, 'Fastaval message');
