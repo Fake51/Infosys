@@ -1457,7 +1457,7 @@ WHERE
             throw new Exception('No device ID set for participant - cannot send message');
         }
 
-        $firebase_message = new FirebasePushMessage($server_key, $this->gcm_id);
+        $firebase_message = new FirebaseMessage($server_key, $this->gcm_id);
 
         return $firebase_message->send($title, $message);
     }
