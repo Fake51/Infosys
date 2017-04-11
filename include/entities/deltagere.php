@@ -1428,6 +1428,23 @@ WHERE
         return numberToEAN8(date('y', strtotime($this->created)) . str_pad($this->id, 5, '0', STR_PAD_LEFT));
     }
 
+    /**
+     * sends a message to an iOS device
+     *
+     * @access public
+     * @return result
+     */
+    public function sendIosMessage($certificate_path, $message, $title)
+    {
+        if (empty($this->apple_id)) {
+            throw new Exception('No Apple ID set for participant - cannot send message');
+        }
+
+        $message = new IosPushMessage($certificate_path, $this->apple_id);
+
+        return $message->send($title, $message);
+    }
+
     public function sendGcmMessage($server_api_token, $message, $title)
     {
         if (empty($this->gcm_id)) {
