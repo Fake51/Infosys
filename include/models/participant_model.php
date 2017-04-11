@@ -2067,21 +2067,28 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
         $status = array();
 
         foreach ($this->getSavedSearchResult() as $receiver) {
-            if ($receiver->apple_id) {
-                $result = $receiver->sendIosMessage($this->config->get('ios.certificate_path'), $post->sms_besked, 'Fastaval message');
-                $this->log('Sent iOS notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
+            try {
+                if ($receiver->apple_id) {
+                    $result = $receiver->sendIosMessage($this->config->get('ios.certificate_path'), $post->sms_besked, 'Fastaval message');
+                    $this->log('Sent iOS notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
 
-                $status[] = intval($result === IosPushMessage::SEND_SUCCESS);
+                    $status[] = intval($result === IosPushMessage::SEND_SUCCESS);
 
-            } elseif ($receiver->gcm_id) {
-                $result = $receiver->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $post->sms_besked, 'Fastaval message');
-                $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
+                } elseif ($receiver->gcm_id) {
+                    $result = $receiver->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $post->sms_besked, 'Fastaval message');
+                    $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
 
-                $status[] = intval($result === FirebaseMessage::SEND_SUCCESS);
+                    $status[] = intval($result === FirebaseMessage::SEND_SUCCESS);
 
-            } else {
-                $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $post->sms_besked));
+                } else {
+                    $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $post->sms_besked));
+                }
+
+            } catch (Exception $e) {
+                $this->log('Failed notification to participant #' . $receiver->id . '. Error: ' . $e->getMessage(), 'App', null);
+                $status[] = 0;
             }
+
         }
 
         $grouped = array_count_values($status);
