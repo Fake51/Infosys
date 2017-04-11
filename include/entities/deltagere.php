@@ -1440,9 +1440,9 @@ WHERE
             throw new Exception('No Apple ID set for participant - cannot send message');
         }
 
-        $message = new IosPushMessage($certificate_path, $this->apple_id);
+        $ios_message = new IosPushMessage($certificate_path, $this->apple_id);
 
-        return $message->send($title, $message);
+        return $ios_message->send($title, $message);
     }
 
     public function sendGcmMessage($server_api_token, $message, $title)
