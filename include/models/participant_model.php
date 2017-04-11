@@ -2074,10 +2074,10 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
                 $status[] = intval($result === IosPushMessage::SEND_SUCCESS);
 
             } elseif ($receiver->gcm_id) {
-                list($code, $data, $return) = $receiver->sendGcmMessage($this->config->get('gcm.server_api_key'), $post->sms_besked, 'Fastaval message');
-                $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . $return, 'App', null);
+                $result = $receiver->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $post->sms_besked, 'Fastaval message');
+                $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
 
-                $status[] = intval($code === GcmPushMessage::SEND_SUCCESS);
+                $status[] = intval($result === FirebaseMessage::SEND_SUCCESS);
 
             } else {
                 $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $post->sms_besked));

@@ -1445,6 +1445,23 @@ WHERE
         return $ios_message->send($title, $message);
     }
 
+    /**
+     * sends a message to a firebase device
+     *
+     * @access public
+     * @return result
+     */
+    public function sendFirebaseMessage($server_key, $message, $title)
+    {
+        if (empty($this->gcm_id)) {
+            throw new Exception('No device ID set for participant - cannot send message');
+        }
+
+        $firebase_message = new FirebasePushMessage($server_key, $this->gcm_id);
+
+        return $firebase_message->send($title, $message);
+    }
+
     public function sendGcmMessage($server_api_token, $message, $title)
     {
         if (empty($this->gcm_id)) {
