@@ -34,7 +34,7 @@ class IosPushMessage
     public function send($title, $message)
     {
         $ctx = stream_context_create();
-        stream_context_set_option($ctx, 'ssl', 'local_cert', '../../app-dev-push.pem');
+        stream_context_set_option($ctx, 'ssl', 'local_cert', $this->certificate_path);
         stream_context_set_option($ctx, 'ssl', 'passphrase', '');
 
         // Open a connection to the APNS server
