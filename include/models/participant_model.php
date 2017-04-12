@@ -1613,10 +1613,12 @@ SQL;
         }
 
         if ($vouchers) {
-            if ($vouchers) {
-                $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skal have <strong>' . $vouchers . ' voucher(s).</strong></span>';
+            $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skal have <strong>' . $vouchers . ' voucher(s).</strong></span>';
 
-            }
+        }
+
+        if ($deltager->sleepsOnPremises()) {
+            $text .= '<br/><span style="background-color: aqua; color: #000;">Deltageren sover på Fastaval.</span>';
 
         }
 

@@ -639,6 +639,22 @@ class Deltagere extends DBObject implements AgeFulfilment
     }
 
     /**
+     * returns true if the participant sleeps at fastaval,
+     * i.e. has bought sleep access
+     *
+     * @access public
+     * @return bool
+     */
+    public function sleepsOnPremises()
+    {
+        $sleep_filter = function ($x) {
+            return $x->isSleepTicket();
+        };
+
+        return count(array_filter($this->getIndgang(), $sleep_filter)) > 0;
+    }
+
+    /**
      * calculates what the participant should be paying for wear
      *
      * @access public
