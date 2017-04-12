@@ -75,9 +75,12 @@ class SMSSender implements SMSSending
     {
         $trimmed = preg_replace('/[^\d]/', '', $number);
         $trimmed = (strlen($trimmed) == 10 && substr($trimmed, 0, 2) == '45') ? substr($trimmed, 2) : $trimmed;
+
         if (strlen($trimmed) != 8) {
             return false;
         }
+
+        $trimmed = '45' . $trimmed;
 
         return $this->entity_factory->create('SMSLog')->safetyCheck($trimmed) ? $trimmed : false;
     }
@@ -131,7 +134,7 @@ class SMSSender implements SMSSending
      */
     protected function createUrl(DBObject $participant, $number, $message)
     {
-        return $this->config->get('sms.baseurl') . "?sender=" . $this->service_user . "&secret=" . $this->service_password . "&recipient=" . $number . "&message=" . urlencode($message);
+        return $this->config->get('sms.baseurl') . '?username=' . $this->service_user . '&from=Fastaval&apikey=' . $this->service_password . '&recipient=' . $number . '&utf8=1&message=' . urlencode($message);
     }
 
     /**
