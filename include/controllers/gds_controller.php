@@ -37,7 +37,7 @@
 class GdsController extends Controller
 {
     protected $prerun_hooks = array(
-        array('method' => 'checkUser','exclusive' => true),
+        array('method' => 'checkUser','exclusive' => true, 'methodlist' => ['listShiftsExternal']),
     );
 
     /**
@@ -375,8 +375,29 @@ class GdsController extends Controller
             $this->errorMessage("Kunne ikke finde GDS kategorien");
             $this->hardRedirect($this->url('gdshome'));
         }
+
         $this->page->gds = $gds;
         $this->page->shifts = $gds->getShifts(true);
+    }
+
+    public function listShiftsExternal()
+    {
+        if (empty($this->vars['hash'])) {
+            $this->hardRedirect($this->url('home'));
+        }
+
+        if (!($code = base64_decode($this->vars['hash'])) || mb_substr($code, 0, 4) !== 'GDS!') {
+            $this->hardRedirect($this->url('home'));
+        }
+
+        $this->vars['id'] = mb_substr($code, 4);
+
+        $this->page->layout_template = "external.phtml";
+        $this->page->setTemplate('listShifts');
+
+        $this->page->no_external_link = true;
+
+        return $this->listShifts();
     }
 
     /**

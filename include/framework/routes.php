@@ -303,6 +303,7 @@ class Routes
         $this->routes['ajax_mark_contacted']    = array('url' => 'gds/ajax-mark-contacted', 'controller' => 'Gds', 'method' => 'ajaxMarkContacted');
         $this->routes['gds_sms_team']           = array('url' => 'gds/smsteam/:shift_id:', 'controller' => 'Participant', 'method' => 'smsTeamMembers');
         $this->routes['list_all_shifts']        = array('url' => 'gds/listshifts/:id:', 'controller' => 'Gds', 'method' => 'listShifts');
+        $this->routes['external_list_all_shifts'] = array('url' => 'gds/listshifts/external/:hash:', 'controller' => 'Gds', 'method' => 'listShiftsExternal');
         $this->routes['get_gds_suggestions']    = array('url' => 'gds/shift-suggestions/:shift_id:', 'controller' => 'Gds', 'method' => 'getShiftSuggestions');
         $this->routes['gds_shift_participants'] = array('url' => 'gds/show-shift-participants/:shift_id:', 'controller' => 'Gds', 'method' => 'showShiftParticipants');
 
