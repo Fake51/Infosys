@@ -154,6 +154,7 @@ class SMSSender implements SMSSending
             $this->verifyConfig();
         }
 
+        $message = iconv(mb_detect_encoding($message, mb_detect_order(), false), "UTF-8//IGNORE", $message);
         $url = $this->createUrl($participant, $number, $message);
 
         //$result = 'OK';
@@ -181,6 +182,6 @@ class SMSSender implements SMSSending
 
         }
 
-        return $result === 'SMS succesfully sent to 1 recipient(s)';
+        return $result === '<succes>SMS succesfully sent to 1 recipient(s)</succes>';
     }
 }
