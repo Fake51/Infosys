@@ -181,6 +181,6 @@ class SMSSender implements SMSSending
 
         }
 
-        return $result == '{"code":"1","message":"message spooled","status":"Beskeden blev afsendt korrekt."}';
+        return $result === 'SMS succesfully sent to 1 recipient(s)';
     }
 }
