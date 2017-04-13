@@ -1783,7 +1783,7 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
             $title   = 'Fastaval app notification';
         }
 
-        $result = $participant->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $post->sms_besked, 'Fastaval message');
+        $result = $participant->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $message, $title);
         $this->log('Sent android notification to participant #' . $participant->id . '. Result: ' . $result, 'App', null);
 
         return $this;
