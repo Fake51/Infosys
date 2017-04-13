@@ -10,7 +10,7 @@
         updateGame = function ($gamebit, data) {
             var $circle;
 
-            if (parseInt($gamebit.attr('data-need'), 10) === data.gamers_needed) {
+            if (parseInt($gamebit.attr('data-need'), 10) === data.gamers_needed || data.gamers_needed === $gamebit.attr('data-need')) {
                 return;
             }
 

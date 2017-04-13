@@ -843,6 +843,12 @@ LIMIT 1
 
             $activity = $schedule->getActivity();
 
+            if ($missing == $schedule->getAssignedPlayers()) {
+                $needed = '?';
+            } else {
+                $needed = $missing;
+            }
+
             switch ($activity->type) {
             case 'rolle':
                 $type = 'Scenarie / Scenario';
@@ -868,7 +874,7 @@ LIMIT 1
                 ),
                 'author' => $activity->author,
                 'type'   => $type,
-                'gamers_needed' => $schedule->getMissingPlayers(),
+                'gamers_needed' => $needed,
             );
         }
 
@@ -1279,7 +1285,7 @@ ORDER BY
             $activity->title_en               = 'Gamemaster briefing for ' . $originals[$name]->title_en;
             $activity->tids_eksklusiv         = 'ja';
             $activity->sprog                  = $originals[$name]->sprog;
-            $activity->hidden                 = 'ja';
+            $activity->hidden                 = 'nej';
             $activity->wp_link                = 0;
             $activity->pris                   = 0;
             $activity->teaser_dk              = $activity->teaser_en = $activity->description_en = '';
