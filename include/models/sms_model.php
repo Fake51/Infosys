@@ -56,6 +56,9 @@ class SmsModel extends Model
         $diy   = $index_model->getDIYForAutoSend($when);
         $count = $index_model->sendDIYMessages($diy, $log_sender);
 
+        $diy   = $index_model->getTomorrowsDiyForAutoSend($when);
+        $count = $index_model->sendTomorrowsDiyMessages($diy, $log_sender);
+
         return $log_sender->getMessages();
     }
 

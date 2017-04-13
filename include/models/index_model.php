@@ -338,7 +338,26 @@ ORDER BY
 
         $diy   = $this->getDIYForAutoSend($time);
         $count = $this->sendDIYMessages($diy, $sender);
+
         $log->logToDB("InfoSys har sendt {$count} SMS beskeder til GDS", 'SMS', 1);
+
+        $diy   = $this->getTomorrowsDiyForAutoSend($time);
+        $count = $this->sendTomorrowsDiyMessages($diy, $sender);
+
+        $log->logToDB("InfoSys har sendt {$count} SMS beskeder til GDS", 'SMS', 1);
+    }
+
+    /**
+     * checks if the recipient is valid for sending sms messages to
+     *
+     * @param Deltagere $participant Participant to send to
+     *
+     * @access public
+     * @return bool
+     */
+    public function canSendAutoSmsToParticipant($participant)
+    {
+        return !(!$participant || $participant->medbringer_mobil === 'nej' || !empty($participant->gcm_id) || !empty($participant->apple_id));
     }
 
     /**
@@ -352,11 +371,12 @@ ORDER BY
     public function sendActivityMessages($activities, SMSSending $sender)
     {
         $count = 0;
+
         foreach ($activities as $activity) {
             $deltager = $this->createEntity('Deltagere')->findById($activity['deltager_id']);
             $hold     = $this->createEntity('Hold')->findById($activity['hold_id']);
 
-            if (!$deltager || !$hold || $deltager->medbringer_mobil == 'nej') {
+            if (!$this->canSendAutoSmsToParticipant($deltager) || !$hold) {
                 continue;
             }
 
@@ -378,13 +398,8 @@ ORDER BY
                 $message = "Hej {$firstname}. Om lidt skal du spille {$title}{$room} - mvh. Fastaval";
             }
 
-            if ($deltager->gcm_id) {
-                continue;
-
-            } else {
-                if ($deltager->sendSMS($sender, $message)) {
-                    $count++;
-                }
+            if ($deltager->sendSMS($sender, $message)) {
+                $count++;
             }
         }
 
@@ -446,7 +461,7 @@ SQL;
             $deltager = $this->createEntity('Deltagere')->findById($res['deltager_id']);
             $vagt     = $this->createEntity('GDSVagter')->findById($res['gdsvagt_id']);
 
-            if (!$deltager || !$vagt || $deltager->medbringer_mobil == 'nej' || $deltager->gcm_id) {
+            if (!$this->canSendAutoSmsToParticipant($deltager) || !$vagt) {
                 continue;
             }
 
@@ -488,6 +503,76 @@ WHERE
 SQL;
 
         return $this->db->query($query, array($datetime, $datetime));
+    }
+
+    /**
+     * sends DIY message reminders to participants
+     *
+     * @param array $diy_activities DIY activities to send messages for
+     *
+     * @access public
+     * @return int
+     */
+    public function sendTomorrowsDiyMessages($diy_activities, $sender)
+    {
+        $count = 0;
+
+        foreach ($diy_activities as $res) {
+            $deltager = $this->createEntity('Deltagere')->findById($res['deltager_id']);
+            $vagt     = $this->createEntity('GDSVagter')->findById($res['gdsvagt_id']);
+
+            if (!$this->canSendAutoSmsToParticipant($deltager) || !$vagt) {
+                continue;
+            }
+
+            $gds = $vagt->getGDS();
+
+            $firstname = $deltager->fornavn;
+            $title     = $gds->navn;
+            $tid       = date('H:i', strtotime($vagt->start));
+            $message   = "Hej {$firstname}. Obs! Husk du har en {$title} GDS-tjans i morgen kl.{$tid} :-) Masser af tak og kram fra Fastaval";
+            $count++;
+
+            $deltager->sendSMS($sender, $message);
+        }
+
+        return $count;
+    }
+
+    /**
+     * returns diy activities
+     *
+     * @param string $datetime Time to calculate for
+     *
+     * @access public
+     * @return void
+     */
+    public function getTomorrowsDiyForAutoSend($datetime)
+    {
+        $timestamp = strtotime($datetime);
+
+        if (strtotime(date('Y-m-d') . ' 20:30:00') < $timestamp && $timestamp < strtotime(date('Y-m-d') . ' 20:40:00')) {
+
+            $start = date('Y-m-d', strtotime('tomorrow')) . ' 06:30:00';
+            $end   = date('Y-m-d', strtotime('tomorrow')) . ' 10:30:00';
+
+            // grab diy
+        $query = <<<SQL
+    SELECT
+        deltagere_gdsvagter.*
+    FROM
+        deltagere_gdsvagter,
+        gdsvagter
+    WHERE
+        deltagere_gdsvagter.gdsvagt_id = gdsvagter.id
+        AND gdsvagter.start >= ?
+        AND gdsvagter.start <= ?
+SQL;
+
+            return $this->db->query($query, array($start, $end));
+        }
+
+        return [];
     }
 
     /**
