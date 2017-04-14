@@ -44,6 +44,7 @@ class BoardgamesModel extends Model
             'activityData'    => $this->fetchActivityData(),
             'notes'           => $this->fetchNote(),
             'stats'           => $this->fetchStats(),
+            'designerstats'   => $this->fetchDesignerStats(),
         );
 
         return $data;
@@ -147,6 +148,108 @@ GROUP BY
         return $return;
     }
 
+    public function fetchDesignerStats()
+    {
+        $return = array();
+
+        $query = '
+SELECT COUNT(*) AS count FROM boardgameevents AS bge JOIN boardgames AS bg ON bg.id = bge.boardgame_id WHERE bge.type = "borrowed AND bg.designergame = 1"
+';
+
+        foreach ($this->db->query($query) as $row) {
+            $return['Udlån samlet'] = $row['count'];
+        }
+
+        $query = '
+SELECT DATE(timestamp) AS date, COUNT(*) AS count FROM boardgameevents AS bge JOIN boardgames AS bg ON bg.id = bge.boardgame_id WHERE bge.type = "borrowed" AND bg.designergame = 1 GROUP BY DATE(timestamp) ORDER BY date
+';
+
+        foreach ($this->db->query($query) as $row) {
+            $return['Udlån ' . $row['date']] = $row['count'];
+        }
+
+        $query = '
+SELECT b.name, COUNT(*) AS count FROM boardgames AS b JOIN boardgameevents AS be ON be.boardgame_id = b.id WHERE be.type = "borrowed" AND b.designergame = 1 GROUP BY b.name ORDER BY count DESC LIMIT 3;
+';
+
+        $index = 1;
+
+        foreach ($this->db->query($query) as $row) {
+            $return['Top ' . $index++] = $row['name'] . ' (' . $row['count'] . ')';
+        }
+
+        $gameevents = array();
+        $time       = 0;
+
+        $query = '
+SELECT be.type, be.boardgame_id, be.timestamp FROM boardgameevents AS be JOIN boardgames AS b ON be.boardgame_id = b.id WHERE be.type IN ("borrowed", "returned") AND b.designergame = 1 ORDER BY be.boardgame_id, be.timestamp
+';
+
+        foreach ($this->db->query($query) as $row) {
+            if ($row['type'] === 'borrowed') {
+                $gameevents[$row['boardgame_id']] = $row['timestamp'];
+                continue;
+            }
+
+            if ($row['type'] === 'returned' && !empty($gameevents[$row['boardgame_id']])) {
+                $time += round((strtotime($row['timestamp']) - strtotime($gameevents[$row['boardgame_id']])) / 3600, 2);
+            }
+        }
+
+        $return['Samlet udlånstid i timer'] = $time;
+
+        $query = '
+SELECT
+    COUNT(*) as count
+FROM
+    boardgames
+WHERE
+    designergame = 1
+';
+
+        foreach ($this->db->query($query) as $row) {
+            $return['Samlet antal spil'] = $row['count'];
+        }
+
+        $query = '
+SELECT
+    bge.boardgame_id,
+    COUNT(*) AS count
+FROM
+    boardgameevents AS bge
+    JOIN boardgames AS bg ON bg.id = bge.boardgame_id
+    JOIN (
+        SELECT
+            boardgame_id,
+            type
+        FROM (
+            SELECT
+                boardgame_id,
+                type
+            FROM
+                boardgameevents
+            WHERE
+                type IN ("borrowed", "returned")
+            ORDER BY
+                boardgame_id,
+                timestamp DESC
+        ) AS temped
+        GROUP BY
+            boardgame_id
+    ) AS temp ON temp.boardgame_id = bge.boardgame_id
+WHERE
+    bge.boardgame_id NOT IN (SELECT boardgame_id FROM boardgameevents WHERE type = "finished")
+    AND temp.type = "borrowed"
+    AND bg.designergame = 1
+GROUP BY
+    bge.boardgame_id
+';
+
+        $return['Udlån lige nu'] = count($this->db->query($query));
+
+        return $return;
+    }
+
     /**
      * fetch all game details
      *
@@ -169,6 +272,7 @@ GROUP BY
                 'owner'          => $game->owner,
                 'comment'        => $game->comment,
                 'log'            => $game->getLog(),
+                'designergame'   => intval($game->designergame),
                 'borrowed_count' => isset($borrowed_stats[$game->id]) ? $borrowed_stats[$game->id] : 0,
             );
 
@@ -278,10 +382,11 @@ GROUP BY
 
         $boardgame = $this->createEntity('Boardgame');
 
-        $boardgame->name    = $post->name;
-        $boardgame->owner   = $post->owner;
-        $boardgame->barcode = $post->barcode;
-        $boardgame->comment = isset($post->comment) ? $post->comment : '';
+        $boardgame->name         = $post->name;
+        $boardgame->owner        = $post->owner;
+        $boardgame->barcode      = $post->barcode;
+        $boardgame->designergame = $post->designergame;
+        $boardgame->comment      = isset($post->comment) ? $post->comment : '';
 
         $boardgame->insert();
 
@@ -331,10 +436,11 @@ GROUP BY
             throw new Exception('No game with id: ' . $post->gameId);
         }
 
-        $game->name = $post->name;
-        $game->owner = $post->owner;
-        $game->barcode = !empty($post->barcode) ? $post->barcode : '';
-        $game->comment = !empty($post->comment) ? $post->comment : '';
+        $game->name         = $post->name;
+        $game->owner        = $post->owner;
+        $game->barcode      = !empty($post->barcode) ? $post->barcode : '';
+        $game->designergame = !empty($post->designergame) ? $post->designergame : '';
+        $game->comment      = !empty($post->comment) ? $post->comment : '';
 
         $game->update();
 
@@ -385,10 +491,11 @@ GROUP BY
 
             $game = $this->createEntity('Boardgame');
 
-            $game->name = $columns[$header_index['Navn']];
-            $game->owner = $columns[$header_index['Ejer']];
-            $game->barcode = $columns[$header_index['Stregkode']];
-            $game->comment = $columns[$header_index['Kommentar']];
+            $game->name         = $columns[$header_index['Navn']];
+            $game->owner        = $columns[$header_index['Ejer']];
+            $game->barcode      = $columns[$header_index['Stregkode']];
+            $game->designergame = $columns[$header_index['Designer']];
+            $game->comment      = $columns[$header_index['Kommentar']];
 
             $game->insert();
         }

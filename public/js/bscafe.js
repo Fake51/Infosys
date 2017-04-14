@@ -14,6 +14,7 @@ var BSCafe = (function ($, window) {
         gameOwners: [],
         indexedGames: {},
         gamestats: null,
+        designergamestats: null,
         $dialog: null,
         noteText: '',
         noteUpdateToken: null,
@@ -189,6 +190,7 @@ var BSCafe = (function ($, window) {
 
                     game.name    = $name.val();
                     game.barcode = $barcode.val();
+                    game.designergame = $designergame.prop('checked');
                     game.owner   = $owner.val();
                     game.comment = $comment.val();
 
@@ -196,18 +198,20 @@ var BSCafe = (function ($, window) {
                     $barcode.data('original', game.barcode);
                     $owner.data('original', game.owner);
                     $comment.data('original', game.comment);
+                    $designergame.data('original', game.designergame ? 1 : 0);
 
                     module.updateGameDisplay(game);
                 },
                 $name = $editContainer.find('input[name="game"]'),
                 $barcode = $editContainer.find('input[name="barcode"]'),
                 $owner = $editContainer.find('input[name="owner"]'),
+                $designergame = $editContainer.find('input[name=designergame]'),
                 $comment = $editContainer.find('textarea[name="comment"]');
 
             $.ajax({
                 url: window.boardgames_edit_url,
                 type: 'POST',
-                data: {name: $name.val(), barcode: $barcode.val(), owner: $owner.val(), comment: $comment.val(), gameId: game.id},
+                data: {name: $name.val(), barcode: $barcode.val(), owner: $owner.val(), comment: $comment.val(), gameId: game.id, designergame: $designergame.prop('checked') ? 1 : 0},
                 success: handleEditSuccess,
                 error: function () {
                     window.alert('Kunne ikke opdatere spillet');
@@ -442,8 +446,11 @@ var BSCafe = (function ($, window) {
                 .replace(/:owner:/g, game.owner)
                 .replace(/:comment:/g, game.comment || '')
                 .replace(/:barcode:/g, game.barcode)
+                .replace(/:designergame:/g, game.designergame)
                 .replace(/:borrowed:/g, game.borrowed_count)
                 .replace(/:game-status:/g, status);
+
+            html = html.replace(/fastaval-designergame/, game.designergame ? 'checked' : '');
 
             if (toReplace) {
                 toReplace.replaceWith(html);
@@ -499,10 +506,11 @@ var BSCafe = (function ($, window) {
             throw new Error('No such participant');
         },
         createGame: function () {
-            var gameString    = module.elements.$gameToCreate.val(),
-                ownerString   = module.elements.$gcOwner.val(),
-                barcodeString = module.elements.$gcBarcode.val(),
-                commentString = module.elements.$gcComment.val(),
+            var gameString        = module.elements.$gameToCreate.val(),
+                ownerString       = module.elements.$gcOwner.val(),
+                barcodeString     = module.elements.$gcBarcode.val(),
+                designergameValue = module.elements.$gcDesignergame.prop('checked'),
+                commentString     = module.elements.$gcComment.val(),
                 gameRegistered = function (data) {
                     var game = {
                         id: parseInt(data.id, 10),
@@ -510,6 +518,7 @@ var BSCafe = (function ($, window) {
                         name: gameString,
                         owner: ownerString,
                         comment: commentString || '',
+                        designergame: designergameValue,
                         log: data.log
                     };
 
@@ -520,6 +529,7 @@ var BSCafe = (function ($, window) {
                     module.elements.$gcOwner.val('');
                     module.elements.$gcBarcode.val('');
                     module.elements.$gcComment.val('');
+                    module.elements.$gcDesignergame.prop('checked', false);
 
                     module.elements.$gamesTab.addClass('auto-highlight');
                     window.setTimeout(function () {
@@ -538,6 +548,7 @@ var BSCafe = (function ($, window) {
                     name: gameString,
                     owner: ownerString,
                     barcode: barcodeString,
+                    designergame: designergameValue ? 1 : 0,
                     comment: commentString,
                 },
                 success: gameRegistered,
@@ -714,6 +725,7 @@ var BSCafe = (function ($, window) {
                 module.elements.$gameToCreate           = $('#gc-name');
                 module.elements.$gcOwner                = $('#gc-owner');
                 module.elements.$gcBarcode              = $('#gc-barcode');
+                module.elements.$gcDesignergame         = $('#gc-designergame');
                 module.elements.$gcComment              = $('#gc-comment');
                 module.elements.$borrowingComment       = $('#borrowing-comment');
                 module.elements.$inPlayList             = $('div.in-play-list ul');
@@ -723,6 +735,7 @@ var BSCafe = (function ($, window) {
                 module.elements.$registeredGamesList    = $('ul.registered-games');
                 module.elements.$notes                  = $('div.notes textarea');
                 module.elements.$statistics             = $('#statistics');
+                module.elements.$designerStatistics     = $('#designerstatistics');
                 module.templates.gameInPlayTemplate     = $('#in-play-game-template').text();
                 module.templates.logLineTemplate        = $('#log-line-template').text();
                 module.templates.activityTemplate       = $('#activity-template').text();
@@ -754,7 +767,7 @@ var BSCafe = (function ($, window) {
                             return false;
                         }
 
-                        temp = $.extend({barcode: ''}, temp);
+                        temp = $.extend({barcode: '', designergame: false}, temp);
 
                         parsed.push(temp);
                         names[temp.owner] = true;
@@ -829,7 +842,8 @@ var BSCafe = (function ($, window) {
                         return;
                     }
 
-                    module.gamestats = data.stats;
+                    module.gamestats         = data.stats;
+                    module.designergamestats = data.designerstats;
 
                     resolve();
                 };
@@ -913,13 +927,13 @@ var BSCafe = (function ($, window) {
                 fillNotes = function () {
                     module.elements.$notes.val(module.noteText);
                 },
-                fillStats = function () {
+                fillStats = function (stats, $container) {
                     var $items = [],
                         heading;
 
-                    for (heading in module.gamestats) {
-                        if (module.gamestats.hasOwnProperty(heading)) {
-                            $items.push($('<dt data-sort="' + heading + '">' + heading + '</dt><dd>' + module.gamestats[heading] + '</dd>'));
+                    for (heading in stats) {
+                        if (stats.hasOwnProperty(heading)) {
+                            $items.push($('<dt data-sort="' + heading + '">' + heading + '</dt><dd>' + stats[heading] + '</dd>'));
                         }
                     }
 
@@ -927,7 +941,7 @@ var BSCafe = (function ($, window) {
                         return a.attr('data-sort') < b.attr('data-sort') ? -1 : 1;
                     });
 
-                    module.elements.$statistics.append($items);
+                    $container.append($items);
                 },
                 wrapper = function (resolve) {
                     fillInPlay();
@@ -936,7 +950,8 @@ var BSCafe = (function ($, window) {
 
                     fillNotes();
 
-                    fillStats();
+                    fillStats(module.gamestats, module.elements.$statistics);
+                    fillStats(module.designergamestats, module.elements.$designerStatistics);
 
                     resolve();
                 };

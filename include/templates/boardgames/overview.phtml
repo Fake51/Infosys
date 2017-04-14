@@ -9,6 +9,7 @@
                     <li><a href="#create">Opret</a></li>
                     <li><a href="#games">Spil</a></li>
                     <li><a href="#statistics">Stats</a></li>
+                    <li><a href="#designerstatistics">FastavalStats</a></li>
                 </ul>
                 <div class="action" id='lend'>
                     <label for="game-to-lend">Spil</label>
@@ -31,6 +32,9 @@
                     <label for="gc-barcode">Stregkode</label>
                     <input type="text" id="gc-barcode" name="barcode" placeholder="Stregkode..."/>
 
+                    <label for="gc-designergame">Fastaval</label>
+                    <input type="checkbox" id="gc-designergame" name="designergame" value="1"/>
+
                     <label for="gc-comment">Kommentar</label>
                     <textarea name="comment" id="gc-comment"></textarea>
                     <div>
@@ -50,6 +54,7 @@
                     </ul>
                 </div>
                 <div class="action" id='statistics'></div>
+                <div class="action" id='designerstatistics'></div>
             </div>
         </div>
         <div class="in-play-pane list">
@@ -95,6 +100,9 @@
 
         <label>Stregkode
         <input type="text" name="barcode" placeholder="Stregkode..." value=":barcode:" data-original=":barcode:"/></label>
+
+        <label>Fastaval
+        <input type="checkbox" name="designergame" value="1" data-original=":designergame:" fastaval-designergame/></label>
 
         <label>Kommentar
         <textarea name="comment" data-original=":comment:">:comment:</textarea></label>
