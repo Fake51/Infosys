@@ -73,8 +73,8 @@
                 </tr>
                 <tr>
                     <td><b>Ønsket antal aktiviteter:</b> <input type='number' min='0' max='10' step='1' value='<?= e($this->deltager->desired_activities);?>' name='deltager[desired_activities]'/></td>
+                    <td><b>Ønsket antal GDS:</b> <input type='number' min='0' max='10' step='1' value='<?= e($this->deltager->desired_diy_shifts);?>' name='deltager[desired_diy_shifts]'/></td>
                     <td><strong>Simultantolk:</strong> <?= $this->genSelect('deltager[interpreter]', array('nej', 'ja'), $this->deltager->dancing_with_the_clans);?></td>
-                    <!--<td><b>Game reallocation project:</b> <?php echo $this->genSelect('deltager[game_reallocation_participant]', array('ja', 'nej'), $this->deltager->game_reallocation_participant);?></td>-->
                 </tr>
                 <tr>
                     <td><b>Udeblevet:</b> <?php echo $this->genSelect('deltager[udeblevet]',array('nej','ja'), $this->deltager->udeblevet);?></td>

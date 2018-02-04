@@ -626,6 +626,7 @@ class ParticipantModel extends Model
             'betalt_beloeb',
             'deltaget_i_fastaval',
             'desired_activities',
+            'desired_diy_shifts',
         );
 
         $regex_ints = array(

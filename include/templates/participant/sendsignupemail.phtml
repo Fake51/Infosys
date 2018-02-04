@@ -196,6 +196,7 @@ case 'a':
 <table style="margin-top: 2em;"></tbody>
 <tr><td colspan="2">===== Ekstra info =====</td></tr>
 <tr><td>Maksimum antal scenarier jeg vil spille (0 er ingen grænse):  </td><td><?= $this->participant->desired_activities;?></td></tr>
+<tr><td>Maksimum antal GDS (0 er ingen grænse):	                      </td><td><?= $this->participant->desired_diy_shifts;?></td></tr>
 <tr><td>Jeg er super GM:                                              </td><td><?= $this->participant->supergm === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg er super GDS:                                             </td><td><?= $this->participant->supergds === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg kan tage mere end 1 GDS vagt:                             </td><td><?= $this->participant->flere_gdsvagter === 'ja' ? 'Ja' : 'Nej';?></td></tr>

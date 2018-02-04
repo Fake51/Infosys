@@ -1682,6 +1682,7 @@ class ParticipantController extends Controller
 
     public function sendFirstPaymentReminder()
     {
+die('Not sending first payment reminders');
         $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;
@@ -1702,6 +1703,7 @@ class ParticipantController extends Controller
 
     public function sendSecondPaymentReminder()
     {
+die('Not sending second payment reminders');
         $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;
@@ -1722,6 +1724,7 @@ class ParticipantController extends Controller
 
     public function sendLastPaymentReminder()
     {
+die('Not sending last payment reminders');
         $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;

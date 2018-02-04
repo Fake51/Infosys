@@ -60,6 +60,7 @@ $this->registerLateLoadJS('activity.js');
                 <tr>
                     <td><strong>Skjult:</strong> <i><?= e($this->aktivitet->hidden);?></i></td>
                     <td><strong>Karmatype:</strong> <i><?= e($this->aktivitet->getMeaningfulKarmatype());?></i></td>
+                    <td><strong>Max tilmeldinger:</strong> <i><?= e($this->aktivitet->max_signups);?></i></td>
                 </tr>
                 <tr>
                     <td colspan="2"><strong>Aldersbegrænsning:</strong> Min: <strong><?= e($this->aktivitet->getMinAge());?></strong>,  max: <strong><?= e($this->aktivitet->getMaxAge());?></strong></td>

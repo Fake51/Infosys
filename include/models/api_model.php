@@ -124,6 +124,35 @@ class ApiModel extends Model {
         $multiblok = $this->createEntity('AfviklingerMultiblok')->findAll();
         $multi_ids = array();
 
+        if (intval($version) === 1) {
+            $query = '
+SELECT
+    ak.id,
+    ak.max_signups,
+    COUNT(*) AS participants
+FROM
+    deltagere_tilmeldinger AS dt
+    JOIN afviklinger AS af ON af.id = dt.afvikling_id
+    JOIN aktiviteter AS ak ON ak.id = af.aktivitet_id
+WHERE
+    ak.max_signups > 0
+GROUP BY
+    ak.id,
+    ak.max_signups
+HAVING
+     participants >= max_signups
+';
+
+            $activities = array_flip(array_map(function ($row) {
+                return $row['id'];
+	    }, $this->db->query($query)));
+
+            $result = array_filter($result, function ($activity) use ($activities) {
+                return !isset($activities[$activity->id]);
+            });
+
+        }
+
         foreach ($multiblok as $multi) {
             $multi_ids[] = $multi->afvikling_id;
         }
@@ -138,8 +167,7 @@ class ApiModel extends Model {
                     ($x->getMinAge() && $age_at_con_start < $x->getMinAge())
                     || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
                     || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
-                    || ($age_at_con_start < 13 && !($x->type === 'junior' || intval($x->id) === 96 || intval($x->id) === 50))
-                    || ($age_at_con_start >= 15 && $x->type === 'junior')
+                    //|| ($age_at_con_start >= 15 && $x->type === 'junior')
                 );
             };
 
@@ -155,6 +183,13 @@ class ApiModel extends Model {
 
                 $text_da = strip_tags(mb_detect_encoding($res->foromtale, 'UTF-8', true) ? $res->foromtale : iconv("ISO-8859-1", "UTF-8", $res->foromtale));
                 $text_en = strip_tags(mb_detect_encoding($res->description_en, 'UTF-8', true) ? $res->description_en : iconv("ISO-8859-1", "UTF-8", $res->description_en));
+
+                if ($version == 1) {
+                   if (!empty($res->wp_link)) {
+                       $text_da .= '<a href="https://www.fastaval.dk/index.php?p=' . intval($res->wp_link) . '" style="display: block; margin-top: 1rem" target="_blank">Læs på hjemmesiden</a>';
+                       $text_en .= '<a href="https://www.fastaval.dk/index.php?p=' . intval($res->wp_link) . '&lang=en" style="display: block; margin-top: 1rem" target="_blank">Read on the homepage</a>';
+                   }
+                }
 
                 if ($version == 2) {
                     $text_da = nl2br($text_da);
@@ -352,7 +387,7 @@ class ApiModel extends Model {
      * @access public
      * @return array
      */
-    public function getGDSStructure(array $ids) {
+    public function getGDSStructure(array $ids, $birthdate_timestamp = '') {
         $select = $this->createEntity('GDS')
             ->getSelect();
         if ($ids) {
@@ -361,6 +396,25 @@ class ApiModel extends Model {
 
         $result = $this->createEntity('GDS')->findBySelectMany($select);
         $return = array();
+
+        if ($birthdate_timestamp) {
+            $time_diff = (new DateTime($this->config->get('con.start')))->diff(new DateTime(date('Y-m-d', $birthdate_timestamp)));
+
+            $age_at_con_start = $time_diff->y;
+
+            $filter = function ($x) use ($age_at_con_start) {
+                return !(
+                    ($x->getMinAge() && $age_at_con_start < $x->getMinAge())
+                    || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
+                    || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
+                    || ($age_at_con_start < 13 && !($x->type === 'junior' || intval($x->id) === 96 || intval($x->id) === 50))
+                    || ($age_at_con_start >= 15 && $x->type === 'junior')
+                );
+            };
+
+            $result = array_filter($result, $filter);
+
+        }
 
         if ($result) {
             foreach ($result as $res) {
@@ -394,7 +448,7 @@ class ApiModel extends Model {
      * @access public
      * @return array
      */
-    public function getGDSCategoryStructure(array $ids) {
+    public function getGDSCategoryStructure(array $ids, $birthdate_timestamp = '') {
         $select = $this->createEntity('GDSCategory')
             ->getSelect();
         if ($ids) {
@@ -403,6 +457,25 @@ class ApiModel extends Model {
 
         $result = $this->createEntity('GDSCategory')->findBySelectMany($select);
         $return = array();
+
+        if ($birthdate_timestamp) {
+            $time_diff = (new DateTime($this->config->get('con.start')))->diff(new DateTime(date('Y-m-d', $birthdate_timestamp)));
+
+            $age_at_con_start = $time_diff->y;
+
+            $filter = function ($x) use ($age_at_con_start) {
+                return !(
+                    ($x->getMinAge() && $age_at_con_start < $x->getMinAge())
+                    || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
+                    || ($x->getMaxAge() && $x->getMaxAge() < $age_at_con_start)
+                    || ($age_at_con_start < 13 && !($x->type === 'junior' || intval($x->id) === 96 || intval($x->id) === 50))
+                    || ($age_at_con_start >= 15 && $x->type === 'junior')
+                );
+            };
+
+            $result = array_filter($result, $filter);
+
+        }
 
         if ($result) {
             foreach ($result as $res) {
@@ -435,18 +508,24 @@ class ApiModel extends Model {
     protected function prepareShiftStructure(GDS $gds)
     {
         $shifts = array();
+
         foreach ($gds->getVagter() as $shift) {
             $parsed = strtotime($shift->start);
             $time = date('G', $parsed);
+
             if ($time > 04 && $time < 12) {
                 $period = date('Y-m-d ', $parsed) . '04-12';
+
             } elseif ($time >= 12 && $time <= 17) {
                 $period = date('Y-m-d ', $parsed) . '12-17';
+
             } else {
 		if ($time <= 4) {
                     $parsed = strtotime($shift->start . ' - 4 hours');
                 }
+
                 $period = date('Y-m-d ', $parsed) . '17-04';
+
             }
 
             if (empty($shifts[$period])) {
@@ -454,7 +533,9 @@ class ApiModel extends Model {
                     'gds_id'        => intval($gds->id),
                     'period'        => $period,
                     'people_needed' => intval($shift->antal_personer),
+                    'signups'       => intval(count($shift->getSignups())),
                 );
+
             } else {
                 $shifts[$period]['people_needed'] += intval($shift->antal_personer);
             }
@@ -794,6 +875,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
     public function addFood(array $json, $deltager) {
         try {
+
             if (!$deltager) {
                 $deltager = $this->createEntity('Deltagere')->findById($json['id']);
             }
@@ -806,8 +888,10 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             //$this->db->exec("DELETE FROM deltagere_madtider WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['food'] as $food) {
-                $foodtime = $this->createEntity('Madtider')->findById($food['madtid_id']);
-                $deltager->setMad($foodtime);
+                if ($foodtime = $this->createEntity('Madtider')->findById($food['madtid_id'])) {
+                    $deltager->setMad($foodtime);
+                }
+
                 //$this->db->exec("INSERT INTO deltagere_madtider (deltager_id, madtid_id) VALUES (?, ?)", $deltager->id, $food['madtid_id']);
             }
         } catch (Exception $e) {
@@ -1082,6 +1166,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'tilmeld_scenarieskrivning',
             'may_contact',
             'desired_activities',
+            'desired_diy_shifts',
             'game_reallocation_participant',
             'dancing_with_the_clans',
             'sovesal',
@@ -1438,6 +1523,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'tilmeld_scenarieskrivning' => $participant->tilmeld_scenarieskrivning,
             'may_contact' => $participant->may_contact,
             'desired_activities' => $participant->desired_activities,
+            'desired_diy_shifts' => $participant->desired_diy_shifts,
             'game_reallocation_participant' => $participant->game_reallocation_participant,
             'sovesal' => $participant->sovesal,
             'ungdomsskole' => $participant->ungdomsskole,

@@ -30,6 +30,10 @@
                     <td><strong>Udelukker samtidige aktiviteter:</strong> <?= $this->genSelect('aktivitet[tids_eksklusiv]', array('ja', 'nej'));?></td>
                 </tr>
                 <tr>
+                    <td colspan="2"><strong>Aldersbegrænsning:</strong> <label>Min: <input type="number" min="0" max="200" name="min_age" size="4" step="1" value=""/></label> <label>Max: <input type="number" min="0" max="200" size="4" name="max_age" step="1" value=""/></label></td>
+                    <td><b>Max tilmeldinger</b><input type="number" min="0" max="1000" step="1" value="<?= e($this->aktivitet->max_signups);?>" name="aktivitet[max_signups]"/></td>
+                </tr>
+                <tr>
                     <td colspan='3'><strong>Note:</strong> <textarea name='aktivitet[note]'></textarea></td>
                 </tr>
                 <tr>

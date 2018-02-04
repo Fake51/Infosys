@@ -59,6 +59,8 @@ If you have any questions regarding the details here, you can e-mail us at <a st
                 <td><?= $this->deltager->arrangoer_naeste_aar == 'ja' ? 'Yes' : 'No';?></td>
                 <td class='label'>Desired number of activities:</td>
                 <td><?= ($this->deltager->desired_activities ? e($this->deltager->desired_activities) : 'Not specified');?></td>
+                <td class='label'>Desired number of DIY shifts:</td>
+                <td><?= ($this->deltager->desired_diy_shifts ? e($this->deltager->desired_diy_shifts) : 'Not specified');?></td>
             </tr>
             <tr>
                 <td colspan='6'><hr/></td>

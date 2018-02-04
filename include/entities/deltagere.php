@@ -61,6 +61,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         'annulled'                      => 'Annulleret',
         'deltager_note'                 => 'Deltager beskeder',
         'desired_activities'            => 'Ønskede aktiviteter',
+        'desired_diy_shifts'            => 'Ønskede GDS',
         'efternavn'                     => 'Efternavn',
         'email'                         => 'E-mail',
         'flere_gdsvagter'               => 'Flere GDS-vagter',

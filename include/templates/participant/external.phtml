@@ -59,6 +59,8 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
                 <td><?= e($this->deltager->arrangoer_naeste_aar);?></td>
                 <td class='label'>Ønsket antal aktiviteter:</td>
                 <td><?= ($this->deltager->desired_activities ? e($this->deltager->desired_activities) : 'Ikke specificeret');?></td>
+                <td class='label'>Ønsket antal GDS:</td>
+                <td><?= ($this->deltager->desired_diy_shifts ? e($this->deltager->desired_diy_shifts) : 'Ikke specificeret');?></td>
             </tr>
             <tr>
                 <td colspan='6'><hr/></td>

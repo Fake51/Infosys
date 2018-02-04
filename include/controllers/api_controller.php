@@ -371,10 +371,18 @@ class ApiController extends Controller
     {
         if ($this->vars['id'] === '*') {
             $ids = array();
+
         } else {
             $ids = explode(',', $this->vars['id']);
         }
-        $this->jsonOutput($this->model->getGDSStructure($ids));
+
+        $birthdate_timestamp = null;
+
+        if ($this->page->request->get->birthdate) {
+            $birthdate_timestamp = strtotime($this->page->request->get->birthdate);
+        }
+
+        $this->jsonOutput($this->model->getGDSStructure($ids, $birthdate_timestamp));
     }
 
     /**

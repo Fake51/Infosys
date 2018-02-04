@@ -150,7 +150,26 @@ class ActivityModel extends Model {
         $activity->teaser_dk = $activity->teaser_dk ? $activity->teaser_dk : '';
         $activity->teaser_en = $activity->teaser_en ? $activity->teaser_en : '';
         $activity->updated   = date('Y-m-d H:i:s');
-        return (($activity->insert()) ? $activity : false);
+
+        if (!$activity->insert()) {
+            return false;
+        }
+
+        if (empty($post->max_age)) {
+            $activity->removeMaxAge();
+
+        } else {
+            $activity->setMaxAge($post->max_age);
+        }
+
+        if (empty($post->min_age)) {
+            $activity->removeMinAge();
+
+        } else {
+            $activity->setMinAge($post->min_age);
+        }
+
+        return $activity;
     }
 
     /**

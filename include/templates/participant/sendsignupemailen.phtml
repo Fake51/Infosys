@@ -191,6 +191,7 @@ case 'a':
 <table style="margin-top: 2em;"></tbody>
 <tr><td colspan="2">===== Extra Info =====</td></tr>
 <tr><td>Maximum number of scenarios I would like to play (0 means no limit):  </td><td><?= $this->participant->desired_activities;?></td></tr>
+<tr><td>Maximum number of DIY shifts (0 means no limit):                      </td><td><?= $this->participant->desired_diy_shifts;?></td></tr>
 <tr><td>I am a super GM:                                                      </td><td><?= $this->participant->supergm === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I am a super DIY helper:                                              </td><td><?= $this->participant->supergds === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I am up for more than 1 DIY shift:                                    </td><td><?= $this->participant->flere_gdsvagter === 'ja' ? 'Yes' : 'No';?></td></tr>

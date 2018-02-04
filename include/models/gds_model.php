@@ -398,6 +398,20 @@ SQL;
             $shift->insert();
         }
 
+        if (empty($post->max_age)) {
+            $diy->removeMaxAge();
+
+        } else {
+            $diy->setMaxAge($post->max_age);
+        }
+
+        if (empty($post->min_age)) {
+            $diy->removeMinAge();
+
+        } else {
+            $diy->setMinAge($post->min_age);
+        }
+
         return array();
     }
 

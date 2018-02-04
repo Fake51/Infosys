@@ -189,6 +189,7 @@ class Aktiviteter extends DBObject
         $this->replayable             = $this->replayable ? $this->replayable : 'nej';
         $this->hidden                 = $this->hidden ? $this->hidden : 'nej';
         $this->karmatype              = $this->karmatype ? $this->karmatype : 0;
+        $this->max_signups            = $this->max_signups ? $this->max_signups : 0;
     }
 
     /**

@@ -36,7 +36,7 @@
  */
 class PaymentFritidDkApi
 {
-    const APIURL = 'https://devapi.fritid.dk/portal/post_unique_product';
+    const APIURL = 'https://api.fritid.dk/portal/post_unique_product';
 
     /**
      * http helper
@@ -82,7 +82,7 @@ class PaymentFritidDkApi
             'email'        => $participant->email,
         ];
 
-        $response = $this->http_helper->request('POST', self::APIURL, ['json' => array_merge($data, $connection_links)]);
+        $response = $this->http_helper->request('POST', self::APIURL, ['json' => array_merge($data, $connection_links), 'verify' => false]);
 
         if ($response->getStatusCode() !== 200) {
             throw new FrameworkException('Could not create ticket at fritid.dk');
