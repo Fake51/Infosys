@@ -37,15 +37,14 @@ var users_object = {
         }
 
         function makeRoleStructure(role_id) {
-            var template = $('.role-template').html(),
+            var template = jQuery('.role-template').html(),
                 element;
 
             if (!that.roles[role_id]) {
                 return '';
             }
 
-            element = $(template.replace(/role-id-placeholder/, role_id).replace(/role-name-placeholder/, that.roles[role_id]));
-            return element;
+            return template.replace(/role-id-placeholder/, role_id).replace(/role-name-placeholder/, that.roles[role_id]);
         }
 
         $('#users-table').on('click', '.action_removerole', function() {
@@ -196,6 +195,12 @@ var users_object = {
             } else {
                 alert('Brugernavn eller kode er for kort eller mangler.');
             }
+        });
+
+        jQuery('#role_select option').filter(function () {
+            return Number(this.value) > 0;
+        }).each(function () {
+            that.roles[this.value] = this.textContent.replace(/^\s+|\s+$/, '');
         });
     }
 };
