@@ -45,9 +45,53 @@ class BoardgamesModel extends Model
             'notes'           => $this->fetchNote(),
             'stats'           => $this->fetchStats(),
             'designerstats'   => $this->fetchDesignerStats(),
+            'presence'        => $this->fetchPresence(),
         );
 
         return $data;
+    }
+
+    /**
+     * returns stats on game presence
+     *
+     * @access protected
+     * @return array
+     */
+    protected function fetchPresence()
+    {
+        $query = '
+SELECT
+    b.id,
+    b.name,
+    IFNULL(be.type, "not-present") AS state
+FROM
+    boardgames AS b
+    LEFT JOIN (
+        SELECT
+            MAX(ibe.id) AS id,
+            ibe.boardgame_id
+        FROM
+            boardgameevents AS ibe
+        WHERE
+            ibe.type IN ("borrowed", "present", "returned")
+        GROUP BY
+            ibe.boardgame_id
+    ) AS temp ON temp.boardgame_id = b.id
+    LEFT JOIN boardgameevents AS be ON be.boardgame_id = temp.boardgame_id AND be.id = temp.id
+ORDER BY
+    b.name
+';
+
+        return array_map(function ($row) {
+            return [
+                    'name'  => $row['name'],
+                    'id'    => $row['id'],
+                    'state' => $row['state'],
+                   ];
+            }, array_filter($this->db->query($query), function ($row) {
+            return $row['state'] !== 'returned';
+        }));
+
     }
 
     public function fetchStats()

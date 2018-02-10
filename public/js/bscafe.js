@@ -7,6 +7,7 @@ var BSCafe = (function ($, window) {
         },
         templates: {},
         activityData: [],
+        presenceData: [],
         gamesBorrowed: [],
         gamesReturned: [],
         participantData: [],
@@ -736,10 +737,14 @@ var BSCafe = (function ($, window) {
                 module.elements.$notes                  = $('div.notes textarea');
                 module.elements.$statistics             = $('#statistics');
                 module.elements.$designerStatistics     = $('#designerstatistics');
+                module.elements.$checkListIndex         = $('.check-list-index');
+                module.elements.$checkListGames         = $('.check-list-games');
                 module.templates.gameInPlayTemplate     = $('#in-play-game-template').text();
                 module.templates.logLineTemplate        = $('#log-line-template').text();
                 module.templates.activityTemplate       = $('#activity-template').text();
                 module.templates.registeredGameTemplate = $('#registered-game-template').text();
+                module.templates.checkListIndexItem     = $('#check-list-indexItem').text();
+                module.templates.checkListgameItem      = $('#check-list-gamesItem').text();
 
                 // filter buttons
                 module.elements.$availableFilter        = $('button[data-status=available]');
@@ -831,13 +836,20 @@ var BSCafe = (function ($, window) {
 
                     return true;
                 },
+                parsePresenceData = function (presenceData) {
+                    module.presenceData = presenceData.sort(function (a, b) {
+                        return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+                    });
+
+                    return true;
+                },
                 setupDataAsync = function (resolve, reject) {
                     if (!data.gameData || !data.participantData) {
                         reject();
                         return;
                     }
 
-                    if (!parseGameData(data.gameData) || !parseParticipantData(data.participantData) || !parseActivityData(data.activityData)) {
+                    if (!parseGameData(data.gameData) || !parseParticipantData(data.participantData) || !parseActivityData(data.activityData) || !parsePresenceData(data.presence)) {
                         reject();
                         return;
                     }
@@ -943,10 +955,21 @@ var BSCafe = (function ($, window) {
 
                     $container.append($items);
                 },
+                fillPresence = function () {
+
+                    module.elements.$checkListGames.append(
+                        module.presenceData.map(function (item) {
+                            return module.templates.checkListgameItem.replace(/:id:/g, item.id)
+                                .replace(/:name:/g, item.name)
+                                .replace(/:state:/g, item.state);
+                        })
+                    );
+                },
                 wrapper = function (resolve) {
                     fillInPlay();
                     fillActivities();
                     fillRegisteredGames();
+                    fillPresence();
 
                     fillNotes();
 

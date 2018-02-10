@@ -1,5 +1,22 @@
 var FVActivity = (function() {
-    var FVActivity = {
+    var bufferer = function (func, time) {
+            var timeout;
+
+            return function () {
+                var args = arguments;
+
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+
+                timeout = setTimeout(function () {
+                    timeout = false;
+                    func.apply(null, args);
+                }, time);
+            };
+        },
+        popupTimeout = false,
+        FVActivity = {
         participants:          {},
         groups:                {},
         schedules:             null,
@@ -15,8 +32,7 @@ var FVActivity = (function() {
         createGroup: function(ajax, schedule, json) {
             var group_element = $('fieldset.afviklingsbox-group.template').
                     clone().
-                    removeClass('template').
-                    removeClass('hidden').
+                    removeClass('template hidden').
                     attr('data-group_id', json.id),
                 link = group_element.find('a.show-team'),
                 group;
@@ -265,9 +281,6 @@ var FVActivity = (function() {
                 return;
             }
 
-            e.preventDefault();
-            e.stopPropagation();
-
             FVActivity.being_dragged.moveDrag(coords);
             window.setTimeout(function() {
                 FVActivity.checkEndpointHover(coords);
@@ -334,6 +347,94 @@ var FVActivity = (function() {
             return coords;
         },
 
+        makeInfoPopupContent: function ($row) {
+            return {
+                fields: [
+                    'language',
+                    'age',
+                    'maxWanted',
+                    'gender',
+                ],
+                language: $row.attr('data-language'),
+                age: $row.attr('data-age'),
+                maxWanted: $row.attr('data-maxWanted'),
+                gender: $row.attr('data-gender'),
+            };
+        },
+
+        getInfoPopup: function () {
+            var $popup = $($('#info-popup-template').text().replace(/\n/, '')),
+                obj = {
+                    hide: function () {
+                        $popup.hide();
+
+                        return this;
+                    },
+                    setContent: function(content) {
+                        $popup.children()
+                            .children()
+                            .remove();
+
+                        $popup.children()
+                            .first()
+                            .append('<dl>' + 
+                            content.fields.map(function (item) {
+                                return '<dt>' + item + '</dt><dd>' + content[item] + '</dd>';
+                            }).join('') + '</dl>'
+                        );
+
+                        return this;
+                    },
+                    displayForRow: function ($row) {
+                        var offset = $row.offset();
+
+                        $popup.css({
+                            display: 'block',
+                            top: 'calc(' + offset.top + 'px - 1rem)',
+                            left: offset.left,
+                        });
+
+                        return this;
+                    }
+                };
+
+            $('body').append($popup);
+
+            FVActivity.getInfoPopup = function () {
+                return obj;
+            };
+
+            return obj;
+        },
+
+        showInfoPopup: function ($row) {
+            popupTimeout = false;
+
+            if ($row.length) {
+                FVActivity.getInfoPopup()
+                    .setContent(FVActivity.makeInfoPopupContent($row))
+                    .displayForRow($row);
+            }
+        },
+
+        triggerInfoTimer: function (event) {
+            var element = document.elementFromPoint(event.clientX, event.clientY),
+                $row = element ? $(element).closest('tr.participant') : false;
+
+            if (popupTimeout) {
+                clearTimeout(popupTimeout);
+            }
+
+            FVActivity.getInfoPopup()
+                .hide();
+
+            if (!$row.length) {
+                return;
+            }
+
+            popupTimeout = setTimeout(FVActivity.showInfoPopup.bind(null, $row), 250);
+        },
+
         init: function($, options) {
             var ajax = new Ajax();
 
@@ -362,7 +463,9 @@ var FVActivity = (function() {
             $('body').on(
                 'mouseup', FVActivity.stopParticipantDrag
             ).on(
-                'mousemove', FVActivity.moveDrag
+                'mousemove.moveDrag', FVActivity.moveDrag
+            ).on(
+                'mousemove.triggerInfo', bufferer(FVActivity.triggerInfoTimer, 50)
             );
 
             if (options) {
