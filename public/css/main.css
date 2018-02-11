@@ -636,7 +636,6 @@ div form#lokale-edit fieldset div.clearit {
 
 /* aktivitet styles  {{{ */
 div.aktivitetbox {
-    width: 1245px;
     position: relative;
 }
 
@@ -791,11 +790,15 @@ table.aktivitet-graph a:hover, table.aktivitet-graph a:active, table.aktivitet-g
     color: #d8d8d8;
 }
 
-div.afviklingsbox {
-    width: 610px;
+.signup-pool {
+    width: 100%;
 }
 
-div.afviklingsbox.inactive {
+.afviklingsbox {
+    width: 49%;
+}
+
+.afviklingsbox.inactive {
     background-color: #777;
 }
 
@@ -1704,6 +1707,11 @@ span.reset-search {
 
 span.reset-search img {
     cursor: pointer;
+}
+
+.activitySchedules {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .activityInfoPopup {

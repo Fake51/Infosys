@@ -60,7 +60,7 @@ class PhotoController extends Controller
         $this->page->registerLateLoadJS('jquery.cropit.js');
         $this->page->registerLateLoadJS('photo-cropper.js');
         $this->page->includeCSS('photo-shopper.css');
-        $this->page->includeCss('fontello-ca56566b/css/idtemplate.css');
+        $this->page->includeCss('fontello-e8916cee/css/idtemplate.css');
 
         $this->page->photo_width  = 213;
         $this->page->photo_height = 295;

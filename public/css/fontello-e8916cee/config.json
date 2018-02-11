@@ -47,6 +47,12 @@
       "css": "file-image",
       "code": 61893,
       "src": "fontawesome"
+    },
+    {
+      "uid": "34ba50fe8e4f95e7f3d76c6534814a70",
+      "css": "infinity",
+      "code": 59397,
+      "src": "entypo"
     }
   ]
 }

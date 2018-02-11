@@ -85,6 +85,7 @@ class ActivityController extends Controller
             $this->page->setTemplate('noresults');
 
         } else {
+            $this->page->includeCss('fontello-e8916cee/css/idtemplate.css');
             $this->page->setTitle(e($aktivitet->navn) . ' - Aktiviteter');
             $time_array = array();
 

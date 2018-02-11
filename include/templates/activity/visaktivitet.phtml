@@ -4,7 +4,7 @@ $this->registerLateLoadJS('ajax.js');
 $this->registerLateLoadJS('activity.js');
 ?>
         <div id='debug'></div>
-<div class='middleboxes'>
+<div>
     <div class='aktivitetbox'>
         <div id='popup_creator'>
             <form action="<?= $this->url('opret_afvikling', array('aktivitet_id' => $this->aktivitet->id));?>" method='post'>
@@ -78,7 +78,7 @@ $this->registerLateLoadJS('activity.js');
         </fieldset>
     </div>
 </div>
-<div class='middleboxes'>
+<div class='activitySchedules'>
 
     <?php if (count($this->afviklinger)) :
         $participants_on_teams = array_flip($this->aktivitet->getParticipantsOnTeams('spiller'));
