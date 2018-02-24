@@ -396,6 +396,9 @@ class Routes
         $this->routes['boardgames_edit']             = array('url' => 'boardgames/edit', 'controller' => 'Boardgames', 'method' => 'editGame');
         $this->routes['boardgames_parse']            = array('url' => 'boardgames/parse', 'controller' => 'Boardgames', 'method' => 'parseSpreadsheet');
         $this->routes['boardgames_update_note']      = array('url' => 'boardgames/update-note', 'controller' => 'Boardgames', 'method' => 'updateNote');
+        $this->routes['boardgames_presence_check']   = array('url' => 'boardgames/presence-check', 'controller' => 'Boardgames', 'method' => 'presenceCheck');
+        $this->routes['boardgames_presence_update']  = array('url' => 'boardgames/presence-update', 'controller' => 'Boardgames', 'method' => 'presenceUpdate');
+        $this->routes['boardgames_presence_reset']   = array('url' => 'boardgames/presence-reset', 'controller' => 'Boardgames', 'method' => 'resetPresence');
 
         // loans
         $this->routes['loans_overview']         = array('url' => 'loans', 'controller' => 'Loans', 'method' => 'overview');

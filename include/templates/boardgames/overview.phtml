@@ -91,10 +91,13 @@ $this->includeCSS('bscafe.css');?>
     </div>
 </section>
     <script type="text/template" id="check-list-indexItem">
-<li data-value=":value:" class="check-list-indexItem">:value:</li>
+<li data-value=":value:" class="check-list-indexItem">:title:</li>
     </script>
     <script type="text/template" id="check-list-gamesItem">
 <li data-value=":name:" data-id=":id:" class="check-list-gamesItem :state:">:name:</li>
+    </script>
+    <script type="text/template" id="check-list-gamesDivider">
+<li data-value=":initial:" class="check-list-gamesDivider">:initial:</li>
     </script>
     <script type="text/template" id="in-play-game-template">
 <li data-id=":data-id:" data-sort=":game-title:"><span class="title"><img class="return-game" src="/img/undo2.png" alt="Mark game returned"/><span class="text">:game-title:<span class="popup-details"><span class="title">Ejer: <span class="name">:game-owner:</span></span><!--game-comment--><span class="comment">Kommentar: :game-comment:</span><!--game-comment--></span></span></span><span class="sub-info">- lånt af <span class="name">:borrower:</span> <span class="time">:time:</span><!--borrowing-comment--><span class="comment">Kommentar: :borrowing-comment:</span><!--borrowing-comment--></span></li>
@@ -141,12 +144,15 @@ $this->includeCSS('bscafe.css');?>
     </script>
     <script type="text/javascript">
     $(function () {
-    window.boardgames_data_url   = '<?= $this->url('boardgames_data');?>';
-    window.boardgames_create_url = '<?= $this->url('boardgames_create');?>';
-    window.boardgames_update_url = '<?= $this->url('boardgames_update');?>';
-    window.boardgames_edit_url   = '<?= $this->url('boardgames_edit');?>';
-    window.boardgames_parse_url  = '<?= $this->url('boardgames_parse');?>';
-    window.boardgames_notes_url  = '<?= $this->url('boardgames_update_note');?>';
+    window.boardgames_data_url        = '<?= $this->url('boardgames_data');?>';
+    window.boardgames_create_url      = '<?= $this->url('boardgames_create');?>';
+    window.boardgames_update_url      = '<?= $this->url('boardgames_update');?>';
+    window.boardgames_edit_url        = '<?= $this->url('boardgames_edit');?>';
+    window.boardgames_parse_url       = '<?= $this->url('boardgames_parse');?>';
+    window.boardgames_notes_url       = '<?= $this->url('boardgames_update_note');?>';
+    window.boardgames_presence_check  = '<?= $this->url('boardgames_presence_check');?>';
+    window.boardgames_presence_update = '<?= $this->url('boardgames_presence_update');?>';
+    window.boardgames_presence_reset  = '<?= $this->url('boardgames_presence_reset');?>';
     BSCafe.init();
     });
     </script>

@@ -178,4 +178,88 @@ class BoardgamesController extends Controller
 
         exit;
     }
+
+    /**
+     * returns boardgame presence events since last check
+     *
+     * @access public
+     * @return void
+     */
+    public function presenceCheck()
+    {
+        if (!$this->page->request->isGet()) {
+            header('HTTP/1.1 405 Bad method');
+            exit;
+
+        }
+
+        try {
+            $updates = $this->model->getPresenceUpdates($this->page->request->get->time);
+
+            header('HTTP/1.1 200 Done');
+            header('Content-Type: application/json; charset=UTF-8');
+
+            echo json_encode($updates);
+
+        } catch (Exception $e) {
+            header('HTTP/1.1 500 Error processing data');
+            echo $e->getMessage();
+        }
+
+        exit;
+    }
+
+    /**
+     * sets new presence state
+     *
+     * @access public
+     * @return void
+     */
+    public function presenceUpdate()
+    {
+        if (!$this->page->request->isPost()) {
+            header('HTTP/1.1 405 Bad method');
+            exit;
+
+        }
+
+        try {
+            $this->model->addPresenceEvent($this->page->request->post->id, $this->page->request->post->state);
+
+            header('HTTP/1.1 200 Done');
+
+        } catch (Exception $e) {
+            header('HTTP/1.1 500 Error processing data');
+            echo $e->getMessage();
+        }
+
+        exit;
+    }
+
+    /**
+     * resets all games marked present
+     *
+     * @access public
+     * @return void
+     */
+    public function resetPresence()
+    {
+        if (!$this->page->request->isPost()) {
+            header('HTTP/1.1 405 Bad method');
+            exit;
+
+        }
+
+        try {
+            $this->model->resetPresence();
+
+            header('HTTP/1.1 200 Done');
+
+        } catch (Exception $e) {
+            header('HTTP/1.1 500 Error processing data');
+            echo $e->getMessage();
+        }
+
+        exit;
+    }
 }

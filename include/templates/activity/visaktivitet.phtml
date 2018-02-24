@@ -111,7 +111,7 @@ $this->registerLateLoadJS('activity.js');
                 ?>
                     <fieldset class='afviklingsbox-group hoverable' data-group_id="<?= e($hold->id);?>">
                         <legend><a href="<?= $this->url('vis_hold', array('id' => $hold->id));?>">Hold <?= e($hold->holdnummer);?></a> - 
-                            <span class='group-status'><span class='<?= $hold_gamer_status;?> gamer-status'>S</span><span class='gm-status <?= $hold_gm_status;?>'>SL</span></span>
+                            <span class='group-status'><span class='<?= $hold_gamer_status;?> gamer-status'>S</span><span class='gm-status <?= $hold_gm_status;?>'><i class="icon-meeple-king"></i></span></span>
                         </legend>
                         <button class='delete-group'>Slet hold</button>
                         <table>
@@ -123,7 +123,7 @@ $this->registerLateLoadJS('activity.js');
                                     $locked                   = $deltager->activity_lock === 'ja' ? ' locked' : '';
                                 ?>
                                     <tr class="participant p<?= e($deltager->id) . $locked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-gender="<?= $deltager->gender;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="10" data-participant_gender="<?= e($deltager->gender);?>">
-                                        <td><?= $type;?></td>
+                                        <td><?= $type === 'SL' ? '<i class="icon-meeple-king"></i>' : '';?></td>
                                         <td><a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"><?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?></a></td>
                                         <td class="karma"><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                                         <td><?= e($deltager->alder);?></td>
@@ -139,6 +139,19 @@ $this->registerLateLoadJS('activity.js');
             <fieldset class='afviklingsbox-signups'>
                 <legend>Tilmeldinger</legend>
                 <table class="signup-pool">
+                    <thead>
+                        <tr>
+                            <td><i class="icon-meeple-king"></i></td>
+                            <td class="name">Name</td>
+                            <td class='afviklingsbox-extras'Pri</td>
+                            <td class="karma"><i class="icon-balance-scale"></i></td>
+                            <td class='afviklingsbox-extras'><i class="icon-ages"></i></td>
+                            <td class='gender'><i class="icon-transgender-alt"></i></td>
+                            <td class='max-wanted'><i class="icon-heart-empty"></i></td>
+                            <td class='language'><i class="icon-dk"></i></td>
+                            <td class='message'><i class="icon-chat"></i></td>
+                        </tr>
+                    </thead>
                     <tbody>
                         <?php foreach ($afvikling->getTilmeldinger() as $tilmelding) :
                             $type      = $tilmelding->getRoleAcronym();
@@ -147,14 +160,37 @@ $this->registerLateLoadJS('activity.js');
                             $busy      = $this->aktivitet->tids_eksklusiv == 'ja' && empty($displayed) && $deltager->isBusyBetween($afvikling->start, $afvikling->slut) ? 'deltagerbusy' : '';
                             $double_booked = !empty($this->double_booked_gms[$deltager->id][$afvikling->id]) ? 'double-booked' : '';
                             $locked    = $deltager->activity_lock === 'ja' ? ' locked' : '';
+
+                            if ($deltager->gender === 'm') {
+                                $gender = 'male-1';
+
+                            } else if ($deltager->gender === 'k') {
+                                $gender = 'female-1';
+
+                            } else {
+                                $gender = 'transgender-alt';
+                            }
+
+                            if ($deltager->sprog === 'engelsk') {
+                                $language = 'uk';
+
+                            } else if ($deltager->sprog === 'dansk') {
+                                $language = 'dk';
+
+                            } else {
+                                $language = '';
+                            }
                         ;?>
                                 <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?> <?= $double_booked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-gender="<?= $deltager->gender;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="<?= e($tilmelding->prioritet);?>" data-participant_gender="<?= e($deltager->gender);?>">
-                                    <td><?= e($type);?></td>
+                                    <td><?= $type === 'SL' ? '<i class="icon-meeple-king"></i>' : '';?></td>
                                     <td class="name"><a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"<?= ($busy ? " title='Deltageren er optaget på dette tidspunkt'" : '');?>><?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?></a></td>
-                                    <td class='afviklingsbox-extras'><?= $tilmelding->prioritet;?>.pri</td>
-                                    <td class="karma""><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
+                                    <td class='afviklingsbox-extras'><?= $tilmelding->prioritet;?></td>
+                                    <td class="karma"><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                                     <td class='afviklingsbox-extras'><?= e($deltager->alder);?></td>
-                                    <td class='gender'><?= $deltager->gender;?></td>
+                                    <td class='gender'><i class="icon-<?= $gender;?>"></i></td>
+                                    <td class='max-wanted'><?= $deltager->desired_activities > 0 ?: '';?></td>
+                                    <td class='language'><i class="icon-<?= $language;?>"></i></td>
+                                    <td class='message'><?= $deltager->deltager_note ? '<i class="icon-chat"></i>' : '';?></td>
                                 </tr>
                         <?php endforeach;?>
                     </tbody>
@@ -180,7 +216,7 @@ $(function() {
 
 <fieldset class='afviklingsbox-group template hidden hoverable' data-group_id=''>
     <legend><a href="<?= $this->url('vis_hold', array('id' => 'xxx'));?>" class="show-team"></a> - 
-        <span class='group-status'><span class='needs gamer-status'>S</span><span class='needs gm-status'>SL</span></span>
+        <span class='group-status'><span class='needs gamer-status'>S</span><span class='needs gm-status'><i class="icon-meeple-king"></i></span></span>
     </legend>
     <button class='delete-group'>Slet hold</button>
     <table>

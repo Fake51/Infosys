@@ -18,6 +18,7 @@ var BSCafe = (function ($, window) {
         designergamestats: null,
         $dialog: null,
         noteText: '',
+        presenceCheckTimer: null,
         noteUpdateToken: null,
         gameCreateMatcher: function (game, term) {
             var name    = game.name.toLowerCase(),
@@ -612,6 +613,46 @@ var BSCafe = (function ($, window) {
                 }
             });
         },
+        resetGamesItemState: function () {
+            var self = $(this);
+
+            self.attr('disabled', true);
+
+            $.ajax({
+                url: window.boardgames_presence_reset,
+                type: 'POST',
+                complete: function () {
+                    self.removeAttr('disabled');
+                },
+                error: function () {
+                    alert('Kunne ikke resette');
+                }
+            });
+        },
+        modifyGamesItemState: function () {
+            var $this = $(this),
+                state;
+
+            if ($this.hasClass('present')) {
+                $this.removeClass('present')
+                    .addClass('not-present');
+
+                state = 'not-present';
+
+            } else {
+                $this.removeClass('not-present borrowed')
+                    .addClass('present');
+
+                state = 'present';
+            }
+
+            $.ajax({
+                url: window.boardgames_presence_update,
+                type: 'POST',
+                data: {id: $this.attr('data-id'), state: state}
+            });
+
+        },
         handleUpload: function () {
             var data = {
                     input: $(this).parent().find('textarea').val()
@@ -665,6 +706,16 @@ var BSCafe = (function ($, window) {
                 });
             }, 1000);
         },
+        scrollToGames: function () {
+            var scrollTop = module.elements.$checkListGames.scrollTop(),
+                parentOffset = module.elements.$checkListGames.offset().top,
+                $element = module.elements.$checkListGames
+                    .find('*[data-value="' + this.getAttribute('data-value') + '"]');
+
+            module.elements.$checkListGames.scrollTop(
+                $element.offset().top + scrollTop - parentOffset
+            );
+        },
         setupEventHooks: function () {
             module.elements.$inPlayList.on('click.remove-game', 'img.return-game', module.returnBorrowedGame);
             module.elements.$actionPane.on('click.lend-game', 'button.lend-game', module.lendGame);
@@ -678,9 +729,66 @@ var BSCafe = (function ($, window) {
             module.elements.$actionPane.on('click.cancel-edit-game', 'a.cancel-editing', module.disableGameEditing);
             module.elements.$notes.on('keyup.update-note', module.updateNote);
             $('#upload-spreadsheet-data').click(module.handleUploadSpreadsheet);
+            module.elements.$checkListGames.on('click', '.check-list-gamesItem', module.modifyGamesItemState);
+            module.elements.$checkListReset.on('click', module.resetGamesItemState);
+            module.elements.$checkListIndex.on('click', '.check-list-indexItem', module.scrollToGames);
+        },
+        fetchPresenceUpdates: function (time) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: window.boardgames_presence_check,
+                    type: 'GET',
+                    data: {time: Math.floor(time.valueOf() / 1000)},
+                    success: resolve,
+                    error: reject
+                });
+            });
+        },
+        applyPresenceUpdate: function (updates) {
+            updates.forEach(function (item) {
+                module.elements.$checkListGames
+                    .find('[data-id="' + item.id + '"]')
+                    .removeClass('present not-present borrowed')
+                    .addClass(item.state);
+            });
+
+        },
+        handlePresenceCheckFail: function (err) {
+            console.log(err);
+        },
+        handlePresenceUpdate: function () {
+            module.presenceCheckTimer = false;
+            module.presenceCheckTime  = new Date();
+
+            module.fetchPresenceUpdates(module.presenceCheckTime)
+                .then(module.applyPresenceUpdate)
+                .catch(module.handlePresenceCheckFail)
+                .finally(module.activatePresenceCheck);
+        },
+        activatePresenceCheck: function () {
+            if (!module.presenceCheckTimer) {
+                module.presenceCheckTimer = setTimeout(module.handlePresenceUpdate, 1000);
+            }
+        },
+        deactivatePresenceCheck: function () {
+            if (module.presenceCheckTimer) {
+                clearTimeout(module.presenceCheckTimer);
+            }
+
+            module.presenceCheckTimer = false;
         },
         setupTabs: function () {
-            $('div.action-board').tabs();
+            $('div.action-board').tabs({
+                activate: function (event, ui) {
+                    var tab = ui.newTab.find('a').attr('href');
+
+                    if (tab.search(/check/) !== -1) {
+                        module.activatePresenceCheck();
+                    } else {
+                        module.deactivatePresenceCheck();
+                    }
+                }
+            });
         },
         setupAutoComplete: function () {
             var setup = function ($element, source) {
@@ -739,12 +847,14 @@ var BSCafe = (function ($, window) {
                 module.elements.$designerStatistics     = $('#designerstatistics');
                 module.elements.$checkListIndex         = $('.check-list-index');
                 module.elements.$checkListGames         = $('.check-list-games');
+                module.elements.$checkListReset         = $('.check-reset');
                 module.templates.gameInPlayTemplate     = $('#in-play-game-template').text();
                 module.templates.logLineTemplate        = $('#log-line-template').text();
                 module.templates.activityTemplate       = $('#activity-template').text();
                 module.templates.registeredGameTemplate = $('#registered-game-template').text();
                 module.templates.checkListIndexItem     = $('#check-list-indexItem').text();
                 module.templates.checkListgameItem      = $('#check-list-gamesItem').text();
+                module.templates.gamesDivider           = $('#check-list-gamesDivider').text();
 
                 // filter buttons
                 module.elements.$availableFilter        = $('button[data-status=available]');
@@ -956,6 +1066,16 @@ var BSCafe = (function ($, window) {
                     $container.append($items);
                 },
                 fillPresence = function () {
+                    var initials,
+                        key,
+                        index,
+                        dividers = [],
+                        letters = [],
+                        factor,
+                        initialCount = 0,
+                        parts = 8,
+                        first,
+                        last;
 
                     module.elements.$checkListGames.append(
                         module.presenceData.map(function (item) {
@@ -964,6 +1084,47 @@ var BSCafe = (function ($, window) {
                                 .replace(/:state:/g, item.state);
                         })
                     );
+
+                    initials = module.presenceData.reduce(function (agg, next) {
+                        var initial = next.name.substr(0, 1).toUpperCase();
+
+                        if (initial >= "0" && initial <= "9") {
+                            initial = "#";
+                        }
+
+                        if (agg[initial]) {
+                            return agg;
+                        }
+
+                        agg[initial] = next.id;
+                        initialCount++;
+
+                        return agg;
+                    }, {});
+
+                    for (key in initials) {
+                        if (initials.hasOwnProperty(key)) {
+                            letters.push(key);
+
+                            module.elements.$checkListGames.find('*[data-id="' + initials[key] + '"]')
+                                .before(module.templates.gamesDivider.replace(/:initial:/g, key));
+                        }
+                    }
+
+                    letters = letters.sort();
+                    factor = initialCount / parts;
+
+                    for (index = 0; index < parts; index++) {
+                        first = letters[Math.ceil(index * factor)];
+                        last  = letters[Math.floor(index * factor + factor)];
+
+                        if (last === undefined) {
+                            last = letters[Math.floor(index * factor + factor - 1)];
+                        }
+
+                        module.elements.$checkListIndex.append(module.templates.checkListIndexItem.replace(/:value:/g, first).replace(/:title:/g, first + '-' + last));
+                    }
+
                 },
                 wrapper = function (resolve) {
                     fillInPlay();
@@ -1001,3 +1162,5 @@ var BSCafe = (function ($, window) {
 
     return module;
 })(jQuery, window);
+
+// handle index

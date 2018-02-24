@@ -57,8 +57,14 @@ class BoardgamesModel extends Model
      * @access protected
      * @return array
      */
-    protected function fetchPresence()
+    protected function fetchPresence($time = null)
     {
+        $where = '';
+
+        if ($time) {
+            $where = 'WHERE be.timestamp > "' . date('Y-m-d H:i:s', $time) . '" - INTERVAL 5 SECOND';
+        }
+
         $query = '
 SELECT
     b.id,
@@ -73,11 +79,12 @@ FROM
         FROM
             boardgameevents AS ibe
         WHERE
-            ibe.type IN ("borrowed", "present", "returned")
+            ibe.type IN ("borrowed", "present", "returned", "not-present")
         GROUP BY
             ibe.boardgame_id
     ) AS temp ON temp.boardgame_id = b.id
     LEFT JOIN boardgameevents AS be ON be.boardgame_id = temp.boardgame_id AND be.id = temp.id
+    ' . $where . '
 ORDER BY
     b.name
 ';
@@ -574,5 +581,59 @@ ON DUPLICATE KEY UPDATE note = ?';
         $this->db->exec($query, array($post->note, $post->note));
 
         return $this;
+    }
+
+    /**
+     * returns updates to presence check
+     *
+     * @param variable variable Point to get updates from
+     *
+     * @access public
+     * @return array
+     */
+    public function getPresenceUpdates($time)
+    {
+        return $this->fetchPresence($time);
+    }
+
+    /**
+     * adds a presence event
+     *
+     * @param int    $id    Id to add for
+     * @param string $state State to add
+     *
+     * @access public
+     * @return void
+     */
+    public function addPresenceEvent($id, $state)
+    {
+        $query = '
+INSERT INTO boardgameevents
+SET boardgame_id = ?, type = ?, timestamp = NOW(), data = ""
+';
+
+        $this->db->exec($query, [$id, $state]);
+    }
+
+    /**
+     * adds not-present events for all games marked present
+     *
+     * @access public
+     * @return void
+     */
+    public function resetPresence()
+    {
+        $filter = function ($item) {
+            return $item['state'] === 'present';
+        };
+
+        $map = function ($item) {
+            return '(' . $item['id'] . ', "not-present", NOW(), "")';
+        };
+
+        $query = 'INSERT INTO boardgameevents (boardgame_id, type, timestamp, data) VALUES
+' . implode(', ', array_map($map, array_filter($this->fetchPresence(), $filter)));
+
+        $this->db->exec($query);
     }
 }
