@@ -631,8 +631,14 @@ SET boardgame_id = ?, type = ?, timestamp = NOW(), data = ""
             return '(' . $item['id'] . ', "not-present", NOW(), "")';
         };
 
+        $games = array_map($map, array_filter($this->fetchPresence(), $filter));
+
+        if (!$games) {
+            return;
+        }
+
         $query = 'INSERT INTO boardgameevents (boardgame_id, type, timestamp, data) VALUES
-' . implode(', ', array_map($map, array_filter($this->fetchPresence(), $filter)));
+' . implode(', ', $games);
 
         $this->db->exec($query);
     }
