@@ -629,6 +629,15 @@ var BSCafe = (function ($, window) {
                 }
             });
         },
+        filterGamesItemState: function () {
+            if (module.elements.$checkListGames.hasClass('filtered')) {
+                module.elements.$checkListGames.removeClass('filtered');
+                $(this).removeClass('active');
+            } else {
+                module.elements.$checkListGames.addClass('filtered');
+                $(this).addClass('active');
+            }
+        },
         modifyGamesItemState: function () {
             var $this = $(this),
                 state;
@@ -731,6 +740,7 @@ var BSCafe = (function ($, window) {
             $('#upload-spreadsheet-data').click(module.handleUploadSpreadsheet);
             module.elements.$checkListGames.on('click', '.check-list-gamesItem', module.modifyGamesItemState);
             module.elements.$checkListReset.on('click', module.resetGamesItemState);
+            module.elements.$checkListFilter.on('click', module.filterGamesItemState);
             module.elements.$checkListIndex.on('click', '.check-list-indexItem', module.scrollToGames);
         },
         fetchPresenceUpdates: function (time) {
@@ -848,6 +858,7 @@ var BSCafe = (function ($, window) {
                 module.elements.$checkListIndex         = $('.check-list-index');
                 module.elements.$checkListGames         = $('.check-list-games');
                 module.elements.$checkListReset         = $('.check-reset');
+                module.elements.$checkListFilter        = $('.check-filter');
                 module.templates.gameInPlayTemplate     = $('#in-play-game-template').text();
                 module.templates.logLineTemplate        = $('#log-line-template').text();
                 module.templates.activityTemplate       = $('#activity-template').text();

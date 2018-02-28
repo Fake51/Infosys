@@ -16,6 +16,15 @@
     padding: 0.2rem;
 }
 
+.check-filter.active {
+    background-color: lightblue;
+}
+
+.filtered .check-list-gamesItem.borrowed,
+.filtered .check-list-gamesItem.present {
+    display: none;
+}
+
 .check-list-gamesItem.not-present {
     background: lightgrey;
 }

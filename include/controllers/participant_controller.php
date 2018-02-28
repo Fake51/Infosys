@@ -1683,6 +1683,7 @@ class ParticipantController extends Controller
     public function sendFirstPaymentReminder()
     {
 die('Not sending first payment reminders');
+
         $participants = $this->model->getParticipantsForPaymentReminder();
 
         $count = 0;
@@ -1748,11 +1749,11 @@ die('Not sending last payment reminders');
         $this->model->setupPaymentReminderEmail($participant, $this->page);
 
         if ($danish) {
-            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval 2017';
+            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval 2018';
             $this->page->setTemplate('participant/' . $template . '-da');
 
         } else {
-            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval 2017';
+            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval 2018';
             $this->page->setTemplate('participant/' . $template . '-en');
         }
 

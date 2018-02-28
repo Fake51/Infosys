@@ -9,6 +9,7 @@ $(function() {
             sAjaxSource: window.infosys_data.all_users_ajax,
             iDisplayStart: 0,
             iDisplayLength: 25,
+            aLengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
             aaSorting: [[0, 'asc']],
             fnServerParams: function(datamap) {
                 var extra_columns = [];
