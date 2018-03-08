@@ -197,7 +197,7 @@ $this->registerLateLoadJS('participant.js');
         <fieldset>
             <legend>IDkort</legend>
             <?php if ($this->cropped_photo) : ?>
-            <img src="<?= e($this->cropped_photo);?>" alt=""/>
+            <img src="<?= e($this->cropped_photo);?>?rand=<?= uniqid();?>" alt=""/>
             <?php endif;?>
             <div class="actions">
                 <a href="<?= $this->participant_photo_upload_link;?>" class="btn btn-primary" target="_blank">Foto upload</a>

@@ -463,7 +463,7 @@ var madwearedit = {
             return [];
         }
 
-        return this.wearSizes.slice(start, end)
+        return this.wearSizes.slice(start, end + 1)
             .map(function (item) {
                 return {
                     value: item,

@@ -2478,6 +2478,13 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         });
     }
 
+    public function filterOutAnnulled(array $participants)
+    {
+        return array_filter($participants, function ($x) {
+            return $x->annulled === 'nej';
+        });
+    }
+
     public function filterOutTodaysReminders(array $participants)
     {
         $select = $this->createEntity('LogItem')->getSelect();
@@ -2517,6 +2524,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $participants = $this->filterOutPaidSignups($this->createEntity('Deltagere')->findAll());
         $participants = $this->filterOutGroups($participants);
         $participants = $this->filterOutTodaysReminders($participants);
+        $participants = $this->filterOutAnnulled($participants);
         $participants = $this->filterSignedUpToday($participants);
 
         return $participants;

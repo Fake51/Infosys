@@ -39,5 +39,5 @@ infosysExportWidth = <?= e($this->photo_width);?>;
 infosysExportHeight = <?= e($this->photo_height);?>;
 infosysCropUrl = "<?= $this->url('photo_upload_cropped', ['identifier' => $this->identifier]);?>";
 infosysOriginalUrl = "<?= $this->url('photo_upload_original', ['identifier' => $this->identifier]);?>";
-infosysExistingImageUrl = "<?= e($this->existing_image);?>";
+infosysExistingImageUrl = "<?= $this->existing_image ? $this->public_uri . e($this->existing_image) . "?rand=" . uniqid() : "";?>";
 </script>
