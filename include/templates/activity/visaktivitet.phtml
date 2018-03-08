@@ -7,7 +7,7 @@ $this->registerLateLoadJS('activity.js');
 <div>
     <div class='aktivitetbox'>
         <div id='popup_creator'>
-            <form action="<?= $this->url('opret_afvikling', array('aktivitet_id' => $this->aktivitet->id));?>" method='post'>
+            <form action="<?= $this->url('opret_afvikling', array('aktivitet_id' => $this->activity->id));?>" method='post'>
                 <div>
                     <label for='start'>Start: </label> <input type="text" class="datetimepicker" name="start" id="start"/>
                     <label for='start'>Slut: </label> <input type="text" class="datetimepicker" name="end" id="stop"/>
@@ -23,56 +23,56 @@ $this->registerLateLoadJS('activity.js');
             </form>
         </div>
         <fieldset>
-            <legend>Aktivitet - <a href="<?= $this->url('edit_aktivitet', array('id' => $this->aktivitet->id));?>"><i>Ret/slet</i></a> - <a id='popup_creator_link' href='#'><i>Opret afvikling</i></a></legend>
+            <legend>Aktivitet - <a href="<?= $this->url('edit_aktivitet', array('id' => $this->activity->id));?>"><i>Ret/slet</i></a> - <a id='popup_creator_link' href='#'><i>Opret afvikling</i></a></legend>
             <table>
                 <tr>
-                    <td colspan='3'><strong>Id:</strong> <i><?= $this->aktivitet->id;?></i></td>
+                    <td colspan='3'><strong>Id:</strong> <i><?= $this->activity->id;?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><strong>Titel:</strong> <i><?= e($this->aktivitet->navn);?></i></td>
+                    <td colspan='3'><strong>Titel:</strong> <i><?= e($this->activity->navn);?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><strong>Engelsk titel:</strong> <i><?= e($this->aktivitet->title_en);?></i></td>
+                    <td colspan='3'><strong>Engelsk titel:</strong> <i><?= e($this->activity->title_en);?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><strong>Forfatter(e):</strong> <i><?= e($this->aktivitet->author);?></i></td>
+                    <td colspan='3'><strong>Forfatter(e):</strong> <i><?= e($this->activity->author);?></i></td>
                 </tr>
                 <tr>
-                    <td><strong>WP Id:</strong> <i><?= $this->aktivitet->wp_link;?></i></td>
-                    <td><strong>Spiltype:</strong> <i><?= e($this->aktivitet->type);?></i></td>
-                    <td><strong>Varighed:</strong> <i><?= e($this->aktivitet->varighed_per_afvikling);?> timer</i></td>
+                    <td><strong>WP Id:</strong> <i><?= $this->activity->wp_link;?></i></td>
+                    <td><strong>Spiltype:</strong> <i><?= e($this->activity->type);?></i></td>
+                    <td><strong>Varighed:</strong> <i><?= e($this->activity->varighed_per_afvikling);?> timer</i></td>
                 </tr>
                 <tr>
-                    <td><strong>Min Spillere:</strong> <i id="min-gamers"><?= e($this->aktivitet->min_deltagere_per_hold);?></i></td>
-                    <td><strong>Max Spillere:</strong> <i id="max-gamers"><?= e($this->aktivitet->max_deltagere_per_hold);?></i></td>
-                    <td><strong>Spilledere:</strong> <i id="gms-required"><?= e($this->aktivitet->spilledere_per_hold);?></i></td>
+                    <td><strong>Min Spillere:</strong> <i id="min-gamers"><?= e($this->activity->min_deltagere_per_hold);?></i></td>
+                    <td><strong>Max Spillere:</strong> <i id="max-gamers"><?= e($this->activity->max_deltagere_per_hold);?></i></td>
+                    <td><strong>Spilledere:</strong> <i id="gms-required"><?= e($this->activity->spilledere_per_hold);?></i></td>
                 </tr>
                 <tr>
-                    <td><strong>Pris:</strong> <i><?= e($this->aktivitet->pris);?></i></td>
-                    <td><strong>Kan tilmeldes:</strong> <i><?= $this->aktivitet->kan_tilmeldes;?></i></td>
-                    <td><strong>Fylder lokale:</strong> <i><?= $this->aktivitet->lokale_eksklusiv;?></i></td>
+                    <td><strong>Pris:</strong> <i><?= e($this->activity->pris);?></i></td>
+                    <td><strong>Kan tilmeldes:</strong> <i><?= $this->activity->kan_tilmeldes;?></i></td>
+                    <td><strong>Fylder lokale:</strong> <i><?= $this->activity->lokale_eksklusiv;?></i></td>
                 </tr>
                 <tr>
-                    <td><strong>Sprog:</strong> <i><?= e($this->aktivitet->sprog);?></i></td>
-                    <td><strong>Udelukker samtidige aktiviteter:</strong> <i><?= $this->aktivitet->tids_eksklusiv;?></i></td>
-                    <td><strong>Kan spilles flere gange:</strong> <i><?= e($this->aktivitet->replayable);?></i></td>
+                    <td><strong>Sprog:</strong> <i><?= e($this->activity->sprog);?></i></td>
+                    <td><strong>Udelukker samtidige aktiviteter:</strong> <i><?= $this->activity->tids_eksklusiv;?></i></td>
+                    <td><strong>Kan spilles flere gange:</strong> <i><?= e($this->activity->replayable);?></i></td>
                 </tr>
                 <tr>
-                    <td><strong>Skjult:</strong> <i><?= e($this->aktivitet->hidden);?></i></td>
-                    <td><strong>Karmatype:</strong> <i><?= e($this->aktivitet->getMeaningfulKarmatype());?></i></td>
-                    <td><strong>Max tilmeldinger:</strong> <i><?= e($this->aktivitet->max_signups);?></i></td>
+                    <td><strong>Skjult:</strong> <i><?= e($this->activity->hidden);?></i></td>
+                    <td><strong>Karmatype:</strong> <i><?= e($this->activity->getMeaningfulKarmatype());?></i></td>
+                    <td><strong>Max tilmeldinger:</strong> <i><?= e($this->activity->max_signups);?></i></td>
                 </tr>
                 <tr>
-                    <td colspan="2"><strong>Aldersbegrænsning:</strong> Min: <strong><?= e($this->aktivitet->getMinAge());?></strong>,  max: <strong><?= e($this->aktivitet->getMaxAge());?></strong></td>
+                    <td colspan="2"><strong>Aldersbegrænsning:</strong> Min: <strong><?= e($this->activity->getMinAge());?></strong>,  max: <strong><?= e($this->activity->getMaxAge());?></strong></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><strong>Note:</strong> <i><?= nl2br(htmlspecialchars($this->aktivitet->note, ENT_QUOTES));?></i></td>
+                    <td colspan='3'><strong>Note:</strong> <i><?= nl2br(htmlspecialchars($this->activity->note, ENT_QUOTES));?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><strong>Foromtale:</strong> <i><?= nl2br(htmlspecialchars($this->aktivitet->foromtale, ENT_QUOTES));?></i></td>
+                    <td colspan='3'><strong>Foromtale:</strong> <i><?= nl2br(htmlspecialchars($this->activity->foromtale, ENT_QUOTES));?></i></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><strong>Engelsk foromtale:</strong> <i><?= nl2br(htmlspecialchars($this->aktivitet->description_en, ENT_QUOTES));?></i></td>
+                    <td colspan='3'><strong>Engelsk foromtale:</strong> <i><?= nl2br(htmlspecialchars($this->activity->description_en, ENT_QUOTES));?></i></td>
                 </tr>
             </table>
         </fieldset>
@@ -81,7 +81,7 @@ $this->registerLateLoadJS('activity.js');
 <div class='activitySchedules'>
 
     <?php if (count($this->afviklinger)) :
-        $participants_on_teams = array_flip($this->aktivitet->getParticipantsOnTeams('spiller'));
+        $participants_on_teams = array_flip($this->activity->getParticipantsOnTeams('spiller'));
 
         foreach ($this->afviklinger as $afvikling) :
             $start     = $this->replaceDayNames(date("D H:i", strtotime($afvikling->start)));
@@ -111,7 +111,7 @@ $this->registerLateLoadJS('activity.js');
                 ?>
                     <fieldset class='afviklingsbox-group hoverable' data-group_id="<?= e($hold->id);?>">
                         <legend><a href="<?= $this->url('vis_hold', array('id' => $hold->id));?>">Hold <?= e($hold->holdnummer);?></a> - 
-                            <span class='group-status'><span class='<?= $hold_gamer_status;?> gamer-status'>S</span><span class='gm-status <?= $hold_gm_status;?>'><i class="icon-meeple-king"></i></span></span>
+                            <span class='group-status'><span class='<?= $hold_gamer_status;?> gamer-status'>S</span><span class='gm-status <?= $hold_gm_status;?>'>SL</span></span>
                         </legend>
                         <button class='delete-group'>Slet hold</button>
                         <table>
@@ -156,8 +156,8 @@ $this->registerLateLoadJS('activity.js');
                         <?php foreach ($afvikling->getTilmeldinger() as $tilmelding) :
                             $type      = $tilmelding->getRoleAcronym();
                             $deltager  = $tilmelding->getDeltager();
-                            $displayed = isset($gamer_ids[$deltager->id]) || (isset($participants_on_teams[$deltager->id]) && $type == 'S' && $this->aktivitet->replayable == 'nej') ? 'on-team' : '';
-                            $busy      = $this->aktivitet->tids_eksklusiv == 'ja' && empty($displayed) && $deltager->isBusyBetween($afvikling->start, $afvikling->slut) ? 'deltagerbusy' : '';
+                            $displayed = isset($gamer_ids[$deltager->id]) || (isset($participants_on_teams[$deltager->id]) && $type == 'S' && $this->activity->replayable == 'nej') ? 'on-team' : '';
+                            $busy      = $this->activity->tids_eksklusiv == 'ja' && empty($displayed) && $deltager->isBusyBetween($afvikling->start, $afvikling->slut) ? 'deltagerbusy' : '';
                             $double_booked = !empty($this->double_booked_gms[$deltager->id][$afvikling->id]) ? 'double-booked' : '';
                             $locked    = $deltager->activity_lock === 'ja' ? ' locked' : '';
 
@@ -180,15 +180,22 @@ $this->registerLateLoadJS('activity.js');
                             } else {
                                 $language = '';
                             }
+
+                            if (isset($this->desired_activity_stats[$deltager->id])) {
+                                $desired = empty($this->desired_activity_stats[$deltager->id]) ? '<i class="icon-heart"></i>' : '<i class="icon-heart-empty"></i>';
+
+                            } else {
+                                $desired = '';
+                            }
                         ;?>
-                                <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?> <?= $double_booked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-gender="<?= $deltager->gender;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="<?= e($tilmelding->prioritet);?>" data-participant_gender="<?= e($deltager->gender);?>">
+                                <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?> <?= $double_booked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-gender="<?= $deltager->gender;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="<?= e($tilmelding->prioritet);?>" data-participant_gender="<?= e($deltager->gender);?>" data-participantNote="<?= e($deltager->deltager_note);?>">
                                     <td><?= $type === 'SL' ? '<i class="icon-meeple-king"></i>' : '';?></td>
                                     <td class="name"><a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"<?= ($busy ? " title='Deltageren er optaget på dette tidspunkt'" : '');?>><?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?></a></td>
                                     <td class='afviklingsbox-extras'><?= $tilmelding->prioritet;?></td>
                                     <td class="karma"><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                                     <td class='afviklingsbox-extras'><?= e($deltager->alder);?></td>
                                     <td class='gender'><i class="icon-<?= $gender;?>"></i></td>
-                                    <td class='max-wanted'><?= $deltager->desired_activities > 0 ?: '';?></td>
+                                    <td class='max-wanted'><?= $desired;?></td>
                                     <td class='language'><i class="icon-<?= $language;?>"></i></td>
                                     <td class='message'><?= $deltager->deltager_note ? '<i class="icon-chat"></i>' : '';?></td>
                                 </tr>
@@ -204,7 +211,7 @@ endif; ?>
 <div class="clearit"></div>
 <script type='text/javascript'>
 public_uri      = '<?= $this->public_uri;?>';
-replayable_game = <?= $this->aktivitet->replayable === 'ja' ? 'true' : 'false';?>
+replayable_game = <?= $this->activity->replayable === 'ja' ? 'true' : 'false';?>
 
 $(function() {
     FVActivity.init($, {replayable_game: replayable_game});

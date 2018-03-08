@@ -80,13 +80,13 @@ class ActivityController extends Controller
      */
     public function visAktivitet()
     {
-        if (empty($this->vars['id']) || !($aktivitet = $this->model->findEntity('Aktiviteter', $this->vars['id']))) {
+        if (empty($this->vars['id']) || !($activity = $this->model->findEntity('Aktiviteter', $this->vars['id']))) {
             $this->page->setTitle('Intet resultat');
             $this->page->setTemplate('noresults');
 
         } else {
             $this->page->includeCss('fontello-ebe72605/css/idtemplate.css');
-            $this->page->setTitle(e($aktivitet->navn) . ' - Aktiviteter');
+            $this->page->setTitle(e($activity->navn) . ' - Aktiviteter');
             $time_array = array();
 
             for ($i = 0; $i < 24; $i++) {
@@ -95,13 +95,15 @@ class ActivityController extends Controller
             }
 
             $this->page->time_array  = $time_array;
-            $this->page->aktivitet   = $aktivitet;
-            $this->page->afviklinger = $aktivitet->getCompleteScheduling();
+            $this->page->activity    = $activity;
+            $this->page->afviklinger = $activity->getCompleteScheduling();
             $this->page->lokaler     = $this->model->getAllRooms();
 
-            $this->page->double_booked_gms = $this->model->getDoubleBookings($aktivitet);
+            $this->page->double_booked_gms = $this->model->getDoubleBookings($activity);
 
             $this->page->karma_stats = $this->model->getKarmaStats();
+
+            $this->page->desired_activity_stats = $this->model->getDesiredActivityStats($activity);
 
         }
     }

@@ -1726,6 +1726,7 @@ span.reset-search img {
     border: 1px solid #7f7f7f;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     padding: 0.5rem 1rem;
+    min-width: 30rem;
 }
 
 .activity-dialog-table td {

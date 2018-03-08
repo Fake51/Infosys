@@ -1724,4 +1724,39 @@ GROUP BY
         return $data;
     }
 
+    /**
+     * calculates desired activity stats
+     *
+     * @access public
+     * @return array
+     */
+    public function getDesiredActivityStats(Aktiviteter $activity)
+    {
+        $query = '
+SELECT
+    d.id,
+    d.desired_activities - COUNT(p.deltager_id) AS activities
+FROM
+    deltagere AS d
+    JOIN deltagere_tilmeldinger AS dt ON dt.deltager_id = d.id
+    JOIN afviklinger AS dt_a ON dt_a.id = dt.afvikling_id
+    LEFT JOIN pladser AS p ON p.deltager_id = d.id
+    LEFT JOIN hold as h ON h.id = p.hold_id
+    LEFT JOIN afviklinger AS a ON a.id = h.afvikling_id
+WHERE
+    dt_a.aktivitet_id = ?
+    AND d.desired_activities > 0
+GROUP BY
+    d.id
+';
+
+        $reducer = function ($agg, $next) {
+            $agg[$next['id']] = $next['activities'];
+
+            return $agg;
+        };
+
+        return array_reduce($this->db->query($query, [$activity->id]), $reducer, []);
+    }
+
 }

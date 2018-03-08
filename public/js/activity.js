@@ -354,11 +354,13 @@ var FVActivity = (function() {
                     'age',
                     'maxWanted',
                     'gender',
+                    'note',
                 ],
                 language: $row.attr('data-language'),
                 age: $row.attr('data-age'),
                 maxWanted: $row.attr('data-maxWanted'),
                 gender: $row.attr('data-gender'),
+                note: $row.attr('data-participantNote'),
             };
         },
 
