@@ -810,6 +810,8 @@ div.afviklingsbox div.afviklingsbox-groupbox {
     width: 40%;
     margin: 0px;
     padding: 0px;
+    float: left;
+    clear: none;
 }
 
 div.afviklingsbox div.afviklingsbox-groupbox table {
