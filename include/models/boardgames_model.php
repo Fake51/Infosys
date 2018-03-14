@@ -89,7 +89,7 @@ ORDER BY
     b.name
 ';
 
-        return array_map(function ($row) {
+        return array_values(array_map(function ($row) {
             return [
                     'name'  => $row['name'],
                     'id'    => $row['id'],
@@ -97,7 +97,7 @@ ORDER BY
                    ];
             }, array_filter($this->db->query($query), function ($row) {
             return $row['state'] !== 'returned';
-        }));
+        })));
 
     }
 
