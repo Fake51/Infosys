@@ -1735,12 +1735,12 @@ GROUP BY
         $query = '
 SELECT
     d.id,
-    d.desired_activities - COUNT(p.deltager_id) AS activities
+    CAST(d.desired_activities AS signed) - COUNT(p.deltager_id) AS activities
 FROM
     deltagere AS d
     JOIN deltagere_tilmeldinger AS dt ON dt.deltager_id = d.id
     JOIN afviklinger AS dt_a ON dt_a.id = dt.afvikling_id
-    LEFT JOIN pladser AS p ON p.deltager_id = d.id
+    LEFT JOIN pladser AS p ON p.deltager_id = d.id AND p.type = "spiller"
     LEFT JOIN hold as h ON h.id = p.hold_id
     LEFT JOIN afviklinger AS a ON a.id = h.afvikling_id
 WHERE

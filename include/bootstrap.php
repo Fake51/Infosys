@@ -32,7 +32,7 @@
  */
 
 bootstrap_settings();
-bootstrap_fix_magic_quotes();
+//bootstrap_fix_magic_quotes();
 bootstrap_setup_path_constants();
 
 require FRAMEWORK_FOLDER . 'infosys.php';
