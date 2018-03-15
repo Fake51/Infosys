@@ -66,6 +66,15 @@ class GdsController extends Controller
         if ($this->page->request->isPost()) {
             $post = $this->page->request->post;
 
+            if ($post->cancel_edit) {
+                $this->hardRedirect($this->url('gds_categories'));
+            }
+
+            if ($post->delete_entry) {
+                // delete entry
+                $this->hardRedirect($this->url('gds_categories'));
+            }
+
             $messages = $this->model->updateDIY($diy, $post);
 
             $this->hardRedirect($this->url('gds_category', array('gds_id' => $diy->id)));

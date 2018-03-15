@@ -17,8 +17,8 @@ echo $this->getMessagesHtml();
     <tbody>
         <?php foreach ($this->categories as $category) : ?>
             <tr>
-                <td><a href="#<?= $category->id;?>"><?= e($category->id);?></a></td>
-                <td><a href="#<?= $category->id;?>"><?= e($category->navn);?></a></td>
+                <td><a href="<?= $this->url('gds_category', ['gds_id' => $category->id]);?>"><?= e($category->id);?></a></td>
+                <td><a href="<?= $this->url('gds_category', ['gds_id' => $category->id]);?>"><?= e($category->navn);?></a></td>
                 <td><?= e($category->beskrivelse);?></td>
                 <td><?= e($category->moedested);?></td>
             </tr>

@@ -738,4 +738,16 @@ class ApiController extends Controller
         $participant_model->setupSignupEmail($this->page->participant, $this->page);
         $this->page->layout_template = 'contentonly.phtml';
     }
+
+    public function getBoardgameData()
+    {
+        if ($this->vars['version'] !== '1') {
+            header('HTTP/1.1 400 Wrong version');
+            exit;
+        }
+
+        $model = $this->model->factory('Boardgames');
+
+        $this->jsonOutput($model->getGameStatus(), '200 Here you are', 'application/json');
+    }
 }

@@ -642,4 +642,33 @@ SET boardgame_id = ?, type = ?, timestamp = NOW(), data = ""
 
         $this->db->exec($query);
     }
+
+    /**
+     * returns status of games and relevant data
+     *
+     * @access public
+     * @return array
+     */
+    public function getGameStatus()
+    {
+        $availability = function ($log) {
+            $part = end($log);
+
+            if (empty($part)) {
+                return true;
+            }
+
+            return !in_array($part['status'], ['borrowed', 'returned']);
+        };
+
+        $mapper = function ($game) use ($availability) {
+            return [
+                    'id'           => $game['id'],
+                    'name'         => $game['name'],
+                    'availability' => $availability(isset($game['log']) ? $game['log'] : []),
+                   ];
+        };
+
+        return array_map($mapper, $this->fetchGameData());
+    }
 }
