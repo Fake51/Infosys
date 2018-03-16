@@ -5,6 +5,12 @@
             <span class='label'>Navn (da):</span> <span class='detail'><input type='text' name='name' required value='<?= e($this->diy->navn);?>'/></span><br/>
             <span class='label'>Navn (en):</span> <span class='detail'><input type='text' name='title_en' required value='<?= e($this->diy->title_en);?>'/></span><br/>
 
+            <span class='label'>Beskrivelse (da):</span> <span class='detail'><input type='text' name='beskrivelse' required value='<?= e($this->diy->beskrivelse);?>'/></span><br/>
+            <span class='label'>Beskrivelse (en):</span> <span class='detail'><input type='text' name='description_en' required value='<?= e($this->diy->description_en);?>'/></span><br/>
+
+            <span class='label'>Mødested (da):</span> <span class='detail'><input type='text' name='moedested' required value='<?= e($this->diy->moedested);?>'/></span><br/>
+            <span class='label'>Mødested (en):</span> <span class='detail'><input type='text' name='moedested_en' required value='<?= e($this->diy->moedested_en);?>'/></span><br/>
+
             <table>
                 <tbody>
             <?php foreach ($this->diy->getShifts(true) as $shift) :?>

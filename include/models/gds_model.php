@@ -346,6 +346,26 @@ SQL;
             $diy->title_en = $post->title_en;
         }
 
+        if (isset($post->beskrivelse) && $post->beskrivelse !== $diy->beskrivelse) {
+            $diy_updated      = true;
+            $diy->beskrivelse = $post->beskrivelse;
+        }
+
+        if (isset($post->description_en) && $post->description_en !== $diy->description_en) {
+            $diy_updated         = true;
+            $diy->description_en = $post->description_en;
+        }
+
+        if (isset($post->moedested) && $post->moedested !== $diy->moedested) {
+            $diy_updated    = true;
+            $diy->moedested = $post->moedested;
+        }
+
+        if (isset($post->moedested_en) && $post->moedested_en !== $diy->moedested_en) {
+            $diy_updated       = true;
+            $diy->moedested_en = $post->moedested_en;
+        }
+
         if ($diy_updated) {
             $diy->update();
         }
