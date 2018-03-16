@@ -684,7 +684,7 @@ var BSCafe = (function ($, window) {
                 module.$dialog.remove();
             }
 
-            module.$dialog = $('<div><p>Copypaste spreadsheet data ind her. Kolonnerne skal have følgende overskrifter for at upload accepteres: Navn, Ejer, Stregkode, Kommentar. <strong>VÆR OPMÆRKSOM PÅ AT AL DATA SLETTES!</strong></p><textarea class="spreadsheet-upload"></textarea><button class="upload">Upload</button></div>');
+            module.$dialog = $('<div><p>Copypaste spreadsheet data ind her. Kolonnerne skal have følgende overskrifter for at upload accepteres: Navn, Ejer, BGG-id, Kommentar, Designerspil. <strong>VÆR OPMÆRKSOM PÅ AT AL DATA SLETTES!</strong></p><textarea class="spreadsheet-upload"></textarea><button class="upload">Upload</button></div>');
 
             module.$dialog.appendTo('body');
 

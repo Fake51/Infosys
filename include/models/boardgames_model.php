@@ -324,6 +324,7 @@ GROUP BY
                 'comment'        => $game->comment,
                 'log'            => $game->getLog(),
                 'designergame'   => intval($game->designergame),
+                'bggId'          => intval($game->bgg_id),
                 'borrowed_count' => isset($borrowed_stats[$game->id]) ? $borrowed_stats[$game->id] : 0,
             );
 
@@ -436,7 +437,7 @@ GROUP BY
         $boardgame->name         = $post->name;
         $boardgame->owner        = $post->owner;
         $boardgame->barcode      = $post->barcode;
-        $boardgame->designergame = $post->designergame;
+        $boardgame->designergame = intval($post->designergame);
         $boardgame->comment      = isset($post->comment) ? $post->comment : '';
 
         $boardgame->insert();
@@ -490,7 +491,7 @@ GROUP BY
         $game->name         = $post->name;
         $game->owner        = $post->owner;
         $game->barcode      = !empty($post->barcode) ? $post->barcode : '';
-        $game->designergame = !empty($post->designergame) ? $post->designergame : '';
+        $game->designergame = !empty($post->designergame) ? $post->designergame : 0;
         $game->comment      = !empty($post->comment) ? $post->comment : '';
 
         $game->update();
@@ -509,8 +510,9 @@ GROUP BY
         $required_headers = array(
                              'Navn',
                              'Ejer',
-                             'Stregkode',
+                             'BGG-id',
                              'Kommentar',
+                             'Designerspil',
                             );
 
         $header_index = array();
@@ -544,8 +546,8 @@ GROUP BY
 
             $game->name         = $columns[$header_index['Navn']];
             $game->owner        = $columns[$header_index['Ejer']];
-            $game->barcode      = $columns[$header_index['Stregkode']];
-            $game->designergame = $columns[$header_index['Designer']];
+            $game->barcode      = '';
+            $game->designergame = $columns[$header_index['Designerspil']];
             $game->comment      = $columns[$header_index['Kommentar']];
 
             $game->insert();
@@ -666,7 +668,8 @@ SET boardgame_id = ?, type = ?, timestamp = NOW(), data = ""
                     'id'           => $game['id'],
                     'name'         => $game['name'],
                     'availability' => $availability(isset($game['log']) ? $game['log'] : []),
-                    'bggId'        => 0,
+                    'fastavalGame' => !empty($game['designergame']),
+                    'bggId'        => $game['bggId'],
                    ];
         };
 
