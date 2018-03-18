@@ -80,6 +80,7 @@ class GdsController extends Controller
             $this->hardRedirect($this->url('gds_category', array('gds_id' => $diy->id)));
         }
 
+        $this->page->categories = $this->model->getCategories();
 
         $this->page->diy = $diy;
     }

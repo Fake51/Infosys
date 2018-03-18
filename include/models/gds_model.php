@@ -75,6 +75,19 @@ class GdsModel extends Model
     }
 
     /**
+     * returns diy categories
+     *
+     * @access public
+     * @return array
+     */
+    public function getCategories()
+    {
+        $select = $this->createEntity('GDSCategory')->getSelect();
+        $select->setOrder('name_da','asc');
+        return $this->createEntity('GDSCategory')->findBySelectMany($select);
+    }
+
+    /**
      * returns all gds categories, ordered alphabetically
      *
      * @access public

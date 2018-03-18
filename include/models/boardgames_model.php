@@ -549,6 +549,8 @@ GROUP BY
             $game->barcode      = '';
             $game->designergame = $columns[$header_index['Designerspil']];
             $game->comment      = $columns[$header_index['Kommentar']];
+            $game->bgg_id       = intval($columns[$header_index['BGG-id']]);
+
 
             $game->insert();
         }
