@@ -17,6 +17,7 @@
             </select>
             <br/>
             <br/>
+            <span class='label'>Aldersbegrænsning:</span> Min: <input type="number" value="<?= e($this->diy->getMinAge() ?: '');?>" name="min_age"/> max: <input type="number" value="<?= e($this->diy->getMaxAge() ?: '');?>" name="max_age"/>
             <table>
                 <tbody>
             <?php foreach ($this->diy->getShifts(true) as $shift) :?>

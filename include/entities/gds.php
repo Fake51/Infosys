@@ -208,7 +208,7 @@ DELETE FROM diyageranges WHERE diy_id = ? AND requirementtype = ?
     protected function setAgeRequirement($type, $age)
     {
         $query = '
-INSERT INTO diyageranges SET activity_id = ?, requirementtype = ?, age = ? ON DUPLICATE KEY UPDATE age = ?
+INSERT INTO diyageranges SET diy_id = ?, requirementtype = ?, age = ? ON DUPLICATE KEY UPDATE age = ?
 ';
 
         $this->db->exec($query, [$this->id, $type, $age, $age]);
