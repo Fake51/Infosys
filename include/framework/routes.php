@@ -293,6 +293,7 @@ class Routes
         $this->routes['gdshome']                = array('url' => 'gds/', 'controller' => 'Gds', 'method' => 'main');
         $this->routes['gds_calendar_date']      = array('url' => 'gds/calendar/:date:', 'controller' => 'Gds', 'method' => 'viewDay');
         $this->routes['gds_categories']         = array('url' => 'gds/categories', 'controller' => 'Gds', 'method' => 'categories');
+        $this->routes['gds_create_category']    = array('url' => 'gds/create-category', 'controller' => 'Gds', 'method' => 'createCategory');
         $this->routes['gds_category']           = array('url' => 'gds/category/:gds_id:', 'controller' => 'Gds', 'method' => 'editCategory');
         $this->routes['ajax_get_vagttider']     = array('url' => 'gds/ajaxvagttider/:deltager_id:/:gds_id:', 'controller' => 'Gds', 'method' => 'ajaxGetGDSTider');
         $this->routes['ajax_get_gds_periods']   = array('url' => 'gds/ajaxshiftperiods/:deltager_id:/:gds_id:', 'controller' => 'Gds', 'method' => 'ajaxGetGDSPeriods');

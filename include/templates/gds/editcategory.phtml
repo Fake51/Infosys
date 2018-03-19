@@ -1,7 +1,7 @@
 <div id='gds-details'>
     <fieldset>
         <legend>Redigér GDS kategori</legend>
-        <form action='' method='post' id="edit-gds">
+        <form action='<?= $this->url('gds_category', ['gds_id' => $this->diy->id ?: 0]);?>' method='post' id="edit-gds">
             <span class='label'>Navn (da):</span> <span class='detail'><input type='text' name='name' required value='<?= e($this->diy->navn);?>'/></span>
             <span class='label'>Beskrivelse (da):</span> <span class='detail'><input type='text' name='beskrivelse' required value='<?= e($this->diy->beskrivelse);?>'/></span>
             <span class='label'>Mødested (da):</span> <span class='detail'><input type='text' name='moedested' required value='<?= e($this->diy->moedested);?>'/></span><br/>
@@ -61,10 +61,16 @@
                 </tfoot>
             </table>
 
+            <?php if ($this->diy->id) : ?>
             <input type='submit' value='Opdater' name='update_entry' class='centersubmits'/>
+            <?php else : ?>
+            <input type='submit' value='Opret' name='update_entry' class='centersubmits'/>
+            <?php endif;?>
+            <?php if ($this->diy->id) : ?>
             <input type='submit' value='Fortryd' name="cancel_edit" class='centersubmits'/>
             <input type='hidden' name='id' value='<?= e($this->diy->id);?>'/>
             <input type='submit' value='Slet' name='delete_entry' class='centersubmits'/>
+            <?php endif;?>
         </form>
     </fieldset>
 </div>

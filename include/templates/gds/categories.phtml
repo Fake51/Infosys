@@ -4,7 +4,7 @@ $this->includeCSS('../js/DataTables-1.9.0/media/css/jquery.dataTables.css');
 $this->includeCSS('../js/DataTables-1.9.0/media/css/jquery.dataTables_themeroller.css');
 echo $this->getMessagesHtml();
 ?>
-<span class='add-category'><img src='<?= $this->imgLink('plus.png');?>' alt='Add column'/> Tilføj kategori</span>
+<a href="<?= $this->url('gds_create_category');?>"><img src='<?= $this->imgLink('plus.png');?>' alt='Add column'/> Tilføj kategori</a>
 <table class='data-table current'>
     <thead>
         <tr>

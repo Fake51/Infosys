@@ -485,6 +485,7 @@ class DBObject
         $data = $args = array();
         $fields = $this->getColumns();
         $DB = $this->getDB();
+
         foreach ($fields as $field) {
             if ($this->checkIfPrimaryField($field) || ($this->$field === null && !$this->isFieldNullable($field))) {
                 continue;
@@ -492,10 +493,13 @@ class DBObject
 
             $data[] = " {$this->quoteTable($field)} = ?";
             $args[] = $this->$field;
+
         }
+
         $query = "UPDATE {$this->quoteTable($this->tablename)} SET " . implode(',',$data) . " WHERE " . implode(' AND ', array_keys($where));
         $args = array_merge($args, $where);
         $blob = array();
+
         foreach ($args as $arg) {
             $blob[] = $arg;
         }

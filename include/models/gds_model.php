@@ -349,38 +349,32 @@ SQL;
     {
         $diy_updated = false;
 
-        if (isset($post->name) && $post->name !== $diy->navn) {
-            $diy_updated = true;
-            $diy->navn   = $post->name;
-        }
+        $fields = [
+                   'name'           => 'navn',
+                   'title_en'       => 'title_en',
+                   'beskrivelse'    => 'beskrivelse',
+                   'description_en' => 'description_en',
+                   'moedested'      => 'moedested',
+                   'moedested_en'   => 'moedested_en',
+                   'gdscategory_id' => 'category_id',
+                  ];
 
-        if (isset($post->title_en) && $post->title_en !== $diy->title_en) {
-            $diy_updated   = true;
-            $diy->title_en = $post->title_en;
-        }
+        foreach ($fields as $key => $field) {
+            if (isset($post->$key) && $post->$key != $diy->$field) {
+                $diy_updated = true;
+                $diy->$field = $post->$key;
 
-        if (isset($post->beskrivelse) && $post->beskrivelse !== $diy->beskrivelse) {
-            $diy_updated      = true;
-            $diy->beskrivelse = $post->beskrivelse;
-        }
+            }
 
-        if (isset($post->description_en) && $post->description_en !== $diy->description_en) {
-            $diy_updated         = true;
-            $diy->description_en = $post->description_en;
-        }
-
-        if (isset($post->moedested) && $post->moedested !== $diy->moedested) {
-            $diy_updated    = true;
-            $diy->moedested = $post->moedested;
-        }
-
-        if (isset($post->moedested_en) && $post->moedested_en !== $diy->moedested_en) {
-            $diy_updated       = true;
-            $diy->moedested_en = $post->moedested_en;
         }
 
         if ($diy_updated) {
-            $diy->update();
+            if ($diy->id) {
+                $diy->update();
+
+            } else {
+                $diy->insert();
+            }
         }
 
         $actual_shifts = $diy->getShifts();
@@ -529,5 +523,16 @@ SQL;
         }
 
         return $output;
+    }
+
+    /**
+     * returns empty diy
+     *
+     * @access public
+     * @return Gds
+     */
+    public function createEmptyDiy()
+    {
+        return $this->createEntity('GDS');
     }
 }

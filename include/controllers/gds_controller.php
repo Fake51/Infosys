@@ -59,8 +59,14 @@ class GdsController extends Controller
     public function editCategory()
     {
         if (!($diy = $this->model->findGDS($this->vars['gds_id']))) {
-            $this->errorMessage("Kunne ikke finde GDS kategorien");
-            $this->hardRedirect($this->url('gdshome'));
+            if ($this->vars['gds_id'] === '0') {
+                $diy = $this->model->createEmptyDiy();
+
+            } else {
+                $this->errorMessage("Kunne ikke finde GDS kategorien");
+                $this->hardRedirect($this->url('gdshome'));
+
+            }
         }
 
         if ($this->page->request->isPost()) {
@@ -83,6 +89,21 @@ class GdsController extends Controller
         $this->page->categories = $this->model->getCategories();
 
         $this->page->diy = $diy;
+    }
+
+    /**
+     * displays page for creating a diy type
+     *
+     * @access public
+     * @return void
+     */
+    public function createCategory()
+    {
+        $this->page->categories = $this->model->getCategories();
+
+        $this->page->diy = $this->model->createEmptyDiy();
+
+        $this->page->setTemplate('editcategory');
     }
 
     /**
