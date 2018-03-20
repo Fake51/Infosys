@@ -182,4 +182,21 @@ class PhotoController extends Controller
 
         exit;
     }
+
+    /**
+     * fetches list of participants that have not uploaded photos,
+     * then redirects to list view
+     *
+     * @access public
+     * @return void
+     */
+    public function seeMissingPhotos()
+    {
+        $participants = $this->model->fetchParticipantsToRemind(0);
+
+        $participant_model = $this->model->factory('Participant');
+        $participant_model->setSearchBaseIds($participants);
+
+        $this->hardRedirect($this->url('show_search_result'));
+    }
 }

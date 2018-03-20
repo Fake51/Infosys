@@ -438,6 +438,7 @@ HTML;
             if ($this->user->hasRole('Infonaut') || $this->user->hasRole('Admin')) {
                 $return .= <<<HTML
             <li><a href='{$this->url('template_editing')}'>ID skabeloner</a></li>
+            <li><a href='{$this->url('show_missing_photo')}'>Arrangører med manglende ID-billede</a></li>
 HTML;
             }
 

@@ -209,6 +209,12 @@ WHERE
 
         foreach ($this->db->query($query) as $row) {
             if (!glob(PUBLIC_PATH . 'uploads/photo-cropped-' . mb_strtolower($row['identifier']) . '*')) {
+                if ($days === 0) {
+                    $ids[] = $row['id'];
+                    continue;
+
+                }
+
                 $diff = $now->diff(new DateTime($row['signed_up'] . ' 00:00:00'));
 
                 if ($diff->d && $diff->d % $days === 0) {
