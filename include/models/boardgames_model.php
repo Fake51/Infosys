@@ -669,7 +669,7 @@ SET boardgame_id = ?, type = ?, timestamp = NOW(), data = ""
             return [
                     'id'           => $game['id'],
                     'name'         => $game['name'],
-                    'availability' => $availability(isset($game['log']) ? $game['log'] : []),
+                    'available' => $availability(isset($game['log']) ? $game['log'] : []),
                     'fastavalGame' => !empty($game['designergame']),
                     'bggId'        => $game['bggId'],
                    ];

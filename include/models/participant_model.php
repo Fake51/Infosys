@@ -1746,7 +1746,7 @@ SQL;
                     $where .= 'fornavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
                     $where .= 'efternavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
                 } else {
-                    $where .= $columns[$i] . " LIKE " . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+                    $where .= '`' . $columns[$i] . "` LIKE " . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
                 }
             }
 
