@@ -264,6 +264,7 @@ class Routes
         $this->routes['ajax_get_wear']                = array('url' => 'wear/ajaxgetwear/:id:', 'controller' => 'Wear', 'method' => 'ajaxGetWear');
         $this->routes['wear_handout']                 = array('url' => 'wear/handout', 'controller' => 'Wear', 'method' => 'displayHandout');
         $this->routes['wear_handout_ajax']            = array('url' => 'wear/handout/ajax', 'controller' => 'Wear', 'method' => 'ajaxHandout');
+        $this->routes['wear_labels']                  = array('url' => 'wear/print-labels', 'controller' => 'Wear', 'method' => 'showPrintLabels');
 
         // mad routes
         $this->routes['madhome']              = array('url' => 'mad/', 'controller' => 'Food', 'method' => 'main');

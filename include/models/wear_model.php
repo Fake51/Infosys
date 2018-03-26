@@ -414,4 +414,52 @@ class WearModel extends Model
         $this->log("Deltager #{$deltager->id} har fået wear markeret ikke udleveret af {$this->getLoggedInUser()->user}", 'Wear', $this->getLoggedInUser());
         return htmlspecialchars($deltager->fornavn . " " . $deltager->efternavn, ENT_QUOTES) . " (ID: {$deltager->id}) har fået slettet markeringen for udlevering af wear. Wear markeret ikke udleveret:<ul><li>" . implode('</li><li>', $handout) . '</li></ul>';
     }
+
+    /**
+     * returns data to use for print labels for wear handout data
+     *
+     * @access public
+     * @return array
+     */
+    public function getLabelData()
+    {
+        $query = '
+SELECT
+    d.id, CONCAT(d.fornavn, " ",
+    d.efternavn),
+    w.navn AS wear,
+    dwp.antal,
+    dwp.size
+FROM
+    deltagere AS d
+    JOIN deltagere_wear AS dwp ON dwp.deltager_id = d.id
+    JOIN wearpriser AS wp ON wp.id = dwp.wearpris_id
+    JOIN wear AS w on w.id = wp.wear_id
+WHERE
+    w.id IN (7, 18, 21, 22, 28, 29, 31)
+ORDER BY
+    d.id, w.navn';
+
+        $labels = [];
+
+        foreach ($this->db->query($query) as $row) {
+            if (!isset($labels[$row['id']])) {
+                $labels[$row['id']] = [
+                                       'name' => e('ID: ' . $row['id']),
+                                       'wear' => [],
+                                      ];
+            }
+
+            $labels[$row['id']]['wear'][] = e(sprintf('%u %s - %s', $row['antal'], $row['size'], $row['wear']));
+
+        }
+
+        $groups = [];
+
+        while (count($labels) > 0) {
+            $groups[] = array_splice($labels, 0, 8);
+        }
+
+        return $groups;
+    }
 }

@@ -330,4 +330,16 @@ class WearController extends Controller {
             exit;
         }
     }
+
+    /**
+     * show labels for printing for wear handout bags
+     *
+     * @access public
+     * @return void
+     */
+    public function showPrintLabels()
+    {
+        $this->page->layout_template = 'contentonly.phtml';
+        $this->page->groups = $this->model->getLabelData();
+    }
 }
