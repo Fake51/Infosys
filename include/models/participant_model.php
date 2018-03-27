@@ -2083,7 +2083,7 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
 
                     $status[] = intval($result === FirebaseMessage::SEND_SUCCESS);
 
-                } else {
+                } elseif (empty($post->app_only)) {
                     $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $post->sms_besked));
                 }
 

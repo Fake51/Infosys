@@ -833,7 +833,8 @@ class ActivityController extends Controller
                 echo '{"pairs": [{"text": "Vælg", "value": ""}';
                 foreach ($result as $hold) {
                     $disabled = 'false';
-                    if ($hold->isFull()) {
+
+                    if (!$hold->canUseGamers() && !$hold->needsGMs()) {
                         $disabled = 'true';
                     }
 

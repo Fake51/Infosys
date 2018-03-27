@@ -38,6 +38,10 @@ class FirebaseMessage
                 'title' => $title,
                 'body'  => $message,
             ],
+            'data' => [
+                'EXTRA_NOTIFICATION_TITLE'   => $title,
+                'EXTRA_NOTIFICATION_MESSAGE' => $message,
+            ],
             'to' => $this->device_key,
         ];
  
