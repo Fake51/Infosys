@@ -428,7 +428,7 @@ GROUP BY
 
     public function createBoardgame(RequestVars $post)
     {
-        if (!$post->name || !$post->owner || !$post->barcode) {
+        if (!$post->name || !$post->owner) {
             throw new Exception('Missing data for boardgame creation');
         }
 
@@ -439,6 +439,7 @@ GROUP BY
         $boardgame->barcode      = $post->barcode;
         $boardgame->designergame = intval($post->designergame);
         $boardgame->comment      = isset($post->comment) ? $post->comment : '';
+        $boardgame->bgg_id       = isset($post->bgg_id) ? intval($post->bgg_id) : 0;
 
         $boardgame->insert();
 

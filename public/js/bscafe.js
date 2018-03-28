@@ -513,6 +513,7 @@ var BSCafe = (function ($, window) {
                 barcodeString     = module.elements.$gcBarcode.val(),
                 designergameValue = module.elements.$gcDesignergame.prop('checked'),
                 commentString     = module.elements.$gcComment.val(),
+                bggId             = module.elements.$gcBggId.val(),
                 gameRegistered = function (data) {
                     var game = {
                         id: parseInt(data.id, 10),
@@ -531,6 +532,7 @@ var BSCafe = (function ($, window) {
                     module.elements.$gcOwner.val('');
                     module.elements.$gcBarcode.val('');
                     module.elements.$gcComment.val('');
+                    module.elements.$gcBggId.val('');
                     module.elements.$gcDesignergame.prop('checked', false);
 
                     module.elements.$gamesTab.addClass('auto-highlight');
@@ -552,6 +554,7 @@ var BSCafe = (function ($, window) {
                     barcode: barcodeString,
                     designergame: designergameValue ? 1 : 0,
                     comment: commentString,
+                    bgg_id: bggId,
                 },
                 success: gameRegistered,
                 error: function () {
@@ -846,6 +849,7 @@ var BSCafe = (function ($, window) {
                 module.elements.$gcBarcode              = $('#gc-barcode');
                 module.elements.$gcDesignergame         = $('#gc-designergame');
                 module.elements.$gcComment              = $('#gc-comment');
+                module.elements.$gcBggId                = $('#gc-bgg-id');
                 module.elements.$borrowingComment       = $('#borrowing-comment');
                 module.elements.$inPlayList             = $('div.in-play-list ul');
                 module.elements.$actionPane             = $('div.action-pane');
