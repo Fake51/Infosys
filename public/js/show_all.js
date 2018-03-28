@@ -109,7 +109,7 @@ $(function() {
         $('div.deltager-search-box-inner input, div.deltager-search-box-inner select').each(function() {
             var self = $(this);
 
-            if (self.attr('type') == 'checkbox' && !self.is(':checked')) {
+            if ((self.attr('type') === 'checkbox' || self.attr('type') === 'radio') && !self.is(':checked')) {
                 return;
             }
 

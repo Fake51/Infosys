@@ -329,11 +329,25 @@ class ParticipantModel extends Model
 
         $select->setField('distinct deltagere.*', false);
 
-        if ($search_vars->incremental) {
+        if ($search_vars->search_combination) {
             $session = $this->dic->get('Session');
+
             if ($session->search && !empty($session->search['ids']) && is_array($session->search['ids'])) {
-                $select->setWhere('deltagere.id', 'IN', $session->search['ids']);
+
+                if ($search_vars->search_combination === 'intersection') {
+                    $select->setWhere('deltagere.id', 'IN', $session->search['ids']);
+                }
+
+                if ($search_vars->search_combination === 'union') {
+                    $select->setWhereOr('deltagere.id', 'IN', $session->search['ids']);
+                }
+
+                if ($search_vars->search_combination === 'difference') {
+                    $select->setWhere('deltagere.id', 'NOT IN', $session->search['ids']);
+                }
+
             }
+
         }
 
         return $this->createEntity('Deltagere')->findBySelectMany($select);

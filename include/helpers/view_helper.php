@@ -236,7 +236,20 @@ HTML;
                     </tbody>
                 </table>
             </fieldset>
-            <label for='logic'>Søgelogik:</label> <select name='logic'><option value='and'>And</option><option value='or'>Or</option></select><br/><label for='incremental'>Begræns søgning til tidligere resultat:</label><input id='incremental' type='checkbox' name='incremental' /><br /><button class="submit" type='submit'>Søg</button><button class="reset">Reset</button>
+            <label for='logic'>Søgelogik:</label>
+            <select name='logic'>
+                <option value='and'>And</option>
+                <option value='or'>Or</option>
+            </select>
+            <p>
+                <label><input type='radio' name='search_combination' value="" checked /> Ny søgning</label>
+                <label><input type='radio' name='search_combination' value="intersection" /> Begræns søgning til tidligere resultat</label>
+                <label><input type='radio' name='search_combination' value="union" /> Tilføj søgning til tidligere resultat</label>
+                <label><input type='radio' name='search_combination' value="difference" /> Træk tidligere resultat fra denne søgning</label>
+            </p>
+            <p>
+                <button class="submit" type='submit'>Søg</button><button class="reset">Reset</button>
+            </p>
     </div>
 HTML;
 
