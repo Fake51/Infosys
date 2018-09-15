@@ -5,6 +5,14 @@ for a role-playing convention. It is based on the needs of
 one such convention (Fastaval in Denmark) but might have a
 use for a wider audience - hence it's opensource.
 
+Requirements
+============
+PHP 5.6
+- xml
+- mbstring
+
+Mysql 5.5/5.7
+
 Contact
 =======
 If you have any questions, feedback or ideas, you can reach
