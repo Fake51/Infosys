@@ -93,11 +93,9 @@ ORDER BY
             return [
                     'name'  => $row['name'],
                     'id'    => $row['id'],
-                    'state' => $row['state'],
+                    'state' => $row['state'] === 'returned' ? 'not-present' : $row['state'],
                    ];
-            }, array_filter($this->db->query($query), function ($row) {
-            return $row['state'] !== 'returned';
-        })));
+            }, $this->db->query($query)));
 
     }
 
@@ -204,7 +202,7 @@ GROUP BY
         $return = array();
 
         $query = '
-SELECT COUNT(*) AS count FROM boardgameevents AS bge JOIN boardgames AS bg ON bg.id = bge.boardgame_id WHERE bge.type = "borrowed AND bg.designergame = 1"
+SELECT COUNT(*) AS count FROM boardgameevents AS bge JOIN boardgames AS bg ON bg.id = bge.boardgame_id WHERE bge.type = "borrowed" AND bg.designergame = 1
 ';
 
         foreach ($this->db->query($query) as $row) {
@@ -677,5 +675,43 @@ SET boardgame_id = ?, type = ?, timestamp = NOW(), data = ""
         };
 
         return array_map($mapper, $this->fetchGameData());
+    }
+
+    public function getReportingData()
+    {
+        $query = '
+SELECT b.name, b.id, b.designergame, be.type, be.timestamp
+FROM boardgames AS b
+LEFT JOIN boardgameevents AS be ON be.boardgame_id = b.id AND be.type IN ("borrowed", "returned")
+ORDER BY b.name, b.id, be.timestamp
+';
+
+        $reporting = [];
+
+        foreach ($this->db->query($query) as $row) {
+            if ($row['type'] === 'borrowed') {
+                $from = strtotime($row['timestamp']);
+
+            }
+
+            if (empty($reporting[$row['name']])) {
+               $reporting[$row['name']] = ['count' => 0, 'time' => 0, 'designergame' => $row['designergame']];
+            }
+
+            if (!empty($from)) {
+
+                $time = (strtotime($row['timestamp']) - $from) / 60;
+
+                if ($time < 5) {
+                    continue;
+                }
+
+                $reporting[$row['name']]['count']++;
+                $reporting[$row['name']]['time'] += $time;
+
+            }
+        }
+
+        return $reporting;
     }
 }

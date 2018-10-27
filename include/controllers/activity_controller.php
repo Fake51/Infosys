@@ -682,9 +682,8 @@ class ActivityController extends Controller
     {
         $user = $this->model->getLoggedInUser();
 
-        if (!in_array($user->user, ['peter.e.lind@gmail.com', 'appleofdisorder@gmail.com', 'ponsgaard@gmail.com'])) {
+        if (!$user->hasRole('VotingStats')) {
             $this->hardRedirect($this->url('no_access'));
-
         }
 
         $this->page->stats = $this->model->collectVotingStats();

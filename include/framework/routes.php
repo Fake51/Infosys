@@ -403,6 +403,7 @@ class Routes
         $this->routes['boardgames_presence_check']   = array('url' => 'boardgames/presence-check', 'controller' => 'Boardgames', 'method' => 'presenceCheck');
         $this->routes['boardgames_presence_update']  = array('url' => 'boardgames/presence-update', 'controller' => 'Boardgames', 'method' => 'presenceUpdate');
         $this->routes['boardgames_presence_reset']   = array('url' => 'boardgames/presence-reset', 'controller' => 'Boardgames', 'method' => 'resetPresence');
+        $this->routes['boardgames_reporting']        = array('url' => 'boardgames/reporting', 'controller' => 'Boardgames', 'method' => 'showReporting');
 
         // loans
         $this->routes['loans_overview']         = array('url' => 'loans', 'controller' => 'Loans', 'method' => 'overview');

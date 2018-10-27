@@ -262,4 +262,15 @@ class BoardgamesController extends Controller
 
         exit;
     }
+
+    public function showReporting()
+    {
+        $this->page->data = $this->model->getReportingData();
+
+        $this->page->layout_template = "contentonly.phtml";
+
+        header('HTTP/1.1 200 Done');
+        header('Content-Type: application/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="reporting.csv"');
+    }
 }
