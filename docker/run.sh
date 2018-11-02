@@ -1,5 +1,8 @@
 #!/bin/bash
 
+/bin/chown mysql:mysql /var/lib/mysql -R
+/bin/chown mysql:mysql /var/run/mysqld -R
+
 /usr/sbin/service nginx start
 /usr/sbin/service php5.6-fpm start
 /usr/sbin/service mysql start
@@ -15,6 +18,11 @@ then
     /usr/bin/mysql -u root < /var/www/create.sql
     rm /var/www/create.sql
 fi
+
+OLD_PWD=$(pwd)
+cd /var/www/infosys
+./composer.phar install
+cd $OLD_PWD
 
 shutdown() {
 	/usr/sbin/service php5.6-fpm stop

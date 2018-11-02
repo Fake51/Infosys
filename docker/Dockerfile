@@ -19,7 +19,8 @@ RUN apt update \
     php5.6-tidy \
     php5.6-xml \
     php5.6-zip \
-    mysql-server
+    mysql-server \
+    wget
 
 RUN mkdir -p /var/www/ \
     && rm /etc/php/5.6/fpm/pool.d/www.conf \
