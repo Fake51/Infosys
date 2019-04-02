@@ -350,4 +350,97 @@ INSERT INTO activityageranges SET activity_id = ?, requirementtype = ?, age = ? 
 
         return $this;
     }
+	
+	public function importActivity($array)
+	{
+		// Required values
+        if($array['A'] == null) $this->updated = date('Y-m-d H:i:s');
+        else $this->updated = date('Y-m-d H:i:s', $array['A']);
+        
+        if($array['B'] == null) $this->navn = "Navn";
+        else $this->navn = $array['B'];
+
+        if($array['C'] == null) $this->title_en = "Name";
+        else $this->title_en = $array['C'];
+
+        if($array['D'] == null) $this->author = "Forfatter";
+        else $this->author = $array['D'];
+
+        $this->type = 'rolle';
+        $typeText = $array['E'];
+        if($typeText == null);
+        else if(stripos($typeText, 'bræt') !== false) $this->type = 'braet';
+        else if(stripos($typeText, 'braet') !== false) $this->type = 'braet';
+        else if(stripos($typeText, 'live') !== false) $this->type = 'live';
+        else if(stripos($typeText, 'figur') !== false) $this->type = 'figur';
+        else if(stripos($typeText, 'workshop') !== false) $this->type = 'workshop';
+        else if(stripos($typeText, 'otto') !== false) $this->type = 'ottoviteter';
+        else if(stripos($typeText, 'magic') !== false) $this->type = 'magic';
+        else if(stripos($typeText, 'system') !== false) $this->type = 'system';
+        else if(stripos($typeText, 'junior') !== false) $this->type = 'junior';
+
+        $this->sprog = 'dansk';
+        $sprogText = $array['F'];
+        if($sprogText == null);
+        else if(stripos($sprogText, 'engelsk') !== false)
+        {
+            if(stripos($sprogText, 'dansk') !== false) $this->sprog = 'dansk+engelsk';
+            else $this->sprog = 'engelsk';
+        }
+
+        if($array['G'] == null) $this->min_deltagere_per_hold = 1;
+        else $this->min_deltagere_per_hold = $array['G'];
+
+		if($array['H'] == null) $this->max_deltagere_per_hold = 1;
+        else $this->max_deltagere_per_hold = $array['H'];
+
+        if($array['I'] == null) $this->spilledere_per_hold = 1;
+        else $this->spilledere_per_hold = $array['I'];
+
+        if($array['J'] == null) $this->pris = 0;
+        else $this->pris = $array['J'];
+
+        if($array['M'] == null) $this->varighed_per_afvikling = 1;
+        else $this->varighed_per_afvikling = (float)$array['M'];
+
+        if($array['N'] == null) $this->teaser_dk = "TeaserDK";
+        else $this->teaser_dk = $array['N'];
+
+        if($array['O'] == null) $this->teaser_en = "TeaserEN";
+        else $this->teaser_en = $array['O'];
+  
+        $this->replayable = 'nej';
+        $replayableText = $array['P'];
+        if($replayableText == null);
+        else if(stripos($replayableText, 'ja') !== false) $this->replayable = 'ja';
+        
+        if($array['Q'] == null) $this->max_signups = 0;
+        else $this->max_signups = $array['Q'];
+
+        if($array['R'] == null) $this->foromtale = "foromtale";
+        else $this->foromtale = $array['R'];
+
+        if($array['S'] == null) $this->description_en = "foromtaleEN";
+        else $this->description_en = $array['S'];
+		
+		// Default values:
+		$this->kan_tilmeldes = 'ja';
+		$this->note = NULL;
+		$this->lokale_eksklusiv = 'ja';
+		$this->wp_link = 0;
+		$this->tids_eksklusiv = 'ja';
+		
+		// Default values (which are not visible under "Opret Aktivitet")
+		$this->hidden = 'nej';
+		$this->karmatype = 0;
+        
+		if (!$this->insert()) { // TO DO: Check for conflicts. If activity with same name already exists, we should probably skip it.
+            return false;
+        }
+
+        if($array['K'] != null) $this->setMinAge($array['K']); // Optional field - can only be set after activity is created
+        if($array['L'] != null) $this->setMaxAge($array['L']); // Optional field - can only be set after activity is created
+		
+		return true;
+	}
 }

@@ -172,48 +172,50 @@ class ActivityModel extends Model {
         return $activity;
     }
 	
-	public function importActivities()
+	public function importActivities($filename)
 	{
-		$activity = $this->createEntity('Aktiviteter');
-		// Required values
-		$activity->updated = date('Y-m-d H:i:s');
-		$activity->navn = "Test";
-		$activity->title_en = "Test";
-		$activity->author = "Text";
-		$activity->type = 'rolle';
-		$activity->sprog = 'dansk';
-		$activity->min_deltagere_per_hold = 1;
-		$activity->max_deltagere_per_hold = 1;
-		$activity->spilledere_per_hold = 1;
-		$activity->pris = 0;
-		$activity->varighed_per_afvikling = 1;
-		$activity->teaser_dk = "TeaserDK";
-		$activity->teaser_en = "TeaserEN";
-		$activity->replayable = 'nej';
-		$activity->max_signups = 0;
-		$activity->foromtale = "foromtale"; // Can be null
-		$activity->description_en = "DescriptionEN";
+		include_once LIB_FOLDER . 'PHPExcel/Classes/PHPExcel/IOFactory.php';
 		
-		// Default values:
-		$activity->kan_tilmeldes = 'ja';
-		$activity->note = NULL;
-		$activity->lokale_eksklusiv = 'ja';
-		$activity->wp_link = 0;
-		$activity->tids_eksklusiv = 'ja';
+		$objPHPExcel = PHPExcel_IOFactory::load($filename);
+		$objPHPExcel->setActiveSheetIndex(0);
+		$worksheet = $objPHPExcel->getActiveSheet();
+		$highestColumn = $worksheet->getHighestColumn();
+		$highestRow = $worksheet->getHighestRow();
 		
-		// Default values (which are not visible under "Opret Aktivitet")
-		$activity->hidden = 'nej';
-		$activity->karmatype = 0;
+		if($highestColumn < 'S')
+		{
+			$this->log("Aktiviteter kunne ikke importeres - manglende kolonner", 'Aktivitet', $this->model->getLoggedInUser());
+			return false;
+		}
+		else if($worksheet->getCellByColumnAndRow('A',1)->getValue() != "Tidsstempel")
+		{
+			$this->log("Aktiviteter kunne ikke importeres - forkert format", 'Aktivitet', $this->model->getLoggedInUser());
+			return false;
+		}
 		
-		if (!$activity->insert()) {
-            return false;
-        }
+		$result = true;
 		
-		// Optional values:
-		//$activity->setMinAge(7);
-		//$activity->setMaxAge(50);
+		for ($row = 2; $row < $highestRow + 1; $row++) {
+			$array = array();         
+			for ($column = 'A'; $column < 'T'; $column++) {
+				 $val = $worksheet->getCell($column . $row)->getValue();
+	//             echo "Row ".$row." Column ".$column. ": ".$val . "<br>";
+				 $array[$column] = $val;
+            }
+			
+			$activity = $this->createEntity('Aktiviteter');
+			
+			if(!$activity->importActivity($array)) // TO DO: function importActivity() in this class didn't work
+			{
+				$result = false; // return true if at least one activity was succesfully imported
+			}
+			else
+			{
+				//$this->log("Aktivitet kunne ikke importeres", 'Aktivitet', $this->model->getLoggedInUser()); // TO DO: This log statement crashes the script
+            }
+		}
 		
-		return true;
+		return $result;
 	}
 
     /**
