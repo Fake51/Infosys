@@ -223,27 +223,24 @@ class ActivityController extends Controller
 		if ($this->page->request->isPost()) {
             $post = $this->page->request->post;
 			
-			/*
-			Nothing in $post...
-			foreach ($post as $key => $value) {
-				echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>";
-			}
-			exit;
-			*/
-			
-            if (empty($post->importactivities)) { // skal jeg bruge file eller importactivities ?
-                $this->errorMessage('Ingen Excel fil valgt.');
+			$filename = $_FILES['file']['tmp_name'];
+			$originalName = $_FILES['file']['name'];
+			$indexOfXls = strpos($originalName, ".xls");
+			if($indexOfXls === false)
+			{
+				$this->errorMessage('Ingen Excel (.xls) fil valgt.');
                 $this->hardRedirect($this->url('aktiviteterhome'));
-            }
+			}
 			else {
                 try {
-                    if ($this->model->importActivities()) {
+                    if ($this->model->importActivities($filename)) {
 						$this->successMessage('Aktiviteter blev importeret.');
 						$this->log("Aktiviter blev importeret af {$this->model->getLoggedInUser()->user}", 'Aktivitet', $this->model->getLoggedInUser());
                         $this->hardRedirect($this->url('aktiviteterhome'));
 					} else
 					{
 						$this->errorMessage('Kunne ikke importere aktiviteter.'); 
+						$this->log("Aktiviter kunne ikke importeres af {$this->model->getLoggedInUser()->user}", 'Aktivitet', $this->model->getLoggedInUser());
 						$this->hardRedirect($this->url('aktiviteterhome'));
 					}
                 } catch (Exception $e) {

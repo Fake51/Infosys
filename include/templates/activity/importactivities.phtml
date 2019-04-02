@@ -2,13 +2,35 @@
 	<fieldset>
 		<legend>Importer Aktiviteter</legend>
 		<div class="outer-container">
-			<form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+			<form action="" method="post" enctype="multipart/form-data">
 				<div>
 					<label>Vælg Excel Fil</label> 
-					<input type="file" name="file" id="file" accept=".xls,.xlsx">
+					<input type="file" name="file" id="file" accept=".xls">
 					<button type="submit" id="importactivities" name="importactivities" class="btn-submit">Importer</button>
 				</div>
 			</form>
 		</div>
 	</fieldset>
+	
+	<br>
+	Pt. understøttes kun filer af typen .xls i følgende format: <br>
+	A1 - Tidsstempel<br>
+	B1 - Aktivitetsnavn - Dansk<br>
+	C1 - Aktivitetsnavn - Engelsk<br>
+	D1 - Forfatter/designer<br>
+	E1 - Aktivitetstype (bræt, rolle, live, figur, workshop, otto, magic, system, junior)<br>
+	F1 - Sprog (dansk, engelsk, dansk+engelsk)<br>
+	G1 - Min. antal spiller pr. hold<br>
+	H1 - Maks. antal spiller pr. hold<br>
+	I1 - Antal spilledere pr. hold<br>
+	J1 - Pris<br>
+	K1 - Alders begrænsning - Min alder<br>
+	L1 - Alders begrænsning - Max alder<br>
+	M1 - Varighed (i timer)<br>
+	N1 - Foromtale hjemmeside - Dansk<br>
+	O1 - Foromtale hjemmeside - Engelsk<br>
+	P1 - Engangs-event<br>
+	Q1 - Maksimum antal spillere i alt<br>
+	R1 - Foromtale tilmelding - Dansk<br>
+	S1 - Foromtale tilmelding - Engelsk<br>
 </div>
