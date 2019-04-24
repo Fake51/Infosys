@@ -65,11 +65,6 @@ class Participant
     private $messaging;
 
     /**
-     * @ORM\Column(type="array")
-     */
-    private $languages = [];
-
-    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\ParticipantType", mappedBy="participants")
      */
     private $participantTypes;
@@ -133,6 +128,12 @@ class Participant
      * @ORM\Column(type="integer")
      */
     private $wantedNumberOfTasks;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Language")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $languages;
 
     public function __construct()
     {
@@ -250,18 +251,6 @@ class Participant
     public function setMessaging(bool $messaging): self
     {
         $this->messaging = $messaging;
-
-        return $this;
-    }
-
-    public function getLanguages(): ?array
-    {
-        return $this->languages;
-    }
-
-    public function setLanguages(array $languages): self
-    {
-        $this->languages = $languages;
 
         return $this;
     }
@@ -469,6 +458,18 @@ class Participant
     public function setWantedNumberOfTasks(int $wantedNumberOfTasks): self
     {
         $this->wantedNumberOfTasks = $wantedNumberOfTasks;
+
+        return $this;
+    }
+
+    public function getLanguages(): ?Language
+    {
+        return $this->languages;
+    }
+
+    public function setLanguages(?Language $languages): self
+    {
+        $this->languages = $languages;
 
         return $this;
     }

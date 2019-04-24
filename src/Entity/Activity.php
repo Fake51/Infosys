@@ -69,11 +69,6 @@ class Activity
     private $isScheduleExclusive;
 
     /**
-     * @ORM\Column(type="array")
-     */
-    private $languages = [];
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $canParticipateMoreThanOnce;
@@ -104,10 +99,27 @@ class Activity
      */
     private $schedules;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Language")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $languages;
+
     public function __construct()
     {
         $this->creators = new ArrayCollection();
         $this->schedules = new ArrayCollection();
+        $this->duration = 0;
+        $this->minimumGroupParticipants = 0;
+        $this->maximumGroupParticipants = \PHP_INT_MAX;
+        $this->isAreaExclusive = true;
+        $this->isScheduleExclusive = true;
+        $this->canParticipateMoreThanOnce = false;
+        $this->price = 0;
+        $this->numberOfGroupHostsRequired = 0;
+        $this->maximumSignups = \PHP_INT_MAX;
+        $this->maximumSignupsPerSchedule = \PHP_INT_MAX;
+        $this->note = '';
     }
 
     public function getId(): ?int
@@ -249,18 +261,6 @@ class Activity
         return $this;
     }
 
-    public function getLanguages(): ?array
-    {
-        return $this->languages;
-    }
-
-    public function setLanguages(array $languages): self
-    {
-        $this->languages = $languages;
-
-        return $this;
-    }
-
     public function getCanParticipateMoreThanOnce(): ?bool
     {
         return $this->canParticipateMoreThanOnce;
@@ -348,6 +348,18 @@ class Activity
                 $schedule->setActivity(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLanguages(): ?Language
+    {
+        return $this->languages;
+    }
+
+    public function setLanguages(?Language $languages): self
+    {
+        $this->languages = $languages;
 
         return $this;
     }
