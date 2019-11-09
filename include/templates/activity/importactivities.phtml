@@ -1,3 +1,4 @@
+<?=$this->getMessagesHtml()?>
 <div class='middleboxes'>
 	<fieldset>
 		<legend>Importer Aktiviteter</legend>
@@ -6,9 +7,27 @@
 				<div>
 					<label>Vælg Excel Fil</label>
 					<input type="file" name="activities" id="activities_file" accept=".xls,.xlsx">
-					<button type="submit" id="importactivities" name="importactivities" class="btn-submit">Importer</button>
+					<button type="submit" id="importactivities" name="importactivities" class="btn-submit">Importér</button>
 				</div>
 			</form>
 		</div>
 	</fieldset>
+	<?php 
+	if (isset($this->activity_data)) { ?>
+		<fieldset>
+			<form action="" method="post" name="frmConfirmImport" id="frmConfirmImport" enctype="multipart/form-data">
+				<button type="submit" id="import_add" name="import_add" class="btn-submit">Tilføj</button>
+				<button type="submit" id="import_replace" name="import_replace" class="btn-submit">Overskriv</button>
+			</form>
+			<table>
+				<?php foreach($this->activity_data as $row){ ?>
+					<tr>
+						<?php foreach($row as $cell) { ?>
+							<td><?=$cell?></td>
+						<?php } ?>
+					</tr>
+				<?php } ?>
+			</table>
+		</fieldset>
+	<?php } ?>
 </div>
