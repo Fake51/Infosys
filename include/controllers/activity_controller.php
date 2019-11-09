@@ -215,45 +215,80 @@ class ActivityController extends Controller
 
         $this->page->model = $this->model;
     }
-	
+    
+    /**
+     * Imports activities from a submitted spreadsheet
+     *
+     * @access public
+     * @return void
+     */
 	public function importActivities()
 	{
-		$user = $this->model->getLoggedInUser();
-		
-		if ($this->page->request->isPost()) {
-            $post = $this->page->request->post;
-			
-			/*
-			Nothing in $post...
-			foreach ($post as $key => $value) {
-				echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>";
-			}
-			exit;
-			*/
-			
-            if (empty($post->importactivities)) { // skal jeg bruge file eller importactivities ?
+        $session = $this->dic->get('Session');
+        if (isset($session->activity_data)) {
+            $this->page->activity_data = $session->activity_data;
+        }
+        
+        // if it's not a post request, don't do anything
+        if (!$this->page->request->isPost()){
+            return;
+        }
+        $post = $this->page->request->post;
+        
+        // Did the user submit a file
+        if (isset($post->importactivities)) { 
+            $file = isset($_FILES['activities']) ? $_FILES['activities'] : null;
+            if($file == null || $file['error'] == 4) {
                 $this->errorMessage('Ingen Excel fil valgt.');
-                $this->hardRedirect($this->url('aktiviteterhome'));
+                return;
             }
-			else {
-                try {
-                    if ($this->model->importActivities()) {
-						$this->successMessage('Aktiviteter blev importeret.');
-						$this->log("Aktiviter blev importeret af {$this->model->getLoggedInUser()->user}", 'Aktivitet', $this->model->getLoggedInUser());
-                        $this->hardRedirect($this->url('aktiviteterhome'));
-					} else
-					{
-						$this->errorMessage('Kunne ikke importere aktiviteter.'); 
-						$this->hardRedirect($this->url('aktiviteterhome'));
-					}
-                } catch (Exception $e) {
-                    $this->errorMessage('Kunne ikke importere aktiviteter.');
+
+            // Parse the file depending on file type or give an error if type isn't known
+            list($name, $type) = explode(".", $file['name']);
+            switch ($type) {
+                case "xlsx":
+                    if ( !$data = SimpleXLSX::parse($file['tmp_name'])->rows() ) {
+                        $this->errorMessage(SimpleXLSX::parseError());
+                    }
+                    break;
+                case "xls":
+                    if ( !$data = SimpleXLS::parse($file['tmp_name'])->rows() ) {
+                        $this->errorMessage(SimpleXLS::parseError());
+                    }
+                    break;
+                default:
+                    $this->errorMessage('Fil er ikke korrekt type');
+                    return false;
+            }
+
+            $header = $data[0];
+            $this->activity_data[0] = $header;
+            unset($data[0]);
+            foreach($data as $row) {
+                $values = array_combine($header, $row);
+                $this->activity_data[] = $values;
+            }
+            $this->page->activity_data  = $this->activity_data;
+            $session->activity_data     = $this->activity_data;
+            $this->successMessage('Aktiviteter blev uploadet, men er IKKE gemt');
+        } 
+
+        // $this->successMessage(print_r($data,true));
+        if (isset($post->import_add) || isset($post->import_replace)) { 
+            try {
+                if ($this->model->importActivities($data, $header)) {
+                    $this->successMessage('Aktiviteter blev importeret.');
+                    $this->log("Aktiviter blev importeret", 'Aktivitet', $this->model->getLoggedInUser());
+                    $this->hardRedirect($this->url('aktiviteterhome'));
+                } else {
+                    $this->errorMessage('Kunne ikke importere aktiviteter.'); 
                     $this->hardRedirect($this->url('aktiviteterhome'));
                 }
+            } catch (Exception $e) {
+                $this->errorMessage('Kunne ikke importere aktiviteter.');
+                $this->hardRedirect($this->url('aktiviteterhome'));
             }
         }
-		
-		$this->page->model = $this->model;
 	}
 
     /**
