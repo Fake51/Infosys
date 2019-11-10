@@ -225,9 +225,6 @@ class ActivityController extends Controller
 	public function importActivities()
 	{
         $session = $this->dic->get('Session');
-        if (isset($session->activity_data)) {
-            $this->page->activity_data = $session->activity_data;
-        }
         
         // if it's not a post request, don't do anything
         if (!$this->page->request->isPost()){
@@ -261,34 +258,36 @@ class ActivityController extends Controller
                     return false;
             }
 
-            $header = $data[0];
-            $this->activity_data[0] = $header;
-            unset($data[0]);
-            foreach($data as $row) {
-                $values = array_combine($header, $row);
-                $this->activity_data[] = $values;
-            }
-            $this->page->activity_data  = $this->activity_data;
-            $session->activity_data     = $this->activity_data;
+            unset($data[0]); // remove column names from data
+            $session->activity_data = $this->model->parseActivityData($data);
             $this->successMessage('Aktiviteter blev uploadet, men er IKKE gemt');
-        } 
+        }
 
-        // $this->successMessage(print_r($data,true));
-        if (isset($post->import_add) || isset($post->import_replace)) { 
+        if ((isset($post->import_add) || isset($post->import_replace)) && isset($session->activity_data)) { 
             try {
-                if ($this->model->importActivities($data, $header)) {
+                if ($this->model->importActivities($session->activity_data, isset($post->import_replace))) {
                     $this->successMessage('Aktiviteter blev importeret.');
                     $this->log("Aktiviter blev importeret", 'Aktivitet', $this->model->getLoggedInUser());
-                    $this->hardRedirect($this->url('aktiviteterhome'));
+                    $session->delete('activity_data');
                 } else {
                     $this->errorMessage('Kunne ikke importere aktiviteter.'); 
-                    $this->hardRedirect($this->url('aktiviteterhome'));
+                }
+            } catch (FrameworkException $e) {
+                if ($e->getCode() == 1) {
+                    $this->errorMessage('Kan ikke udskifte aktiviteter efter der er oprettet afviklinger');
+                } else {
+                    $this->errorMessage('Kunne ikke importere aktiviteter.');
                 }
             } catch (Exception $e) {
                 $this->errorMessage('Kunne ikke importere aktiviteter.');
-                $this->hardRedirect($this->url('aktiviteterhome'));
             }
         }
+
+        if (isset($session->activity_data)) {
+            $this->page->activity_data = $session->activity_data;
+            $this->page->activity_header = $this->model->getActivityHeader();
+        }
+
 	}
 
     /**
