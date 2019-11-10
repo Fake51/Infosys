@@ -568,6 +568,21 @@ class DBObject
         return true;
     }
 
+    /**
+     * deletes ALL elements of the curret object type from the database
+     *
+     * @access public
+     * @return bool
+     */
+    public function deleteALL(){
+        $query = "DELETE FROM {$this->quoteTable($this->tablename)}";
+        $this->getDB()->exec($query);
+        $this->invalidate();
+        $query = "ALTER TABLE {$this->quoteTable($this->tablename)} AUTO_INCREMENT = 1";
+        $this->getDB()->exec($query);
+        return true;
+    }
+
 //{{{ methods dealing with loading objects and invalidating them
     /**
      * creates a number of new objects and calls loadObject to fill them with data
