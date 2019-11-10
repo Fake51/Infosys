@@ -1358,7 +1358,7 @@ div#checkin-interface-container div.success.money {
 div#food-handout-container fieldset#stats-fieldset {
     background-color: #eeeeee;
     padding: 10px;
-    border
+    /*border*/
 }
 
 div#food-handout-container div#stats-boxes div.stats-box {
@@ -2315,4 +2315,10 @@ table.accounting tbody {
 .sleepingStats th, .sleepingStats td {
     border: 1px solid #000;
     padding: 1em 2em;
+}
+
+.importTable td {
+    padding: 5px;
+    vertical-align: top;
+    border: #000 1px solid;
 }
