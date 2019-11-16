@@ -2317,6 +2317,10 @@ table.accounting tbody {
     padding: 1em 2em;
 }
 
+.importTable th {
+    padding: 0px 5px;
+}
+
 .importTable td {
     padding: 5px;
     vertical-align: top;
