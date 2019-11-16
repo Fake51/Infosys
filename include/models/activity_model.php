@@ -178,7 +178,6 @@ class ActivityModel extends Model {
         $fields[] = 'age_min';
         $fields[] = 'age_max';
         unset($fields[0]); // remove id from header
-        unset($fields[3]); // remove note from header
         return $fields;
     }    
 
@@ -191,7 +190,7 @@ class ActivityModel extends Model {
     }
 
     public static function parseActivityRow($row){
-        for($i = 0; $i < 22; $i++){
+        for($i = 0; $i < 24; $i++){
             $row[$i] = isset($row[$i]) ? $row[$i] : "";
         }
 
@@ -199,7 +198,7 @@ class ActivityModel extends Model {
         //$result_row['id'] = '';
         $result_row['navn'] = $row[1];
         $result_row['kan_tilmeldes'] = 'ja';
-        //$result_row['note'] = '';
+        $result_row['note'] = $row[22];
         $result_row['foromtale'] = $row[17];
         preg_match("/\d+/", $row[12], $matches);
         $result_row['varighed_per_afvikling'] = $matches[0];
@@ -249,15 +248,41 @@ class ActivityModel extends Model {
         $result_row['sprog'] = $sprog;
 
         $result_row['replayable'] = preg_match("/ja/", strtolower($row[15])) == 1 ? 'nej' : 'ja'; // If not one-time event
-        $result_row['updated'] = $row[0];
+        $result_row['updated'] = self::parseDateTime($row[0]);
         $result_row['hidden'] = preg_match("/ja/", strtolower($row[21])) == 1 ? 'ja' : 'nej';
-        $result_row['karmatype'] = 0;
+        preg_match("/\d/", $row[23], $matches);
+        $result_row['karmatype'] = isset($matches[0]) ? $matches[0] : 0;
         preg_match("/\d+/", $row[16], $matches);
         $result_row['max_signups'] = isset($matches[0]) ? $matches[0] : 0;
         $result_row['age_min'] = $row[10];
         $result_row['age_max'] = $row[11];
         
         return $result_row;
+    }
+
+    /**
+     * Simple method for parsing timestamp or just give current time
+     * 
+     *  @return parsed timestamp or if parsing failed 
+     */
+    private static function parseDateTime($dateTime){
+        // parse time
+        if (preg_match("/\b(\d{2})[:\.](\d{2})[:\.](\d{2})\b/",$dateTime, $matches)){
+            $time = "$matches[1]:$matches[2]:$matches[3]";
+        } else {
+            $time = date("H:i:s");
+        }
+
+        // parse date
+        if (preg_match("/(\d{4})[-\/](\d{2})[-\/](\d{2})/",$dateTime, $matches)){
+            $date = "$matches[1]-$matches[2]-$matches[3]";
+        } elseif (preg_match("/(\d{2})[-\/](\d{2})[-\/](\d{4})/",$dateTime, $matches)){
+            $date = "$matches[3]-$matches[2]-$matches[1]";
+        } else {
+            $date = date("Y-m-d");
+        }
+
+        return "$date $time";
     }
 	
 	public function importActivities($data, $replace = false) {
