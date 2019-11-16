@@ -33,7 +33,11 @@
 				</tr>
 				<?php foreach($this->activity_data as $row){ ?>
 					<tr>
-						<?php foreach($row as $cell) { ?>
+						<?php foreach($row as $key => $cell) { 
+							if($key == "updated") {
+								$cell = preg_replace("/ /","&nbsp;",$cell);
+								$cell = preg_replace("/-/","&#8209;",$cell);
+							} ?>
 							<td><?=$cell?></td>
 						<?php } ?>
 					</tr>
