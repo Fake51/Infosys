@@ -80,9 +80,15 @@ $this->registerLateLoadJS('index.js');
     </ul>
     <h3>Mad udleveret:</h3>
     <ul>
-        <?php foreach ($this->food_data['received'] as $type => $count) :?>
-            <li><strong><?= e($type);?>:</strong> <?= e($count);?></li>
-        <?php endforeach;?>
+        <?php 
+        if (isset($this->food_data['received'])) {
+            foreach ($this->food_data['received'] as $type => $count) {
+                ?>
+                <li><strong><?= e($type);?>:</strong> <?= e($count);?></li>
+                <?php 
+            } // end if
+        } // end foreach
+        ?>
     </ul>
 </div>
 
