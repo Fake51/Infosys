@@ -194,7 +194,7 @@ class ActivityModel extends Model {
         }
 
         $result_row = [];
-        $result_row['id'] = $row[26];
+        $result_row['id'] = is_numeric($row[26]) ? intval($row[26]) : null;
         $result_row['navn'] = $row[1];
         $result_row['kan_tilmeldes'] = preg_match("/nej/", strtolower($row[24])) == 1 ? 'nej' : 'ja';;
         $result_row['note'] = $row[22];
@@ -210,7 +210,7 @@ class ActivityModel extends Model {
         preg_match("/\d+/", $row[9], $matches);
         $result_row['pris'] = isset($matches[0]) ? $matches[0] : 0;
         $result_row['lokale_eksklusiv'] = preg_match("/nej/", strtolower($row[19])) == 1 ? 'nej' : 'ja';
-        $result_row['wp_link'] = $row[25];
+        $result_row['wp_link'] = is_numeric($row[26]) ? intval($row[26]) : 0;
         $result_row['teaser_dk'] = $row[13];
         $result_row['teaser_en'] = $row[14];
         $result_row['title_en'] = $row[2];;
