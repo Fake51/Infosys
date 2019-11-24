@@ -177,7 +177,6 @@ class ActivityModel extends Model {
         $fields = $activity->getColumns();
         $fields[] = 'age_min';
         $fields[] = 'age_max';
-        unset($fields[0]); // remove id from header
         return $fields;
     }    
 
@@ -190,18 +189,18 @@ class ActivityModel extends Model {
     }
 
     public static function parseActivityRow($row){
-        for($i = 0; $i < 24; $i++){
+        for($i = 0; $i <= 26; $i++){
             $row[$i] = isset($row[$i]) ? $row[$i] : "";
         }
 
         $result_row = [];
-        //$result_row['id'] = '';
+        $result_row['id'] = $row[26];
         $result_row['navn'] = $row[1];
-        $result_row['kan_tilmeldes'] = 'ja';
+        $result_row['kan_tilmeldes'] = preg_match("/nej/", strtolower($row[24])) == 1 ? 'nej' : 'ja';;
         $result_row['note'] = $row[22];
         $result_row['foromtale'] = $row[17];
         preg_match("/\d+/", $row[12], $matches);
-        $result_row['varighed_per_afvikling'] = $matches[0];
+        $result_row['varighed_per_afvikling'] = isset($matches[0]) ? $matches[0] : 0;
         preg_match("/\d+/", $row[6], $matches);
         $result_row['min_deltagere_per_hold'] = isset($matches[0]) ? $matches[0] : 0;
         preg_match("/\d+/", $row[7], $matches);
@@ -211,7 +210,7 @@ class ActivityModel extends Model {
         preg_match("/\d+/", $row[9], $matches);
         $result_row['pris'] = isset($matches[0]) ? $matches[0] : 0;
         $result_row['lokale_eksklusiv'] = preg_match("/nej/", strtolower($row[19])) == 1 ? 'nej' : 'ja';
-        $result_row['wp_link'] = 0;
+        $result_row['wp_link'] = $row[25];
         $result_row['teaser_dk'] = $row[13];
         $result_row['teaser_en'] = $row[14];
         $result_row['title_en'] = $row[2];;
@@ -285,7 +284,7 @@ class ActivityModel extends Model {
         return "$date $time";
     }
 	
-	public function importActivities($data, $replace = false) {
+	public function saveActivities($data, $replace = false) {
         if($replace === true) {
             // Check if we have any afviklinger before trying to replace activities
             if ($this->createEntity('Afviklinger')->findAll()
@@ -325,7 +324,74 @@ class ActivityModel extends Model {
         }
 		
 		return $errors == 0;
-	}
+    }
+
+    /**
+     * Load all activities from database
+     * for use with export function
+     */
+    public function loadActivities()
+    {
+        $activity = $this->createEntity('Aktiviteter');
+        //$columns = $activity->getColumns();
+        $activities = $activity->findAll();
+        $columns = [
+            'updated',                  //0
+            'navn',                     //1
+            'title_en',                 //2
+            'author',                   //3
+            'type',                     //4
+            'sprog',                    //5
+            'min_deltagere_per_hold',   //6
+            'max_deltagere_per_hold',   //7
+            'spilledere_per_hold',      //8
+            'pris',                     //9
+            'age_min',                  //10
+            'age_max',                  //11
+            'varighed_per_afvikling',   //12
+            'teaser_dk',                //13
+            'teaser_en',                //14
+            'onetime',                  //15 inverse of replayable
+            'max_signups',              //16
+            'foromtale',                //17
+            'description_en',           //18
+            'lokale_eksklusiv',         //19
+            'tids_eksklusiv',           //20
+            'hidden',                   //21
+            'note',                     //22
+            'karmatype',                //23
+            'kan_tilmældes',            //24
+            'wp_link',                  //25
+            'id',                       //26
+        ];
+
+        $list[] = $columns;
+        foreach ($activities as $activity) {
+            $fields = [];
+            foreach ($columns as $column){
+                switch($column) {
+                    case 'age_min':
+                        $age = $activity->getMinAge();
+                        $fields[] = $age == false ? '' : $age;
+                        break;
+                    case 'age_max':
+                        $age = $activity->getMaxAge();
+                        $fields[] = $age == false ? '' : $age;
+                        break;
+                    case 'onetime':
+                        $fields[] = $activity->replayable == 'nej' ? 'ja' : 'nej';
+                        break;
+                    default:
+                        $fields[] = str_replace("\"","''",$activity->$column);
+                }
+            }
+            $list[] = $fields;
+        }
+
+        //usort($activities[$type], function($a, $b) {return strcmp($a->navn, $b->navn);});
+        return $list;
+    }
+
 
     /**
      * creates a scheduling for an activity with data from POST
