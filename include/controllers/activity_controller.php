@@ -326,9 +326,11 @@ class ActivityController extends Controller
                     $this->errorMessage('Kan ikke udskifte aktiviteter efter der er oprettet afviklinger');
                 } else {
                     $this->errorMessage('Kunne ikke importere aktiviteter.');
+                    error_log($e->getMessage());
                 }
             } catch (Exception $e) {
                 $this->errorMessage('Kunne ikke importere aktiviteter.');
+                error_log($e->getMessage());
             }
     }
     
