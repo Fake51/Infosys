@@ -2326,3 +2326,19 @@ table.accounting tbody {
     vertical-align: top;
     border: #000 1px solid;
 }
+
+.importTable td div {
+    max-height: 8em;
+    overflow: hidden;
+    margin: 0;
+}
+
+.importTable td div.long-text {
+    width: 30em;
+    overflow: auto;
+}
+
+form#frmExcelExport select {
+    margin-bottom: 0px;
+    width: auto;
+}
