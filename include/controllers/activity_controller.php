@@ -215,60 +215,109 @@ class ActivityController extends Controller
 
         $this->page->model = $this->model;
     }
-    
+
     /**
-     * Imports activities from a submitted spreadsheet
-     *
+     * Handle import and export of activity data
+     * 
      * @access public
      * @return void
      */
-	public function importActivities()
-	{
+    public function importExportActivities(){
         $session = $this->dic->get('Session');
-        
+
         // if it's not a post request, don't do anything
         if (!$this->page->request->isPost()){
             return;
         }
         $post = $this->page->request->post;
-        
-        // Did the user submit a file
+
         if (isset($post->importactivities)) { 
-            $file = isset($_FILES['activities']) ? $_FILES['activities'] : null;
-            if($file == null || $file['error'] == 4) {
-                $this->errorMessage('Ingen Excel fil valgt.');
-                return;
-            }
-
-            // Parse the file depending on file type or give an error if type isn't known
-            list($name, $type) = explode(".", $file['name']);
-            switch ($type) {
-                case "xlsx":
-                    if ( !$data = SimpleXLSX::parse($file['tmp_name'])->rows() ) {
-                        $this->errorMessage(SimpleXLSX::parseError());
-                    }
-                    break;
-                case "xls":
-                    if ( !$data = SimpleXLS::parse($file['tmp_name'])->rows() ) {
-                        $this->errorMessage(SimpleXLS::parseError());
-                    }
-                    break;
-                default:
-                    $this->errorMessage('Fil er ikke korrekt type');
-                    return false;
-            }
-
-            unset($data[0]); // remove column names from data
-            $session->activity_data = $this->model->parseActivityData($data);
-            $this->successMessage('Aktiviteter blev uploadet, men er IKKE gemt');
+            $this->uploadActivities();
+            $session->activity_data = $this->model->activity_data;
         }
 
         if ((isset($post->import_add) || isset($post->import_replace)) && isset($session->activity_data)) { 
+            $this->saveActivities($session->activity_data, isset($post->import_replace));
+            $session->delete('activity_data');
+        }
+
+        if (isset($post->exportactivities)){
+            $this->exportActivities();
+        }
+
+        if (isset($session->activity_data)) {
+            $this->page->activity_data = $session->activity_data;
+            $this->page->activity_header = $this->model->getActivityHeader();
+        }
+
+    }
+    
+    /**
+     * Imports activities from a submitted spreadsheet
+     *
+     * @access private
+     * @return void
+     */
+	private function uploadActivities()
+	{
+        // Did the user submit a file
+        $file = isset($_FILES['activities']) ? $_FILES['activities'] : null;
+        if($file == null || $file['error'] == 4) {
+            $this->errorMessage('Ingen Excel fil valgt.');
+            return;
+        }
+
+        // Parse the file depending on file type or give an error if type isn't known
+        list($name, $type) = explode(".", $file['name']);
+        switch ($type) {
+            case "xlsx":
+                if ( !$data = SimpleXLSX::parse($file['tmp_name'])->rows() ) {
+                    $this->errorMessage(SimpleXLSX::parseError());
+                }
+                break;
+            case "xls":
+                if ( !$data = SimpleXLS::parse($file['tmp_name'])->rows() ) {
+                    $this->errorMessage(SimpleXLS::parseError());
+                }
+                break;
+            case "csv":
+                $data = self::parseCSV($file['tmp_name']);
+                break;
+            default:
+                $this->errorMessage('Fil er ikke korrekt type');
+                return false;
+        }
+
+        unset($data[0]); // remove column names from data
+        $this->model->activity_data = $this->model->parseActivityData($data);
+        $this->successMessage('Aktiviteter blev uploadet, men er IKKE gemt');
+    }
+
+    private static function parseCSV($file){
+        $csv = file_get_contents($file);
+        // $lb = "\n";
+        // $delim = ";";
+        $lines = explode(";\n", $csv);
+        foreach ($lines as $line) {
+            preg_match_all("/\"([^\"]*)\"/",$line,$matches);
+            if (count($matches[1]) > 0) {
+                $data[] = $matches[1];
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Save uploaded data in the database
+     * 
+     * @access private
+     * @return void
+     */
+    private function saveActivities($data, $replace = false) {
             try {
-                if ($this->model->importActivities($session->activity_data, isset($post->import_replace))) {
+                if ($this->model->saveActivities($data, $replace)) {
                     $this->successMessage('Aktiviteter blev importeret.');
                     $this->log("Aktiviter blev importeret", 'Aktivitet', $this->model->getLoggedInUser());
-                    $session->delete('activity_data');
                 } else {
                     $this->errorMessage('Kunne ikke importere aktiviteter.'); 
                 }
@@ -281,14 +330,23 @@ class ActivityController extends Controller
             } catch (Exception $e) {
                 $this->errorMessage('Kunne ikke importere aktiviteter.');
             }
-        }
+    }
+    
+    private function exportActivities(){
+        $activities = $this->model->loadActivities();
+        header('Content-Type: text/csv;charset=utf-8');
+        header('Content-Disposition: attachment;filename="aktiviteter.csv"');
+        header('Cache-Control: max-age=0');
+        //echo "this; is; a; test; header;\n";
 
-        if (isset($session->activity_data)) {
-            $this->page->activity_data = $session->activity_data;
-            $this->page->activity_header = $this->model->getActivityHeader();
+        foreach($activities as $activity) {
+            foreach($activity as $cell) {
+                echo "\"$cell\";";
+            }
+            echo "\n";
         }
-
-	}
+        exit;
+    }
 
     /**
      * creates a scheduling for an activity
