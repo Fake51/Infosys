@@ -339,8 +339,8 @@ class ActivityController extends Controller
         header('Content-Type: text/csv;charset=utf-8');
         header('Content-Disposition: attachment;filename="aktiviteter.csv"');
         header('Cache-Control: max-age=0');
-        //echo "this; is; a; test; header;\n";
-
+        
+        echo chr(0xEF).chr(0xBB).chr(0xBF); // UTF8 BOM
         foreach($activities as $activity) {
             foreach($activity as $cell) {
                 echo "\"$cell\";";
