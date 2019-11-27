@@ -315,19 +315,17 @@ class ActivityController extends Controller
      */
     private function saveActivities($data, $replace = false) {
             try {
-                if ($this->model->saveActivities($data, $replace)) {
-                    $this->successMessage('Aktiviteter blev importeret.');
-                    $this->log("Aktiviter blev importeret", 'Aktivitet', $this->model->getLoggedInUser());
-                } else {
-                    $this->errorMessage('Kunne ikke importere aktiviteter.'); 
-                }
+                $this->model->saveActivities($data, $replace);
+                $this->successMessage('Aktiviteter blev importeret.');
+                $this->log("Aktiviter blev importeret", 'Aktivitet', $this->model->getLoggedInUser());
             } catch (FrameworkException $e) {
                 if ($e->getCode() == 1) {
                     $this->errorMessage('Kan ikke udskifte aktiviteter efter der er oprettet afviklinger');
                 } else {
                     $this->errorMessage('Kunne ikke importere aktiviteter.');
-                    error_log($e->getMessage());
                 }
+                $this->errorMessage('Framework Exception'); 
+                $e->logException();
             } catch (Exception $e) {
                 $this->errorMessage('Kunne ikke importere aktiviteter.');
                 error_log($e->getMessage());

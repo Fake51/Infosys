@@ -293,13 +293,18 @@ class ActivityModel extends Model {
                 throw new FrameworkException("Cannot replace activities after afviklinger has been created", 1);
             }
 
-            $activity = $this->createEntity('Aktiviteter');
+            $activity = $this->createEntity('Aktiviteter');            
             $activity->deleteAll();
         }
 
         $errors = 0;
         foreach($data as $row) {
             $activity = $this->createEntity('Aktiviteter');
+            if (!$replace) {
+                $exists = $activity->findById($row['id']);
+            } else {
+                $exists = false;
+            }            
 
             foreach ($row as $key => $value){
                 if ($key === 'age_min' || $key === 'age_max'){
@@ -308,11 +313,13 @@ class ActivityModel extends Model {
 
                 $activity->$key = $value;            
             }
-            
-            if (!$activity->insert()) {
-                $errors ++;
-            }
 
+            if ($exists) {
+                $activity->update();
+            } else {
+                $activity->insert();
+            }
+            
             // Values that have to be set after the activity is inserted
             // since they are in a different table with foreign key constraint
             if ($row['age_min'] !== '') {
@@ -322,8 +329,6 @@ class ActivityModel extends Model {
                 $activity->setMaxAge($row['age_max']);
             }
         }
-		
-		return $errors == 0;
     }
 
     /**
