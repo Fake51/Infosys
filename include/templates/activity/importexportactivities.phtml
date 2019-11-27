@@ -35,12 +35,11 @@
 	if (isset($this->activity_data)) { ?>
 		<fieldset>
 			<p>Herunder kan du se de data infosys har læst fra arket</p>
-			<p>Vil du overskrive de aktiviteter der allerede ligger i databasen?
-			<br>Eller vil du tilføje alle disse aktiviteter til dem der ligger i forvejen?
-			<br>(Infosys checker ikke om du tilføjer en aktivitet der ellerede findes i forvejen, det skal du selv gøre)</p>
+			<p>Vil du fjene de aktiviteter der allerede ligger i databasen og ersatte med dem du har uploadet
+			<br>eller vil du opdatere aktiviteter med samme ID og tilføje dem der ikke allerede findes i forvejen?</p>
 			<form action="" method="post" name="frmConfirmImport" id="frmConfirmImport" enctype="multipart/form-data">
-				<button type="submit" id="import_add" name="import_add" class="btn-submit">Tilføj</button>
-				<button type="submit" id="import_replace" name="import_replace" class="btn-submit">Overskriv</button>
+				<button type="submit" id="import_replace" name="import_replace" class="btn-submit">Slet og erstat</button>
+				<button type="submit" id="import_add" name="import_add" class="btn-submit">Tilføj/Opdater</button>
 			</form>
 			<table class="importTable">
 				<tr>
