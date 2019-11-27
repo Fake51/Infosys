@@ -222,9 +222,9 @@ class ActivityModel extends Model {
             $type = 'junior';
         } elseif (preg_match("/live/", $type)) {
             $type = 'live';
-        } elseif (preg_match("/brætspil/", $type)) {
+        } elseif (preg_match("/brætspil|braet/", $type)) {
             $type = 'braet';
-        } elseif(preg_match("/rollespil/", $type)) {
+        } elseif(preg_match("/rolle(spil)?/", $type)) {
             $type = 'rolle';
         } elseif (preg_match("/figur/", $type)) {
             $type = 'figur';
