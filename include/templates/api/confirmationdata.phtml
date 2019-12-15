@@ -194,8 +194,18 @@ case 'a':
 <?php if ($this->participant->skills) : ?>
 <tr><td>Evner/skills du kan og vil hjælpe med:                        </td><td><?= e($this->participant->skills);?></td></tr>
 <?php endif;?>
-<?php if ($this->participant->deltager_note) : ?>
-<tr><td>Andre kommentarer:                                            </td><td><?= e($this->participant->deltager_note);?></td></tr>
+<?php if ($this->participant->deltager_note) : 
+    $note = $this->participant->deltager_note;
+    if (is_object($note)) :
+        if (isset($note->gds)) : ?>
+            <tr><td>Kommentarer til GDS:                                          </td><td><?= e($note->gds);?></td></tr>
+        <?php endif;
+        if (isset($note->comment)) : ?>
+            <tr><td>Andre kommentarer:                                            </td><td><?= e($note->comment);?></td></tr>
+        <?php endif;
+    else : ?>
+<tr><td>Andre kommentarer:                                            </td><td><?= e($note);?></td></tr>
+    <?php endif; ?>
 <?php endif;?>
 <?php if ($this->participant->rig_onkel === 'ja') : ?>
 <tr><td>Rig tante/onkel (støtter Fastaval med 300kr.)                       </td><td>Ja</td></tr>
