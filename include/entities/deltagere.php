@@ -94,6 +94,23 @@ class Deltagere extends DBObject implements AgeFulfilment
     );
 
     /**
+     * Contains display names for different notes
+     *
+     * @var array
+     */
+    protected $note_names = [
+        'da' => [
+            'comment' => 'Andre kommentarer',
+            'gds' => 'Kommentarer til GDS'
+        ],
+        'en' => [
+            'comment' => 'Other comments',
+            'gds' => 'Comments regarding GDS'
+        ]
+    ];
+
+
+    /**
      * Name of database table
      *
      * @var string
@@ -124,6 +141,22 @@ class Deltagere extends DBObject implements AgeFulfilment
             $diff = $to->diff($from);
 
             return $this->calculated_age = $diff->format('%y');
+
+        } elseif($var == 'note') {
+            if (!isset($this->note_obj)) {
+                if ($note_obj = json_decode($this->deltager_note)) {
+                    $this->note_obj = new stdClass();
+                } else {
+                    $this->note_obj = null;
+                }
+                foreach($note_obj as $key => $value) {
+                    $this->note_obj->$key = new stdClass();
+                    $this->note_obj->$key->content = $value;
+                    $this->note_obj->$key->name = isset($this->note_names['da'][$key]) ? $this->note_names['da'][$key] : $key;
+                    $this->note_obj->$key->name_en = isset($this->note_names['en'][$key]) ? $this->note_names['en'][$key] : $key;
+                }
+            }
+            return $this->note_obj;
 
         } elseif (array_key_exists($var, $this->storage)) {
             return parent::__get($var);

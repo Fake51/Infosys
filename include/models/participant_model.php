@@ -2403,10 +2403,6 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             }
         }
 
-        if ($note = json_decode($participant->deltager_note)){
-            $participant->deltager_note = $note;
-        }
-
         if ($participant->rig_onkel === 'ja') {
             $prices['other-stuff'] += 300;
         }

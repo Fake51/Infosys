@@ -192,19 +192,15 @@ case 'a':
 <tr><td>Jeg vil gerne have en plads i arrangørsovesalen:              </td><td>Ja</td></tr>
 <?php endif;?>
 <?php if ($this->participant->skills) : ?>
-<tr><td>Evner/skills du kan og vil hjælpe med:                        </td><td><?= e($this->participant->skills);?></td></tr>
+<tr><td>Evner/skills du kan og vil hjælpe med:                        </td><td><?=e($this->participant->skills)?></td></tr>
 <?php endif;?>
 <?php if ($this->participant->deltager_note) : 
-    $note = $this->participant->deltager_note;
-    if (is_object($note)) :
-        if (isset($note->gds)) : ?>
-            <tr><td>Kommentarer til GDS:                                          </td><td><?= e($note->gds);?></td></tr>
-        <?php endif;
-        if (isset($note->comment)) : ?>
-            <tr><td>Andre kommentarer:                                            </td><td><?= e($note->comment);?></td></tr>
-        <?php endif;
+    if($this->deltager->note) :
+        foreach($this->deltager->note as $note) : ?>
+            <tr><td><?=$note->name?>:                                          </td><td><?=e($note->content)?></td></tr>
+<?php   endforeach;
     else : ?>
-<tr><td>Andre kommentarer:                                            </td><td><?= e($note);?></td></tr>
+<tr><td>Andre kommentarer:                                            </td><td><?=e($this->participant->deltager_note)?></td></tr>
     <?php endif; ?>
 <?php endif;?>
 <?php if ($this->participant->rig_onkel === 'ja') : ?>
