@@ -195,8 +195,8 @@ case 'a':
 <tr><td>Evner/skills du kan og vil hjælpe med:                        </td><td><?=e($this->participant->skills)?></td></tr>
 <?php endif;?>
 <?php if ($this->participant->deltager_note) : 
-    if($this->deltager->note) :
-        foreach($this->deltager->note as $note) : ?>
+    if($this->participant->note) :
+        foreach($this->participant->note as $note) : ?>
             <tr><td><?=$note->name?>:                                          </td><td><?=e($note->content)?></td></tr>
 <?php   endforeach;
     else : ?>

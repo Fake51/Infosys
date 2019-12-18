@@ -195,12 +195,12 @@ case 'a':
 <tr><td>Any skills you can and would like to help Fastaval with:                        </td><td><?= e($this->participant->skills);?></td></tr>
 <?php endif;?>
 <?php if ($this->participant->deltager_note) : 
-    if($this->deltager->note) :
-        foreach($this->deltager->note as $note) : ?>
+    if($this->participant->note) :
+        foreach($this->participant->note as $note) : ?>
             <tr><td><?=$note->name_en?>:                                          </td><td><?=e($note->content)?></td></tr>
 <?php   endforeach;
     else : ?>
-<tr><td>Other comments:                                               </td><td><?= e($note);?></td></tr>
+<tr><td>Other comments:                                               </td><td><?= e($this->participant->deltager_note);?></td></tr>
     <?php endif; ?>
 <?php endif;?>
 <?php if ($this->participant->rig_onkel === 'ja') : ?>
