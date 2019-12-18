@@ -1648,4 +1648,10 @@ WHERE
             return $x->isEntrance() && !$x->isDayTicket();
         })) === 0;
     }
+
+    public function setNote($name, $content) {
+        $note = json_decode($this->deltager_note);
+        $note->$name = $content;
+        parent::__set('deltager_note', json_encode($note));
+    }
 }
