@@ -980,21 +980,18 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             $e->logException();
 
             return ['Could not update database with participant data'];
-
         }
 
         $errors = array();
 
         if (!empty($data['wear']) && is_array($data['wear'])) {
             $errors[] = $this->addWear($data, $participant);
-
         } else {
             $errors[] = $this->addWear(['wear' => []], $participant);
         }
 
         if (!empty($data['activity']) && is_array($data['activity'])) {
             $errors[] = $this->addActivity($data, $participant);
-
         } else {
             $errors[] = $this->addActivity(['activity' => []], $participant);
         }
@@ -1005,14 +1002,12 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
         if (!empty($data['gds']) && is_array($data['gds'])) {
             $errors[] = $this->addGDS($data, $participant);
-
         } else {
             $errors[] = $this->addGDS(['gds' => []], $participant);
         }
 
         if (!empty($data['food']) && is_array($data['food'])) {
             $errors[] = $this->addFood($data, $participant);
-
         } else {
             $errors[] = $this->addFood(['food' => []], $participant);
         }
@@ -1194,6 +1189,8 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         if ($bk->id) {
             $participant->brugerkategori_id = $bk->id;
         }
+
+        $participant->note = $this->createEntity('Deltagere')->parseNote($participant->deltager_note);
 
         return $this;
     }

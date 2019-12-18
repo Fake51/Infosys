@@ -98,7 +98,7 @@ class Deltagere extends DBObject implements AgeFulfilment
      *
      * @var array
      */
-    protected $note_names = [
+    static protected $note_names = [
         'da' => [
             'comment' => 'Andre kommentarer',
             'gds' => 'Kommentarer til GDS'
@@ -144,17 +144,7 @@ class Deltagere extends DBObject implements AgeFulfilment
 
         } elseif($var == 'note') {
             if (!isset($this->note_obj)) {
-                if ($note_obj = json_decode($this->deltager_note)) {
-                    $this->note_obj = new stdClass();
-                } else {
-                    $this->note_obj = null;
-                }
-                foreach($note_obj as $key => $value) {
-                    $this->note_obj->$key = new stdClass();
-                    $this->note_obj->$key->content = $value;
-                    $this->note_obj->$key->name = isset($this->note_names['da'][$key]) ? $this->note_names['da'][$key] : $key;
-                    $this->note_obj->$key->name_en = isset($this->note_names['en'][$key]) ? $this->note_names['en'][$key] : $key;
-                }
+                $this->note_obj = self::parseNote($this->deltager_note);
             }
             return $this->note_obj;
 
@@ -1653,5 +1643,20 @@ WHERE
         $note = json_decode($this->deltager_note);
         $note->$name = $content;
         parent::__set('deltager_note', json_encode($note));
+    }
+
+    public static function parseNote($note){
+        if ($jsnon_note = json_decode($note)) {
+            $note_obj = new stdClass();
+            foreach($jsnon_note as $key => $value) {
+                $note_obj->$key = new stdClass();
+                $note_obj->$key->content = $value;
+                $note_obj->$key->name = isset(self::$note_names['da'][$key]) ? self::$note_names['da'][$key] : $key;
+                $note_obj->$key->name_en = isset(self::$note_names['en'][$key]) ? self::$note_names['en'][$key] : $key;
+            }
+            return $note_obj;
+        }
+
+        return null;
     }
 }
