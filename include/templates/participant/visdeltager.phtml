@@ -312,12 +312,6 @@ $this->registerLateLoadJS('participant.js');
             <p class="editable textarea" id="admin_note"><?= nl2br(htmlspecialchars($this->deltager->admin_note, ENT_QUOTES));?></p>
         </fieldset>
     </div>
-    <div id='note2' class='note'>
-        <fieldset>
-            <legend>Deltagerens noter (til Fastaval) - <a href="<?= $this->url('edit_deltager_note', array('textfield' => 'deltager_note', 'id' => $this->deltager->id));?>">Ret/slet</a></legend>
-            <p class="editable textarea" id="deltager_note"><?= nl2br(htmlspecialchars($this->deltager->deltager_note, ENT_QUOTES));?></p>
-        </fieldset>
-    </div>
     <div id='note3' class='note'>
         <fieldset>
             <legend>Beskeder til deltageren (fra Fastaval) - <a href="<?= $this->url('edit_deltager_note', array('textfield' => 'beskeder', 'id' => $this->deltager->id));?>">Ret/slet</a></legend>
@@ -343,6 +337,16 @@ $this->registerLateLoadJS('participant.js');
         </fieldset>
     </div>
     <div class='clearit'></div>
+    <?php if($this->deltager->note) : ?>
+        <?php foreach($this->deltager->note as $key => $note) : ?>
+    <div id='note_<?=$key?>' class='note'>
+        <fieldset>
+            <legend><?=$note->name?> - <a href="<?= $this->url('edit_deltager_note', array('textfield' => 'deltager_note_'.$key, 'id' => $this->deltager->id));?>">Ret/slet</a></legend>
+            <p class="editable textarea" id="deltager_note_<?=$key?>"><?= nl2br(htmlspecialchars($note->content, ENT_QUOTES));?></p>
+        </fieldset>
+    </div>
+        <?php endforeach; ?>
+    <?php endif;?>
 </div>
 <?php endif;?>
 <?php if (!($this->payment_edit || ($this->is_read_only && !$this->is_read_only_activity))) :?>
