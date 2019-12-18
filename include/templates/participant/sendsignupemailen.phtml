@@ -209,8 +209,14 @@ case 'a':
 <?php if ($this->participant->skills) : ?>
 <tr><td>Skills you would like to help with at Fastaval:                       </td><td><?= e($this->participant->skills);?></td></tr>
 <?php endif;?>
-<?php if ($this->participant->deltager_note) : ?>
-<tr><td>Other comments:                                                       </td><td><?= e($this->participant->deltager_note);?></td></tr>
+<?php if ($this->participant->deltager_note) : 
+    if($this->participant->note) :
+        foreach($this->participant->note as $note) : ?>
+            <tr><td><?=$note->name_en?>:                                          </td><td><?=e($note->content)?></td></tr>
+<?php   endforeach;
+    else : ?>
+<tr><td>Other comments:                                               </td><td><?= e($this->participant->deltager_note);?></td></tr>
+    <?php endif; ?>
 <?php endif;?>
 <?php if ($this->participant->rig_onkel === 'ja') : ?>
 <tr><td>Rich uncle (supporting Fastaval with 300kr.)                          </td><td>Yes</td></tr>
