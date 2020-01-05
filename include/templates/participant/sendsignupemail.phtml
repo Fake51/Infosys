@@ -217,7 +217,7 @@ case 'a':
 <?php if ($this->participant->deltager_note) : 
     if($this->participant->note) :
         foreach($this->participant->note as $note) : ?>
-            <tr><td><?=$note->name?>:                                          </td><td><?=e($note->content)?></td></tr>
+            <tr><td><?=$note->name?>:                                          </td><td><?=nl2br(e($note->content))?></td></tr>
 <?php   endforeach;
     else : ?>
 <tr><td>Andre kommentarer:                                            </td><td><?=e($this->participant->deltager_note)?></td></tr>

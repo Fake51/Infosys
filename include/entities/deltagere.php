@@ -101,11 +101,13 @@ class Deltagere extends DBObject implements AgeFulfilment
     static protected $note_names = [
         'da' => [
             'comment' => 'Andre kommentarer',
-            'gds' => 'Kommentarer til GDS'
+            'gds' => 'Kommentarer til GDS',
+            'junior_ward' => 'Værge kontakt'
         ],
         'en' => [
             'comment' => 'Other comments',
-            'gds' => 'Comments regarding GDS'
+            'gds' => 'Comments regarding GDS',
+            'junior_ward' => 'Ward contact'
         ]
     ];
 
