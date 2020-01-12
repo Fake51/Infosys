@@ -384,6 +384,7 @@ class ParticipantController extends Controller
                                                 'supergds' => '',
                                                 'flere_gdsvagter' => '',
                                                 'sovesal' => '',
+                                                'sober_sleeping',
                                                 'udeblevet' => '',
                                                 'rabat' => '',
                                                 'knutepunkt_bil' => '',

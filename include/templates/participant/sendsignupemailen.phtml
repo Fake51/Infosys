@@ -206,6 +206,9 @@ case 'a':
 <?php if ($this->participant->sovesal === 'ja') : ?>
 <tr><td>I need a space in the volunteers sleeping area:                       </td><td>Yes</td></tr>
 <?php endif;?>
+<?php if ($this->participant->sober_sleeping === 'ja') : ?>
+<tr><td>I would like to sleep in the area for sober people:                   </td><td>Yes</td></tr>
+<?php endif;?>
 <?php if ($this->participant->skills) : ?>
 <tr><td>Skills you would like to help with at Fastaval:                       </td><td><?= e($this->participant->skills);?></td></tr>
 <?php endif;?>

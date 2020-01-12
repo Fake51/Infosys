@@ -62,6 +62,7 @@
                     <td><b>Må kontaktes:</b> <i><?php echo $this->genSelect('deltager[may_contact]', array('nej', 'ja'), $this->deltager->may_contact);?></i></td>
                 </tr>
                 <tr>
+                    <td><b>Ædru sovesal:</b> <?php echo $this->genSelect('deltager[sober_sleeping]',array('nej','ja'), $this->deltager->sober_sleeping);?></td>
                     <td><b>Forfatter:</b> <?php echo $this->genSelect('deltager[forfatter]',array('nej', 'ja'), $this->deltager->forfatter);?></td>
                 </tr>
                 <tr>
@@ -72,7 +73,7 @@
                 <tr>
                     <td><b>Ønsket antal aktiviteter:</b> <input type='number' min='0' max='10' step='1' value='<?= e($this->deltager->desired_activities);?>' name='deltager[desired_activities]'/></td>
                     <td><b>Ønsket antal GDS:</b> <input type='number' min='0' max='10' step='1' value='<?= e($this->deltager->desired_diy_shifts);?>' name='deltager[desired_diy_shifts]'/></td>
-                    <td><strong>Simultantolk:</strong> <?= $this->genSelect('deltager[interpreter]', array('nej', 'ja'), $this->deltager->dancing_with_the_clans);?></td>
+                    <td><strong>Simultantolk:</strong> <?= $this->genSelect('deltager[interpreter]', array('nej', 'ja'), $this->deltager->interpreter);?></td>
                 </tr>
                 <tr>
                     <td><b>Udeblevet:</b> <?php echo $this->genSelect('deltager[udeblevet]',array('nej','ja'), $this->deltager->udeblevet);?></td>
