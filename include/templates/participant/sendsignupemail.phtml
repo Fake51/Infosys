@@ -211,6 +211,9 @@ case 'a':
 <?php if ($this->participant->sovesal === 'ja') : ?>
 <tr><td>Jeg vil gerne have en plads i arrangørsovesalen:              </td><td>Ja</td></tr>
 <?php endif;?>
+<?php if ($this->participant->sober_sleeping === 'ja') : ?>
+<tr><td>Jeg vil gerne sove i sovesal for ædru personer:                            </td><td>Ja</td></tr>
+<?php endif;?>
 <?php if ($this->participant->skills) : ?>
 <tr><td>Evner/skills du kan og vil hjælpe med:                        </td><td><?= e($this->participant->skills);?></td></tr>
 <?php endif;?>

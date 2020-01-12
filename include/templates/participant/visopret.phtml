@@ -80,6 +80,7 @@
                     <td><strong>Simultantolk:</strong> <?= $this->genSelect('deltager[interpreter]', array('nej', 'ja'));?></td>
                 </tr>
                 <tr>
+                    <td><b>Ædru sovesal:</b> <?php echo $this->genSelect('deltager[sober_sleeping]',array('nej','ja'));?></td>
                     <td><b>Udeblevet:</b> <?php echo $this->genSelect('deltager[udeblevet]',array('nej','ja'));?></td>
                     <td><b>SuperGM:</b> <?php echo $this->genSelect('deltager[supergm]', array('nej','ja'));?></td>
                 </tr>

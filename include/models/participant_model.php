@@ -658,6 +658,7 @@ class ParticipantModel extends Model
             'supergds',
             'flere_gdsvagter',
             'sovesal',
+            'sober_sleeping',
             'udeblevet',
             'rabat',
             'forfatter',
@@ -667,7 +668,6 @@ class ParticipantModel extends Model
             'ready_mandag',
             'ready_tirsdag',
             'may_contact',
-            'game_reallocation_participant',
             'interpreter',
             'annulled',
         );

@@ -189,7 +189,10 @@ case 'a':
 <tr><td>I will help setup the place Tuesday:                                </td><td><?= $this->participant->ready_tirsdag === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I can help translate on-site:                                       </td><td><?= $this->participant->interpreter === 'ja' ? 'Yes' : 'No';?></td></tr>
 <?php if ($this->participant->sovesal === 'ja') : ?>
-<tr><td>I would like a spot in the organisers sleeping area:              </td><td>Yes</td></tr>
+<tr><td>I would like a spot in the organisers sleeping area:                </td><td>Yes</td></tr>
+<?php endif;?>
+<?php if ($this->participant->sober_sleeping === 'ja') : ?>
+<tr><td>I would like to sleep in the area for sober people:                 </td><td>Yes</td></tr>
 <?php endif;?>
 <?php if ($this->participant->skills) : ?>
 <tr><td>Any skills you can and would like to help Fastaval with:                        </td><td><?= e($this->participant->skills);?></td></tr>
