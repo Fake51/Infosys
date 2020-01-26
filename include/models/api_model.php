@@ -914,7 +914,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             foreach ($json['activity'] as $activity) {
                 $schedule = $this->createEntity('Afviklinger')->findById($activity['schedule_id']);
 
-                if (intval($activity['priority']) === 4) {
+                if (intval($activity['priority']) === 5) {
                     $deltager->setAktivitetTilmelding($schedule, 1, 'spiller');
                     $deltager->setAktivitetTilmelding($schedule, 0, 'spilleder');
 
