@@ -291,7 +291,14 @@ class WearModel extends Model
      */
     public function getAllParticipantCategories()
     {
-        return (($return = $this->createEntity('BrugerKategorier')->findAll()) ? $return : array());
+        $category = $this->createEntity('BrugerKategorier');
+        $categories = $category->findAll();
+        $categories = $categories ? $categories : array();
+        $category->navn = "Alle arrangører";
+        $category->id = 0;
+        $categories[] = $category;
+
+        return $categories;
     }
 
     /**

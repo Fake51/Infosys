@@ -22,7 +22,13 @@
                             if ($result = $this->wear->getWearpriser()) :
                                 foreach ($result as $price) : ?>
                                     <tr>
-                                        <td><input name='wearpriceid[]' value='<?php echo $price->id;?>' type='hidden'/><input name='wearprice_category[]' value='<?php echo $price->brugerkategori_id;?>' type='hidden'/><input value='<?php echo $price->getCategory()->navn;?>' type='hidden'/><input type='hidden' value='<?php echo $price->wear_id;?>' name='wearprice_wearid[]'/><?php echo $price->getCategory()->navn;?></td>
+                                        <td>
+                                            <input name='wearpriceid[]' value='<?php echo $price->id;?>' type='hidden'/>
+                                            <input name='wearprice_category[]' value='<?php echo $price->brugerkategori_id;?>' type='hidden'/>
+                                            <input value='<?php echo $price->getCategory()->navn;?>' type='hidden'/>
+                                            <input type='hidden' value='<?php echo $price->wear_id;?>' name='wearprice_wearid[]'/>
+                                            <?php echo $price->getCategory()->navn;?>
+                                        </td>
                                         <td><input type='text' name='wearprice_price[]' value='<?php echo $price->pris;?>'/></td>
                                         <td><input type='button' value='Slet' class='remove-wearprice' /></td>
                                     </tr>
