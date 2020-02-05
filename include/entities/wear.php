@@ -110,6 +110,44 @@ class Wear extends DBObject
     }
 
     /**
+     * returns array of wear prices for the wear object, with only one price for organizers
+     *
+     * @param object $kategori - BrugerKategorier entity
+     * @access public
+     * @return array
+     */
+    public function getWearpriserSquashed()
+    {
+        if (!$this->isLoaded()) {
+            return array();
+        }
+
+        $select = $this->createEntity('WearPriser')->getSelect();
+        $select->setWhere('wear_id', '=', $this->id);
+        if (is_object($kategori) && $kategori->isLoaded()) {
+            $select->setWhere('brugerkategori_id', '=', $kategori->id);
+        }
+
+        $prices = $this->createEntity('WearPriser')->findBySelectMany($select);
+
+        $first = true;
+        foreach ($prices as $key => $price){
+            if ($price->isArrangoer()){
+                if ($first) {
+                    $first = false;
+                    $prices[$key]->id = 0;
+                    $prices[$key]->brugerkategori_id = 0;
+                    $prices[$key]->wear_id = 0;
+                } else {
+                    unset($prices[$key]);
+                }
+            }
+        }
+
+        return $prices;
+    }
+
+    /**
      * returns array of user category id's that already have prices
      * set for them, for this wear item
      *
@@ -119,7 +157,7 @@ class Wear extends DBObject
     public function getUsedUserCategories()
     {
         $return = array();
-        $prices = $this->getWearPriser();
+        $prices = $this->getWearpriserSquashed();
         foreach ($prices as $price)
         {
             $return[] = $price->brugerkategori_id;

@@ -35,6 +35,8 @@
 
 class WearModel extends Model
 {
+    public $allOrganizerCategory = "Alle arrangører";
+
     /**
      * returns array of info on ordered wear
      *
@@ -243,10 +245,36 @@ class WearModel extends Model
         $success    = true;
 
         if (!empty($post->wearpriceid) && !empty($post->wearprice_category) && !empty($post->wearprice_price)) {
+            
+            
+            // Is the special all organizer category set?
+            if ($key = array_search (0, $post->wearprice_category)){
+                $organizer_price = $post->wearprice_price[$key];
+                $organizers = $this->getAllOrganizerCategories();
+                $org_ids = [];
+                foreach ($organizers as $org) {
+                    $org_ids[$org->id] = true;
+                }
+
+                //$msg = "</pre>".var_export($post,true)."</pre>";
+                //$this->successMessage($msg);
+            }
+
             foreach ($post->wearpriceid as $index => $id) {
+                // Don't add seperate price for the "all organizers" category
+                if ($post->wearprice_category[$index] === '0') continue;
+
+                // Do we use organizer price
+                if (isset($org_ids[$post->wearprice_category[$index]])) {
+                    $price = $organizer_price;
+                    unset($org_ids[$post->wearprice_category[$index]]);
+                } else {
+                    $price = $post->wearprice_price[$index];
+                }
+
                 if (isset($pris_index[$id])) {
                     $wearprice = $priser[$pris_index[$id]];
-                    $wearprice->pris = $post->wearprice_price[$index];
+                    $wearprice->pris = $price;
                     $wearprice->update();
 
                     unset($priser[$pris_index[$id]]);
@@ -255,20 +283,17 @@ class WearModel extends Model
 
                 } elseif ($id > 0) {
                     continue;
-
                 }
 
                 $new_wearprice                    = $this->createEntity('WearPriser');
                 $new_wearprice->wear_id           = $wear->id;
                 $new_wearprice->brugerkategori_id = $post->wearprice_category[$index];
-                $new_wearprice->pris              = $post->wearprice_price[$index];
+                $new_wearprice->pris              = $price;
 
                 if (!$new_wearprice->insert()) {
                     $success = false;
                 }
-
             }
-
         }
 
         if (!$success) {
@@ -277,7 +302,20 @@ class WearModel extends Model
 
         foreach ($priser as $pris) {
             $pris->delete();
+        }
 
+        var_export($org_ids);
+        if (is_array($org_ids)) {
+            foreach ($org_ids as $id => $value) {
+                $new_wearprice                    = $this->createEntity('WearPriser');
+                $new_wearprice->wear_id           = $wear->id;
+                $new_wearprice->brugerkategori_id = $id;
+                $new_wearprice->pris              = $organizer_price;
+
+                if (!$new_wearprice->insert()) {
+                    $success = false;
+                }
+            }
         }
 
         return true;
@@ -294,10 +332,27 @@ class WearModel extends Model
         $category = $this->createEntity('BrugerKategorier');
         $categories = $category->findAll();
         $categories = $categories ? $categories : array();
-        $category->navn = "Alle arrangører";
+        foreach($categories as $key => $category){
+            if ($category->isArrangoer()){
+                unset($categories[$key]);
+            }
+        }
+        $category->navn = $this->allOrganizerCategory;
         $category->id = 0;
         $categories[] = $category;
 
+        return $categories;
+    }
+
+    public function getAllOrganizerCategories(){
+        $category = $this->createEntity('BrugerKategorier');
+        $categories = $category->findAll();
+        $categories = $categories ? $categories : array();
+        foreach($categories as $key => $category){
+            if (!$category->isArrangoer()){
+                unset($categories[$key]);
+            }
+        }
         return $categories;
     }
 
