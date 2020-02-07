@@ -245,19 +245,14 @@ class WearModel extends Model
         $success    = true;
 
         if (!empty($post->wearpriceid) && !empty($post->wearprice_category) && !empty($post->wearprice_price)) {
-            
-            
             // Is the special all organizer category set?
-            if ($key = array_search (0, $post->wearprice_category)){
+            if (false !== $key = array_search(0, $post->wearprice_category)){
                 $organizer_price = $post->wearprice_price[$key];
                 $organizers = $this->getAllOrganizerCategories();
                 $org_ids = [];
                 foreach ($organizers as $org) {
                     $org_ids[$org->id] = true;
                 }
-
-                //$msg = "</pre>".var_export($post,true)."</pre>";
-                //$this->successMessage($msg);
             }
 
             foreach ($post->wearpriceid as $index => $id) {
@@ -303,7 +298,7 @@ class WearModel extends Model
         foreach ($priser as $pris) {
             $pris->delete();
         }
-
+        
         if (is_array($org_ids)) {
             foreach ($org_ids as $id => $value) {
                 $new_wearprice                    = $this->createEntity('WearPriser');
