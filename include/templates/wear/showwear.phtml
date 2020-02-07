@@ -19,12 +19,17 @@
             </thead>
             <tbody>
                 <?php
-                    if ($prices = $this->wear->getWearpriser()) :
+                    if ($prices = $this->wear->getWearpriserSquashed()) :
                         foreach ($prices as $price) :
+                            if ($price->brugerkategori_id == 0) {
+                                $navn = $this->model->allOrganizerCategory;
+                            } else {
+                                $navn = $price->getCategory()->navn;
+                            }
                 ?>
                 <tr id='wp_<?php echo $price->id;?>'>
                     <td><?php echo $price->id;?></td>
-                    <td><?php echo $price->getCategory()->navn;?></td>
+                    <td><?=$navn;?></td>
                     <td><?php echo $price->pris;?></td>
                 </tr>
                 <?php endforeach;
