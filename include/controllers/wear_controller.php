@@ -75,6 +75,7 @@ class WearController extends Controller {
         if (empty($this->vars['id']) || !($wear = $this->model->findEntity('Wear', $this->vars['id']))) {
             $this->page->setTemplate('noResults');
         } else {
+            $this->page->model = $this->model;
             $this->page->wear = $wear;
         }
     }
