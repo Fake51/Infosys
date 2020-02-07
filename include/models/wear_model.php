@@ -296,7 +296,13 @@ class WearModel extends Model
         }
 
         foreach ($priser as $pris) {
-            $pris->delete();
+            if (isset($org_ids[$pris->brugerkategori_id])) {
+                $pris->pris = $organizer_price;
+                $pris->update();
+                unset($org_ids[$pris->brugerkategori_id]);
+            } else {
+                $pris->delete();
+            }
         }
         
         if (is_array($org_ids)) {
@@ -312,7 +318,7 @@ class WearModel extends Model
             }
         }
 
-        return true;
+        return $success;
     }
 
     /**
