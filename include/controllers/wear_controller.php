@@ -183,7 +183,7 @@ class WearController extends Controller {
     public function wearBreakdown()
     {
         $this->page->wear_data = $this->model->getWearBreakdown();
-        $this->page->wear_pricetypes = $this->model->getAllWearprices();
+        $this->page->wear_types = $this->model->getAllWearTypes();
         $this->page->model = $this->model;
         $this->page->sizes = $this->model->getWearSizes();
         $this->page->size_count = count($this->page->sizes);
@@ -251,8 +251,8 @@ class WearController extends Controller {
         $size = ((!empty($this->vars['size'])) ? strtoupper($this->vars['size']) : null);
         $this->page->orders = $this->model->getWearOrders($type, $size);
         $this->page->size = $size;
-        $this->page->type = (($type) ? $this->model->findEntity('WearPriser', $type) : null);
-        $this->page->headname = $type ? $this->page->type->getWear()->navn . '(' . $this->page->type->getCategory()->navn . ')' : '';
+        $this->page->type = (($type) ? $this->model->findEntity('Wear', $type) : null);
+        $this->page->headname = $type ? $this->page->type->navn : '';
         $this->page->headsize = $size ? 'str. ' . $size : '';
     }
 
