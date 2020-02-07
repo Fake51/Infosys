@@ -304,7 +304,6 @@ class WearModel extends Model
             $pris->delete();
         }
 
-        var_export($org_ids);
         if (is_array($org_ids)) {
             foreach ($org_ids as $id => $value) {
                 $new_wearprice                    = $this->createEntity('WearPriser');
