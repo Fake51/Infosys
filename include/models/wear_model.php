@@ -54,21 +54,19 @@ class WearModel extends Model
         $select = $this->createEntity('DeltagereWear')->getSelect();
         $select->setFrom('wearpriser')->
                  setTableWhere('wearpriser.id','deltagere_wear.wearpris_id')->
-                 setGroupBy('wearpris_id')->
                  setGroupBy('size')->
                  setGroupBy('wear_id')->
-                 setField('wearpris_id')->
                  setField('size')->
                  setField('wear_id')->
                  setField('SUM(antal) AS antal',false)->
-                 setOrder('wearpris_id','asc')->
+                 setOrder('wear_id','asc')->
                  setOrder('size','asc');
         $DB = $this->db;
         if ($result = $DB->query($select))
         {
             foreach ($result as $row)
             {
-                $results[$row['wearpris_id']][] = $row;
+                $results[$row['wear_id']][] = $row;
             }
         }
         return $results;
@@ -98,17 +96,16 @@ class WearModel extends Model
     }
 
     /**
-     * returns all WearPriser entities
+     * returns all Wear entities
      *
      * @access public
      * @return array
      */
-    public function getAllWearprices()
+    public function getAllWearTypes()
     {
-        $select = $this->createEntity('WearPriser')->getSelect();
-        $select->setOrder('wear_id','asc');
-        $select->setOrder('brugerkategori_id','asc');
-        return $this->createEntity('WearPriser')->findBySelectMany($select);
+        $select = $this->createEntity('Wear')->getSelect();
+        $select->setOrder('id','asc');
+        return $this->createEntity('Wear')->findBySelectMany($select);
     }
 
     /**
@@ -154,7 +151,8 @@ class WearModel extends Model
         $select = $dw->getSelect();
         if ($type)
         {
-            $select->setWhere('wearpris_id','=',$type);
+            $select->setLeftJoin('wearpriser', 'wearpris_id', 'id');
+            $select->setWhere('wear_id','=',$type);
         }
         if ($size)
         {

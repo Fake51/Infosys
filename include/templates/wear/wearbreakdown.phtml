@@ -15,22 +15,22 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($this->wear_pricetypes as $key => $price) :
+            <?php foreach ($this->wear_types as $key => $wear) :
                 $ialt = 0;
             ?>
             <tr>
-                <td class='wear-type'><?php echo $price->getWear()->navn;?>, <?php echo $price->getCategory()->navn;?></td>
-                <?php if (empty($this->wear_data[$price->id])) : 
+                <td class='wear-type'><?=$wear->navn;?></td>
+                <?php if (empty($this->wear_data[$wear->id])) : 
                     foreach ($this->sizes as $size) :?>
                         <td>0</td>
                     <?php endforeach;?>
                 <?php else :
                     foreach ($this->sizes as $size) :
                         $col_done = false;
-                            foreach ($this->wear_data[$price->id] as $data) :
-                                if ($data['size'] == $size && $data['wearpris_id'] == $price->id) : ?>
+                            foreach ($this->wear_data[$wear->id] as $data) :
+                                if ($data['size'] == $size && $data['wear_id'] == $wear->id) : ?>
                             <td class='alt'>
-                                <a href="<?php echo $this->url('detailed_mini_list', array('type' => $price->id, 'size' => $size));?>"><?php echo $data['antal'];?></a>
+                                <a href="<?php echo $this->url('detailed_mini_list', array('type' => $wear->id, 'size' => $size));?>"><?php echo $data['antal'];?></a>
                             </td>
                             <?php
                                 $ialt += $data['antal'];
