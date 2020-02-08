@@ -333,11 +333,6 @@ class WearModel extends Model
         $category = $this->createEntity('BrugerKategorier');
         $categories = $category->findAll();
         $categories = $categories ? $categories : array();
-        // foreach($categories as $key => $category){
-        //     if ($category->isArrangoer()){
-        //         unset($categories[$key]);
-        //     }
-        // }
         $category->navn = $this->allOrganizerCategory;
         $category->id = 0;
         $categories[] = $category;
