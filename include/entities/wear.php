@@ -122,29 +122,41 @@ class Wear extends DBObject
             return array();
         }
 
+        $select = $this->createEntity('BrugerKategorier')->getSelect();
+        $select->setWhere('arrangoer','=','ja');
+        $organizer_cats = $this->createEntity('BrugerKategorier')->findBySelectMany($select);
+
         $select = $this->createEntity('WearPriser')->getSelect();
+        $select->setLeftJoin('brugerkategorier','brugerkategori_id', 'brugerkategorier.id');
         $select->setWhere('wear_id', '=', $this->id);
-        if (is_object($kategori) && $kategori->isLoaded()) {
-            $select->setWhere('brugerkategori_id', '=', $kategori->id);
+        $select->setWhere('arrangoer','=','nej');
+        $select->setField('wearpriser.id');
+        $select->setField('wearpriser.wear_id');
+        $select->setField('wearpriser.brugerkategori_id');
+        $select->setField('wearpriser.pris');
+        $participant_prices = $this->createEntity('WearPriser')->findBySelectMany($select);
+
+        $select = $this->createEntity('WearPriser')->getSelect();
+        $select->setLeftJoin('brugerkategorier','brugerkategori_id', 'brugerkategorier.id');
+        $select->setWhere('wear_id', '=', $this->id);
+        $select->setWhere('arrangoer','=','ja');
+        $select->setField('wearpriser.id');
+        $select->setField('wearpriser.wear_id');
+        $select->setField('wearpriser.brugerkategori_id');
+        $select->setField('wearpriser.pris');
+        $organizer_prices = $this->createEntity('WearPriser')->findBySelectMany($select);
+
+        if (count($organizer_cats) == count($organizer_prices)){
+            $organizer_price = (object) [
+                'id' => 0,
+                'brugerkategori_id' => 0,
+                'wear_id' => $this->id,
+                'pris' => $organizer_prices[0]->pris 
+            ];
+            $participant_prices[] = $organizer_price;
+            return $participant_prices;
         }
-
-        $prices = $this->createEntity('WearPriser')->findBySelectMany($select);
-
-        $first = true;
-        foreach ($prices as $key => $price){
-            if ($price->isArrangoer()){
-                if ($first) {
-                    $first = false;
-                    $prices[$key]->id = 0;
-                    $prices[$key]->brugerkategori_id = 0;
-                    $prices[$key]->wear_id = 0;
-                } else {
-                    unset($prices[$key]);
-                }
-            }
-        }
-
-        return $prices;
+        return array_merge($participant_prices,$organizer_prices);
     }
 
     /**
