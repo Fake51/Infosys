@@ -240,6 +240,7 @@ class WearModel extends Model
     {
         $priser     = $wear->getWearpriser();
         $pris_index = array_flip($this->extractIds($priser));
+        $categories = array_flip($this->extractIds($priser, 'brugerkategori_id'));
         $success    = true;
 
         if (!empty($post->wearpriceid) && !empty($post->wearprice_category) && !empty($post->wearprice_price)) {
@@ -254,23 +255,25 @@ class WearModel extends Model
             }
 
             foreach ($post->wearpriceid as $index => $id) {
+                $category = $post->wearprice_category[$index];
+
                 // Don't add seperate price for the "all organizers" category
-                if ($post->wearprice_category[$index] === '0') continue;
+                if ($category === '0') continue;
 
                 // Do we use organizer price
-                if (isset($org_ids[$post->wearprice_category[$index]])) {
+                if (isset($org_ids[$category])) {
                     $price = $organizer_price;
-                    unset($org_ids[$post->wearprice_category[$index]]);
+                    unset($org_ids[$category]);
                 } else {
                     $price = $post->wearprice_price[$index];
                 }
-
-                if (isset($pris_index[$id])) {
-                    $wearprice = $priser[$pris_index[$id]];
+                
+                if (isset($categories[$category])) {
+                    $wearprice = $priser[$categories[$category]];
                     $wearprice->pris = $price;
                     $wearprice->update();
 
-                    unset($priser[$pris_index[$id]]);
+                    unset($priser[$categories[$category]]);
 
                     continue;
 
@@ -280,7 +283,7 @@ class WearModel extends Model
 
                 $new_wearprice                    = $this->createEntity('WearPriser');
                 $new_wearprice->wear_id           = $wear->id;
-                $new_wearprice->brugerkategori_id = $post->wearprice_category[$index];
+                $new_wearprice->brugerkategori_id = $category;
                 $new_wearprice->pris              = $price;
 
                 if (!$new_wearprice->insert()) {
@@ -330,11 +333,11 @@ class WearModel extends Model
         $category = $this->createEntity('BrugerKategorier');
         $categories = $category->findAll();
         $categories = $categories ? $categories : array();
-        foreach($categories as $key => $category){
-            if ($category->isArrangoer()){
-                unset($categories[$key]);
-            }
-        }
+        // foreach($categories as $key => $category){
+        //     if ($category->isArrangoer()){
+        //         unset($categories[$key]);
+        //     }
+        // }
         $category->navn = $this->allOrganizerCategory;
         $category->id = 0;
         $categories[] = $category;
