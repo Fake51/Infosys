@@ -439,6 +439,7 @@ HTML;
                 $return .= <<<HTML
             <li><a href='{$this->url('template_editing')}'>ID skabeloner</a></li>
             <li><a href='{$this->url('show_missing_photo')}'>Arrangører med manglende ID-billede</a></li>
+            <li><a href='{$this->url('photo_download')}'>Hent billeder til ID</a></li>
 HTML;
             }
 
