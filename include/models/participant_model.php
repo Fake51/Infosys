@@ -3036,4 +3036,26 @@ WHERE (
 
         return $participants;
     }
+
+    /**
+     * fetches a participant from a photo identifier
+     *
+     * @param string $identifier identifier to search by
+     *
+     * @access public
+     * @return null|Deltagere
+     */
+    public function getParticipantFromPhotoidentifier($identifier)
+    {
+        $query = "SELECT participant_id FROM participantphotoidentifiers WHERE LOWER(identifier) = LOWER(?)";
+
+        $participant = null;
+
+        if ($results = $this->db->query($query, array($identifier))) {
+            $participant = $this->createEntity('Deltagere')->findById($results[0]['participant_id']);
+        }
+
+        return $participant;
+    }
+
 }
