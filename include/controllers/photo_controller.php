@@ -199,4 +199,59 @@ class PhotoController extends Controller
 
         $this->hardRedirect($this->url('show_search_result'));
     }
+
+    /**
+     * Download all uploaded photos with ID and name of organizer,
+     * in a zip archive
+     *
+     * @access public
+     * @return void
+     */
+    public function downloadPhotos(){
+        // Path and file names
+        $path = PUBLIC_PATH . 'uploads/';
+        $archive = $path.'photos.zip';
+        
+        // Get all croped photos
+        $photos = glob($path.'photo-cropped-*');
+
+        if (!is_array($photos)) {
+            echo "Ingen fotos er blevet uploaded";
+            exit;
+        }
+
+        $participant_model = $this->model->factory('Participant');
+
+        // create new zip archive
+        $zip = new ZipArchive();
+        $zip->open($archive, ZIPARCHIVE::CREATE );
+        
+        foreach ($photos as $photo){
+            // Get identifier and file type from photo
+            preg_match("/photo-cropped-(.+)\.(.+)/", $photo, $matches);
+            $identifier = $matches[1];
+            $filetype = $matches[2];
+
+            // Find the participant(organizer) the photo belongs to 
+            if ($participant = $participant_model->getParticipantFromPhotoidentifier($identifier)){
+                // Add photo to zip file, with a more useful name
+                $name = preg_replace("/\s+/","_", $participant->getName() );
+                $filename = "{$participant->id}_$name.$filetype";
+                $zip->addFile($photo,$filename);
+            }
+
+        }
+        // Close the archive
+        $zip->close();
+        // Set headers for downloading the zip file
+        header("Content-type: application/zip"); 
+        header("Content-Disposition: attachment; filename=Arrangør_billeder_".date("Ymd").".zip"); 
+        header("Pragma: no-cache"); 
+        header("Expires: 0");
+        // Add zip file to the response
+        readfile($archive);
+        // Delete the zip file afterwards
+        unlink($archive);
+        exit;
+    }
 }
