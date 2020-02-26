@@ -486,10 +486,10 @@ ORDER BY
         foreach ($this->createEntity('Mad')->findAll() as $food) {
             foreach ($food->getMadtider() as $madtid) {
                 if ($madtid->isDinner()) {
-                    $usage[$madtid->dato] = array(1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
+                    $usage[$madtid->dato] = array(1 => 0, 2 => 0, 3 => 0, 4 => 0);
 
                 } elseif ($madtid->isLunch()) {
-                    $usage[$madtid->dato] = array(1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
+                    $usage[$madtid->dato] = array(1 => 0, 2 => 0, 3 => 0, 4 => 0);
                 }
 
             }
