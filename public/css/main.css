@@ -2342,3 +2342,8 @@ form#frmExcelExport select {
     margin-bottom: 0px;
     width: auto;
 }
+
+.deltager-search-box-inner input[type=radio],
+.deltager-search-box-inner input[type=checkbox] {
+    margin: 0px;
+}
