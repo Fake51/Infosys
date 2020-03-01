@@ -226,6 +226,8 @@ class Deltagere extends DBObject implements AgeFulfilment
                     case 'arbejdsomraade':
                     case 'ungdomsklub':
                     case 'scenarie':
+                    case 'skills':
+                    case 'deltager_note':
                         $select->setWhereOr($field, 'like', "%{$bit}%");
                         break;
                     default:
