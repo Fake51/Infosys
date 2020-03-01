@@ -127,13 +127,15 @@ HTML;
                     </tr>
 
                     <tr>
-                        <td colspan='2'><b>Sprog:</b>
+                        <td>
+                            <b>Sprog:</b>
 HTML;
-
             foreach ($model->getAvailableSprog() as $sprog) {
                 $output .= "
-
-                                <label for='lang_" . e($sprog) . "'>" . substr($sprog, 0,3) . ".</label><input class='langbox' type='checkbox' name='deltager_search[lang][" . e($sprog) . "]' value='" . e($sprog) . "' id='lang_" . e($sprog) . "'/>
+                                <label>
+                                    <input class='langbox' type='checkbox' name='deltager_search[lang][".e($sprog)."]' value='".e($sprog)."'/>
+                                    $sprog
+                                </label>
 ";
             }
 
@@ -179,7 +181,6 @@ HTML;
                         <td><b>Skills:</b> <input class='tripleinput' type='text' value='' name='deltager_search[skills]' /></td>
                         <td><b>Noter:</b> <input class='tripleinput' type='text' value='' name='deltager_search[deltager_note]' /></td>
                     </tr>
-
                 </table>
                 <hr/>
                 <table id='search-indgang'>
