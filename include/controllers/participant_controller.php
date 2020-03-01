@@ -1885,4 +1885,8 @@ exit;
     {
         $this->page->double_booked_participants = $this->model->findDoubleBookedParticipants();
     }
+
+    public function showRefund(){
+        $this->page->rfundees = $this->model->findPeopleNeedingRefund();
+    }
 }

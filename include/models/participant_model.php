@@ -3060,4 +3060,17 @@ WHERE (
         return $participant;
     }
 
+    public function findPeopleNeedingRefund(){
+        $participants = $this->createEntity('Deltagere')->findAll();
+
+        foreach($participants as $participant) {
+            $participant->difference = $participant->calcRealTotal() - $participant->betalt_beloeb;
+            if ($participant->difference < 0) {
+                $refundees[] = $participant;
+            }
+        }
+
+        return $refundees;
+    }
+
 }
