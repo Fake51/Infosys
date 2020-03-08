@@ -2,18 +2,21 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/doctrine-migrations-bundle": "^2.0",
-        "sensio/framework-extra-bundle": "^5.3",
-        "symfony/console": "4.2.*",
-        "symfony/dotenv": "4.2.*",
-        "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.2.*",
-        "symfony/maker-bundle": "^1.11",
-        "symfony/twig-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*"
+        "doctrine/doctrine-migrations-bundle": "^2.1",
+        "doctrine/orm": "^2.7",
+        "sensio/framework-extra-bundle": "^5.5",
+        "symfony/console": "5.0.*",
+        "symfony/dotenv": "5.0.*",
+        "symfony/flex": "^1.3.1",
+        "symfony/framework-bundle": "5.0.*",
+        "symfony/maker-bundle": "^1.14",
+        "symfony/yaml": "5.0.*"
+    },
+    "require-dev": {
+        "hautelook/alice-bundle": "^2.7"
     },
     "config": {
         "preferred-install": {
@@ -35,6 +38,7 @@
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
         "symfony/polyfill-php71": "*",
         "symfony/polyfill-php70": "*",
         "symfony/polyfill-php56": "*"
@@ -57,11 +61,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.2.*"
+            "require": "5.0.*"
         }
-    },
-    "require-dev": {
-        "hautelook/alice-bundle": "^2.5",
-        "symfony/web-server-bundle": "4.2.*"
     }
 }
