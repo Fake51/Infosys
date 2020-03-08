@@ -16,7 +16,10 @@
         "symfony/maker-bundle": "^1.14",
         "symfony/security-bundle": "5.0.*",
         "symfony/twig-bundle": "5.0.*",
-        "symfony/yaml": "5.0.*"
+        "symfony/yaml": "5.0.*",
+        "hwi/oauth-bundle": "dev-master",
+        "php-http/guzzle6-adapter": "*",
+        "php-http/httplug-bundle": "*"
     },
     "require-dev": {
         "hautelook/alice-bundle": "^2.7"
