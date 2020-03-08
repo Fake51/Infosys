@@ -20,6 +20,8 @@ composer.phar
 
 # production
 /build
+/public/js
+/public/images
 
 # misc
 .DS_Store
