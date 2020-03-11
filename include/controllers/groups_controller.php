@@ -191,7 +191,7 @@ class GroupsController extends Controller
         }
         if ($this->page->request->isPost() && !empty($this->page->request->post->delete_hold))
         {
-            (($this->model->deleteHold($hold)) ? $this->successMessage('Holdet blev slettet.') : $this->errorMessage('Holdet kunne ikke slettes.'));
+            (($this->model->deleteHold($hold, true)) ? $this->successMessage('Holdet blev slettet.') : $this->errorMessage('Holdet kunne ikke slettes.'));
             $this->log("Hold #{$this->vars['id']} blev slettet af {$this->model->getLoggedInUser()->user}", 'Hold', $this->model->getLoggedInUser());
         }
         $this->hardRedirect($this->url('vis_alle_hold'));
