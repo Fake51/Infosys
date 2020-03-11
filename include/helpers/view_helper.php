@@ -147,30 +147,30 @@ HTML;
                         <td><b>Flere GDSVagter:</b> {$this->view->genSelect('deltager_search[flere_gdsvagter]', array('', 'nej','ja'))}</td>
                         <td><b>SuperGM:</b> {$this->view->genSelect('deltager_search[supergm]', array('', 'nej','ja'))}</td>
                     </tr>
-
-                    <tr>
-                        <td><b>Arr. sovesal:</b> {$this->view->genSelect('deltager_search[sovesal]', array('', 'nej','ja'))}</td>
-                        <td><b>Arrangør igen:</b> {$this->view->genSelect('deltager_search[arrangoer_naeste_aar]', array('', 'nej','ja'))}</td>
-                        <td><b>Må kontaktes:</b> {$this->view->genSelect('deltager_search[may_contact]', array('', 'nej', 'ja'))}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Forfatter:</b> {$this->view->genSelect('deltager_search[forfatter]', array('', 'nej','ja'))}</td>
-                        <td><b>Rig onkel:</b> {$this->view->genSelect('deltager_search[rig_onkel]', array('', 'nej', 'ja'))}</td>
-                        <td><b>Hemmelig onkel:</b> {$this->view->genSelect('deltager_search[hemmelig_onkel]', array('', 'nej', 'ja'))}</td>
-                    </tr>
                     <tr>
                         <td><b>Opstart mandag:</b> {$this->view->genSelect('deltager_search[ready_mandag]', array('', 'nej', 'ja'))}</td>
                         <td><b>Opstart tirsdag:</b> {$this->view->genSelect('deltager_search[ready_tirsdag]', array('', 'nej', 'ja'))}</td>
+                        <td><b>Må kontaktes:</b> {$this->view->genSelect('deltager_search[may_contact]', array('', 'nej', 'ja'))}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Arrangør igen:</b> {$this->view->genSelect('deltager_search[arrangoer_naeste_aar]', array('', 'nej','ja'))}</td>
+                        <td><b>Arr. sovesal:</b> {$this->view->genSelect('deltager_search[sovesal]', array('', 'nej','ja'))}</td>
+                        <td><b>Ædru sovesal:</b> {$this->view->genSelect('deltager_search[sober_sleeping]', array('', 'nej','ja'))}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Forfatter:</b> {$this->view->genSelect('deltager_search[forfatter]', array('', 'nej','ja'))}</td>
+                        <td><b>Ønsket antal aktiviteter:</b> <input type='number' min='0' max='10' step='1' value='' name='deltager_search[desired_activities]'/></td>
+                        <td><b>Ønsket antal GDS:</b> <input type='number' min='0' max='10' step='1' value='' name='deltager_search[desired_diy_shifts]'/></td>
+                    </tr>
+                    <tr>
+                        <td><b>Rig onkel:</b> {$this->view->genSelect('deltager_search[rig_onkel]', array('', 'nej', 'ja'))}</td>
+                        <td><b>Hemmelig onkel:</b> {$this->view->genSelect('deltager_search[hemmelig_onkel]', array('', 'nej', 'ja'))}</td>
                         <td><b>Checkin-time:</b>  <input type='text' value='' name='deltager_search[checkin_time]' /></td>
                     </tr>
                     <tr>
-                        <td><b>Ønsket antal aktiviteter:</b> <input type='number' min='0' max='10' step='1' value='' name='deltager_search[desired_activities]'/></td>
-                        <td><b>Udeblevet:</b> {$this->view->genSelect('deltager_search[udeblevet]', array('', 'nej','ja'))}</td>
                         <td><strong>Simultantolk:</strong> {$this->view->genSelect('deltager_search[interpreter]', array('', 'nej','ja'))}</td>
-                    </tr>
-                    <tr>
+                        <td><b>Udeblevet:</b> {$this->view->genSelect('deltager_search[udeblevet]', array('', 'nej','ja'))}</td>
                         <td><b>Annulleret:</b> {$this->view->genSelect('deltager_search[annulled]', array('', 'nej','ja'))}</td>
-                        <td><b>Ønsket antal GDS:</b> <input type='number' min='0' max='10' step='1' value='' name='deltager_search[desired_diy_shifts]'/></td>
                     </tr>
                     <tr>
                         <td><b>Ungdomsskole:</b> <input class='tripleinput' type='text' value='' name='deltager_search[ungdomsskole]' /></td>
