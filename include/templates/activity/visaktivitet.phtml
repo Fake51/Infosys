@@ -92,13 +92,17 @@ $this->registerLateLoadJS('activity.js');
     <div class='afviklingsbox' data-schedule_id="<?= e($afvikling->id);?>">
         <fieldset class="schedule-fieldset">
             <legend>Afvikling: <?= $start;?>-<?= $slut;?><?php if (!$afvikling->isMultiBlock()) :?> (ID: <?= $afvikling->id;?>) - <a href="<?= $this->url('edit_afvikling', array('id' => $afvikling->id));?>"><i>Ret/slet</i></a><?php endif;?></legend>
-            <?php if (!$afvikling->isMultiBlock()) :?><a href="<?= $this->url('list_schedule_signups', array('afvikling_id' => $afvikling->id));?>">Liste over tilmeldte</a>
-            <p class='afviklingsbox-groupbutton'><button class='add-group'>Tilføj hold</button></p>
-            <?php endif;?>
             <span data-location-id="<?= $afvikling->getRoomObject() ? $afvikling->getRoomObject()->id : '';?>" class="location-link"><?= $afvikling->getLokale();?></span>
+            <?php if (!$afvikling->isMultiBlock()) :?>
+            <p><a href="<?= $this->url('list_schedule_signups', array('afvikling_id' => $afvikling->id, 'assigned' => 'all'));?>">Liste over alle tilmeldte</a></p>
+            <?php endif;?>
             <div class='clearit'></div>
             <div class='afviklingsbox-groupbox'>
-                <?php foreach ($afvikling->getHold() as $hold) :
+                <?php if (!$afvikling->isMultiBlock()) :?>
+                    <p class='afviklingsbox-groupbutton'><button class='add-group'>Tilføj hold</button></p>
+                    <a href="<?= $this->url('list_schedule_signups', array('afvikling_id' => $afvikling->id, 'assigned' => 'assigned'));?>">Liste over tilføjede deltagere</a>
+                <?php endif;
+                foreach ($afvikling->getHold() as $hold) :
                     if ($hold->needsGamers()) {
                         $hold_gamer_status = 'needs';
                     } elseif ($hold->canUseGamers()) {

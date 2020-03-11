@@ -186,8 +186,15 @@ class ParticipantController extends Controller
             return;
         }
 
-        $participants = $this->model->getSignupsForSchedule($afvikling);
-        $this->model->setSearchBaseIds($participants);
+        //Do we only want to see people assigend to a group?
+        if ($this->vars['assigned'] === 'assigned') {
+            $ids = $afvikling->getParticipantsOnTeams();
+            $session         = $this->dic->get('Session');
+            $session->search = ['ids' => $ids];
+        } else {
+            $participants = $this->model->getSignupsForSchedule($afvikling);
+            $this->model->setSearchBaseIds($participants);
+        }
 
         $get = $this->page->request->get;
 
