@@ -55,35 +55,35 @@ case 'a':
 <?php if (!empty($this->entrance['sleeping-partout'])) : ?>
 <tr><td colspan="2">Sleeping area (all-days)</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-23'])) : ?>
-<tr><td colspan="2">Entrance Wednesday 28/3</td></tr>
+<?php if (!empty($this->entrance['entrance-08'])) : ?>
+<tr><td colspan="2">Entrance Wednesday 8/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-23'])) : ?>
-<tr><td colspan="2">Sleeping area Wednesday 28/3</td></tr>
+<?php if (!empty($this->entrance['sleeping-08'])) : ?>
+<tr><td colspan="2">Sleeping area Wednesday 8/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-24'])) : ?>
-<tr><td colspan="2">Entrance Thursday 29/3</td></tr>
+<?php if (!empty($this->entrance['entrance-09'])) : ?>
+<tr><td colspan="2">Entrance Thursday 9/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-24'])) : ?>
-<tr><td colspan="2">Sleeping area Thursday 29/3</td></tr>
+<?php if (!empty($this->entrance['sleeping-09'])) : ?>
+<tr><td colspan="2">Sleeping area Thursday 9/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-25'])) : ?>
-<tr><td colspan="2">Entrance Friday 30/3</td></tr>
+<?php if (!empty($this->entrance['entrance-10'])) : ?>
+<tr><td colspan="2">Entrance Friday 10/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-25'])) : ?>
-<tr><td colspan="2">Sleeping area Friday 30/3</td></tr>
+<?php if (!empty($this->entrance['sleeping-10'])) : ?>
+<tr><td colspan="2">Sleeping area Friday 10/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-26'])) : ?>
-<tr><td colspan="2">Entrance Saturday 31/3</td></tr>
+<?php if (!empty($this->entrance['entrance-11'])) : ?>
+<tr><td colspan="2">Entrance Saturday 11/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-26'])) : ?>
-<tr><td colspan="2">Sleeping area Saturday 31/3</td></tr>
+<?php if (!empty($this->entrance['sleeping-11'])) : ?>
+<tr><td colspan="2">Sleeping area Saturday 11/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-27'])) : ?>
-<tr><td colspan="2">Entrance Sunday 1/4</td></tr>
+<?php if (!empty($this->entrance['entrance-12'])) : ?>
+<tr><td colspan="2">Entrance Sunday 12/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-27'])) : ?>
-<tr><td colspan="2">Sleeping area Sunday 1/4</td></tr>
+<?php if (!empty($this->entrance['sleeping-12'])) : ?>
+<tr><td colspan="2">Sleeping area Sunday 12/4</td></tr>
 <?php endif;?>
 
 <?php if (!empty($this->food)) : ?>
@@ -91,27 +91,27 @@ case 'a':
     <?php foreach ($this->food as $fooditem) : ?>
         <?php $food = $fooditem->getMad();
         switch (date('d', strtotime($fooditem->dato))) {
-        case '23':
+        case '8':
             $day_da = 'Onsdag';
             $day_en = 'Wednesday';
             break;
 
-        case '24':
+        case '9':
             $day_da = 'Torsdag';
             $day_en = 'Thursday';
             break;
 
-        case '25':
+        case '10':
             $day_da = 'Fredag';
             $day_en = 'Friday';
             break;
 
-        case '26':
+        case '11':
             $day_da = 'Lørdag';
             $day_en = 'Saturday';
             break;
 
-        case '27':
+        case '12':
             $day_da = 'Sønddag';
             $day_en = 'Sunday';
             break;
@@ -184,18 +184,27 @@ case 'a':
 <tr><td>I want to play in Danish:                                           </td><td><?= strpos($this->participant->sprog, 'dansk') !== false ? 'Yes' : 'No';?></td></tr>
 <tr><td>I want to play in English:                                          </td><td><?= strpos($this->participant->sprog, 'engelsk') !== false ? 'Yes' : 'No';?></td></tr>
 <tr><td>I want to play in Scandinavian:                                     </td><td><?= strpos($this->participant->sprog, 'skandinavisk') !== false ? 'Yes' : 'No';?></td></tr>
-<tr><td>I want to be part of organizing Fastaval 2020:                      </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Yes' : 'No';?></td></tr>
+<tr><td>I want to be part of organizing Fastaval 2021:                      </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I will help setup the place Monday:                                 </td><td><?= $this->participant->ready_mandag === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I will help setup the place Tuesday:                                </td><td><?= $this->participant->ready_tirsdag === 'ja' ? 'Yes' : 'No';?></td></tr>
 <tr><td>I can help translate on-site:                                       </td><td><?= $this->participant->interpreter === 'ja' ? 'Yes' : 'No';?></td></tr>
 <?php if ($this->participant->sovesal === 'ja') : ?>
-<tr><td>I would like a spot in the organisers sleeping area:              </td><td>Yes</td></tr>
+<tr><td>I would like a spot in the organisers sleeping area:                </td><td>Yes</td></tr>
+<?php endif;?>
+<?php if ($this->participant->sober_sleeping === 'ja') : ?>
+<tr><td>I would like to sleep in the area for sober people:                 </td><td>Yes</td></tr>
 <?php endif;?>
 <?php if ($this->participant->skills) : ?>
 <tr><td>Any skills you can and would like to help Fastaval with:                        </td><td><?= e($this->participant->skills);?></td></tr>
 <?php endif;?>
-<?php if ($this->participant->deltager_note) : ?>
-<tr><td>Other comments:                                            </td><td><?= e($this->participant->deltager_note);?></td></tr>
+<?php if ($this->participant->deltager_note) : 
+    if($this->participant->note) :
+        foreach($this->participant->note as $note) : ?>
+            <tr><td><?=$note->name_en?>:                                          </td><td><?=nl2br(e($note->content))?></td></tr>
+<?php   endforeach;
+    else : ?>
+<tr><td>Other comments:                                               </td><td><?= e($this->participant->deltager_note);?></td></tr>
+    <?php endif; ?>
 <?php endif;?>
 <?php if ($this->participant->rig_onkel === 'ja') : ?>
 <tr><td>I am a rich aunty/uncle (supporting Fastaval with 300kr.)                       </td><td>Yes</td></tr>

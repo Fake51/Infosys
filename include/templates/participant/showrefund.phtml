@@ -1,0 +1,11 @@
+<h1>Deltagere der skal have penge tilbage</h1>
+<?php if (empty($this->rfundees)) : ?>
+<h2>Ingen fundet</h2>
+<?php else : ?>
+<h2>Deltagere:</h2>
+<ul>
+    <?php foreach ($this->rfundees as $participant) : ?>
+    <li><a href="<?= $this->url('visdeltager', ['id' => $participant->id]);?>"><?= e($participant->getName()).", DKK ".(-$participant->difference)?></a></li>
+    <?php endforeach;?>
+</ul>
+<?php endif; ?>

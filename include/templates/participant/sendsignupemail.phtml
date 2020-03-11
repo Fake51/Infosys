@@ -211,11 +211,20 @@ case 'a':
 <?php if ($this->participant->sovesal === 'ja') : ?>
 <tr><td>Jeg vil gerne have en plads i arrangørsovesalen:              </td><td>Ja</td></tr>
 <?php endif;?>
+<?php if ($this->participant->sober_sleeping === 'ja') : ?>
+<tr><td>Jeg vil gerne sove i sovesal for ædru personer:                            </td><td>Ja</td></tr>
+<?php endif;?>
 <?php if ($this->participant->skills) : ?>
 <tr><td>Evner/skills du kan og vil hjælpe med:                        </td><td><?= e($this->participant->skills);?></td></tr>
 <?php endif;?>
-<?php if ($this->participant->deltager_note) : ?>
-<tr><td>Andre kommentarer:                                            </td><td><?= e($this->participant->deltager_note);?></td></tr>
+<?php if ($this->participant->deltager_note) : 
+    if($this->participant->note) :
+        foreach($this->participant->note as $note) : ?>
+            <tr><td><?=$note->name?>:                                          </td><td><?=nl2br(e($note->content))?></td></tr>
+<?php   endforeach;
+    else : ?>
+<tr><td>Andre kommentarer:                                            </td><td><?=e($this->participant->deltager_note)?></td></tr>
+    <?php endif; ?>
 <?php endif;?>
 <?php if ($this->participant->rig_onkel === 'ja') : ?>
 <tr><td>Rig onkel (støtter Fastaval med 300kr.)                       </td><td>Ja</td></tr>

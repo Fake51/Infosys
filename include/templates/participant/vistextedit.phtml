@@ -2,7 +2,7 @@
     <fieldset>
         <legend>Rediger <?php echo $this->field;?></legend>
         <form method='post' action="<?php echo $this->url('update_deltager_note', array('textfield' => $this->textfield, 'id' => $this->deltager->id));?>">
-            <textarea class='' name='<?php echo $this->textfield;?>'><?php echo e($this->deltager->{$this->textfield});?></textarea>
+            <textarea class='' name='<?php echo $this->textfield;?>'><?php echo e($this->textcontent);?></textarea>
             <input type='submit' class='centersubmits' value='Opdater' name='update_note' />
         </form>
     </fieldset>

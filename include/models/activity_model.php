@@ -171,50 +171,232 @@ class ActivityModel extends Model {
 
         return $activity;
     }
-	
-	public function importActivities()
-	{
-		$activity = $this->createEntity('Aktiviteter');
-		// Required values
-		$activity->updated = date('Y-m-d H:i:s');
-		$activity->navn = "Test";
-		$activity->title_en = "Test";
-		$activity->author = "Text";
-		$activity->type = 'rolle';
-		$activity->sprog = 'dansk';
-		$activity->min_deltagere_per_hold = 1;
-		$activity->max_deltagere_per_hold = 1;
-		$activity->spilledere_per_hold = 1;
-		$activity->pris = 0;
-		$activity->varighed_per_afvikling = 1;
-		$activity->teaser_dk = "TeaserDK";
-		$activity->teaser_en = "TeaserEN";
-		$activity->replayable = 'nej';
-		$activity->max_signups = 0;
-		$activity->foromtale = "foromtale"; // Can be null
-		$activity->description_en = "DescriptionEN";
-		
-		// Default values:
-		$activity->kan_tilmeldes = 'ja';
-		$activity->note = NULL;
-		$activity->lokale_eksklusiv = 'ja';
-		$activity->wp_link = 0;
-		$activity->tids_eksklusiv = 'ja';
-		
-		// Default values (which are not visible under "Opret Aktivitet")
-		$activity->hidden = 'nej';
-		$activity->karmatype = 0;
-		
-		if (!$activity->insert()) {
-            return false;
+
+    public function getActivityHeader(){
+        $activity = $this->createEntity('Aktiviteter');
+        $fields = $activity->getColumns();
+        $fields[] = 'age_min';
+        $fields[] = 'age_max';
+        return $fields;
+    }    
+
+    public static function parseActivityData($data){
+        $result = [];
+        foreach ($data as $row) {
+            $result[] = self::parseActivityRow($row);
         }
-		
-		// Optional values:
-		//$activity->setMinAge(7);
-		//$activity->setMaxAge(50);
-		
-		return true;
-	}
+        return $result;
+    }
+
+    public static function parseActivityRow($row){
+        for($i = 0; $i <= 26; $i++){
+            $row[$i] = isset($row[$i]) ? $row[$i] : "";
+        }
+
+        $result_row = [];
+        $result_row['id'] = is_numeric($row[26]) ? intval($row[26]) : null;
+        $result_row['navn'] = $row[1];
+        $result_row['kan_tilmeldes'] = preg_match("/nej/", strtolower($row[24])) == 1 ? 'nej' : 'ja';;
+        $result_row['note'] = $row[22];
+        $result_row['foromtale'] = $row[17];
+        preg_match("/\d+/", $row[12], $matches);
+        $result_row['varighed_per_afvikling'] = isset($matches[0]) ? $matches[0] : 0;
+        preg_match("/\d+/", $row[6], $matches);
+        $result_row['min_deltagere_per_hold'] = isset($matches[0]) ? $matches[0] : 0;
+        preg_match("/\d+/", $row[7], $matches);
+        $result_row['max_deltagere_per_hold'] = isset($matches[0]) ? $matches[0] : 0;
+        preg_match("/\d+/", $row[8], $matches);
+        $result_row['spilledere_per_hold'] = isset($matches[0]) ? $matches[0] : 0;
+        preg_match("/\d+/", $row[9], $matches);
+        $result_row['pris'] = isset($matches[0]) ? $matches[0] : 0;
+        $result_row['lokale_eksklusiv'] = preg_match("/nej/", strtolower($row[19])) == 1 ? 'nej' : 'ja';
+        $result_row['wp_link'] = is_numeric($row[26]) ? intval($row[26]) : 0;
+        $result_row['teaser_dk'] = $row[13];
+        $result_row['teaser_en'] = $row[14];
+        $result_row['title_en'] = $row[2];;
+        $result_row['description_en'] = $row[18];
+        $result_row['author'] = $row[3];;
+        // parsing type from input
+        $type = strtolower($row[4]);
+        if (preg_match("/junior/", $type)) {
+            $type = 'junior';
+        } elseif (preg_match("/live/", $type)) {
+            $type = 'live';
+        } elseif (preg_match("/brætspil|braet/", $type)) {
+            $type = 'braet';
+        } elseif(preg_match("/rolle(spil)?/", $type)) {
+            $type = 'rolle';
+        } elseif (preg_match("/figur/", $type)) {
+            $type = 'figur';
+        } elseif(preg_match("/magic/", $type)) {
+            $type = 'magic';
+        } elseif(preg_match("/workshop/", $type)) {
+            $type = 'workshop';
+        } elseif(preg_match("/system/", $type) || preg_match("/spillederbriefing/", strtolower($result_row['navn']))) {
+            $type = 'system';
+        } else {
+            $type = 'ottoviteter';
+        }
+        $result_row['type'] = $type;
+
+        $result_row['tids_eksklusiv'] = preg_match("/nej/", strtolower($row[20])) == 1 ? 'nej' : 'ja';
+        
+        $sprog = preg_match("/d/", strtolower($row[5])) == 1 ? 'dansk' : '';
+        $engelsk = $sprog == '' ? 'engelsk' : '+engelsk';
+        $sprog .= preg_match("/e/", strtolower($row[5])) == 1 ? $engelsk : '';
+        $result_row['sprog'] = $sprog;
+
+        $result_row['replayable'] = preg_match("/ja/", strtolower($row[15])) == 1 ? 'nej' : 'ja'; // If not one-time event
+        $result_row['updated'] = self::parseDateTime($row[0]);
+        $result_row['hidden'] = preg_match("/ja/", strtolower($row[21])) == 1 ? 'ja' : 'nej';
+        preg_match("/\d/", $row[23], $matches);
+        $result_row['karmatype'] = isset($matches[0]) ? $matches[0] : 0;
+        preg_match("/\d+/", $row[16], $matches);
+        $result_row['max_signups'] = isset($matches[0]) ? $matches[0] : 0;
+        $result_row['age_min'] = $row[10];
+        $result_row['age_max'] = $row[11];
+        
+        return $result_row;
+    }
+
+    /**
+     * Simple method for parsing timestamp or just give current time
+     * 
+     *  @return parsed timestamp or if parsing failed 
+     */
+    private static function parseDateTime($dateTime){
+        // parse time
+        if (preg_match("/\b(\d{2})[:\.](\d{2})[:\.](\d{2})\b/",$dateTime, $matches)){
+            $time = "$matches[1]:$matches[2]:$matches[3]";
+        } else {
+            $time = date("H:i:s");
+        }
+
+        // parse date
+        if (preg_match("/(\d{4})[-\/](\d{2})[-\/](\d{2})/",$dateTime, $matches)){
+            $date = "$matches[1]-$matches[2]-$matches[3]";
+        } elseif (preg_match("/(\d{2})[-\/](\d{2})[-\/](\d{4})/",$dateTime, $matches)){
+            $date = "$matches[3]-$matches[2]-$matches[1]";
+        } else {
+            $date = date("Y-m-d");
+        }
+
+        return "$date $time";
+    }
+	
+	public function saveActivities($data, $replace = false) {
+        if($replace === true) {
+            // Check if we have any afviklinger before trying to replace activities
+            if ($this->createEntity('Afviklinger')->findAll()
+                    || $this->createEntity('AfviklingerMultiblok')->findAll())
+            {
+                throw new FrameworkException("Cannot replace activities after afviklinger has been created", 1);
+            }
+
+            $activity = $this->createEntity('Aktiviteter');            
+            $activity->deleteAll();
+        }
+
+        $errors = 0;
+        foreach($data as $row) {
+            $activity = $this->createEntity('Aktiviteter');
+            if (!$replace) {
+                $exists = $activity->findById($row['id']);
+            } else {
+                $exists = false;
+            }            
+
+            foreach ($row as $key => $value){
+                if ($key === 'age_min' || $key === 'age_max'){
+                    continue;
+                }
+
+                $activity->$key = $value;            
+            }
+
+            if ($exists) {
+                $activity->update();
+            } else {
+                $activity->insert();
+            }
+            
+            // Values that have to be set after the activity is inserted
+            // since they are in a different table with foreign key constraint
+            if ($row['age_min'] !== '') {
+                $activity->setMinAge($row['age_min']);
+            }
+            if ($row['age_max'] !== '') {
+                $activity->setMaxAge($row['age_max']);
+            }
+        }
+    }
+
+    /**
+     * Load all activities from database
+     * for use with export function
+     */
+    public function loadActivities()
+    {
+        $activity = $this->createEntity('Aktiviteter');
+        //$columns = $activity->getColumns();
+        $activities = $activity->findAll();
+        $columns = [
+            'updated',                  //0
+            'navn',                     //1
+            'title_en',                 //2
+            'author',                   //3
+            'type',                     //4
+            'sprog',                    //5
+            'min_deltagere_per_hold',   //6
+            'max_deltagere_per_hold',   //7
+            'spilledere_per_hold',      //8
+            'pris',                     //9
+            'age_min',                  //10
+            'age_max',                  //11
+            'varighed_per_afvikling',   //12
+            'teaser_dk',                //13
+            'teaser_en',                //14
+            'onetime',                  //15 inverse of replayable
+            'max_signups',              //16
+            'foromtale',                //17
+            'description_en',           //18
+            'lokale_eksklusiv',         //19
+            'tids_eksklusiv',           //20
+            'hidden',                   //21
+            'note',                     //22
+            'karmatype',                //23
+            'kan_tilmældes',            //24
+            'wp_link',                  //25
+            'id',                       //26
+        ];
+
+        $list[] = $columns;
+        foreach ($activities as $activity) {
+            $fields = [];
+            foreach ($columns as $column){
+                switch($column) {
+                    case 'age_min':
+                        $age = $activity->getMinAge();
+                        $fields[] = $age == false ? '' : $age;
+                        break;
+                    case 'age_max':
+                        $age = $activity->getMaxAge();
+                        $fields[] = $age == false ? '' : $age;
+                        break;
+                    case 'onetime':
+                        $fields[] = $activity->replayable == 'nej' ? 'ja' : 'nej';
+                        break;
+                    default:
+                        $fields[] = str_replace("\"","''",$activity->$column);
+                }
+            }
+            $list[] = $fields;
+        }
+
+        //usort($activities[$type], function($a, $b) {return strcmp($a->navn, $b->navn);});
+        return $list;
+    }
+
 
     /**
      * creates a scheduling for an activity with data from POST

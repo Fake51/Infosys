@@ -384,6 +384,7 @@ class ParticipantController extends Controller
                                                 'supergds' => '',
                                                 'flere_gdsvagter' => '',
                                                 'sovesal' => '',
+                                                'sober_sleeping',
                                                 'udeblevet' => '',
                                                 'rabat' => '',
                                                 'knutepunkt_bil' => '',
@@ -471,24 +472,31 @@ class ParticipantController extends Controller
             $this->page->setTemplate('noResults');
         } else {
             $this->page->textfield = $this->vars['textfield'];
-            $var = $this->page->textfield;
-            $this->page->textcontent = $deltager->$var;
             $this->page->deltager = $deltager;
-            switch ($var) {
-                case 'admin_note':
-                    $this->page->field = 'noter <strong>om</strong> deltageren';
-                    break;
-                case 'deltager_note':
-                    $this->page->field = 'beskeder <strong>fra</strong> deltageren';
-                    break;
-                case 'beskeder':
-                    $this->page->field = 'beskeder <strong>til</strong> deltageren';
-                    break;
-                case 'paid_note':
-                    $this->page->field = 'økonomi-noter';
-                    break;
-                default:
-                    $this->page->field = e($var);
+
+            if (preg_match("/deltager_note_(\w+)/",$this->page->textfield,$matches)) {
+                $var = $matches[1];
+                $this->page->textcontent = $deltager->note->$var->content;
+                $this->page->field = $deltager->note->$var->name;
+            } else {
+                $var = $this->page->textfield;
+                $this->page->textcontent = $deltager->$var;
+                switch ($var) {
+                    case 'admin_note':
+                        $this->page->field = 'noter <strong>om</strong> deltageren';
+                        break;
+                    case 'deltager_note':
+                        $this->page->field = 'beskeder <strong>fra</strong> deltageren';
+                        break;
+                    case 'beskeder':
+                        $this->page->field = 'beskeder <strong>til</strong> deltageren';
+                        break;
+                    case 'paid_note':
+                        $this->page->field = 'økonomi-noter';
+                        break;
+                    default:
+                        $this->page->field = e($var);
+                }
             }
             $this->page->setTitle('Rediger ' . strip_tags($this->page->field));
         }
@@ -1876,5 +1884,9 @@ exit;
     public function checkForDoubleBookings()
     {
         $this->page->double_booked_participants = $this->model->findDoubleBookedParticipants();
+    }
+
+    public function showRefund(){
+        $this->page->rfundees = $this->model->findPeopleNeedingRefund();
     }
 }

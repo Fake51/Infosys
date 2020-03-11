@@ -201,6 +201,8 @@ class ParticipantModel extends Model
                 $select->setWhereOr('ungdomsskole', 'like', "%{$term}%");
                 $select->setWhereOr('scenarie', 'like', "%{$term}%");
                 $select->setWhereOr('arbejdsomraade', 'like', "%{$term}%");
+                $select->setWhereOr('skills', 'like', "%{$term}%");
+                $select->setWhereOr('deltager_note', 'like', "%{$term}%");
             }
         }
 
@@ -658,6 +660,7 @@ class ParticipantModel extends Model
             'supergds',
             'flere_gdsvagter',
             'sovesal',
+            'sober_sleeping',
             'udeblevet',
             'rabat',
             'forfatter',
@@ -667,7 +670,6 @@ class ParticipantModel extends Model
             'ready_mandag',
             'ready_tirsdag',
             'may_contact',
-            'game_reallocation_participant',
             'interpreter',
             'annulled',
         );
@@ -1085,11 +1087,15 @@ class ParticipantModel extends Model
      */
     public function updateDeltagerNote($deltager, $field, RequestVars $post)
     {
-        if (!in_array($field, array('deltager_note', 'admin_note', 'beskeder', 'paid_note', 'medical_note'))) {
-            return false;
-        }
+        if (preg_match("/deltager_note_(\w+)/", $field, $matches)) {
+            $deltager->setNote($matches[1], $post->$field);
+        } else{
+            if (!in_array($field, array('deltager_note', 'admin_note', 'beskeder', 'paid_note', 'medical_note'))) {
+                return false;
+            }
 
-        $deltager->$field = $post->$field;
+            $deltager->$field = $post->$field;
+        }
         return $deltager->update();
     }
 
@@ -1849,36 +1855,40 @@ SQL;
 
         $this->factory('IdTemplate')->cleanIdTemplateParticipantCache($participant);
 
-        switch ($post->id) {
-        case 'birthdate':
-            $parsed = strtotime($post->value);
-            $participant->birthdate = $parsed ? date('Y-m-d', $parsed) : '0000-00-00';
-            break;
-        case 'address':
-            $participant->adresse1 = $post->value;
-            break;
-        case 'name':
-            $parts = explode(' ', $post->value);
-            if (count($parts) > 1) {
-                $participant->efternavn = array_pop($parts);
-                $participant->fornavn   = implode(' ', $parts);
-            } else {
-                $participant->fornavn   = $parts[0];
-                $participant->efternavn = '';
+        if (preg_match("/deltager_note_(\w+)/",$post->id, $matches)) {
+            $participant->setNote($matches[1], $post->value);
+        } else {
+            switch ($post->id) {
+            case 'birthdate':
+                $parsed = strtotime($post->value);
+                $participant->birthdate = $parsed ? date('Y-m-d', $parsed) : '0000-00-00';
+                break;
+            case 'address':
+                $participant->adresse1 = $post->value;
+                break;
+            case 'name':
+                $parts = explode(' ', $post->value);
+                if (count($parts) > 1) {
+                    $participant->efternavn = array_pop($parts);
+                    $participant->fornavn   = implode(' ', $parts);
+                } else {
+                    $participant->fornavn   = $parts[0];
+                    $participant->efternavn = '';
+                }
+                break;
+            case 'brugerkategori_id':
+                $category     = $this->createEntity('BrugerKategorier')->findById($post->value);
+                $return_value = $category->navn;
+                $participant->brugerkategori_id = $category->id;
+                break;
+
+            case 'participant-template':
+                $this->updateParticipantIdTemplate($participant, intval($post->value));
+                break;
+
+            default:
+                $participant->{$post->id} = $post->value;
             }
-            break;
-        case 'brugerkategori_id':
-            $category     = $this->createEntity('BrugerKategorier')->findById($post->value);
-            $return_value = $category->navn;
-            $participant->brugerkategori_id = $category->id;
-            break;
-
-        case 'participant-template':
-            $this->updateParticipantIdTemplate($participant, intval($post->value));
-            break;
-
-        default:
-            $participant->{$post->id} = $post->value;
         }
 
         $this->log("Deltager #{$participant->id} fik opdateret " . $post->id . " af {$this->getLoggedInUser()->user}", 'Deltager', $this->getLoggedInUser());
@@ -2428,11 +2438,12 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             $page->participant_photo_upload_link = $this->getPhotoUploadLink($participant);
         }
 
-        if ($participant->speaksDanish() && $lang !== 'en') {
-            $page->end_signup_changes_date = date('d/m-Y', $paytime + 7 * 86400);
-        } else {
-            $page->end_signup_changes_date = date('M d, Y', $paytime + 7 * 86400);
-        }
+        $page->end_signup_changes_date = $page->payment_day;
+        // if ($participant->speaksDanish() && $lang !== 'en') {
+        //     $page->end_signup_changes_date = date('d/m-Y', $paytime + 7 * 86400);
+        // } else {
+        //     $page->end_signup_changes_date = date('M d, Y', $paytime + 7 * 86400);
+        // }
 
         return $participant;
     }
@@ -3027,4 +3038,39 @@ WHERE (
 
         return $participants;
     }
+
+    /**
+     * fetches a participant from a photo identifier
+     *
+     * @param string $identifier identifier to search by
+     *
+     * @access public
+     * @return null|Deltagere
+     */
+    public function getParticipantFromPhotoidentifier($identifier)
+    {
+        $query = "SELECT participant_id FROM participantphotoidentifiers WHERE LOWER(identifier) = LOWER(?)";
+
+        $participant = null;
+
+        if ($results = $this->db->query($query, array($identifier))) {
+            $participant = $this->createEntity('Deltagere')->findById($results[0]['participant_id']);
+        }
+
+        return $participant;
+    }
+
+    public function findPeopleNeedingRefund(){
+        $participants = $this->createEntity('Deltagere')->findAll();
+
+        foreach($participants as $participant) {
+            $participant->difference = $participant->calcRealTotal() - $participant->betalt_beloeb;
+            if ($participant->difference < 0) {
+                $refundees[] = $participant;
+            }
+        }
+
+        return $refundees;
+    }
+
 }

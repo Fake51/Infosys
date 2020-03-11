@@ -147,6 +147,7 @@ class Routes
         $this->routes['participant_signup_email']                   = array('url' => 'participant/send-signup-email/:id:', 'controller' => 'Participant', 'method' => 'sendSignupEmail');
         $this->routes['participant_check_for_voucher']              = array('url' => 'participant/has-vouchers/:participant_id:', 'controller' => 'Participant', 'method' => 'checkForVouchers');
         $this->routes['show_double_bookings']                       = array('url' => 'participant/check-double-bookings', 'controller' => 'Participant', 'method' => 'checkForDoubleBookings');
+        $this->routes['show_refund']                                = array('url' => 'participant/show-refund', 'controller' => 'Participant', 'method' => 'showRefund');
 
         $this->routes['participant_reset_password']                 = array('url' => 'participant/reset-password/:hash:', 'controller' => 'Participant', 'method' => 'resetParticipantPassword');
 
@@ -157,6 +158,7 @@ class Routes
 
         $this->routes['send_photo_upload_reminders']                = ['url' => 'photo/send-reminders', 'controller' => 'Photo', 'method' => 'sendUploadReminders'];
         $this->routes['show_missing_photo']                         = ['url' => 'photo/see-missing-photo', 'controller' => 'Photo', 'method' => 'seeMissingPhotos'];
+        $this->routes['photo_download']                             = ['url' => 'photo/download', 'controller' => 'Photo', 'method' => 'downloadPhotos'];
 
         // id template stuff
         $this->routes['template_editing']                           = ['url' => 'id-templates', 'controller' => 'IdTemplate', 'method' => 'showEdit'];
@@ -200,7 +202,7 @@ class Routes
         $this->routes['edit_aktivitet']            = array('url' => 'aktivitet/edit/:id:', 'controller' => 'Activity', 'method' => 'editAktivitet');
         $this->routes['edit_afvikling']            = array('url' => 'aktivitet/editafvikling/:id:', 'controller' => 'Activity', 'method' => 'editAfvikling');
         $this->routes['opret_aktivitet']           = array('url' => 'aktivitet/opret/', 'controller' => 'Activity', 'method' => 'opretAktivitet');
-		$this->routes['import_activities']         = array('url' => 'aktivitet/importer/', 'controller' => 'Activity', 'method' => 'importActivities');
+		$this->routes['import_activities']         = array('url' => 'aktivitet/importer_eksporter/', 'controller' => 'Activity', 'method' => 'importExportActivities');
         $this->routes['opret_afvikling']           = array('url' => 'aktivitet/opretafvikling/:aktivitet_id:', 'controller' => 'Activity', 'method' => 'opretAfvikling');
         $this->routes['slet_aktivitet']            = array('url' => 'aktivitet/slet/:id:', 'controller' => 'Activity', 'method' => 'sletAktivitet');
         $this->routes['slet_afvikling']            = array('url' => 'aktivitet/sletafvikling/:id:', 'controller' => 'Activity', 'method' => 'sletAfvikling');

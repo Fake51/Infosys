@@ -215,46 +215,138 @@ class ActivityController extends Controller
 
         $this->page->model = $this->model;
     }
-	
-	public function importActivities()
+
+    /**
+     * Handle import and export of activity data
+     * 
+     * @access public
+     * @return void
+     */
+    public function importExportActivities(){
+        $session = $this->dic->get('Session');
+
+        // if it's not a post request, don't do anything
+        if (!$this->page->request->isPost()){
+            return;
+        }
+        $post = $this->page->request->post;
+
+        if (isset($post->importactivities)) { 
+            $this->uploadActivities();
+            $session->activity_data = $this->model->activity_data;
+        }
+
+        if ((isset($post->import_add) || isset($post->import_replace)) && isset($session->activity_data)) { 
+            $this->saveActivities($session->activity_data, isset($post->import_replace));
+            $session->delete('activity_data');
+        }
+
+        if (isset($post->exportactivities)){
+            $this->exportActivities();
+        }
+
+        if (isset($session->activity_data)) {
+            $this->page->activity_data = $session->activity_data;
+            $this->page->activity_header = $this->model->getActivityHeader();
+        }
+
+    }
+    
+    /**
+     * Imports activities from a submitted spreadsheet
+     *
+     * @access private
+     * @return void
+     */
+	private function uploadActivities()
 	{
-		$user = $this->model->getLoggedInUser();
-		
-		if ($this->page->request->isPost()) {
-            $post = $this->page->request->post;
-			
-			/*
-			Nothing in $post...
-			foreach ($post as $key => $value) {
-				echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>";
-			}
-			exit;
-			*/
-			
-            if (empty($post->importactivities)) { // skal jeg bruge file eller importactivities ?
-                $this->errorMessage('Ingen Excel fil valgt.');
-                $this->hardRedirect($this->url('aktiviteterhome'));
-            }
-			else {
-                try {
-                    if ($this->model->importActivities()) {
-						$this->successMessage('Aktiviteter blev importeret.');
-						$this->log("Aktiviter blev importeret af {$this->model->getLoggedInUser()->user}", 'Aktivitet', $this->model->getLoggedInUser());
-                        $this->hardRedirect($this->url('aktiviteterhome'));
-					} else
-					{
-						$this->errorMessage('Kunne ikke importere aktiviteter.'); 
-						$this->hardRedirect($this->url('aktiviteterhome'));
-					}
-                } catch (Exception $e) {
-                    $this->errorMessage('Kunne ikke importere aktiviteter.');
-                    $this->hardRedirect($this->url('aktiviteterhome'));
+        // Did the user submit a file
+        $file = isset($_FILES['activities']) ? $_FILES['activities'] : null;
+        if($file == null || $file['error'] == 4) {
+            $this->errorMessage('Ingen Excel fil valgt.');
+            return;
+        }
+
+        // Parse the file depending on file type or give an error if type isn't known
+        list($name, $type) = explode(".", $file['name']);
+        switch ($type) {
+            case "xlsx":
+                if ( !$data = SimpleXLSX::parse($file['tmp_name'])->rows() ) {
+                    $this->errorMessage(SimpleXLSX::parseError());
                 }
+                break;
+            case "xls":
+                if ( !$data = SimpleXLS::parse($file['tmp_name'])->rows() ) {
+                    $this->errorMessage(SimpleXLS::parseError());
+                }
+                break;
+            case "csv":
+                $data = self::parseCSV($file['tmp_name']);
+                break;
+            default:
+                $this->errorMessage('Fil er ikke korrekt type');
+                return false;
+        }
+
+        unset($data[0]); // remove column names from data
+        $this->model->activity_data = $this->model->parseActivityData($data);
+        $this->successMessage('Aktiviteter blev uploadet, men er IKKE gemt');
+    }
+
+    private static function parseCSV($file){
+        $csv = file_get_contents($file);
+        // $lb = "\n";
+        // $delim = ";";
+        $lines = explode(";\n", $csv);
+        foreach ($lines as $line) {
+            preg_match_all("/\"([^\"]*)\"/",$line,$matches);
+            if (count($matches[1]) > 0) {
+                $data[] = $matches[1];
             }
         }
-		
-		$this->page->model = $this->model;
-	}
+        return $data;
+    }
+
+    /**
+     * Save uploaded data in the database
+     * 
+     * @access private
+     * @return void
+     */
+    private function saveActivities($data, $replace = false) {
+            try {
+                $this->model->saveActivities($data, $replace);
+                $this->successMessage('Aktiviteter blev importeret.');
+                $this->log("Aktiviter blev importeret", 'Aktivitet', $this->model->getLoggedInUser());
+            } catch (FrameworkException $e) {
+                if ($e->getCode() == 1) {
+                    $this->errorMessage('Kan ikke udskifte aktiviteter efter der er oprettet afviklinger');
+                } else {
+                    $this->errorMessage('Kunne ikke importere aktiviteter.');
+                }
+                $this->errorMessage('Framework Exception'); 
+                $e->logException();
+            } catch (Exception $e) {
+                $this->errorMessage('Kunne ikke importere aktiviteter.');
+                error_log($e->getMessage());
+            }
+    }
+    
+    private function exportActivities(){
+        $activities = $this->model->loadActivities();
+        header('Content-Type: text/csv;charset=utf-8');
+        header('Content-Disposition: attachment;filename="aktiviteter.csv"');
+        header('Cache-Control: max-age=0');
+        
+        echo chr(0xEF).chr(0xBB).chr(0xBF); // UTF8 BOM
+        foreach($activities as $activity) {
+            foreach($activity as $cell) {
+                echo "\"$cell\";";
+            }
+            echo "\n";
+        }
+        exit;
+    }
 
     /**
      * creates a scheduling for an activity

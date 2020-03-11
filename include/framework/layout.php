@@ -433,12 +433,14 @@ XML;
             <li><a href='{$this->url('checkin_interface')}'>Checkin registrering</a></li>
             <li><a href='{$this->url('edit_participant_types')}'>Rediger deltagertyper</a></li>
             <li><a href='{$this->url('show_double_bookings')}'>Tjek for dobbelt-bookinger</a></li>
+            <li><a href='{$this->url('show_refund')}'>Deltagere der skal have penge tilbage</a></li>
 HTML;
 
             if ($this->user->hasRole('Infonaut') || $this->user->hasRole('Admin')) {
                 $return .= <<<HTML
             <li><a href='{$this->url('template_editing')}'>ID skabeloner</a></li>
             <li><a href='{$this->url('show_missing_photo')}'>Arrangører med manglende ID-billede</a></li>
+            <li><a href='{$this->url('photo_download')}'>Hent billeder til ID</a></li>
 HTML;
             }
 
@@ -453,7 +455,7 @@ HTML;
             <li><a href='{$this->url('vis_alle_aktiviteter')}'>Alle aktiviteter</a></li>
             <li><a href='{$this->url('activities_graphed')}'>Grafisk oversigt</a></li>
             <li><a href='{$this->url('opret_aktivitet')}'>Opret aktivitet</a></li>
-			<li><a href='{$this->url('import_activities')}'>Importer aktiviter</a></li>
+			<li><a href='{$this->url('import_activities')}'>Importer/eksporter aktiviter</a></li>
             <li><a href='{$this->url('show_vote_stats')}'>Afstemnings-statistik</a></li>
             <li><a href='{$this->url('priority_signup_statistics')}'>Tilmeldings-statistik</a></li>
             <li><hr/></li>

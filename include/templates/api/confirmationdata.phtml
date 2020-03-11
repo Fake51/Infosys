@@ -55,35 +55,35 @@ case 'a':
 <?php if (!empty($this->entrance['sleeping-partout'])) : ?>
 <tr><td colspan="2">Overnatning (alle dage)</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-23'])) : ?>
-<tr><td colspan="2">Indgang onsdag 28/3</td></tr>
+<?php if (!empty($this->entrance['entrance-08'])) : ?>
+<tr><td colspan="2">Indgang onsdag 8/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-23'])) : ?>
-<tr><td colspan="2">Overnatning onsdag 28/3</td></tr>
+<?php if (!empty($this->entrance['sleeping-08'])) : ?>
+<tr><td colspan="2">Overnatning onsdag 8/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-24'])) : ?>
-<tr><td colspan="2">Indgang torsdag 29/3</td></tr>
+<?php if (!empty($this->entrance['entrance-09'])) : ?>
+<tr><td colspan="2">Indgang torsdag 9/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-24'])) : ?>
-<tr><td colspan="2">Overnatning torsdag 29/3</td></tr>
+<?php if (!empty($this->entrance['sleeping-09'])) : ?>
+<tr><td colspan="2">Overnatning torsdag 9/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-25'])) : ?>
-<tr><td colspan="2">Indgang fredag 30/3</td></tr>
+<?php if (!empty($this->entrance['entrance-10'])) : ?>
+<tr><td colspan="2">Indgang fredag 10/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-25'])) : ?>
-<tr><td colspan="2">Overnatning fredag 30/3</td></tr>
+<?php if (!empty($this->entrance['sleeping-10'])) : ?>
+<tr><td colspan="2">Overnatning fredag 10/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-26'])) : ?>
-<tr><td colspan="2">Indgang lørdag 31/3</td></tr>
+<?php if (!empty($this->entrance['entrance-11'])) : ?>
+<tr><td colspan="2">Indgang lørdag 11/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-26'])) : ?>
-<tr><td colspan="2">Overnatning lørdag 31/3</td></tr>
+<?php if (!empty($this->entrance['sleeping-11'])) : ?>
+<tr><td colspan="2">Overnatning lørdag 11/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-27'])) : ?>
-<tr><td colspan="2">Indgang søndag 1/4</td></tr>
+<?php if (!empty($this->entrance['entrance-12'])) : ?>
+<tr><td colspan="2">Indgang søndag 12/4</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['sleeping-27'])) : ?>
-<tr><td colspan="2">Overnatning søndag 1/4</td></tr>
+<?php if (!empty($this->entrance['sleeping-12'])) : ?>
+<tr><td colspan="2">Overnatning søndag 12/4</td></tr>
 <?php endif;?>
 
 <?php if (!empty($this->food)) : ?>
@@ -91,27 +91,27 @@ case 'a':
     <?php foreach ($this->food as $fooditem) : ?>
         <?php $food = $fooditem->getMad();
         switch (date('d', strtotime($fooditem->dato))) {
-        case '23':
+        case '8':
             $day_da = 'Onsdag';
             $day_en = 'Wednesday';
             break;
 
-        case '24':
+        case '9':
             $day_da = 'Torsdag';
             $day_en = 'Thursday';
             break;
 
-        case '25':
+        case '10':
             $day_da = 'Fredag';
             $day_en = 'Friday';
             break;
 
-        case '26':
+        case '11':
             $day_da = 'Lørdag';
             $day_en = 'Saturday';
             break;
 
-        case '27':
+        case '12':
             $day_da = 'Sønddag';
             $day_en = 'Sunday';
             break;
@@ -184,18 +184,27 @@ case 'a':
 <tr><td>Jeg vil spille på dansk:                                      </td><td><?= strpos($this->participant->sprog, 'dansk') !== false ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på engelsk:                                    </td><td><?= strpos($this->participant->sprog, 'engelsk') !== false ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på skandinavisk:                               </td><td><?= strpos($this->participant->sprog, 'skandinavisk') !== false ? 'Ja' : 'Nej';?></td></tr>
-<tr><td>Vil gerne med-arrangere Fastaval 2020:                        </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Ja' : 'Nej';?></td></tr>
+<tr><td>Vil gerne med-arrangere Fastaval 2021:                        </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Klargøre skolen fra mandag:                                   </td><td><?= $this->participant->ready_mandag === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Klargøre skolen fra tirsdag:                                  </td><td><?= $this->participant->ready_tirsdag === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil være simultantolk:                                    </td><td><?= $this->participant->interpreter === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <?php if ($this->participant->sovesal === 'ja') : ?>
 <tr><td>Jeg vil gerne have en plads i arrangørsovesalen:              </td><td>Ja</td></tr>
 <?php endif;?>
-<?php if ($this->participant->skills) : ?>
-<tr><td>Evner/skills du kan og vil hjælpe med:                        </td><td><?= e($this->participant->skills);?></td></tr>
+<?php if ($this->participant->sober_sleeping === 'ja') : ?>
+<tr><td>Jeg vil gerne sove i sovesal for ædru personer:                            </td><td>Ja</td></tr>
 <?php endif;?>
-<?php if ($this->participant->deltager_note) : ?>
-<tr><td>Andre kommentarer:                                            </td><td><?= e($this->participant->deltager_note);?></td></tr>
+<?php if ($this->participant->skills) : ?>
+<tr><td>Evner/skills du kan og vil hjælpe med:                        </td><td><?=e($this->participant->skills)?></td></tr>
+<?php endif;?>
+<?php if ($this->participant->deltager_note) : 
+    if($this->participant->note) :
+        foreach($this->participant->note as $note) : ?>
+            <tr><td><?=$note->name?>:                                          </td><td><?=nl2br(e($note->content))?></td></tr>
+<?php   endforeach;
+    else : ?>
+<tr><td>Andre kommentarer:                                            </td><td><?=e($this->participant->deltager_note)?></td></tr>
+    <?php endif; ?>
 <?php endif;?>
 <?php if ($this->participant->rig_onkel === 'ja') : ?>
 <tr><td>Rig tante/onkel (støtter Fastaval med 300kr.)                       </td><td>Ja</td></tr>

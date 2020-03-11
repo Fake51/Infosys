@@ -35,6 +35,8 @@
 
 class WearModel extends Model
 {
+    public $allOrganizerCategory = "Alle arrangører";
+
     /**
      * returns array of info on ordered wear
      *
@@ -52,21 +54,19 @@ class WearModel extends Model
         $select = $this->createEntity('DeltagereWear')->getSelect();
         $select->setFrom('wearpriser')->
                  setTableWhere('wearpriser.id','deltagere_wear.wearpris_id')->
-                 setGroupBy('wearpris_id')->
                  setGroupBy('size')->
                  setGroupBy('wear_id')->
-                 setField('wearpris_id')->
                  setField('size')->
                  setField('wear_id')->
                  setField('SUM(antal) AS antal',false)->
-                 setOrder('wearpris_id','asc')->
+                 setOrder('wear_id','asc')->
                  setOrder('size','asc');
         $DB = $this->db;
         if ($result = $DB->query($select))
         {
             foreach ($result as $row)
             {
-                $results[$row['wearpris_id']][] = $row;
+                $results[$row['wear_id']][] = $row;
             }
         }
         return $results;
@@ -96,17 +96,16 @@ class WearModel extends Model
     }
 
     /**
-     * returns all WearPriser entities
+     * returns all Wear entities
      *
      * @access public
      * @return array
      */
-    public function getAllWearprices()
+    public function getAllWearTypes()
     {
-        $select = $this->createEntity('WearPriser')->getSelect();
-        $select->setOrder('wear_id','asc');
-        $select->setOrder('brugerkategori_id','asc');
-        return $this->createEntity('WearPriser')->findBySelectMany($select);
+        $select = $this->createEntity('Wear')->getSelect();
+        $select->setOrder('id','asc');
+        return $this->createEntity('Wear')->findBySelectMany($select);
     }
 
     /**
@@ -152,7 +151,8 @@ class WearModel extends Model
         $select = $dw->getSelect();
         if ($type)
         {
-            $select->setWhere('wearpris_id','=',$type);
+            $select->setLeftJoin('wearpriser', 'wearpris_id', 'id');
+            $select->setWhere('wear_id','=',$type);
         }
         if ($size)
         {
@@ -240,35 +240,56 @@ class WearModel extends Model
     {
         $priser     = $wear->getWearpriser();
         $pris_index = array_flip($this->extractIds($priser));
+        $categories = array_flip($this->extractIds($priser, 'brugerkategori_id'));
         $success    = true;
 
         if (!empty($post->wearpriceid) && !empty($post->wearprice_category) && !empty($post->wearprice_price)) {
+            // Is the special all organizer category set?
+            if (false !== $key = array_search(0, $post->wearprice_category)){
+                $organizer_price = $post->wearprice_price[$key];
+                $organizers = $this->getAllOrganizerCategories();
+                $org_ids = [];
+                foreach ($organizers as $org) {
+                    $org_ids[$org->id] = true;
+                }
+            }
+
             foreach ($post->wearpriceid as $index => $id) {
-                if (isset($pris_index[$id])) {
-                    $wearprice = $priser[$pris_index[$id]];
-                    $wearprice->pris = $post->wearprice_price[$index];
+                $category = $post->wearprice_category[$index];
+
+                // Don't add seperate price for the "all organizers" category
+                if ($category === '0') continue;
+
+                // Do we use organizer price
+                if (isset($org_ids[$category])) {
+                    $price = $organizer_price;
+                    unset($org_ids[$category]);
+                } else {
+                    $price = $post->wearprice_price[$index];
+                }
+                
+                if (isset($categories[$category])) {
+                    $wearprice = $priser[$categories[$category]];
+                    $wearprice->pris = $price;
                     $wearprice->update();
 
-                    unset($priser[$pris_index[$id]]);
+                    unset($priser[$categories[$category]]);
 
                     continue;
 
                 } elseif ($id > 0) {
                     continue;
-
                 }
 
                 $new_wearprice                    = $this->createEntity('WearPriser');
                 $new_wearprice->wear_id           = $wear->id;
-                $new_wearprice->brugerkategori_id = $post->wearprice_category[$index];
-                $new_wearprice->pris              = $post->wearprice_price[$index];
+                $new_wearprice->brugerkategori_id = $category;
+                $new_wearprice->pris              = $price;
 
                 if (!$new_wearprice->insert()) {
                     $success = false;
                 }
-
             }
-
         }
 
         if (!$success) {
@@ -276,11 +297,29 @@ class WearModel extends Model
         }
 
         foreach ($priser as $pris) {
-            $pris->delete();
+            if (isset($org_ids[$pris->brugerkategori_id])) {
+                $pris->pris = $organizer_price;
+                $pris->update();
+                unset($org_ids[$pris->brugerkategori_id]);
+            } else {
+                $pris->delete();
+            }
+        }
+        
+        if (is_array($org_ids)) {
+            foreach ($org_ids as $id => $value) {
+                $new_wearprice                    = $this->createEntity('WearPriser');
+                $new_wearprice->wear_id           = $wear->id;
+                $new_wearprice->brugerkategori_id = $id;
+                $new_wearprice->pris              = $organizer_price;
 
+                if (!$new_wearprice->insert()) {
+                    $success = false;
+                }
+            }
         }
 
-        return true;
+        return $success;
     }
 
     /**
@@ -291,7 +330,26 @@ class WearModel extends Model
      */
     public function getAllParticipantCategories()
     {
-        return (($return = $this->createEntity('BrugerKategorier')->findAll()) ? $return : array());
+        $category = $this->createEntity('BrugerKategorier');
+        $categories = $category->findAll();
+        $categories = $categories ? $categories : array();
+        $category->navn = $this->allOrganizerCategory;
+        $category->id = 0;
+        $categories[] = $category;
+
+        return $categories;
+    }
+
+    public function getAllOrganizerCategories(){
+        $category = $this->createEntity('BrugerKategorier');
+        $categories = $category->findAll();
+        $categories = $categories ? $categories : array();
+        foreach($categories as $key => $category){
+            if (!$category->isArrangoer()){
+                unset($categories[$key]);
+            }
+        }
+        return $categories;
     }
 
     /**

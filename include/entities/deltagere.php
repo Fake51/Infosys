@@ -94,6 +94,25 @@ class Deltagere extends DBObject implements AgeFulfilment
     );
 
     /**
+     * Contains display names for different notes
+     *
+     * @var array
+     */
+    static protected $note_names = [
+        'da' => [
+            'comment' => 'Andre kommentarer',
+            'gds' => 'Kommentarer til GDS',
+            'junior_ward' => 'Værge kontakt'
+        ],
+        'en' => [
+            'comment' => 'Other comments',
+            'gds' => 'Comments regarding GDS',
+            'junior_ward' => 'Ward contact'
+        ]
+    ];
+
+
+    /**
      * Name of database table
      *
      * @var string
@@ -124,6 +143,12 @@ class Deltagere extends DBObject implements AgeFulfilment
             $diff = $to->diff($from);
 
             return $this->calculated_age = $diff->format('%y');
+
+        } elseif($var == 'note') {
+            if (!isset($this->note_obj)) {
+                $this->note_obj = self::parseNote($this->deltager_note);
+            }
+            return $this->note_obj;
 
         } elseif (array_key_exists($var, $this->storage)) {
             return parent::__get($var);
@@ -201,6 +226,8 @@ class Deltagere extends DBObject implements AgeFulfilment
                     case 'arbejdsomraade':
                     case 'ungdomsklub':
                     case 'scenarie':
+                    case 'skills':
+                    case 'deltager_note':
                         $select->setWhereOr($field, 'like', "%{$bit}%");
                         break;
                     default:
@@ -1614,5 +1641,26 @@ WHERE
         })) <= 1 && count(array_filter($this->getIndgang(), function ($x) {
             return $x->isEntrance() && !$x->isDayTicket();
         })) === 0;
+    }
+
+    public function setNote($name, $content) {
+        $note = json_decode($this->deltager_note);
+        $note->$name = $content;
+        parent::__set('deltager_note', json_encode($note));
+    }
+
+    public static function parseNote($note){
+        if ($jsnon_note = json_decode($note)) {
+            $note_obj = new stdClass();
+            foreach($jsnon_note as $key => $value) {
+                $note_obj->$key = new stdClass();
+                $note_obj->$key->content = $value;
+                $note_obj->$key->name = isset(self::$note_names['da'][$key]) ? self::$note_names['da'][$key] : $key;
+                $note_obj->$key->name_en = isset(self::$note_names['en'][$key]) ? self::$note_names['en'][$key] : $key;
+            }
+            return $note_obj;
+        }
+
+        return null;
     }
 }

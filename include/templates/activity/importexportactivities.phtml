@@ -1,0 +1,66 @@
+<?=$this->getMessagesHtml()?>
+<div class='middleboxes'>
+	<fieldset>
+		<legend>Eksporter Aktiviteter</legend>
+		<div class="outer-container">
+			<form action="" method="post" name="frmExcelExport" id="frmExcelExport" enctype="multipart/form-data">
+				<div>
+					<label>Vælg Filtype</label>
+					<select name="filetype" id="activities_filetype">
+						<option value ="csv">Comma Seperated Values (.csv)</option>
+					</select>
+					<button type="submit" id="exportactivities" name="exportactivities" class="btn-submit">Eksportér</button>
+				</div>
+			</form>
+		</div>
+	</fieldset>
+</div>
+<div class='middleboxes'>
+	<fieldset>
+		<legend>Importer Aktiviteter</legend>
+		<div class="outer-container">
+			<p>Bemærk det er vigtigt at kolonner står i den rigtige rækkefølge.
+				<br>En csv-fil skal være af samme format som det der bliver eksporteret</p>
+			<p>Man vil kunne se resultatet af importen inden man vælger at lægge det i databasen</p>
+			<form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+				<div>
+					<label>Vælg Excel Fil</label>
+					<input type="file" name="activities" id="activities_file" accept=".xls,.xlsx,application/vnd.ms-excel,.csv,text/csv">
+					<button type="submit" id="importactivities" name="importactivities" class="btn-submit">Importér</button>
+				</div>
+			</form>
+		</div>
+	</fieldset>
+	<?php 
+	if (isset($this->activity_data)) { ?>
+		<fieldset>
+			<p>Herunder kan du se de data infosys har læst fra arket</p>
+			<p>Vil du fjene de aktiviteter der allerede ligger i databasen og ersatte med dem du har uploadet
+			<br>eller vil du opdatere aktiviteter med samme ID og tilføje dem der ikke allerede findes i forvejen?</p>
+			<form action="" method="post" name="frmConfirmImport" id="frmConfirmImport" enctype="multipart/form-data">
+				<button type="submit" id="import_replace" name="import_replace" class="btn-submit">Slet og erstat</button>
+				<button type="submit" id="import_add" name="import_add" class="btn-submit">Tilføj/Opdater</button>
+			</form>
+			<table class="importTable">
+				<tr>
+					<?php foreach($this->activity_header as $header) { ?>
+							<th><?=$header?></th>
+					<?php } ?>
+				</tr>
+				<?php foreach($this->activity_data as $row){ ?>
+					<tr>
+						<?php foreach($row as $key => $cell) { 
+							if($key == "updated") {
+								$cell = preg_replace("/ /","&nbsp;",$cell);
+								$cell = preg_replace("/-/","&#8209;",$cell);
+							} 
+							$class = strlen($cell) > 100 ? 'class="long-text"' : '';
+							?>
+							<td><div <?=$class?>><?=$cell?></div></td>
+						<?php } ?>
+					</tr>
+				<?php } ?>
+			</table>
+		</fieldset>
+	<?php } ?>
+</div>

@@ -914,7 +914,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             foreach ($json['activity'] as $activity) {
                 $schedule = $this->createEntity('Afviklinger')->findById($activity['schedule_id']);
 
-                if (intval($activity['priority']) === 4) {
+                if (intval($activity['priority']) === 5) {
                     $deltager->setAktivitetTilmelding($schedule, 1, 'spiller');
                     $deltager->setAktivitetTilmelding($schedule, 0, 'spilleder');
 
@@ -980,21 +980,18 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             $e->logException();
 
             return ['Could not update database with participant data'];
-
         }
 
         $errors = array();
 
         if (!empty($data['wear']) && is_array($data['wear'])) {
             $errors[] = $this->addWear($data, $participant);
-
         } else {
             $errors[] = $this->addWear(['wear' => []], $participant);
         }
 
         if (!empty($data['activity']) && is_array($data['activity'])) {
             $errors[] = $this->addActivity($data, $participant);
-
         } else {
             $errors[] = $this->addActivity(['activity' => []], $participant);
         }
@@ -1005,14 +1002,12 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
         if (!empty($data['gds']) && is_array($data['gds'])) {
             $errors[] = $this->addGDS($data, $participant);
-
         } else {
             $errors[] = $this->addGDS(['gds' => []], $participant);
         }
 
         if (!empty($data['food']) && is_array($data['food'])) {
             $errors[] = $this->addFood($data, $participant);
-
         } else {
             $errors[] = $this->addFood(['food' => []], $participant);
         }
@@ -1167,9 +1162,8 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'may_contact',
             'desired_activities',
             'desired_diy_shifts',
-            'game_reallocation_participant',
-            'dancing_with_the_clans',
             'sovesal',
+            'sober_sleeping',
             'ungdomsskole',
             'original_price',
             'scenarie',
@@ -1194,6 +1188,8 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         if ($bk->id) {
             $participant->brugerkategori_id = $bk->id;
         }
+
+        $participant->note = $this->createEntity('Deltagere')->parseNote($participant->deltager_note);
 
         return $this;
     }
@@ -1524,8 +1520,8 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'may_contact' => $participant->may_contact,
             'desired_activities' => $participant->desired_activities,
             'desired_diy_shifts' => $participant->desired_diy_shifts,
-            'game_reallocation_participant' => $participant->game_reallocation_participant,
             'sovesal' => $participant->sovesal,
+            'sober_sleeping' => $participant->sovesal,
             'ungdomsskole' => $participant->ungdomsskole,
             'original_price' => $participant->original_price,
             'scenarie' => $participant->scenarie,
