@@ -103,7 +103,7 @@ class Routes
         $this->routes['edit_deltager']                              = array('url' => 'deltager/retdeltager/:id:', 'controller' => 'Participant', 'method' => 'visEdit');
         $this->routes['edit_deltager_note']                         = array('url' => 'deltager/retdeltagernote/:textfield:/:id:', 'controller' => 'Participant', 'method' => 'visTextedit');
         $this->routes['karma_stats']                                = array('url' => 'deltager/karmastats/', 'controller' => 'Participant', 'method' => 'karmaStatus');
-        $this->routes['list_schedule_signups']                      = array('url' => 'deltager/visforafvikling/:afvikling_id:', 'controller' => 'Participant', 'method' => 'listForSchedule');
+        $this->routes['list_schedule_signups']                      = array('url' => 'deltager/visforafvikling/:afvikling_id:/:assigned:', 'controller' => 'Participant', 'method' => 'listForSchedule');
         $this->routes['list_group_participants']                    = array('url' => 'deltager/visforhold/:hold_id:', 'controller' => 'Participant', 'method' => 'listForGroup');
         $this->routes['opret_deltager']                             = array('url' => 'deltager/opret/', 'controller' => 'Participant', 'method' => 'createDeltager');
         $this->routes['participant_info']                           = array('url' => 'deltager/tilmeldingsinfo/:hash:', 'controller' => 'Participant', 'method' => 'displayParticipantInfo');
