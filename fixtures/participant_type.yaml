@@ -1,0 +1,11 @@
+App\Entity\ParticipantType:
+  type_1:
+    name: 'participant'
+  type_2:
+    name: 'volunteer'
+  type_3:
+    name: 'writer'
+  type_4:
+    name: 'designer'
+  type_5:
+    name: 'infonaut'

@@ -1,0 +1,21 @@
+App\Entity\Participant:
+  participant_{1..100}:
+    name: '<name()>'
+    email: '<email()>'
+    country: '@country_*'
+    gender: 'male'
+    phone: '<phoneNumber()>'
+    address: '<streetAddress()>'
+    postalcode: '<postcode()>'
+    city: '<city()>'
+    messaging: '<boolean()>'
+    super_gamemaster: '<boolean()>'
+    password: '<password()>'
+    wanted_number_of_activities: '<randomNumber(1)>'
+    wanted_number_of_tasks: '<randomNumber(1)>'
+    birth_date: '<date_create_immutable("1979-01-01")>'
+    extra_vouchers: '0'
+    google_cloud_messaging_id: ""
+    apple_push_id: ""
+    offered_skills: ""
+    participant_types: '2x @type_*'

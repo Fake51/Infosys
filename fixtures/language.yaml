@@ -1,0 +1,7 @@
+App\Entity\Language:
+  language_1:
+    name: 'Danish'
+  language_2:
+    name: 'Swedish'
+  language_3:
+    name: 'English'

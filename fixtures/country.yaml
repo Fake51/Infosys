@@ -1,0 +1,11 @@
+App\Entity\Country:
+  country_1:
+    name: 'Denmark'
+  country_2:
+    name: 'Germany'
+  country_3:
+    name: 'Sweden'
+  country_4:
+    name: 'Norway'
+  country_5:
+    name: 'USA'

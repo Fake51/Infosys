@@ -9,3 +9,13 @@ hwi_oauth_connect:
 hwi_oauth_login:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
     prefix:   /login
+
+# app/config/routing.yml
+facebook_login:
+    path: /login/check-facebook
+
+google_login:
+    path: /login/check-google
+
+github_login:
+    path: /login/check-github

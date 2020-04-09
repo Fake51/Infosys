@@ -1,6 +1,9 @@
 .idea
 composer.phar
 
+main.*hot-update.js
+*hot-update.json
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "npx webpack --config webpack.config.js --watch",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "airbnb"
   },
   "browserslist": [
     ">0.2%",
@@ -70,8 +70,14 @@
     "lodash": "4.17.15",
     "prop-types": "15.7.2",
     "react": "16.13.0",
+    "react-data-table-component": "^6.3.1",
     "react-dom": "16.13.0",
-    "react-hot-loader": "4.12.19"
+    "react-hot-loader": "4.12.19",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "redux": "^4.0.5",
+    "redux-api-middleware": "^3.2.1",
+    "styled-components": "^5.0.1"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"

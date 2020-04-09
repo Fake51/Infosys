@@ -130,8 +130,7 @@ class Participant
     private $wantedNumberOfTasks;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Language")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Language", mappedBy="participants")
      */
     private $languages;
 
@@ -462,14 +461,30 @@ class Participant
         return $this;
     }
 
-    public function getLanguages(): ?Language
+    /**
+     * @return Collection|Language[]
+     */
+    public function getLanguages(): Collection
     {
         return $this->languages;
     }
 
-    public function setLanguages(?Language $languages): self
+    public function addLanguage(Language $language): self
     {
-        $this->languages = $languages;
+        if (!$this->languages->contains($language)) {
+            $this->languages[] = $language;
+            //$language->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLanguage(Language $language): self
+    {
+        if ($this->languages->contains($language)) {
+            $this->languages->removeElement($language);
+            //$language->removeParticipant($this);
+        }
 
         return $this;
     }

@@ -5,8 +5,12 @@
         "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "beberlei/doctrineextensions": "^1.2",
         "doctrine/doctrine-migrations-bundle": "^2.1",
         "doctrine/orm": "^2.7",
+        "hwi/oauth-bundle": "dev-master",
+        "php-http/guzzle6-adapter": "*",
+        "php-http/httplug-bundle": "*",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/asset": "5.0.*",
         "symfony/console": "5.0.*",
@@ -16,10 +20,7 @@
         "symfony/maker-bundle": "^1.14",
         "symfony/security-bundle": "5.0.*",
         "symfony/twig-bundle": "5.0.*",
-        "symfony/yaml": "5.0.*",
-        "hwi/oauth-bundle": "dev-master",
-        "php-http/guzzle6-adapter": "*",
-        "php-http/httplug-bundle": "*"
+        "symfony/yaml": "5.0.*"
     },
     "require-dev": {
         "hautelook/alice-bundle": "^2.7"
