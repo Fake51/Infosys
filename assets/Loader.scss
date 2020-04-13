@@ -1,0 +1,11 @@
+.Loader {
+  width: 5rem;
+  height: 5rem;
+  padding: 0.8rem;
+  border-radius: 1rem;
+  background: orange;
+  position: fixed;
+  top: calc(50% - 2.5rem);
+  left: calc(50% - 2.5rem);
+  z-index: 3;
+}

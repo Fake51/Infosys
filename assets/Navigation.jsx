@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import Routes from "./routes";
+import styles from "./Navigation.scss";
 
 class Navigation extends PureComponent {
   render() {
     return (
-      <nav>
+      <nav className="navigation">
         <ul>
           <li>
             <Link to={Routes.Home}>Dashboard</Link>
@@ -13,6 +14,9 @@ class Navigation extends PureComponent {
           <li>
             <span>Participant</span>
             <ul>
+              <li>
+                <Link to={Routes.Participant.Create}>create</Link>
+              </li>
               <li>
                 <Link to={Routes.Participant.Search}>search</Link>
               </li>

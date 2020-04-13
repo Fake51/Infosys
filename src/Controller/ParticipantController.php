@@ -3,12 +3,18 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
+use App\Form\StructureRenderer;
+use App\Form\Type\FoodOrderType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\MakerBundle\Str;
+use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\Participant as ParticipantService;
+use App\Form\Type\BaseDataType;
 
 class ParticipantController extends AbstractController
 {
@@ -89,5 +95,19 @@ class ParticipantController extends AbstractController
         ];
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/api/v1/participant", name="participant_edit_schema", methods={"OPTIONS"})
+     */
+    public function participantEditSchema() : Response
+    {
+        $form = $this->createFormBuilder()
+            ->add('baseData', BaseDataType::class, ['label' => 'Base Data'])
+            ->add('foodData', FoodOrderType::class, ['label' => 'Food orders']);
+
+        $structure = (new StructureRenderer($form))->render();
+
+        return new JsonResponse($structure);
     }
 }

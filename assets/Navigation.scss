@@ -1,0 +1,12 @@
+
+:global {
+  .navigation {
+    width: 10%;
+    overflow: hidden;
+    transition: width 0.5s ease 0.1s;
+  }
+
+  .navigationClosed .navigation {
+    width: 0;
+  }
+}
