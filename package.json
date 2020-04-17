@@ -68,7 +68,7 @@
     "babel-plugin-transform-react-remove-prop-types": "0.4.24",
     "core-js": "3.6.4",
     "lodash": "4.17.15",
-    "prop-types": "15.7.2",
+    "prop-types": "^15.7.2",
     "react": "16.13.0",
     "react-data-table-component": "^6.3.1",
     "react-dom": "16.13.0",

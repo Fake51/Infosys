@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import DataTable from "react-data-table-component";
 import { connect } from "react-redux";
+import PropTypes from 'prop-types';
 import { createJsonAction } from "../api-action";
 import FieldGroup from "./FieldGroup";
 import styles from "./Search.scss";
@@ -80,41 +81,87 @@ class ParticipantSearch extends PureComponent {
   }
 
   render() {
-    const fieldGroups = this.props.searchMeta.filter(fieldGroup => fieldGroup && fieldGroup.fields.length > 0);
-console.log(columns);
+    const { searchResult, searchMeta } = this.props;
+    const fieldGroups = searchMeta.filter(
+      fieldGroup => fieldGroup && fieldGroup.fields.length > 0
+    );
+
     return (
       <div>
         <div className="Participant_Search_input">
-          <input className="Participant_Search_inputTerms" onKeyUp={this.handleSearch} />
-          <button type="submit" className="Participant_Search_inputGo" onClick={this.handleSearch}>Search</button>
-          <div className={`Participant_Search_inputFieldContainer ${styles.Participant_Search_inputFieldContainerInactive}`}>
-            <button type="button" className="Participant_Search_inputFieldContainer_toggle" onClick={this.handleFieldGroupsToggle}>Fields</button>
-            {fieldGroups.map(group => <FieldGroup key={group.name} onFieldClick={this.handleFieldClick} name={group.name} fields={group.fields} />)}
+          <input
+            className="Participant_Search_inputTerms"
+            onKeyUp={this.handleSearch}
+          />
+          <button
+            type="submit"
+            className="Participant_Search_inputGo"
+            onClick={this.handleSearch}
+          >
+            Search
+          </button>
+          <div
+            className={`Participant_Search_inputFieldContainer ${styles.Participant_Search_inputFieldContainerInactive}`}
+          >
+            <button
+              type="button"
+              className="Participant_Search_inputFieldContainer_toggle"
+              onClick={this.handleFieldGroupsToggle}
+            >
+              Fields
+            </button>
+            {fieldGroups.map(group => (
+              <FieldGroup
+                key={group.name}
+                onFieldClick={this.handleFieldClick}
+                name={group.name}
+                fields={group.fields}
+              />
+            ))}
           </div>
         </div>
-        {this.props.searchResult.length > 0 ? <DataTable title="Arnold Movies" columns={columns} data={this.props.searchResult} /> : <span>No results from search to display</span>}
+        {searchResult.length > 0 ? <DataTable title="Arnold Movies" columns={columns} data={searchResult} /> : <span>No results from search to display</span>}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  const { participant: { searchResult, searchMeta } } = state;
+  const {
+    participant: { searchResult, searchMeta }
+  } = state;
 
   return { searchResult, searchMeta };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    search: (terms, fields) => dispatch(createJsonAction({
-      endpoint: "/api/v1/participants",
-      method: "POST",
-      body: JSON.stringify({terms, fields})
-    }, "PARTICIPANT_SEARCH")),
-    fetchSchema: () => dispatch(createJsonAction({
-      endpoint: "/api/v1/participants",
-      method: "OPTIONS"
-    }, "PARTICIPANT_SEARCH_META"))
+    search: (terms, fields) =>
+      dispatch(
+        createJsonAction(
+          {
+            endpoint: "/api/v1/participants",
+            method: "POST",
+            body: JSON.stringify({ terms, fields })
+          },
+          "PARTICIPANT_SEARCH"
+        )
+      ),
+    fetchSchema: () =>
+      dispatch(
+        createJsonAction(
+          {
+            endpoint: "/api/v1/participants",
+            method: "OPTIONS"
+          },
+          "PARTICIPANT_SEARCH_META"
+        )
+      )
   };
+};
+
+ParticipantSearch.propTypes = {
+  searchMeta: PropTypes.object,
+  searchResult: PropTypes.object
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ParticipantSearch);
