@@ -3,20 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 2;
-
-    const VALID_STATUSES = [
-        self::STATUS_ACTIVE,
-        self::STATUS_INACTIVE,
-    ];
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -25,17 +18,33 @@ class User
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $username;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $password;
+    private $apiToken;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private $status;
 
@@ -51,10 +60,8 @@ class User
 
     public function __construct()
     {
-        $this->password = 'invalid';
-        $this->status = self::STATUS_INACTIVE;
         $this->passwordResetHash = '';
-        $this->passwordResetTime = new \DateTimeImmutable('1000-01-01 00:00:00');
+        $this->passwordResetTime = new \DateTimeImmutable('1001-01-01 00:00:00');
     }
 
     public function getId(): ?int
@@ -62,7 +69,75 @@ class User
         return $this->id;
     }
 
-    public function getEmail(): string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -74,35 +149,36 @@ class User
         return $this;
     }
 
-    public function getPassword(): string
+    public function getApiToken(): ?string
     {
-        return $this->password;
+        return $this->apiToken;
     }
 
-    public function setPassword(string $password): self
+    public function setApiToken(?string $apiToken): self
     {
-        $this->password = $password;
+        $this->apiToken = $apiToken;
 
         return $this;
     }
 
-    public function getStatus(): int
+    public function createApiToken(): void
+    {
+        $this->setApiToken(bin2hex(random_bytes(32)));
+    }
+
+    public function getStatus(): ?bool
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(bool $status): self
     {
-        if (!in_array($status, self::VALID_STATUSES, true)) {
-            throw new \InvalidArgumentException('Invalid status set');
-        }
-
         $this->status = $status;
 
         return $this;
     }
 
-    public function getPasswordResetHash(): string
+    public function getPasswordResetHash(): ?string
     {
         return $this->passwordResetHash;
     }
@@ -114,7 +190,7 @@ class User
         return $this;
     }
 
-    public function getPasswordResetTime(): \DateTimeImmutable
+    public function getPasswordResetTime(): ?\DateTimeImmutable
     {
         return $this->passwordResetTime;
     }

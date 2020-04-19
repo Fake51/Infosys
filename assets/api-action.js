@@ -3,6 +3,12 @@ import {
   getJSON
 } from "redux-api-middleware";
 
+let apiToken = '';
+
+export const setApiToken = token => {
+  apiToken = token || "";
+};
+
 export const createAction = (args, actionType) => {
   const request = {
     ...args,
@@ -38,6 +44,10 @@ export const createJsonAction = (args, actionType) => {
 
   if (args.body) {
     headers.headers["Content-Type"] = "application/json";
+  }
+
+  if (apiToken.length > 0) {
+    headers.headers["X-AUTH-TOKEN"] = apiToken;
   }
 
   return createAction({ ...args, ...headers }, actionType);

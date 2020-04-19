@@ -18,4 +18,13 @@ const participant = (state = defaultState, action) => {
   }
 };
 
-export default { participant };
+const user = (state = {}, action) => {
+  switch (action.type) {
+    case "USER_LOGIN_SUCCESS":
+      return { ...action.payload };
+    default:
+      return state;
+  }
+};
+
+export default { participant, user };

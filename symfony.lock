@@ -110,19 +110,6 @@
             "fixtures/.gitignore"
         ]
     },
-    "hwi/oauth-bundle": {
-        "version": "0.6",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "0.6",
-            "ref": "20cacc9b2da49d96ea55c8a8dd31324c5be88bc9"
-        },
-        "files": [
-            "config/packages/hwi_oauth.yaml",
-            "config/routes/hwi_oauth_routing.yaml"
-        ]
-    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -309,7 +296,7 @@
         ]
     },
     "symfony/form": {
-        "version": "v5.0.5"
+        "version": "v5.0.7"
     },
     "symfony/framework-bundle": {
         "version": "4.4",
@@ -341,7 +328,7 @@
         "version": "v5.0.5"
     },
     "symfony/intl": {
-        "version": "v5.0.5"
+        "version": "v5.0.7"
     },
     "symfony/maker-bundle": {
         "version": "1.0",
@@ -359,7 +346,7 @@
         "version": "v5.0.5"
     },
     "symfony/polyfill-intl-icu": {
-        "version": "v1.14.0"
+        "version": "v1.15.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.14.0"
@@ -415,9 +402,6 @@
         "version": "v2.0.1"
     },
     "symfony/stopwatch": {
-        "version": "v5.0.5"
-    },
-    "symfony/templating": {
         "version": "v5.0.5"
     },
     "symfony/translation": {
