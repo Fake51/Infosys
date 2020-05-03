@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
-import { Switch, Route, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { createJsonAction } from "../api-action";
 import BaseData from "./Edit/BaseData.jsx";
 import Loader from "../Loader.jsx";
@@ -11,45 +12,78 @@ class Edit extends PureComponent {
     super(props);
     this.props = props;
 
-    const { participantId } = this.props.match.params;
+    const {
+      match,
+      participantEditSchema,
+      fetchSchema,
+      fetchParticipant,
+      participantData
+    } = this.props;
+    const { participantId } = match.params;
+
     this.participantId = participantId;
 
-    if (!this.props.participantEditSchema || this.props.participantEditSchema.length === 0) {
-      this.props.fetchSchema();
+    if (!participantEditSchema || participantEditSchema.length === 0) {
+      fetchSchema();
     }
 
-    if (participantId && !this.props.participantData) {
-      this.props.fetchParticipant(participantId);
+    if (participantId && !participantData) {
+      fetchParticipant(participantId);
     }
   }
 
   render() {
+    const { participantEditSchema, participantData } = this.props;
+
     return (
       <div className={styles.Participant_Edit}>
-        {!this.props.participantEditSchema || (this.participantId && !this.props.participantData)
-          ? <Loader />
-          : <BaseData />
-        }
+        {!participantEditSchema || (this.participantId && !participantData) ? (
+          <Loader />
+        ) : (
+          <BaseData />
+        )}
       </div>
     );
   }
 }
 
+Edit.propTypes = {
+  participantEditSchema: PropTypes.shape([]),
+  participantData: PropTypes.shape({}),
+  fetchParticipant: PropTypes.func,
+  fetchSchema: PropTypes.func,
+  match: PropTypes.shape({ params: {} })
+};
+
 const mapStateToProps = state => {
-  const { participant: { participantEditSchema, participantData } } = state;
+  const {
+    participant: { participantEditSchema, participantData }
+  } = state;
 
   return { participantEditSchema, participantData };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    fetchSchema: () => dispatch(createJsonAction({
-      endpoint: "/api/v1/participant",
-      method: "OPTIONS"
-    }, "PARTICIPANT_EDIT_SCHEMA")),
-    fetchParticipant: participantId => dispatch(createJsonAction({
-      endpoint: `/api/v1/participant/${participantId}`,
-      method: "GET"
-    }, "PARTICIPANT_DATA"))
+    fetchSchema: () =>
+      dispatch(
+        createJsonAction(
+          {
+            endpoint: "/api/v1/participant",
+            method: "OPTIONS"
+          },
+          "PARTICIPANT_EDIT_SCHEMA"
+        )
+      ),
+    fetchParticipant: participantId =>
+      dispatch(
+        createJsonAction(
+          {
+            endpoint: `/api/v1/participant/${participantId}`,
+            method: "GET"
+          },
+          "PARTICIPANT_DATA"
+        )
+      )
   };
 };
 

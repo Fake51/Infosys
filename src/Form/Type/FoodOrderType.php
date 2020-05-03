@@ -14,4 +14,9 @@ class FoodOrderType extends AbstractType
         $builder
             ->add('foodOrders', CollectionType::class);
     }
+
+    public function getParent() : string
+    {
+        return GroupType::class;
+    }
 }

@@ -1,17 +1,15 @@
 import React, { PureComponent } from "react";
-import { Connect } from "react-redux";
 import styles from "./HeaderBar.scss";
 
-
 class HeaderBar extends PureComponent {
-  navToggleState = false;
-
   constructor(props) {
     super(props);
     this.props = props;
 
     this.handleNavToggle = this.handleNavToggle.bind(this);
   }
+
+  navToggleState = false;
 
   handleNavToggle() {
     const body = document.querySelector("body");
@@ -29,7 +27,7 @@ class HeaderBar extends PureComponent {
     return (
       <div className={styles.headerBar}>
         Infosys
-        <span onClick={this.handleNavToggle}>X</span>
+        <a onClick={this.handleNavToggle}>X</a>
       </div>
     );
   }

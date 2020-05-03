@@ -5,7 +5,6 @@ import configureStore from "./store";
 import HeaderBar from "./HeaderBar";
 import Navigation from "./Navigation";
 import ContentWrapper from "./ContentWrapper";
-import Login from "./Login";
 import styles from "./App.scss";
 import { setApiToken } from "./api-action";
 
@@ -19,10 +18,10 @@ class App extends Component {
     const { user } = store.getState();
     this.user = user;
 
-    store.subscribe(this.handleStoreUpdate.bind(this, store));
+    store.subscribe(this.handleStoreUpdate.bind(this));
   }
 
-  handleStoreUpdate(store) {
+  handleStoreUpdate() {
     const { user } = store.getState();
 
     if (user !== this.user) {
@@ -32,8 +31,6 @@ class App extends Component {
   }
 
   render() {
-    const { user } = store.getState();
-
     return (
       <Provider store={store}>
         <Router>

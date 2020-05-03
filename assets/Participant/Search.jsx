@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import DataTable from "react-data-table-component";
 import { connect } from "react-redux";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { createJsonAction } from "../api-action";
 import FieldGroup from "./FieldGroup";
 import styles from "./Search.scss";
@@ -9,7 +9,7 @@ import styles from "./Search.scss";
 // todo get available fields from api
 // style
 
-let chosenFields = [ "participant__id" ];
+let chosenFields = ["participant__id"];
 
 let columns = [
   {
@@ -19,17 +19,49 @@ let columns = [
   }
 ];
 
+const handleFieldGroupsToggle = e => {
+  const parent = e.target.parentElement;
+  const classes = parent.getAttribute("class");
+
+  if (classes.search(/Inactive/) > -1) {
+    parent.setAttribute(
+      "class",
+      classes.replace(styles.Participant_Search_inputFieldContainerInactive, "")
+    );
+  } else {
+    parent.setAttribute(
+      "class",
+      `${classes} ${styles.Participant_Search_inputFieldContainerInactive}`
+    );
+  }
+};
+
+const handleFieldClick = e => {
+  const fieldName = e.target.getAttribute("name");
+
+  if (!e.target.checked) {
+    chosenFields = chosenFields.filter(name => name !== fieldName);
+    columns = columns.filter(column => column.selector !== fieldName);
+  } else {
+    chosenFields.push(fieldName);
+    columns.push({
+      name: e.target.getAttribute("data-displayname"),
+      sortable: true,
+      selector: fieldName
+    });
+  }
+};
+
 class ParticipantSearch extends PureComponent {
   constructor(props) {
     super(props);
+    const { fetchSchema, searchMeta } = props;
     this.props = props;
 
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleFieldGroupsToggle = this.handleFieldGroupsToggle.bind(this);
-    this.handleFieldClick = this.handleFieldClick.bind(this);
 
-    if (!this.props.searchMeta || this.props.searchMeta.length === 0) {
-      this.props.fetchSchema();
+    if (!searchMeta || searchMeta.length === 0) {
+      fetchSchema();
     }
   }
 
@@ -50,33 +82,6 @@ class ParticipantSearch extends PureComponent {
       }
     } else {
       this.runSearch(e.target.previousSibling.value);
-    }
-  }
-
-  handleFieldClick(e) {
-    const fieldName = e.target.getAttribute("name");
-
-    if (!e.target.checked) {
-      chosenFields = chosenFields.filter(name => name !== fieldName);
-      columns = columns.filter(column => column.selector !== fieldName);
-    } else {
-      chosenFields.push(fieldName);
-      columns.push({
-        name: e.target.getAttribute("data-displayname"),
-        sortable: true,
-        selector: fieldName
-      });
-    }
-  }
-
-  handleFieldGroupsToggle(e) {
-    const parent = e.target.parentElement;
-    const classes = parent.getAttribute('class');
-
-    if (classes.search(/Inactive/) > -1) {
-      parent.setAttribute('class', classes.replace(styles.Participant_Search_inputFieldContainerInactive, ''));
-    } else {
-      parent.setAttribute('class', `${classes} ${styles.Participant_Search_inputFieldContainerInactive}`);
     }
   }
 
@@ -106,21 +111,29 @@ class ParticipantSearch extends PureComponent {
             <button
               type="button"
               className="Participant_Search_inputFieldContainer_toggle"
-              onClick={this.handleFieldGroupsToggle}
+              onClick={handleFieldGroupsToggle}
             >
               Fields
             </button>
             {fieldGroups.map(group => (
               <FieldGroup
                 key={group.name}
-                onFieldClick={this.handleFieldClick}
+                onFieldClick={handleFieldClick}
                 name={group.name}
                 fields={group.fields}
               />
             ))}
           </div>
         </div>
-        {searchResult.length > 0 ? <DataTable title="Arnold Movies" columns={columns} data={searchResult} /> : <span>No results from search to display</span>}
+        {searchResult.length > 0 ? (
+          <DataTable
+            title="Search result"
+            columns={columns}
+            data={searchResult}
+          />
+        ) : (
+          <span>No results from search to display</span>
+        )}
       </div>
     );
   }
@@ -160,8 +173,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 ParticipantSearch.propTypes = {
-  searchMeta: PropTypes.object,
-  searchResult: PropTypes.object
+  searchMeta: PropTypes.shape([]),
+  searchResult: PropTypes.shape([]),
+  fetchSchema: PropTypes.func,
+  search: PropTypes.func
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ParticipantSearch);

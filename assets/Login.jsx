@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { createJsonAction } from "./api-action";
 
 class Login extends PureComponent {
@@ -14,7 +15,9 @@ class Login extends PureComponent {
     e.preventDefault();
     e.stopPropagation();
 
-    this.props.login(
+    const { login } = this.props;
+
+    login(
       document.getElementById("Login_Email").value,
       document.getElementById("Login_Password").value
     );
@@ -23,13 +26,25 @@ class Login extends PureComponent {
   render() {
     return (
       <div>
-        <label htmlFor="Login_Email">Email: <input type="text" name="email" id="Login_Email" /></label>
-        <label htmlFor="Login_Password">Password: <input type="password" name="password" id="Login_Password" /></label>
-        <button type="submit" onClick={this.handleLoginClick}>Login</button>
+        <label htmlFor="Login_Email">
+          Email: <input type="text" name="email" id="Login_Email" />
+        </label>
+        <label htmlFor="Login_Password">
+          Password:
+          <input type="password" name="password" id="Login_Password" />
+        </label>
+        <button type="submit" onClick={this.handleLoginClick}>
+          Login
+        </button>
       </div>
     );
   }
 }
+
+Login.propTypes = {
+  login: PropTypes.func,
+  user: PropTypes.shape({})
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -44,7 +59,7 @@ const mapDispatchToProps = dispatch => {
           "USER_LOGIN"
         )
       )
-  }
+  };
 };
 
 const mapStateToProps = state => {

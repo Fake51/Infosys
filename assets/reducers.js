@@ -1,6 +1,8 @@
 const defaultState = {
   searchResult: [],
-  searchMeta: []
+  searchMeta: [],
+  participantEditSchema: [],
+  participantData: {}
 };
 const participant = (state = defaultState, action) => {
   switch (action.type) {
@@ -12,6 +14,9 @@ const participant = (state = defaultState, action) => {
 
     case "PARTICIPANT_EDIT_SCHEMA_SUCCESS":
       return { ...state, participantEditSchema: action.payload };
+
+    case "PARTICIPANT_EDIT_DATA_SUCCESS":
+      return { ...state, participantData: action.payload };
 
     default:
       return state;

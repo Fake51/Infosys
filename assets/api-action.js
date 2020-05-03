@@ -3,7 +3,7 @@ import {
   getJSON
 } from "redux-api-middleware";
 
-let apiToken = '';
+let apiToken = "";
 
 export const setApiToken = token => {
   apiToken = token || "";

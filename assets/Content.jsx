@@ -1,16 +1,19 @@
 import React, { PureComponent } from "react";
 import { Switch, Route, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import Routes from "./routes";
 import Participant from "./Participant/Participant";
-import styles from "./Content.scss";
+import "./Content.scss";
 import UnauthorizedUser from "./UnauthorizedUser";
 
 class Content extends PureComponent {
   render() {
+    const { user } = this.props;
+
     return (
       <div>
-        { this.props.user ?
+        {user ? (
           <Switch>
             <Route exact path={Routes.Home}>
               Home
@@ -18,13 +21,18 @@ class Content extends PureComponent {
             <Route path={Routes.Participant.base}>
               <Participant />
             </Route>
-          </Switch> :
+          </Switch>
+        ) : (
           <UnauthorizedUser />
-        }
+        )}
       </div>
     );
   }
 }
+
+Content.propTypes = {
+  user: PropTypes.shape({})
+};
 
 const mapStateToProps = state => {
   const { user } = state;
