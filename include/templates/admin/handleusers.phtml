@@ -6,6 +6,7 @@
                 <tr>
                     <th>Id</th>
                     <th>Username</th>
+                    <th>Label</th>
                     <th>Disabled</th>
                     <th>Password</th>
                     <th>Roles</th>
@@ -19,6 +20,10 @@
                 <tr>
                     <td class='user-id'><?php echo $user->id;?></td>
                     <td><?php echo $user->user;?></td>
+                    <td>
+                        <input class='new_label' value='<?=$user->label?>' type='text'/>
+                        <input type='button' value='Change' class='action_changelabel'/>
+                    </td>
                     <td class='status'><?php echo $user->disabled;?></td>
                     <td>
                         <input class='new_pass' value='' type='text'/>
@@ -31,10 +36,11 @@
                     </td>
                     <td>
                         <select class='role_select'>
-                        <?php foreach ($this->all_roles as $role) :?>
-                        <option value='<?php echo $role->id;?>'><?php echo $role->name;?></option>
-                        <?php endforeach;?>
-                        </select><input type='button' value='Add role' class='action_addrole'/>
+                            <?php foreach ($this->all_roles as $role) :?>
+                                <option value='<?php echo $role->id;?>'><?php echo $role->name;?></option>
+                            <?php endforeach;?>
+                        </select>
+                        <input type='button' value='Add role' class='action_addrole'/>
                     </td>
                     <td><input type='button' value="<?php echo ($user->disabled == 'ja' ? 'Enable' : 'Disable');?>" class='action_disable'/></td>
                     <td><input type='button' value='Delete' class='action_delete'/></td>
@@ -46,15 +52,18 @@
                     <td colspan='7'><hr/></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><label>User: <input type='text' value='' id='user_name'/></label></td>
-                    <td colspan='2'><label>Pass: <input type='text' value='' id='user_pass'/></label></td>
+                    <td colspan='2'><label>User: <input type='text' value='' id='user_name'/></label></td>
+                    <td colspan='2'><label>Label: <input type='text' value='' id='user_label'/></label></td>
+                    <td colspan='1'><label>Pass: <input type='text' value='' id='user_pass'/></label></td>
                     <td colspan='2'>
-                        <select id='role_select'>
-                            <option value=''></option>
-                            <?php foreach ($this->all_roles as $role) :?>
-                            <option value='<?php echo $role->id;?>'><?php echo $role->name;?></option>
-                            <?php endforeach;?>
-                        </select>
+                        <label>Role:
+                            <select id='role_select'>
+                                <option value=''></option>
+                                <?php foreach ($this->all_roles as $role) :?>
+                                <option value='<?php echo $role->id;?>'><?php echo $role->name;?></option>
+                                <?php endforeach;?>
+                            </select>
+                        </label>
                     </td>
                     <td><input type='button' value='Add user' id='action_adduser'/></td>
                 </tr>
@@ -62,6 +71,10 @@
                 <tr class="hidden user-template">
                     <td class='user-id'>user-id-placeholder</td>
                     <td>user-name-placeholder</td>
+                    <td>
+                        <input class='new_label' value='user-label-placeholder' type='text'/>
+                        <input type='button' value='Change' class='action_changelabel'/>
+                    </td>
                     <td class='status'>nej</td>
                     <td>
                         <input class='new_pass' value='' type='text'/>

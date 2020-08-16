@@ -1295,6 +1295,19 @@ div#admin-container table#roles-table td.role-description {
 div#admin-container table#roles-table td.privileges {
     width: 30%;
 }
+
+div#admin-container table#users-table td{
+    padding: 5px;
+}
+
+div#admin-container table#users-table input,
+div#admin-container table#users-table select{
+    margin-bottom: 0px;
+}
+
+div#admin-container table#users-table td.status {
+    text-align: center;
+}
 /* }}} */
 
 div#participant-info {

@@ -341,6 +341,7 @@ class Routes
 
         // admin ajax routes
         $this->routes['admin_ajax_changepass']      = array('url' => 'admin/ajax/changepass/:id:', 'controller' => 'Admin', 'method' => 'ajaxChangePass');
+        $this->routes['admin_ajax_changelabel']     = array('url' => 'admin/ajax/changelabel/:id:', 'controller' => 'Admin', 'method' => 'ajaxChangeLabel');
         $this->routes['admin_ajax_removerole']      = array('url' => 'admin/ajax/removerole/:id:/:role_id:', 'controller' => 'Admin', 'method' => 'ajaxRemoveRole');
         $this->routes['admin_ajax_addrole']         = array('url' => 'admin/ajax/addrole/:id:/:role_id:', 'controller' => 'Admin', 'method' => 'ajaxAddRole');
         $this->routes['admin_ajax_disableuser']     = array('url' => 'admin/ajax/disableuser/:id:', 'controller' => 'Admin', 'method' => 'ajaxDisableUser');
