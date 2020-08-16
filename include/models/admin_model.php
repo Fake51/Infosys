@@ -84,6 +84,7 @@ class AdminModel extends Model
         }
         $user = $this->createEntity('User');
         $user->user = trim($post->user);
+        $user->label = trim($post->label);
         $user->pass = md5(trim($post->pass));
         return (($user->insert()) ? $user : false);
     }

@@ -1,0 +1,2 @@
+ALTER TABLE users ADD label varchar(255) NOT NULL DEFAULT 'Please add a name or description'; -- We use the default value for the existing entries in the table
+ALTER TABLE users ALTER COLUMN label DROP DEFAULT; -- We then remove the default value to force entering a value on creating new users
