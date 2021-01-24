@@ -55,69 +55,22 @@ case 'a':
 <?php if (!empty($this->entrance['sleeping-partout'])) : ?>
 <tr><td colspan="2">Overnatning (alle dage)</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-08'])) : ?>
-<tr><td colspan="2">Indgang onsdag 8/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-08'])) : ?>
-<tr><td colspan="2">Overnatning onsdag 8/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-09'])) : ?>
-<tr><td colspan="2">Indgang torsdag 9/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-09'])) : ?>
-<tr><td colspan="2">Overnatning torsdag 9/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-10'])) : ?>
-<tr><td colspan="2">Indgang fredag 10/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-10'])) : ?>
-<tr><td colspan="2">Overnatning fredag 10/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-11'])) : ?>
-<tr><td colspan="2">Indgang lørdag 11/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-11'])) : ?>
-<tr><td colspan="2">Overnatning lørdag 11/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-12'])) : ?>
-<tr><td colspan="2">Indgang søndag 12/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-12'])) : ?>
-<tr><td colspan="2">Overnatning søndag 12/4</td></tr>
-<?php endif;?>
+
+<?php foreach($this->entrance['entrance-day'] as $date => $value) : ?>
+<tr><td colspan="2">Indgang <?=$this->days[date('N', $date)]?>  <?=date('d/n', $date) ?></td></tr>
+<?php endforeach;?>
+
+<?php foreach($this->entrance['sleeping-day'] as $date => $value) : ?>
+<tr><td colspan="2">Overnatning <?=$this->days[date('N', $date)]?> <?=date('d/n', $date) ?></td></tr>
+<?php endforeach;?>
 
 <?php if (!empty($this->food)) : ?>
 <tr><td colspan="2" class="headline"><strong>MAD:</strong></td></tr>
-    <?php foreach ($this->food as $fooditem) : ?>
-        <?php $food = $fooditem->getMad();
-        switch (date('d', strtotime($fooditem->dato))) {
-        case '8':
-            $day_da = 'Onsdag';
-            $day_en = 'Wednesday';
-            break;
-
-        case '9':
-            $day_da = 'Torsdag';
-            $day_en = 'Thursday';
-            break;
-
-        case '10':
-            $day_da = 'Fredag';
-            $day_en = 'Friday';
-            break;
-
-        case '11':
-            $day_da = 'Lørdag';
-            $day_en = 'Saturday';
-            break;
-
-        case '12':
-            $day_da = 'Sønddag';
-            $day_en = 'Sunday';
-            break;
-        }
+    <?php foreach ($this->food as $fooditem) : 
+        $food = $fooditem->getMad();
+        $day = ucfirst($this->day[date('N', strtotime($fooditem->dato))]);
         ?>
-<tr><td colspan="2"><?= e($food->kategori);?> - <?= $day_da;?> d.<?= date('d/m', strtotime($fooditem->dato));?> (<?= e($food->pris);?>kr)</td></tr>
+<tr><td colspan="2"><?= e($food->kategori)?> - <?= $day?> d.<?= date('d/m', strtotime($fooditem->dato));?> (<?= e($food->pris);?>kr)</td></tr>
     <?php endforeach;?>
 <?php endif;?>
 <?php if (!empty($this->entrance['otto'])) : ?>
@@ -184,7 +137,7 @@ case 'a':
 <tr><td>Jeg vil spille på dansk:                                      </td><td><?= strpos($this->participant->sprog, 'dansk') !== false ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på engelsk:                                    </td><td><?= strpos($this->participant->sprog, 'engelsk') !== false ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på skandinavisk:                               </td><td><?= strpos($this->participant->sprog, 'skandinavisk') !== false ? 'Ja' : 'Nej';?></td></tr>
-<tr><td>Vil gerne med-arrangere Fastaval 2021:                        </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Ja' : 'Nej';?></td></tr>
+<tr><td>Vil gerne med-arrangere Fastaval <?=$this->next_year?>:       </td><td><?= $this->participant->arrangoer_naeste_aar === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Klargøre skolen fra mandag:                                   </td><td><?= $this->participant->ready_mandag === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Klargøre skolen fra tirsdag:                                  </td><td><?= $this->participant->ready_tirsdag === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil være simultantolk:                                    </td><td><?= $this->participant->interpreter === 'ja' ? 'Ja' : 'Nej';?></td></tr>

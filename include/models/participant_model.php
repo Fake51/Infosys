@@ -2306,41 +2306,35 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
     {
         $pay_by_time  = strtotime($this->config->get('con.paymentlimit'));
         $signup_time = strtotime($participant->signed_up) + 86400;
-
         $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
 
         if ($paytime < time()) {
             $paytime = time() + 86400;
         }
-
-        $api = $this->factory('Api');
-
-        $page->participant = $participant;
-        $page->wear        = $participant->getWear();
-        $page->activities  = $participant->getTilmeldinger();
-        $page->gds         = $participant->getGDSTilmeldinger();
-
-        if ($participant->id) {
-            try {
-                $hash = $api->getParticipantPaymentHash($participant);
-
-            } catch (FrameworkException $e) {
-                $hash = $api->setParticipantPaymentHash($participant);
-            }
-
-            $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
-
-        }
-
+        
         $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
-
         if ($participant->speaksDanish() && $lang !== 'en') {
             $page->payment_day = date('d/m-Y', $paytime);
         } else {
             $page->payment_day = date('M d, Y', $paytime);
         }
 
+        $page->participant = $participant;
+        $page->wear        = $participant->getWear();
+        $page->activities  = $participant->getTilmeldinger();
+        $page->gds         = $participant->getGDSTilmeldinger();
         $page->food        = $participant->getMadtider();
+
+        $api = $this->factory('Api');
+        if ($participant->id) {
+            try {
+                $hash = $api->getParticipantPaymentHash($participant);
+            } catch (FrameworkException $e) {
+                $hash = $api->setParticipantPaymentHash($participant);
+            }
+
+            $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
+        }
 
         $entrance = array();
         $prices   = array(
@@ -2375,12 +2369,12 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
                 }
 
             } elseif ($indgang->isDayTicket()) {
-                $entrance['entrance-' . date('d', strtotime($indgang->start))] = true;
+                $entrance['entrance-day'][strtotime($indgang->start)] = true;
 
                 $prices['entrance'] += $indgang->pris;
 
             } elseif ($indgang->isSleepTicket()) {
-                $entrance['sleeping-' . date('d', strtotime($indgang->start))] = true;
+                $entrance['sleeping-day'][strtotime($indgang->start)] = true;
 
                 $prices['sleeping'] += $indgang->pris;
 
@@ -2406,6 +2400,8 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
                 }
             }
         }
+        ksort($entrance['entrance-day']);
+        ksort($entrance['sleeping-day']);
 
         foreach ($page->food as $item) {
             if ($item) {
@@ -2439,11 +2435,9 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         }
 
         $page->end_signup_changes_date = $page->payment_day;
-        // if ($participant->speaksDanish() && $lang !== 'en') {
-        //     $page->end_signup_changes_date = date('d/m-Y', $paytime + 7 * 86400);
-        // } else {
-        //     $page->end_signup_changes_date = date('M d, Y', $paytime + 7 * 86400);
-        // }
+
+        $constart = strtotime($this->config->get('con.start'));
+        $page->next_year = date('Y', strtotime('+1 year',$constart));
 
         return $participant;
     }

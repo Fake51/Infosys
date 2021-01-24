@@ -729,9 +729,10 @@ class ApiController extends Controller
 
         if ($lang === 'en' || !$this->page->participant->speaksDanish()) {
             $this->page->setTemplate('confirmationdataen');
-
+            $this->page->days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         } else {
             $this->page->setTemplate('confirmationdata');
+            $this->page->days = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag', 'søndag'];
         }
 
         $participant_model = new ParticipantModel($this->dic->get('DB'), $this->config, $this->dic);
