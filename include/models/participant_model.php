@@ -2387,6 +2387,14 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             } elseif ($indgang->isFee()) {
                 $prices['fees'] += $indgang->pris;
 
+            } elseif ($indgang->isRich()) {
+                if ($indgang->isSecret()){
+                    $page->hemmelig_onkel = $indgang->pris;
+                } else {
+                    $page->rig_onkel = $indgang->pris;
+                }
+
+                $prices['other-stuff'] += $indgang->pris;
             } else {
                 $entrance[$indgang->type] = true;
 
@@ -2407,14 +2415,6 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             if ($item) {
                 $prices['food'] += $item->getMad()->pris;
             }
-        }
-
-        if ($participant->rig_onkel === 'ja') {
-            $prices['other-stuff'] += 300;
-        }
-
-        if ($participant->hemmelig_onkel === 'ja') {
-            $prices['other-stuff'] += 300;
         }
 
         foreach ($page->wear as $item) {

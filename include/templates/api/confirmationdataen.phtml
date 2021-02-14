@@ -159,11 +159,11 @@ case 'a':
 <tr><td>Other comments:                                               </td><td><?= e($this->participant->deltager_note);?></td></tr>
     <?php endif; ?>
 <?php endif;?>
-<?php if ($this->participant->rig_onkel === 'ja') : ?>
-<tr><td>I am a rich aunty/uncle (supporting Fastaval with 300kr.)                       </td><td>Yes</td></tr>
+<?php if ($this->rig_onkel) : ?>
+<tr><td>I am a rich aunty/uncle (ekstra support for Fastaval)                       </td><td><?=$this->rig_onkel?>kr.</td></tr>
 <?php endif;?>
-<?php if ($this->participant->hemmelig_onkel === 'ja') : ?>
-<tr><td>I am a secretive aunty/uncle (supporting Fastaval anonymously with 300kr.)          </td><td>Yes</td></tr>
+<?php if ($this->hemmelig_onkel) : ?>
+<tr><td>I am a secretive aunty/uncle (anonymous ekstra support for Fastaval)          </td><td><?=$this->hemmelig_onkel?>kr.</td></tr>
 <?php endif;?>
 </tbody>
 

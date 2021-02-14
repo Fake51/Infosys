@@ -159,11 +159,11 @@ case 'a':
 <tr><td>Andre kommentarer:                                            </td><td><?=e($this->participant->deltager_note)?></td></tr>
     <?php endif; ?>
 <?php endif;?>
-<?php if ($this->participant->rig_onkel === 'ja') : ?>
-<tr><td>Rig tante/onkel (støtter Fastaval med 300kr.)                       </td><td>Ja</td></tr>
+<?php if ($this->rig_onkel) : ?>
+<tr><td>Rig tante/onkel (ekstra støtte til Fastaval)                       </td><td><?=$this->rig_onkel?>kr.</td></tr>
 <?php endif;?>
-<?php if ($this->participant->hemmelig_onkel === 'ja') : ?>
-<tr><td>Hemmelig tante/onkel (støtter Fastaval anonymt med 300kr.)          </td><td>Ja</td></tr>
+<?php if ($this->hemmelig_onkel) : ?>
+<tr><td>Hemmelig tante/onkel (anonym ekstra støtte til Fastaval)          </td><td><?=$this->hemmelig_onkel?>kr.</td></tr>
 <?php endif;?>
 </tbody>
 

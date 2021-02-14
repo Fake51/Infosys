@@ -204,6 +204,24 @@ class Indgang extends DBObject
         return stripos($this->type, "medlemskab") !== false;
     }
 
+    public function isRich()
+    {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return stripos($this->type, "onkel") !== false;
+    }
+
+    public function isSecret()
+    {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return stripos($this->type, "Hemmelig") !== false;
+    }
+
     public function getDescription($english = false)
     {
         if (!$this->isLoaded()) {
