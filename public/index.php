@@ -35,11 +35,9 @@ if ($infosys->getConfig()->isSetupRequired()) {
 } else {
     if ($infosys->isMigrationNeeded()) {
         $infosys->runMigrations();
-
     }
 
     $infosys->ensureDatabaseVersion()
         ->handleRequest();
-
 }
 
