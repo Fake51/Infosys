@@ -14,7 +14,7 @@
 /* default layout styles {{{  */
 
 .clear-all {
-clear: both;
+    clear: both;
 }
 
 span.span-block {
@@ -1307,6 +1307,10 @@ div#admin-container table#users-table select{
 
 div#admin-container table#users-table td.status {
     text-align: center;
+}
+
+div#admin-container table#users-table tr.disabled {
+    background-color: #FFE9E9;
 }
 /* }}} */
 

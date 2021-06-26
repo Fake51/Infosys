@@ -17,7 +17,7 @@
             </thead>
             <tbody>
                 <?php foreach ($this->users as $user) :?>
-                <tr>
+                <tr <?= $user->disabled == 'ja' ? 'class="disabled"' : ''?>>
                     <td class='user-id'><?php echo $user->id;?></td>
                     <td><?php echo $user->user;?></td>
                     <td>
