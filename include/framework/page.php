@@ -179,11 +179,11 @@ class Page
      */
     public function __isset($varname)
     {
-        if (isset($this->storage[$varname])) {
-            return true;
-        } else {
-            return false;
+        if (strtolower($varname) == 'request') {
+            return isset($this->request);
         }
+
+        return isset($this->storage[$varname]);
     }
 
     /**
