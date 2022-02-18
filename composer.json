@@ -14,6 +14,7 @@
     "require": {
         "guzzlehttp/guzzle": "^6.2",
         "shuchkin/simplexlsx" : "0.8.10",
-        "shuchkin/simplexls" : "0.9.4"
+        "shuchkin/simplexls" : "0.9.4",
+        "phpoffice/phpspreadsheet": "^1.22"
     }
 }

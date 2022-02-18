@@ -47,7 +47,6 @@
                 <table id='search-participant'>
                     <tr>
                         <td><b>ID:</b> <input type='text' name='deltager_search[id]' value="${search_vars/deltager_search/id}"/></td>
-                        <td><b>Køn:</b> ${structure php:view.genSelect('deltager_search[gender]',array('', 'Mand' => 'm', 'Kvinde' => 'k', 'Andet' => 'a'),search_vars['deltager_search']['gender'])}</td>
                         <td><b>Alder:</b> <input type='text'  name='deltager_search[alder]' value="${search_vars/deltager_search/alder}"/></td>
                     </tr>
                     <tr>

@@ -353,13 +353,11 @@ var FVActivity = (function() {
                     'language',
                     'age',
                     'maxWanted',
-                    'gender',
                     'note',
                 ],
                 language: $row.attr('data-language'),
                 age: $row.attr('data-age'),
                 maxWanted: $row.attr('data-maxWanted'),
-                gender: $row.attr('data-gender'),
                 note: $row.attr('data-participantNote'),
             };
         },
@@ -608,15 +606,6 @@ var FVActivity = (function() {
         return this._age;
     };
 
-    FVActivity.Participant.prototype.getGender = function() {
-        if (this._gender) {
-            return this._gender;
-        }
-
-        this._gender = this.base_element.data('participant_gender');
-        return this._gender;
-    };
-
     FVActivity.Participant.prototype.getPriority = function() {
         if (this._priority) {
             return this._priority;
@@ -629,7 +618,7 @@ var FVActivity = (function() {
     FVActivity.Participant.prototype.createDragElement = function(e) {
         var coords = FVActivity.getEventCoordinates(e);
 
-        this.drag_element = $('<div class="drag-box">' + this.getRole() + ': ' + this.getName() + ' - ' + this.getAge() + '/' + this.getGender() + '/' + this.getPriority() + '</div>').
+        this.drag_element = $('<div class="drag-box">' + this.getRole() + ': ' + this.getName() + ' - ' + this.getAge() + '/' + this.getPriority() + '</div>').
             appendTo('body');
         this.drag_element.sub_y = this.drag_element.height();
         this.drag_element.sub_x = Math.round(this.drag_element.width() / 2);
@@ -783,7 +772,7 @@ var FVActivity = (function() {
     };
 
     FVActivity.Group.prototype.createParticipant = function(participant) {
-        var row = $('<tr class="participant p' + participant.getParticipantId() + '" data-participant_id="' + participant.getParticipantId() + '" data-participant_age="' + participant.getAge() + '" data-participant_role="' + participant.getRole() + '" data-participant_karma="' + participant.getKarma() + '" data-participant_priority="' + participant.getPriority() + '" data-participant_gender="' + participant.getGender() + '"><td>' + participant.getRole() + '</td><td><a href="/deltager/visdeltager/' + participant.getParticipantId() + '">' + participant.getName() + '</a></td><td class="karma">' + participant.getKarma() + '</td><td>' + participant.getAge() + '</td><td>' + participant.getGender() + '</td></tr>'),
+        var row = $('<tr class="participant p' + participant.getParticipantId() + '" data-participant_id="' + participant.getParticipantId() + '" data-participant_age="' + participant.getAge() + '" data-participant_role="' + participant.getRole() + '" data-participant_karma="' + participant.getKarma() + '" data-participant_priority="' + participant.getPriority() + '"><td>' + participant.getRole() + '</td><td><a href="/deltager/visdeltager/' + participant.getParticipantId() + '">' + participant.getName() + '</a></td><td class="karma">' + participant.getKarma() + '</td><td>' + participant.getAge() + '</td></tr>'),
             tbody = this.base_element.find('table tbody');
 
         tbody.

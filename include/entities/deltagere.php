@@ -67,8 +67,9 @@ class Deltagere extends DBObject implements AgeFulfilment
         'flere_gdsvagter'               => 'Flere GDS-vagter',
         'forfatter'                     => 'Forfatter',
         'fornavn'                       => 'Fornavn',
-        'gender'                        => 'Køn',
+        'nickname'                      => 'Kaldenavn',
         'hemmelig_onkel'                => 'Hemmelig onkel',
+        'financial_struggle'            => 'Økonomisk trængende',
         'international'                 => 'International',
         'interpreter'                   => 'Simultantolk',
         'land'                          => 'Land',
@@ -218,6 +219,7 @@ class Deltagere extends DBObject implements AgeFulfilment
                         break;
                     case 'fornavn':
                     case 'efternavn':
+                    case 'nickname':
                     case 'adresse1':
                     case 'adresse2':
                     case 'by':

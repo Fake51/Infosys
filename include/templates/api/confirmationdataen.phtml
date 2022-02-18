@@ -14,22 +14,6 @@
 <?php if ($this->participant->tlf) : ?>
 <tr><td>Emergency number:             </td><td><?= e($this->participant->tlf);?></td></tr>
 <?php endif;?>
-<tr><td>Gender:                                   </td><td><?php
-switch ($this->participant->gender) {
-case 'm':
-    echo 'Male';
-    break;
-
-case 'k':
-    echo 'Female';
-    break;
-
-case 'a':
-    echo 'Other';
-    break;
-
-}
-?></td></tr>
 <tr><td>Birthdate                            </td><td><?= date('d/m-Y', strtotime($this->participant->birthdate));?></td></tr>
 <tr><td>Email:                                 </td><td><?= e($this->participant->email);?></td></tr>
 <tr><td colspan="2" class="headline">ALEA:</td></tr>

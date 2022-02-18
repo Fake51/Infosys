@@ -34,6 +34,10 @@
  * @license  http://www.gnu.org/licenses/gpl.html GPL 3
  * @link     http://www.github.com/Fake51/Infosys
  */
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class ParticipantController extends Controller
 {
     /**
@@ -367,12 +371,12 @@ class ParticipantController extends Controller
     {
         return array('deltager_search' => array(
                                                 'id' => '',
-                                                'gender' => '', 
                                                 'alder' => '',
                                                 'brugerkategori_id' => '',
                                                 'betalt_beloeb' => '',
                                                 'fornavn' => '',
                                                 'efternavn' => '',
+                                                'nickname' => '',
                                                 'email' => '',
                                                 'international' => '',
                                                 'adresse' => '',
@@ -398,6 +402,7 @@ class ParticipantController extends Controller
                                                 'forfatter' => '',
                                                 'rig_onkel' => '',
                                                 'hemmelig_onkel' => '',
+                                                'financial_struggle' => '',
                                                 'tilmeld_scenarieskrivning' => '',
                                                 'krigslive_bus' => '',
                                                 'ungdomsskole' => '',
@@ -1893,7 +1898,95 @@ exit;
         $this->page->double_booked_participants = $this->model->findDoubleBookedParticipants();
     }
 
+    /**
+     * List participants that need a refund
+     *
+     * @access public
+     * @return void
+     */
     public function showRefund(){
         $this->page->rfundees = $this->model->findPeopleNeedingRefund();
     }
+
+
+    /**
+     * List participants with the information needed for name tags
+     *
+     * @access public
+     * @return void
+     */
+    public function nameTagList(){
+        $participants = $this->model->findAll();
+        $this->model->generateParticipantBarcodes($participants);
+
+        // Handle POST request to download spreadsheet
+        if ($this->page->request->isPost()){
+            $post = $this->page->request->post;
+            $file_path = 'sheets/test_sheet.xlsx';
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $row = 1;
+            foreach ($participants as $participant) {
+                $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName();
+                $sheet->setCellValue('A'.$row, $nickname);
+                
+                $barcode = $this->model->generateEan8SheetBarcode($participant->id);
+
+                $barcode_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                $barcode_drawing->setName('Barcode'.$participant->id);
+                $barcode_drawing->setDescription('Barcode'.$participant->id);
+                $barcode_drawing->setPath($barcode); /* put your path and image here */
+                $barcode_drawing->setCoordinates('B'.$row);
+                $barcode_drawing->setHeight(82);
+                $barcode_drawing->setWorksheet($spreadsheet->getActiveSheet());
+                $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(83,'px');
+
+                // Extra stuff for organizers
+                if($participant->isArrangoer()){
+                    $sheet->setCellValue('C'.$row, $participant->arbejdsomraade);
+
+                    $photo = $this->model->fetchCroppedPhoto($participant);
+                    if($photo != '') {
+                        $photo_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                        $photo_drawing->setName('Photo'.$participant->id);
+                        $photo_drawing->setDescription('Photo'.$participant->id);
+                        $photo_drawing->setPath(PUBLIC_PATH.$photo); /* put your path and image here */
+                        $photo_drawing->setCoordinates('D'.$row);
+                        $photo_drawing->setHeight(300,'px');
+                        $photo_drawing->setWorksheet($spreadsheet->getActiveSheet());
+                        $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(300,'px');
+                    }
+                    
+                }
+                $row++;
+            }
+
+            // Set autosize for collumns
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(TRUE);
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(140,'px');
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(TRUE);
+            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(210,'px');
+            
+            $writer = new Xlsx($spreadsheet);
+            $writer->save($file_path);
+
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="name-tag-list.xlsx"');
+            header('Cache-Control: max-age=0');
+            readfile($file_path);
+            exit;
+        }
+
+        
+        $photos = [];
+        foreach ($participants as $participant) {
+            $photos[$participant->id] = $this->model->fetchCroppedPhoto($participant);
+        }
+
+        $this->page->participants = $participants;
+        $this->page->photos = $photos;
+    }
+
+
 }

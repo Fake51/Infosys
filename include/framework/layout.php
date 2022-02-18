@@ -431,7 +431,7 @@ XML;
             <li><a href='{$this->url('vis_spilledere')}'>Spilledere</a></li>
             <li><a href='{$this->url('opret_deltager')}'>Opret deltager</a></li>
             <li><a href='{$this->url('checkin_interface')}'>Checkin registrering</a></li>
-            <li><a href='{$this->url('edit_participant_types')}'>Rediger deltagertyper</a></li>
+            <!--<li><a href='{$this->url('edit_participant_types')}'>Rediger deltagertyper</a></li> This one isn't implemented yet-->
             <li><a href='{$this->url('show_double_bookings')}'>Tjek for dobbelt-bookinger</a></li>
             <li><a href='{$this->url('show_refund')}'>Deltagere der skal have penge tilbage</a></li>
 HTML;
@@ -446,6 +446,7 @@ HTML;
 
             $return .= <<<HTML
 
+            <li><a href='{$this->url('name_tag_list')}'>Liste til navneskilte</a></li>
         </ul>
     </li>
     <li class='topmenu-item'>

@@ -126,12 +126,11 @@ $this->registerLateLoadJS('activity.js');
                                     $gamer_ids[$deltager->id] = true && $type === 'S';
                                     $locked                   = $deltager->activity_lock === 'ja' ? ' locked' : '';
                                 ?>
-                                    <tr class="participant p<?= e($deltager->id) . $locked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-gender="<?= $deltager->gender;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="10" data-participant_gender="<?= e($deltager->gender);?>">
+                                    <tr class="participant p<?= e($deltager->id) . $locked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="10">
                                         <td><?= $type === 'SL' ? '<i class="icon-meeple-king"></i>' : '';?></td>
                                         <td><a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"><?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?></a></td>
                                         <td class="karma"><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                                         <td><?= e($deltager->alder);?></td>
-                                        <td><?= e($deltager->gender);?></td>
                                     </tr>
                                 <?php endforeach;?>
                             </tbody>
@@ -147,10 +146,8 @@ $this->registerLateLoadJS('activity.js');
                         <tr>
                             <td><i class="icon-meeple-king"></i></td>
                             <td class="name">Name</td>
-                            <td class='afviklingsbox-extras'Pri</td>
                             <td class="karma"><i class="icon-balance-scale"></i></td>
                             <td class='afviklingsbox-extras'><i class="icon-ages"></i></td>
-                            <td class='gender'><i class="icon-transgender-alt"></i></td>
                             <td class='max-wanted'><i class="icon-heart-empty"></i></td>
                             <td class='language'><i class="icon-dk"></i></td>
                             <td class='message'><i class="icon-chat"></i></td>
@@ -164,16 +161,6 @@ $this->registerLateLoadJS('activity.js');
                             $busy      = $this->activity->tids_eksklusiv == 'ja' && empty($displayed) && $deltager->isBusyBetween($afvikling->start, $afvikling->slut) ? 'deltagerbusy' : '';
                             $double_booked = !empty($this->double_booked_gms[$deltager->id][$afvikling->id]) ? 'double-booked' : '';
                             $locked    = $deltager->activity_lock === 'ja' ? ' locked' : '';
-
-                            if ($deltager->gender === 'm') {
-                                $gender = 'male-1';
-
-                            } else if ($deltager->gender === 'k') {
-                                $gender = 'female-1';
-
-                            } else {
-                                $gender = 'transgender-alt';
-                            }
 
                             if ($deltager->sprog === 'engelsk') {
                                 $language = 'uk';
@@ -192,13 +179,12 @@ $this->registerLateLoadJS('activity.js');
                                 $desired = '';
                             }
                         ;?>
-                                <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?> <?= $double_booked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-gender="<?= $deltager->gender;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="<?= e($tilmelding->prioritet);?>" data-participant_gender="<?= e($deltager->gender);?>" data-participantNote="<?= e(trim($deltager->deltager_note));?>">
+                                <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?> <?= $double_booked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="<?= e($tilmelding->prioritet);?>" data-participantNote="<?= e(trim($deltager->deltager_note));?>">
                                     <td><?= $type === 'SL' ? '<i class="icon-meeple-king"></i>' : '';?></td>
                                     <td class="name"><a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"<?= ($busy ? " title='Deltageren er optaget på dette tidspunkt'" : '');?>><?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?></a></td>
                                     <td class='afviklingsbox-extras'><?= $tilmelding->prioritet;?></td>
                                     <td class="karma"><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                                     <td class='afviklingsbox-extras'><?= e($deltager->alder);?></td>
-                                    <td class='gender'><i class="icon-<?= $gender;?>"></i></td>
                                     <td class='max-wanted'><?= $desired;?></td>
                                     <td class='language'><i class="icon-<?= $language;?>"></i></td>
                                     <td class='message'><?= trim($deltager->deltager_note) ? '<i class="icon-chat"></i>' : '';?></td>

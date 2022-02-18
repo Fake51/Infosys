@@ -24,13 +24,6 @@ $this->registerLateLoadJS('index.js');
         <?php endforeach;?>
         <!--<li><strong>Graf?</strong> <em><a href="<?= $this->url('graph_participant_shares');?>" class="graph-link">Ja tak!</a></em></li>-->
     </ul>
-    <h3>Tilmeldinger per køn:</h3>
-    <ul>
-        <?php foreach ($this->participant_data['gender'] as $gender => $count) : ?>
-            <li><strong><?= $gender;?>:</strong> <?= $count;?></li>
-        <?php endforeach;?>
-        <!--<li><strong>Graf?</strong> <em><a href="<?= $this->url('graph_participant_shares');?>" class="graph-link">Ja tak!</a></em></li>-->
-    </ul>
 </div>
 
 <div class="infobox stats">

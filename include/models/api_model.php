@@ -775,7 +775,6 @@ HAVING
         $deltager->medical_note      = $deltager->gcm_id = '';
         $deltager->password          = sprintf('%06d', mt_rand(100, 1000000));
         $deltager->brugerkategori_id = $bk->id;
-        $deltager->gender            = 'm';
         $deltager->alder             = 0;
         $deltager->birthdate         = '0000-00-00';
         $deltager->annulled          = 'nej';
@@ -1132,7 +1131,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         $fields = array(
             'fornavn',
             'efternavn',
-            'gender',
+            'nickname',
             'birthdate',
             'alder',
             'email',
@@ -1155,6 +1154,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'rig_onkel',
             'arbejdsomraade',
             'hemmelig_onkel',
+            'financial_struggle',
             'ready_mandag',
             'ready_tirsdag',
             'oprydning_tirsdag',
@@ -1489,7 +1489,6 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         $return = array(
             'fornavn' => $participant->fornavn,
             'efternavn' => $participant->efternavn,
-            'gender' => $participant->gender,
             'package_gds' => $participant->package_gds,
             'birthdate' => $participant->birthdate,
             'alder' => $participant->alder,

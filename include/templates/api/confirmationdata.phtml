@@ -14,22 +14,6 @@
 <?php if ($this->participant->tlf) : ?>
 <tr><td>Alternativt telefonnummer:             </td><td><?= e($this->participant->tlf);?></td></tr>
 <?php endif;?>
-<tr><td>Køn:                                   </td><td><?php
-switch ($this->participant->gender) {
-case 'm':
-    echo 'Mand';
-    break;
-
-case 'k':
-    echo 'Kvinde';
-    break;
-
-case 'a':
-    echo 'Andet';
-    break;
-
-}
-?></td></tr>
 <tr><td>Fødselsdato                            </td><td><?= date('d/m-Y', strtotime($this->participant->birthdate));?></td></tr>
 <tr><td>Email:                                 </td><td><?= e($this->participant->email);?></td></tr>
 <tr><td colspan="2" class="headline">ALEA:</td></tr>

@@ -162,15 +162,6 @@ ORDER BY
             }
         }
 
-        $query = 'SELECT d.gender, COUNT(*) AS count FROM deltagere AS d WHERE signed_up > "0000-00-00" GROUP BY d.gender ORDER BY d.gender';
-
-        if (($result = $this->db->query($query)) && !empty($result[0])) {
-            foreach ($result as $row) {
-                $stats['gender'][$row['gender']] = $row['count'];
-            }
-        }
-
-
         return $stats;
     }
 

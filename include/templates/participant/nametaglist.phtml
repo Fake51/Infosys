@@ -1,0 +1,68 @@
+<h1>Info til navneskilte</h1>
+
+<div class='middleboxes'>
+	<fieldset>
+		<legend>Hent som regneark</legend>
+		<div class="outer-container">
+			<form action="" method="post" name="frmExcelDownload" id="frmExcelDownload" enctype="multipart/form-data">
+				<div>
+					<label>Vælg Filtype</label>
+					<select name="filetype" id="tag_info_filetype">
+						<option value ="xlsx">Office Open XML (.xlsx) Excel 2007 and above</option>
+					</select>
+					<button type="submit" id="download_tag_info" name="download_tag_info" class="btn-submit">Hent</button>
+				</div>
+			</form>
+		</div>
+	</fieldset>
+</div>
+
+<div class='middleboxes'>
+<fieldset>
+<table>
+  <thead>
+    <tr>
+      <th>Kaldenavn:</th>
+      <th>Stregkode:</th>
+      <th>Område:</th>
+      <th>Billede:</th>
+    </tr>
+  </thead>
+  <tbody>
+
+<?php
+
+$count = 0;
+foreach ($this->participants as $participant) {
+  $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName(); 
+
+  $class = 'class ="alterngrey"'
+  ?>
+    <tr <?=$count % 2 ? $class : ""?>>
+      <td><?=$nickname?></td>
+      <td class='align-right'><img class='barcode-image' src='/participant/ean8sheet/<?= $participant->id;?>' alt='barcode'/></td>    
+  <?php
+
+  if ($participant->isArrangoer()) {
+    ?>
+      <td><?=$participant->arbejdsomraade?></td>
+      <td><img src="<?=$this->photos[$participant->id]?>?rand=<?=uniqid()?>" alt=""/></td>
+    <?php
+  } else {
+    ?>
+      <td></td>
+      <td></td>
+    <?php
+  }
+
+  ?>
+    </tr>
+  <?php
+  $count++;
+}
+
+?>
+  </tbody>
+</table>
+</fieldset>
+</div>

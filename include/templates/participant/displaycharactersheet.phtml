@@ -20,7 +20,7 @@
         ?>
 
     <div class='deltager-container'>
-        <?php if ($d->international == 'ja') :?>
+        <?php if (!$d->speaksDanish()) :?>
         <table class='sheet-table' cellspacing="0" cellpadding="0" border="0">
             <tbody>
                 <tr>
@@ -153,7 +153,7 @@
                                 <tr <?php echo $i++ % 2 ? "class='alternate'" : "";?>>
                                     <td><?php echo e($vagt->getGDSName(true));?>:</td>
                                     <td><?php echo date('H:i', strtotime($vagt->start));?> - <?php echo date('H:i', strtotime($vagt->slut));?></td>
-                                    <td><em><?php echo e($vagt->getGDS()->moedested);?></em></td>
+                                    <td><em><?php echo e($vagt->getGDS()->moedested_en);?></em></td>
                                 </tr>
                             <?php endforeach;?>
                         </table>
@@ -167,12 +167,20 @@
                         <table class='subtable fullwidth' cellspacing="0" cellpadding="0" border="0">
                             <caption>Food</caption>
                             <tr>
-                                <td colspan='8' class='align-center'><em>NOTE: Dinner is served in rounds. The time given here shows when YOU can get your dinner (check posters onsite for more details)</em></td>
+                                <td colspan="3" class='align-center'><em>
+                                    NOTE: Dinner is served in rounds. The time given here shows when you can get your
+                                    dinner</em>
+                                    </td>
+                            </tr>
+                            <tr class="heading">
+                                <td colspan="3" class='align-center'>
+                                    (If there's no queue or you have an activity you need to get to, you're allowed to
+                                    pick up your dinner during the entire period from 5pm to 7:30pm)
+                                </td>
                             </tr>
                             <tr>
-                                <td class='label' width="5%">&nbsp;</td>
+                                <td class='label'>&nbsp;</td>
                                 <td class='label align-center'>Breakfast</td>
-                                <td class='label align-center'>Lunch</td>
                                 <td class='label align-center'>Dinner</td>
                             </tr>
                             <?php $day = strtotime($this->con_start);
@@ -187,21 +195,7 @@
 
                                 foreach ($food as $madtid) :
                                     if (substr($madtid->dato, 0, 10) == $date && $madtid->isBreakfast()) :?>
-                                        <td class='align-left'>Yes (8:00 - 11:00)</td>
-                                    <?php $done = true;
-                                        break;
-                                    endif;
-                                endforeach;
-
-                                if (!$done) : ?>
-                                    <td>&nbsp;</td>
-                                <?php endif;
-
-                                $done = false;
-
-                                foreach ($d->getMadtider() as $madtid) :
-                                    if (substr($madtid->dato, 0, 10) == $date && $madtid->isLunch()) :?>
-                                        <td class='align-left'><?php echo e($madtid->getMad()->title_en);?> (<?php echo $madtid->getHandoutTime($d);?>)</td>
+                                        <td class='align-left'>Yes (8:00am - 10:30am)</td>
                                     <?php $done = true;
                                         break;
                                     endif;
@@ -306,7 +300,7 @@
                                 <td>
                                     <?php $strings = array();
                                     foreach ($wear as $wear) :
-                                        $strings[] = "{$wear->antal} {$wear->getWearName()} size: {$wear->size} ({$wear->getWearpris()->getCategory()->navn})";
+                                        $strings[] = "{$wear->antal} {$wear->getWearName(true)} size: {$wear->size} ({$wear->getWearpris()->getCategory()->navn})";
                                     endforeach;
                                     echo implode('<br/>', $strings);
                                     ?>
@@ -530,12 +524,20 @@
                         <table class='subtable fullwidth' cellspacing="0" cellpadding="0" border="0">
                             <caption>Mad</caption>
                             <tr>
-                                <td colspan='8' class='align-center'><em>BEMÆRK: Aftensmadsudleveringen er opdelt i RUNDER. Det påtrykte tidspunkt angiver i hvilket tidsrum DU kan hente din aftensmad (se onsite plakat for uddybning)</em></td>
+                                <td colspan='3' class='align-center'><em>
+                                    BEMÆRK: Aftensmadsudleveringen er opdelt i RUNDER. Det påtrykte tidspunkt angiver i 
+                                    hvilket tidsrum du kan hente din aftensmad.</em>
+                                </td>
+                            </tr>
+                            <tr class="heading">
+                                <td colspan='3' class='align-center'>
+                                    (Hvis der ikke er kø, eller du skal nå et scenarie, må du gerne hente din mad i hele
+                                    perioden mellem 17 og 19:30)
+                                </td>
                             </tr>
                             <tr>
-                                <td class='label' width="5%">&nbsp;</td>
+                                <td class='label'>&nbsp;</td>
                                 <td class='label align-center'>Morgenmad</td>
-                                <td class='label align-center'>Frokost</td>
                                 <td class='label align-center'>Aftensmad</td>
                             </tr>
                             <?php $day = strtotime($this->con_start);
@@ -552,7 +554,7 @@
 
                                 foreach ($food as $madtid) :
                                     if (substr($madtid->dato, 0, 10) == $date && $madtid->isBreakfast()) :?>
-                                        <td class='align-left'>Ja (kl. 8-11)</td>
+                                        <td class='align-left'>Ja (kl. 8-10:30)</td>
                                     <?php
                                         $done = true;
                                         break;
@@ -561,21 +563,6 @@
 
                                 if (!$done) : ?>
                                     <td >&nbsp;</td>
-                                <?php endif;
-
-                                $done = false;
-
-                                foreach ($food as $madtid) :
-                                    if (substr($madtid->dato, 0, 10) == $date && $madtid->isLunch()) :?>
-                                        <td class='align-left'><?php echo e($madtid->getMad()->kategori);?> (kl. <?php echo $madtid->getHandoutTime($d);?>)</td>
-                                    <?php
-                                        $done = true;
-                                        break;
-                                    endif;
-                                endforeach;
-
-                                if (!$done) : ?>
-                                    <td>&nbsp;</td>
                                 <?php endif;
 
                                 $done = false;

@@ -2408,8 +2408,12 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
                 }
             }
         }
-        ksort($entrance['entrance-day']);
-        ksort($entrance['sleeping-day']);
+        if (isset($entrance['entrance-day']) && is_array($entrance['entrance-day'])) {
+            ksort($entrance['entrance-day']);
+        }
+        if (isset($entrance['sleeping-day']) && is_array($entrance['sleeping-day'])) {
+            ksort($entrance['sleeping-day']);
+        }
 
         foreach ($page->food as $item) {
             if ($item) {
