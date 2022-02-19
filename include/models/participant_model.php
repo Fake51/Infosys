@@ -68,7 +68,9 @@ class ParticipantModel extends Model
         $search['ids'] = array();
 
         if ($result = $this->miniWildCardSearch(explode(' ', $query))) {
-            $search['ids'] = array_map(create_function('$a', 'return $a->id;'), $result);
+            $search['ids'] = array_map(function($a) {
+                return $a->id;
+            }, $result);
         }
 
         $session->search = $search;
@@ -1544,10 +1546,14 @@ SQL;
         }
 
         $parts = explode(' ', $participant->fornavn);
-        $participant->fornavn = implode(' ', array_map(create_function('$a', 'return ucfirst($a);'), $parts));
+        $participant->fornavn = implode(' ', array_map(function($a) {
+            return ucfirst($a);
+        }, $parts));
 
         $parts = explode(' ', $participant->efternavn);
-        $participant->efternavn = implode(' ', array_map(create_function('$a', 'return ucfirst($a);'), $parts));
+        $participant->efternavn = implode(' ', array_map(function($a) {
+            return ucfirst($a);
+        }, $parts));
 
         $name = $participant->fornavn . ' ' . $participant->efternavn;
         $name = mb_strlen($name) > 25 ? $participant->fornavn . "\n" . $participant->efternavn : $name;
@@ -1778,7 +1784,9 @@ SQL;
 
         if ($session->search) {
             if (!empty($session->search['ids']) && is_array($session->search['ids'])) {
-                $id_clause = 'deltagere.id IN (' . implode(', ', array_map(create_function('$a', 'return intval($a);'), $session->search['ids'])) . ')';
+                $id_clause = 'deltagere.id IN (' . implode(', ', array_map(function($a) {
+                    return intval($a);
+                }, $session->search['ids'])) . ')';
 
                 $where .= ($where ? ' AND ' : ' WHERE ') . $id_clause;
             } else {

@@ -352,7 +352,9 @@ HAVING
             }
         }
 
-        usort($return, create_function('$a, $b', 'return $a["afvikling_id"] - $b["afvikling_id"];'));
+        usort($return, function($a, $b) {
+            return $a["afvikling_id"] - $b["afvikling_id"];
+        });
 
         return $return;
     }

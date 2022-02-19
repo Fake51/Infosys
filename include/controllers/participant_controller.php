@@ -737,7 +737,9 @@ class ParticipantController extends Controller
         if (!$this->page->request->isPost()) {
             $this->page->deltager = $deltager;
             $activities = $this->model->getAllAktiviteter();
-            usort($activities, create_function('$a, $b', 'return strcmp($a->navn, $b->navn);'));
+            usort($activities, function($a, $b) { 
+                return strcmp($a->navn, $b->navn);
+            });
             $this->page->aktiviteter = $activities;
 
             $this->page->setTemplate('editAktiviteter');

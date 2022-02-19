@@ -255,7 +255,10 @@ class DBObject
         }
 
         if (substr(strtolower($info[$column]), 0, 4) === 'enum') {
-            $types = array_map(create_function('$a', 'return str_replace("\'", "", $a);'), explode(',', substr($info[$column], 5, -1)));
+            $types = array_map(
+                function($a) {return str_replace("'", "", $a);},
+                explode(',', substr($info[$column], 5, -1))
+            );
             return array('type' => 'enum', 'values' => $types);
         }
 
