@@ -145,6 +145,7 @@ class ActivityModel extends Model {
         $activity->spilledere_per_hold    = intval($activity->spilledere_per_hold);
         $activity->varighed_per_afvikling = floatval(str_replace(',', '.', $activity->varighed_per_afvikling));
         $activity->pris                   = intval($activity->pris);
+        $activity->max_signups            = intval($activity->max_signups);
 
         $activity->wp_link   = $activity->wp_link ? $activity->wp_link : 0;
         $activity->teaser_dk = $activity->teaser_dk ? $activity->teaser_dk : '';
