@@ -50,15 +50,23 @@ $this->registerLateLoadJS('index.js');
     <h2>Wear stats</h2>
     <h3>Wear bestillinger:</h3>
     <ul>
-        <?php foreach ($this->wear_data['types'] as $type => $orders) :?>
+        <?php 
+        if(isset($this->wear_data['types'])):
+            foreach ($this->wear_data['types'] as $type => $orders) :?>
             <li><strong><?= e($type);?>:</strong> <?= e($orders);?></li>
-        <?php endforeach;?>
+        <?php 
+            endforeach;
+        endif;?>
     </ul>
     <h3>Wear udleveret:</h3>
     <ul>
-        <?php foreach ($this->wear_data['received'] as $type => $count) :?>
+        <?php 
+        if(isset($this->wear_data['types'])):
+            foreach ($this->wear_data['received'] as $type => $count) :?>
             <li><strong><?= e($type);?>:</strong> <?= e($count);?></li>
-        <?php endforeach;?>
+        <?php 
+            endforeach;
+        endif;?>
     </ul>
 </div>
 
@@ -66,9 +74,13 @@ $this->registerLateLoadJS('index.js');
     <h2>Mad stats</h2>
     <h3>Mad bestillinger:</h3>
     <ul>
-        <?php foreach ($this->food_data['types'] as $type => $orders) :?>
+        <?php
+        if(isset($this->wear_data['types'])):
+            foreach ($this->food_data['types'] as $type => $orders) :?>
             <li><strong><?= e($type);?>:</strong> <?= e($orders);?></li>
-        <?php endforeach;?>
+        <?php 
+            endforeach;
+        endif;?>
         <li><strong>Graf?</strong> <em><a href="<?= $this->url('graph_food_shares');?>" class="graph-link">Ja tak!</a></em></li>
     </ul>
     <h3>Mad udleveret:</h3>
