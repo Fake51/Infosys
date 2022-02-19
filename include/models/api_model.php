@@ -516,15 +516,18 @@ HAVING
             if ($time > 04 && $time < 12) {
                 $period = date('Y-m-d ', $parsed) . '04-12';
 
-            } elseif ($time >= 12 && $time <= 17) {
+            } elseif ($time >= 12 && $time < 16) {
                 $period = date('Y-m-d ', $parsed) . '12-17';
 
+            } elseif ($time >= 16 && $time < 22) {
+                $period = date('Y-m-d ', $parsed) . '17-22';
+    
             } else {
-		if ($time <= 4) {
+		        if ($time <= 4) {
                     $parsed = strtotime($shift->start . ' - 4 hours');
                 }
 
-                $period = date('Y-m-d ', $parsed) . '17-04';
+                $period = date('Y-m-d ', $parsed) . '22-04';
 
             }
 
