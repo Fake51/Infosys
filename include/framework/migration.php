@@ -203,6 +203,7 @@ WHERE
 
                 foreach ($matches[0] as $query) {
                     $query = trim($query, "\n ;");
+                    if (strpos($query, "--") === 0) continue; //Skip comment
 
                     if ($query) {
                         $this->db->exec($query);

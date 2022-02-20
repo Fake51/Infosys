@@ -52,6 +52,7 @@ ALTER TABLE wear ADD FOREIGN KEY (max_size) REFERENCES wear_sizes(size_id);
 ALTER TABLE wear ADD wear_order INT UNSIGNED;
 SET @rn = 0; UPDATE wear SET order = (@rn:=@rn+1);
 
-ALTER TABLE deltagere_wear MODIFY size INT UNSIGNED;
+ALTER TABLE deltagere_wear DROP COLUMN size;
+ALTER TABLE deltagere_wear ADD size INT UNSIGNED;
 UPDATE deltagere_wear SET size = 1;
 ALTER TABLE deltagere_wear ADD FOREIGN KEY (size) REFERENCES wear_sizes(size_id);
