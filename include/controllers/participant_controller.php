@@ -1101,7 +1101,7 @@ class ParticipantController extends Controller
 
             $wear = array();
             foreach ($deltager->getWear() as $w) {
-                $wear[$w->getWear()->navn] = array('size' => $w->size, 'count' => $w->antal);
+                $wear[$w->getWear()->navn] = array('size' => $w->getSizeName(), 'count' => $w->antal);
             }
 
             $aktiviteter = array();

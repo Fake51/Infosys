@@ -681,6 +681,7 @@ HAVING
 
         $result = $this->createEntity('Wear')->findBySelectMany($select);
         $return = array();
+        $return[0] = ['sizes' => $this->createEntity('Wear')->getWearSizes()];
 
         if ($result) {
 
@@ -697,7 +698,8 @@ HAVING
             foreach ($result as $res) {
                 $act = array(
                     'wear_id'    => intval($res->id),
-                    'size_range' => $res->size_range,
+                    'min_size'   => $res->min_size,
+                    'max_size'   => $res->max_size,
                     'title_da'   => $res->navn,
                     'title_en'   => $res->title_en,
                     'prices'     => array(),
@@ -823,7 +825,6 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             }
 
             $deltager->removeAllWear();
-            //$this->db->exec("DELETE FROM deltagere_wear WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['wear'] as $wear) {
                 $wearprice = $this->createEntity('WearPriser');
@@ -842,8 +843,6 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
                 }
 
                 $deltager->setWearOrder($wearprice, $wear['size'], $wear['amount']);
-
-//                $this->db->exec("INSERT INTO deltagere_wear (deltager_id, wearpris_id, size, antal) VALUES (?, ?, ?, ?)", $deltager->id, $wearprice->id, $wear['size'], $wear['amount']);
             }
 
         } catch (Exception $e) {

@@ -141,7 +141,7 @@ var madwearedit = {
                         that.ajaxToSelect($(select_middle), data);
 
                         response = $.parseJSON(data).pairs;
-                        theArray = that.prepareSecondWearArray(response[0].sizerange);
+                        theArray = that.prepareSecondWearArray(response[0].min_size, response[0].max_size);
                         for (var i = 0; i < theArray.length; i++) {
                             $(select_bottom).append('<option value="' + theArray[i].value + '">' + theArray[i].text + '</option>');
                         }
@@ -454,22 +454,26 @@ var madwearedit = {
         return return_value;
     },
 
-    prepareSecondWearArray: function(sizerange){
-        var sizeparts = sizerange.split('-'),
-            start     = this.wearSizes.indexOf(sizeparts[0]),
-            end       = this.wearSizes.indexOf(sizeparts[1]);
+    prepareSecondWearArray: function(min_size, max_size){
+        let start = -1;
+        let end = -1;
 
+        this.wearSizes.forEach( (element, index) => {
+            if (element.size_id === min_size) start = index;
+            if (element.size_id === max_size) end = index;
+        });
+        
         if (start === -1 || end === -1) {
             return [];
         }
+        
+        return this.wearSizes.slice(start, end + 1).map(function (item) {
+            return {
+                value: item.size_id,
+                text: item.size_name_da
+            };
+        });
 
-        return this.wearSizes.slice(start, end + 1)
-            .map(function (item) {
-                return {
-                    value: item,
-                    text: item
-                };
-            });
     },
 
     blankSelect: function(select_id){

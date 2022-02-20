@@ -250,7 +250,7 @@ class DB
                 throw new DBException($this->last_error);
             }
         } catch (PDOException $e) {
-            error_log("Issuing prepared statement failed - {$query}");
+            error_log("Issuing prepared statement failed - {$query}\n".$e->getMessage()."\n");
             throw new DBException("Issuing prepared statement failed - {$query}");
         }
 
@@ -316,7 +316,7 @@ class DB
                 throw new DBException($this->last_error);
             }
         } catch (PDOException $e) {
-            error_log("Issuing prepared statement failed - {$query}");
+            error_log("Issuing prepared statement failed - {$query}\n".$e->getMessage()."\n");
             throw new DBException("Issuing prepared statement failed - {$query}");
         }
     }

@@ -151,7 +151,7 @@ Ved alle muligheder skal du huske at anføre dit navn og deltagernummer (<?= $th
     <?php foreach ($this->wear as $order) : ?>
         <?php $price = $order->getWearpris();
       $name  = $order->getWearname();?>
-<tr><td><?= $order->antal;?> <?= $name;?>, str. <?= $order->size;?> (<?= $price->pris;?>kr.)</td></tr>
+<tr><td><?= $order->antal;?> <?= $name;?>, str. <?= $order->getSizeName();?> (<?= $price->pris;?>kr.)</td></tr>
     <?php endforeach;?>
 </tbody></table>
 <?php endif;?>

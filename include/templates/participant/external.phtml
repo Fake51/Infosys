@@ -226,7 +226,7 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
                 <?php if (!empty($this->deltager_info['wear'])) :
                     foreach ($this->deltager_info['wear'] as $wear) :?>
                         <tr>
-                            <td class="label"><?= e($wear->antal);?> <?= e($wear->getWearName());?>, size <?= e($wear->size);?></td>
+                            <td class="label"><?= e($wear->antal);?> <?= e($wear->getWearName());?>, size <?= e($wear->getSizeName());?></td>
                         </tr>
                     <?php endforeach;
                 endif;?>

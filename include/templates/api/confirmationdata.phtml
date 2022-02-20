@@ -84,7 +84,7 @@
     <?php foreach ($this->wear as $order) : ?>
         <?php $price = $order->getWearpris();
       $name  = $order->getWearname();?>
-<tr><td colspan="2"><?= e($order->antal);?> <?= e($name);?>, str. <?= e($order->size);?> (<?= e($price->pris);?>kr.)</td></tr>
+<tr><td colspan="2"><?= e($order->antal);?> <?= e($name);?>, str. <?= e($order->getSizeName());?> (<?= e($price->pris);?>kr.)</td></tr>
     <?php endforeach;?>
 </tbody>
 <?php endif;?>

@@ -272,7 +272,10 @@ class WearController extends Controller {
                 header('Content-Type: text/plain; encoding: UTF-8');
                 $strings = array();
                 foreach ($result as $wearpris) {
-                    $strings[] = '{"value": "' . $wearpris->id . '", "sizerange": "' . $wear->size_range . '", "text": "' . $wearpris->getCategory()->navn . ' - ' . $wearpris->pris . ',-"}';
+                    $strings[] = '{"value": "' . $wearpris->id . 
+                        '", "min_size": "' . $wear->min_size .
+                        '", "max_size": "' . $wear->max_size .
+                        '", "text": "' . $wearpris->getCategory()->navn . ' - ' . $wearpris->pris . ',-"}';
                 }
                 echo '{"pairs": [' . implode(',', $strings) . ']}';
             }

@@ -7,8 +7,8 @@
             <span class='label'>Beskrivelse:</span> <span class='detail'><input type='text' name='beskrivelse' value='<?php echo (isset($this->wear) ? $this->wear->beskrivelse : '');?>'/></span><br/>
             <span class='label'>Engelsk titel:</span> <span class='detail'><input type='text' name='title_en' value='<?php echo (isset($this->wear) ? $this->wear->title_en : '');?>'/></span><br/>
             <span class='label'>Engelsk beskrivelse:</span> <span class='detail'><input type='text' name='description_en' value='<?php echo (isset($this->wear) ? $this->wear->description_en : '');?>'/></span><br/>
-            <span class='label'>Min str.:</span> <span class='detail'><?php echo $this->genSelect('min_size', $this->model->getWearSizes(), isset($this->wear) ? $this->wear->getMinSize() : null);?></span><br/>
-            <span class='label'>Max str.:</span> <span class='detail'><?php echo $this->genSelect('max_size', $this->model->getWearSizes(), isset($this->wear) ? $this->wear->getMaxSize() : null);?></span><br/>
+            <span class='label'>Min str.:</span> <span class='detail'><?php echo $this->genSelect('min_size', $this->model->getSelectSizes(), isset($this->wear) ? $this->wear->getMinSize()['size_id'] : null);?></span><br/>
+            <span class='label'>Max str.:</span> <span class='detail'><?php echo $this->genSelect('max_size', $this->model->getSelectSizes(), isset($this->wear) ? $this->wear->getMaxSize()['size_id'] : null);?></span><br/>
             <?php if (isset($this->wear)) : ?>
                 <hr/>
                 <table id='wear-priser'>

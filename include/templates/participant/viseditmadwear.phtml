@@ -85,7 +85,10 @@
                                 <?php if (!empty($this->deltager_info['wear'])) :
                                     foreach ($this->deltager_info['wear'] as $wearpris) :?>
                                     <tr>
-                                        <td class='choice'><?php echo e($wearpris->antal);?> stk. <?php echo e($wearpris->getWearpris()->getWear()->navn);?> str. <?php echo e($wearpris->size);?> &mdash; (<?php echo e($wearpris->getWearpris()->getCategory()->navn);?> -  <?php echo e($wearpris->getWearpris()->pris);?>,-)<input type='hidden' name='wearpriser[]' value='<?php echo $wearpris->wearpris_id;?>'/><input type='hidden' name='wearantal[]' value='<?php echo e($wearpris->antal);?>' /><input type='hidden' name='wearsize[]' value='<?php echo e($wearpris->size);?>' /></td>
+                                        <td class='choice'><?=e($wearpris->antal)?> stk. <?=e($wearpris->getWearpris()->getWear()->navn)?> str. <?=e($wearpris->getSizeName())?> &mdash; (<?=e($wearpris->getWearpris()->getCategory()->navn)?> -  <?=e($wearpris->getWearpris()->pris)?>,-)
+                                        <input type='hidden' name='wearpriser[]' value='<?=$wearpris->wearpris_id?>'/>
+                                        <input type='hidden' name='wearantal[]' value='<?=e($wearpris->antal)?>' />
+                                        <input type='hidden' name='wearsize[]' value='<?=$wearpris->size?>' /></td>
                                         <td><input type='button' value='Slet' /></td>
                                     </tr>
                                     <?php endforeach;

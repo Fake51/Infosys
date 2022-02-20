@@ -13,7 +13,7 @@
                         <td class='deltager-wearorder-type'>Kategori: <?php echo $order->getWearName();?></td>
                         <td><?php echo $order->getWearpris()->getCategory()->navn;?></td>
                         <td>Antal: <?php echo $order->antal;?></td>
-                        <td>Str.: <?php echo $order->size;?></td>
+                        <td>Str.: <?php echo $order->getSizeName();?></td>
                         <td class='print-hidden'>Status: <?php echo ($order->received == 'f' ? 'Ikke udleveret' : 'Udleveret');?></td>
                         <td class='print-hidden'><input type='button' value="<?php echo ($order->received == 'f' ? 'Marker udleveret' : 'Fortryd udlevering');?>" class="wear-hand-out <?php echo ($order->received == 'f' ? '' : 'handed-out');?>" id='<?php echo $order->deltager_id;?>-<?php echo $order->wearpris_id;?>'/></td>
                     </tr>

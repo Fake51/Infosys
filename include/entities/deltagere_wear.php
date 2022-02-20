@@ -215,4 +215,16 @@ class DeltagereWear extends DBObject
         $this->size = $size;
         return $this->insert();
     }
+
+    /**
+     * returns the human readable name for the size
+     *
+     * @access public
+     * @return string
+     */
+    public function getSizeName($english = false)
+    {
+        return $this->createEntity('Wear')->getSizeName($this->size, $english);
+    }
+
 }

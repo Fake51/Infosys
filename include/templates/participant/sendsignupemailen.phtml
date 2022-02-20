@@ -146,7 +146,7 @@ When using the bank transfer option, remember to clearly state name and particip
     <?php foreach ($this->wear as $order) : ?>
         <?php $price = $order->getWearpris();
       $name  = $order->getWearname('en');?>
-<tr><td><?= $order->antal;?> <?= $name;?>, size <?= $order->size;?> (<?= $price->pris;?>kr.)</td></tr>
+<tr><td><?= $order->antal;?> <?= $name;?>, size <?= $order->getSizeName(true);?> (<?= $price->pris;?>kr.)</td></tr>
     <?php endforeach;?>
 </tbody></table>
 <?php endif;?>

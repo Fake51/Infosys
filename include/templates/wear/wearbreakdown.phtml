@@ -9,7 +9,7 @@
             <tr>
                 <th>&nbsp;</th>
                 <?php foreach ($this->sizes as $size) : ?>
-                    <th class='wear-subheader'><?php echo $size;?></th>
+                    <th class='wear-subheader'><?php echo $size['size_name_da'];?></th>
                 <?php endforeach;?>
                 <th class='wear-subheader'>Ialt</th>
             </tr>
@@ -28,9 +28,9 @@
                     foreach ($this->sizes as $size) :
                         $col_done = false;
                             foreach ($this->wear_data[$wear->id] as $data) :
-                                if ($data['size'] == $size && $data['wear_id'] == $wear->id) : ?>
+                                if ($data['size'] == $size['size_id'] && $data['wear_id'] == $wear->id) : ?>
                             <td class='alt'>
-                                <a href="<?php echo $this->url('detailed_mini_list', array('type' => $wear->id, 'size' => $size));?>"><?php echo $data['antal'];?></a>
+                                <a href="<?php echo $this->url('detailed_mini_list', array('type' => $wear->id, 'size' => $size['size_id']));?>"><?php echo $data['antal'];?></a>
                             </td>
                             <?php
                                 $ialt += $data['antal'];

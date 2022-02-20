@@ -225,7 +225,7 @@ If you have any questions regarding the details here, you can e-mail us at <a st
                 <?php if (!empty($this->deltager_info['wear'])) :
                     foreach ($this->deltager_info['wear'] as $wear) :?>
                         <tr>
-                            <td class="label"><?= e($wear->antal);?> <?= e($wear->getWear()->getName(true));?>, size <?= e($wear->size);?></td>
+                            <td class="label"><?= e($wear->antal);?> <?= e($wear->getWear()->getName(true));?>, size <?= e($wear->getSizeName(true));?></td>
                         </tr>
                     <?php endforeach;
                 endif;?>
