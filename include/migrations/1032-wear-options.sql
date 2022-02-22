@@ -29,7 +29,7 @@ INSERT INTO wear_sizes (size_name_da, size_name_en) VALUES ('XXL', 'XXL');
 INSERT INTO wear_sizes (size_name_da, size_name_en) VALUES ('3XL', '3XL');
 INSERT INTO wear_sizes (size_name_da, size_name_en) VALUES ('4XL', '4XL');
 INSERT INTO wear_sizes (size_name_da, size_name_en) VALUES ('5XL', '5XL');
-SET @rn = 0; UPDATE wear_sizes SET size_order = (@rn:=@rn+1);
+SET @rn = 0; UPDATE wear SET wear_order = (@rn:=@rn+1);
 
 CREATE TABLE wear_colors (
   color_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
