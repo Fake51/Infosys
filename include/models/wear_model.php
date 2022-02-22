@@ -326,7 +326,7 @@ class WearModel extends Model
             }
         }
         
-        if (is_array($org_ids)) {
+        if (isset($org_ids) && is_array($org_ids)) {
             foreach ($org_ids as $id => $value) {
                 $new_wearprice                    = $this->createEntity('WearPriser');
                 $new_wearprice->wear_id           = $wear->id;
