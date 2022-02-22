@@ -57,12 +57,52 @@ class WearController extends Controller {
     public function showTypes() {
         if ($results = $this->model->getAllWear())
         {
+            $this->page->registerEarlyLoadJS('wearlist.js');
             $this->page->wear_types = $results;
         }
         else
         {
             $this->page->setTemplate('noResults');
         }
+    }
+
+    /**
+     * Handles AJAX commands for the wear type list
+     * 
+     * @access public
+     * @return void
+     */
+    public function showTypesAjax(){
+        // ---------------------------------------------------------------------
+        // Error checks
+        // ---------------------------------------------------------------------
+        if (!$this->page->request->isPost()) {
+            header('HTTP/1.1 400 only post requests');
+            exit;
+        }
+        $post = $this->page->request->post;
+        
+        if (!$post->action) {
+            header('HTTP/1.1 400 no action specified');
+            exit;
+        }
+
+        // ---------------------------------------------------------------------
+        // Actions
+        // ---------------------------------------------------------------------
+
+        // Switch rows
+        if ($post->action === 'switch_row') {
+            $error = $this->model->switchRows($post->source_row, $post->destination_row);
+            $done = true;
+        }
+
+        // ---------------------------------------------------------------------
+        // Reply
+        // ---------------------------------------------------------------------
+        if (!$done) header('HTTP/1.1 400 action "'.$post->action.'" not recognized');
+        if ($error) header('HTTP/1.1 500 botched it');
+        exit;
     }
 
     /**

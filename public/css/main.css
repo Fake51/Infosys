@@ -953,6 +953,14 @@ div#wear-details .centersubmits {
     margin: 10px;
 }
 
+div#wear-table table{
+    margin: 0 auto;
+}
+
+div#wear-table tr.selected{
+    background-color: lightgray;
+}
+
 /* log styles */
 table.log-table tr.log_altern, 
 .data-table tr.log_altern {

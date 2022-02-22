@@ -540,4 +540,20 @@ ORDER BY
 
         return $groups;
     }
+
+    public function switchRows($source_id, $dest_id) {
+        
+        // TODO error checks
+        $source = $this->createEntity('Wear')->findById($source_id);
+        $dest = $this->createEntity('Wear')->findById($dest_id);
+
+        echo "Moving wear with ID:$source->id from Position:$source->wear_order\n";
+        echo "To position of wear with ID:$dest->id with Position:$dest->wear_order\n";
+
+        $source_order = $source->wear_order;
+        $source->wear_order = $dest->wear_order;
+        $source->update();
+        $dest->wear_order = $source_order;
+        $dest->update();
+    }
 }

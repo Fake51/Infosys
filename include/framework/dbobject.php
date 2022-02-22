@@ -338,12 +338,16 @@ class DBObject
     public function findAll()
     {
         $DB = $this->getDB();
-        $pk = $this->getPrimaryKey();
         $select = $this->getSelect();
-        foreach ($pk as $key)
-        {
-            $select->setOrder($key, 'asc');
+        if (isset($this->default_order)){
+            $select->setOrder($this->default_order, 'asc');
+        } else {
+            $pk = $this->getPrimaryKey();
+            foreach ($pk as $key) {
+                $select->setOrder($key, 'asc');
+            }
         }
+
         $results = $DB->query($select);
         if (empty($results))
         {

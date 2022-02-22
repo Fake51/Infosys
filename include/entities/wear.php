@@ -42,6 +42,13 @@ class Wear extends DBObject
     protected $tablename = 'wear';
 
     /**
+     * Name of the column to order by, by default
+     * 
+     * @var string
+     */
+    protected $default_order = 'wear_order';
+
+    /**
      * used for storing sizes once loaded from the database
      */
     private static $sizes = null;

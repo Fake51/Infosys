@@ -255,6 +255,7 @@ class Routes
         // wear routes
         $this->routes['wearhome']                     = array('url' => 'wear/', 'controller' => 'Wear', 'method' => 'main');
         $this->routes['show_wear']                    = array('url' => 'wear/showwear', 'controller' => 'Wear', 'method' => 'showTypes');
+        $this->routes['show_wear_ajax']               = array('url' => 'wear/showwear/ajax', 'controller' => 'Wear', 'method' => 'showTypesAjax');
         $this->routes['vis_wear']                     = array('url' => 'wear/viswear/:id:', 'controller' => 'Wear', 'method' => 'showWear');
         $this->routes['edit_wear']                    = array('url' => 'wear/editwear/:id:', 'controller' => 'Wear', 'method' => 'editWear');
         $this->routes['delete_wear']                  = array('url' => 'wear/deletewear/:id:', 'controller' => 'Wear', 'method' => 'deleteWear');
@@ -269,6 +270,7 @@ class Routes
         $this->routes['wear_handout']                 = array('url' => 'wear/handout', 'controller' => 'Wear', 'method' => 'displayHandout');
         $this->routes['wear_handout_ajax']            = array('url' => 'wear/handout/ajax', 'controller' => 'Wear', 'method' => 'ajaxHandout');
         $this->routes['wear_labels']                  = array('url' => 'wear/print-labels', 'controller' => 'Wear', 'method' => 'showPrintLabels');
+        
 
         // mad routes
         $this->routes['madhome']              = array('url' => 'mad/', 'controller' => 'Food', 'method' => 'main');
