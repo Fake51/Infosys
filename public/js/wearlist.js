@@ -4,13 +4,31 @@
 
   $( document ).ready(function() {
     $('td.buttons img').on('click', function(){
-      moveRow($(this).parents('tr')[0], this.getAttribute('direction'));
-    })
+      moveRow($(this).parents('tr'), this.getAttribute('direction'));
+    });
+
+    $('tr').on('click', function(){
+      if (selected) selected.removeClass('selected');
+      selected = $(this);
+      selected.addClass('selected');
+    });
+
+    $(document).on('keydown', function(evt){
+      if(!selected) return;
+      if(evt.key === 'ArrowUp'){
+        evt.preventDefault();
+        moveRow(selected, 'up');
+      }
+      if(evt.key === 'ArrowDown') {
+        evt.preventDefault();
+        moveRow(selected, 'down');
+      }
+    });
   });
 
   function moveRow(row, direction) {
     //console.log("Moving row:", row, "Direction:", direction);
-
+    if (row[0]) row = row[0];
     if (selected) selected.removeClass('selected');
     selected = $(row);
     selected.addClass('selected');
