@@ -163,7 +163,7 @@ HTML;
                     <tr>
                         <td><b>Rig onkel:</b> {$this->view->genSelect('deltager_search[rig_onkel]', array('', 'nej', 'ja'))}</td>
                         <td><b>Hemmelig onkel:</b> {$this->view->genSelect('deltager_search[hemmelig_onkel]', array('', 'nej', 'ja'))}</td>
-                        <td><b>Økonomisk trængende:</b> {$this->view->genSelect('deltager_search[financial_struggle]', array('', 'nej', 'ja'))}</td>
+                        <td><b>Økonomisk støtte:</b> {$this->view->genSelect('deltager_search[financial_struggle]', array('', 'nej', 'ja'))}</td>
                     </tr>
                     <tr>
                         <td><strong>Simultantolk:</strong> {$this->view->genSelect('deltager_search[interpreter]', array('', 'nej','ja'))}</td>

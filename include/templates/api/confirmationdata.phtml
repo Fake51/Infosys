@@ -34,18 +34,18 @@
 <tr><th colspan="2" class="large">PRAKTISK</th></tr>
 <tr><td colspan="2" class="headline"><strong>INDGANG:</strong></td></tr>
 <?php if (!empty($this->entrance['entrance-partout'])) : ?>
-<tr><td colspan="2">Partout indgang (alle dage)</td></tr>
+<tr><td colspan="2">Partout indgang (alle dage) (<?=e($this->prices['entrance'])?>kr.)</td></tr>
 <?php endif;?>
 <?php if (!empty($this->entrance['sleeping-partout'])) : ?>
-<tr><td colspan="2">Overnatning (alle dage)</td></tr>
+<tr><td colspan="2">Overnatning (alle dage) (<?= e($this->prices['sleeping'])?>kr.)</td></tr>
 <?php endif;?>
 
 <?php foreach($this->entrance['entrance-day'] as $date => $value) : ?>
-<tr><td colspan="2">Indgang <?=$this->days[date('N', $date)]?>  <?=date('d/n', $date) ?></td></tr>
+<tr><td colspan="2">Indgang <?=$this->days[date('N', $date)]?>  <?=date('d/n', $date)?> (<?=e($this->prices['entrance-single'])?>kr.)</td></tr>
 <?php endforeach;?>
 
 <?php foreach($this->entrance['sleeping-day'] as $date => $value) : ?>
-<tr><td colspan="2">Overnatning <?=$this->days[date('N', $date)]?> <?=date('d/n', $date) ?></td></tr>
+<tr><td colspan="2">Overnatning <?=$this->days[date('N', $date)]?> <?=date('d/n', $date)?> (<?= e($this->prices['sleeping-single'])?>kr.)</td></tr>
 <?php endforeach;?>
 
 <?php if (!empty($this->food)) : ?>
@@ -60,21 +60,15 @@
 <?php if (!empty($this->entrance['otto'])) : ?>
 <tr><td colspan="2" class="headline"><strong>OTTOFESTEN:</strong></td></tr>
     <?php if (!empty($this->entrance['ottofest'])) : ?>
-<tr><td colspan="2">Jeg kommer til Ottofesten (125 kr)</td></tr>
+<tr><td colspan="2">Jeg kommer til Ottofesten (<?=$this->prices['party']?> kr)</td></tr>
     <?php endif; ?>
-    <?php if (!empty($this->entrance['Ottofest - Champagne'])) : ?>
-<tr><td colspan="2">Jeg vil gerne have bobler (99 kr)</td></tr>
-    <?php endif;?>
-    <?php if (!empty($this->entrance['Ottofest - rødvin'])) : ?>
-<tr><td colspan="2">Jeg vil gerne have rødvin (80 kr)</td></tr>
-    <?php endif;?>
-    <?php if (!empty($this->entrance['Ottofest - hvidvin'])) : ?>
-<tr><td colspan="2">Jeg vil gerne have hvidvin (80 kr)</td></tr>
+    <?php if (!empty($this->entrance['bubbles'])) : ?>
+<tr><td colspan="2">Jeg vil gerne have bobler (<?=$this->prices['party-bubbles']?> kr)</td></tr>
     <?php endif;?>
 <?php endif;?>
 <?php if (!empty($this->entrance['Leje af madras'])) : ?>
 <tr><td colspan="2" class="headline"><strong>ANDET:</strong></td></tr>
-<tr><td colspan="2">Leje af madras (150 kr)</td></tr>
+<tr><td colspan="2">Leje af madras (<?=$this->prices['mattres']?> kr)</td></tr>
 <?php endif;?>
 </tbody>
 <?php if (!empty($this->wear)) : ?>
@@ -117,7 +111,6 @@
 <tr><td>Maksimum antal GDS jeg vil have (0 er ingen grænse):          </td><td><?= e($this->participant->desired_diy_shifts);?></td></tr>
 <tr><td>Jeg er super GM:                                              </td><td><?= $this->participant->supergm === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg er super GDS:                                             </td><td><?= $this->participant->supergds === 'ja' ? 'Ja' : 'Nej';?></td></tr>
-<tr><td>Jeg kan tage mere end 1 GDS vagt:                             </td><td><?= $this->participant->flere_gdsvagter === 'ja' ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på dansk:                                      </td><td><?= strpos($this->participant->sprog, 'dansk') !== false ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på engelsk:                                    </td><td><?= strpos($this->participant->sprog, 'engelsk') !== false ? 'Ja' : 'Nej';?></td></tr>
 <tr><td>Jeg vil spille på skandinavisk:                               </td><td><?= strpos($this->participant->sprog, 'skandinavisk') !== false ? 'Ja' : 'Nej';?></td></tr>

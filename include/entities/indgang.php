@@ -120,6 +120,14 @@ class Indgang extends DBObject
         return mb_stripos($this->type, 'madras') !== false;
     }
 
+    public function isDigital() {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return mb_stripos($this->type, 'digital') !== false;
+    }
+
     /**
      * returns a shorthand string for the object
      *
@@ -231,6 +239,7 @@ class Indgang extends DBObject
         $date_part = $this->spansAllConvention() ? 'Partout' : date('D', strtotime($this->start));
         if ($this->isEntrance()) {
             $description = $english ? 'Entrance' : "Indgang";
+            if ($this->isDigital()) $description .= ' (Digital)';
         } elseif ($this->isSleepticket()) {
             $description = $english ? 'Accommodation' : "Overnatning";
 
@@ -259,8 +268,10 @@ class Indgang extends DBObject
             return '';
         }
 
-        $temp = $this->spansAllConvention() ? 'Partout' : date('D', strtotime($this->start));
-        return $english ? $temp : danishDayNames($temp);
+        $desc = $this->spansAllConvention() ? 'Partout' : date('D', strtotime($this->start));
+        $desc = $english ? $temp : danishDayNames($desc);
+        if ($this->isDigital()) $desc .= ' (Digital)';
+        return $desc;
     }
 
     public function getProperType() {

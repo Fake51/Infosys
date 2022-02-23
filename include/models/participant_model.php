@@ -2346,15 +2346,20 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         $entrance = array();
         $prices   = array(
-            'alea'        => 0,
-            'sleeping'    => 0,
-            'entrance'    => 0,
-            'food'        => 0,
-            'activities'  => 0,
-            'wear'        => 0,
-            'other-stuff' => 0,
-            'fees'        => 0,
-            'total'       => 0,
+            'alea'              => 0,
+            'sleeping'          => 0,
+            'entrance'          => 0,
+            'food'              => 0,
+            'activities'        => 0,
+            'wear'              => 0,
+            'other-stuff'       => 0,
+            'fees'              => 0,
+            'total'             => 0,
+            // Individual prices for displaying after items
+            'sleeping-single'   => 0,
+            'entrance-single'   => 0,
+            'party'             => 0,
+            'party-bubbles'     => 0,
         );
 
         foreach ($participant->getIndgang() as $indgang) {
@@ -2378,20 +2383,26 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
             } elseif ($indgang->isDayTicket()) {
                 $entrance['entrance-day'][strtotime($indgang->start)] = true;
-
                 $prices['entrance'] += $indgang->pris;
+                $prices['entrance-single'] = $indgang->pris; 
 
             } elseif ($indgang->isSleepTicket()) {
                 $entrance['sleeping-day'][strtotime($indgang->start)] = true;
-
                 $prices['sleeping'] += $indgang->pris;
+                $prices['sleeping-single'] = $indgang->pris;
 
             } elseif ($indgang->isParty()) {
                 $entrance['ottofest'] = true;
                 $entrance['otto']     = true;
 
                 $prices['food'] += $indgang->pris;
+                $prices['party'] = $indgang->pris;
+            } elseif ($indgang->isPartyBubbles()) {
+                $entrance['otto']     = true;
+                $entrance['bubbles']     = true;
 
+                $prices['food'] += $indgang->pris;
+                $prices['party-bubbles'] = $indgang->pris;
             } elseif ($indgang->isFee()) {
                 $prices['fees'] += $indgang->pris;
 
@@ -2405,15 +2416,8 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
                 $prices['other-stuff'] += $indgang->pris;
             } else {
                 $entrance[$indgang->type] = true;
-
-                if (strtolower(substr($indgang->type, 0, 4)) === 'otto') {
-                    $entrance['otto'] = true;
-
-                    $prices['food'] += $indgang->pris;
-
-                } else {
-                    $prices['other-stuff'] += $indgang->pris;
-                }
+                $prices['other-stuff'] += $indgang->pris;
+                if ($indgang->type === 'Leje af madras') $prices['mattres'] = $indgang->pris;
             }
         }
         if (isset($entrance['entrance-day']) && is_array($entrance['entrance-day'])) {

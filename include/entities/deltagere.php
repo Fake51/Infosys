@@ -69,7 +69,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         'fornavn'                       => 'Fornavn',
         'nickname'                      => 'Kaldenavn',
         'hemmelig_onkel'                => 'Hemmelig onkel',
-        'financial_struggle'            => 'Økonomisk trængende',
+        'financial_struggle'            => 'Økonomisk støtte',
         'international'                 => 'International',
         'interpreter'                   => 'Simultantolk',
         'land'                          => 'Land',
@@ -103,12 +103,12 @@ class Deltagere extends DBObject implements AgeFulfilment
         'da' => [
             'comment' => 'Andre kommentarer',
             'gds' => 'Kommentarer til GDS',
-            'junior_ward' => 'Værge kontakt'
+            'junior_ward' => 'Kontakperson'
         ],
         'en' => [
             'comment' => 'Other comments',
             'gds' => 'Comments regarding GDS',
-            'junior_ward' => 'Ward contact'
+            'junior_ward' => 'Contact'
         ]
     ];
 
