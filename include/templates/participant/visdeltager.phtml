@@ -82,12 +82,12 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'>SuperGDS: </td><td id='supergds' class='editable yesno'><?= $this->deltager->supergds;?></td>
+                    <td class='label'>Altid GDS: </td><td id='package_gds' class='editable package_gds'><?= $this->deltager->package_gds ? 'Ja' : 'Nej';?></td>
                     <td class='label'>SuperGM: </td><td id='supergm' class='editable yesno'><?= $this->deltager->supergm;?></td>
                 </tr>
                 <tr>
                     <td class='label'>Hjælper mandag: </td><td id='ready_mandag' class='editable yesno'><?= $this->deltager->ready_mandag;?></td>
                     <td class='label'>Hjælper tirsdag: </td><td id='ready_tirsdag' class='editable yesno'><?= $this->deltager->ready_tirsdag;?></td>
-                    <td class='label'>Pakkeløsning: </td><td id='package_gds' class='editable package_gds'><?= $this->deltager->package_gds ? 'Ja' : 'Nej';?></td>
                 </tr>
                 <tr>
                     <td class='label'>Arr. næste år: </td><td id='arrangoer_naeste_aar' class='editable yesno'><?= $this->deltager->arrangoer_naeste_aar;?></td>
