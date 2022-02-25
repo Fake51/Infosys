@@ -2314,8 +2314,10 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
     {
         $pay_by_time  = strtotime($this->config->get('con.paymentlimit'));
         $signup_time = strtotime($participant->signed_up) + 86400;
-        $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
+        $signup_end_time = strtotime($this->config->get('con.signupend'));        
+        $constart = strtotime($this->config->get('con.start'));
 
+        $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
         if ($paytime < time()) {
             $paytime = time() + 86400;
         }
@@ -2323,9 +2325,12 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
         if ($participant->speaksDanish() && $lang !== 'en') {
             $page->payment_day = date('d/m-Y', $paytime);
+            $page->end_signup_changes_date = date('d/m-Y', $signup_end_time);
         } else {
             $page->payment_day = date('M d, Y', $paytime);
+            $page->end_signup_changes_date = date('M d, Y', $signup_end_time);
         }
+        $page->next_year = date('Y', strtotime('+1 year',$constart));
 
         $page->participant = $participant;
         $page->wear        = $participant->getWear();
@@ -2355,12 +2360,16 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             'other-stuff'       => 0,
             'fees'              => 0,
             'total'             => 0,
-            // Individual prices for displaying after items
+        );
+
+        // Individual prices for displaying after items
+        $item_prices = [
             'sleeping-single'   => 0,
             'entrance-single'   => 0,
             'party'             => 0,
             'party-bubbles'     => 0,
-        );
+            'mattres'           => 0,
+        ];
 
         foreach ($participant->getIndgang() as $indgang) {
             if (!$indgang) {
@@ -2384,25 +2393,25 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             } elseif ($indgang->isDayTicket()) {
                 $entrance['entrance-day'][strtotime($indgang->start)] = true;
                 $prices['entrance'] += $indgang->pris;
-                $prices['entrance-single'] = $indgang->pris; 
+                $item_prices['entrance-single'] = $indgang->pris; 
 
             } elseif ($indgang->isSleepTicket()) {
                 $entrance['sleeping-day'][strtotime($indgang->start)] = true;
                 $prices['sleeping'] += $indgang->pris;
-                $prices['sleeping-single'] = $indgang->pris;
+                $item_prices['sleeping-single'] = $indgang->pris;
 
             } elseif ($indgang->isParty()) {
                 $entrance['ottofest'] = true;
                 $entrance['otto']     = true;
 
                 $prices['food'] += $indgang->pris;
-                $prices['party'] = $indgang->pris;
+                $item_prices['party'] = $indgang->pris;
             } elseif ($indgang->isPartyBubbles()) {
                 $entrance['otto']     = true;
                 $entrance['bubbles']     = true;
 
                 $prices['food'] += $indgang->pris;
-                $prices['party-bubbles'] = $indgang->pris;
+                $item_prices['party-bubbles'] = $indgang->pris;
             } elseif ($indgang->isFee()) {
                 $prices['fees'] += $indgang->pris;
 
@@ -2417,7 +2426,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             } else {
                 $entrance[$indgang->type] = true;
                 $prices['other-stuff'] += $indgang->pris;
-                if ($indgang->type === 'Leje af madras') $prices['mattres'] = $indgang->pris;
+                if ($indgang->type === 'Leje af madras') $item_prices['mattres'] = $indgang->pris;
             }
         }
         if (isset($entrance['entrance-day']) && is_array($entrance['entrance-day'])) {
@@ -2450,10 +2459,6 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             $page->participant_photo_upload_link = $this->getPhotoUploadLink($participant);
         }
 
-        $page->end_signup_changes_date = $page->payment_day;
-
-        $constart = strtotime($this->config->get('con.start'));
-        $page->next_year = date('Y', strtotime('+1 year',$constart));
 
         return $participant;
     }

@@ -1096,9 +1096,10 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         } else {
             return array(
                 array(
-                    'status'     => 'ok',
-                    'failReason' => null,
-                    'total'      => $participant->calcSignupTotal(),
+                    'status'            => 'ok',
+                    'failReason'        => null,
+                    'total'             => $participant->calcSignupTotal(),
+                    'participantid'    => $participant->id,
                 ),
                 $participant,
             );

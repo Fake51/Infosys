@@ -39,15 +39,12 @@
 <?php if (!empty($this->entrance['sleeping-partout'])) : ?>
 <tr><td colspan="2">Overnatning (alle dage) (<?= e($this->prices['sleeping'])?>kr.)</td></tr>
 <?php endif;?>
-
 <?php foreach($this->entrance['entrance-day'] as $date => $value) : ?>
-<tr><td colspan="2">Indgang <?=$this->days[date('N', $date)]?>  <?=date('d/n', $date)?> (<?=e($this->prices['entrance-single'])?>kr.)</td></tr>
+<tr><td colspan="2">Indgang <?=$this->days[date('N', $date)]?>  <?=date('d/n', $date)?> (<?=e($this->item_prices['entrance-single'])?>kr.)</td></tr>
 <?php endforeach;?>
-
 <?php foreach($this->entrance['sleeping-day'] as $date => $value) : ?>
-<tr><td colspan="2">Overnatning <?=$this->days[date('N', $date)]?> <?=date('d/n', $date)?> (<?= e($this->prices['sleeping-single'])?>kr.)</td></tr>
+<tr><td colspan="2">Overnatning <?=$this->days[date('N', $date)]?> <?=date('d/n', $date)?> (<?= e($this->item_prices['sleeping-single'])?>kr.)</td></tr>
 <?php endforeach;?>
-
 <?php if (!empty($this->food)) : ?>
 <tr><td colspan="2" class="headline"><strong>MAD:</strong></td></tr>
     <?php foreach ($this->food as $fooditem) : 
@@ -60,15 +57,15 @@
 <?php if (!empty($this->entrance['otto'])) : ?>
 <tr><td colspan="2" class="headline"><strong>OTTOFESTEN:</strong></td></tr>
     <?php if (!empty($this->entrance['ottofest'])) : ?>
-<tr><td colspan="2">Jeg kommer til Ottofesten (<?=$this->prices['party']?> kr)</td></tr>
+<tr><td colspan="2">Jeg kommer til Ottofesten (<?=$this->item_prices['party']?> kr)</td></tr>
     <?php endif; ?>
     <?php if (!empty($this->entrance['bubbles'])) : ?>
-<tr><td colspan="2">Jeg vil gerne have bobler (<?=$this->prices['party-bubbles']?> kr)</td></tr>
+<tr><td colspan="2">Jeg vil gerne have bobler (<?=$this->item_prices['party-bubbles']?> kr)</td></tr>
     <?php endif;?>
 <?php endif;?>
 <?php if (!empty($this->entrance['Leje af madras'])) : ?>
 <tr><td colspan="2" class="headline"><strong>ANDET:</strong></td></tr>
-<tr><td colspan="2">Leje af madras (<?=$this->prices['mattres']?> kr)</td></tr>
+<tr><td colspan="2">Leje af madras (<?=$this->item_prices['mattres']?> kr)</td></tr>
 <?php endif;?>
 </tbody>
 <?php if (!empty($this->wear)) : ?>

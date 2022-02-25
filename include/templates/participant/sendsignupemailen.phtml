@@ -14,23 +14,27 @@ You can pay via the online-payment functionality, by bank transfer or upon arriv
     <?php endif;?>
 </p>
 <p>
-If you're using the Danish MobilePay, you can transfer the money to 438490.
+When paying remember to clearly state your name and participant ID which is :<b><?=$this->participant->id;?></b>
+</p>
+<p>
+If you're using the Danish MobilePay, you can transfer the money to 438490 (Alea).<br>
+It's important that you pay from the same number as the one you entered during sign-up. If this isn't possible, please
+email <a href=mailto:andreas@fastaval.dk>andreas@fastaval.dk</a> and we'll figure something out.
 </p>
 <p>
 You can also pay right away by using Paypal. Transfer to <a href="mailto:andreas@fastaval.dk.">andreas@fastaval.dk.</a> Remember that fees will be deducted, so you will have to transfer more than 100 DKK .
 </p>
 <p>
-Alternatively you can by bank transfer - please note that there is a fee on bank transfer amounting to 20 kr. (which makes the amount to pay <?= ($this->prices['total'] - $this->participant->betalt_beloeb + 20);?> kr.)<br/>
+Alternatively you can pay by bank transfer - please note that there is a fee on bank transfer amounting to 20 kr. (which makes the amount to pay <?= ($this->prices['total'] - $this->participant->betalt_beloeb + 20);?> kr.)<br/>
 * Paying from a Danish bank, use these details: Reg.: 9314 / Accountnr.: 4573884464<br/>
 * Our bank information is IBAN DK6693144573884464 and BIC SPNODK22.<br/>
 * deadline for payment is the same here: <?= $this->payment_day;?>
 </p>
-<p>
-When using the bank transfer option, remember to clearly state name and participant id (<?= $this->participant->id;?>)
-</p>
 <?php endif;?>
 <?php if ($this->participant_photo_upload_link) : ?>
-<p>As a volunteer/writer/designer you will receive a <strong>Fastaval ID card</strong>. Please use the following link to <strong>upload a photo</strong> for it: <a href="<?= $this->participant_photo_upload_link;?>"><?= $this->participant_photo_upload_link;?></a>
+<p>
+As a volunteer/writer/designer you need to have a picture on your nametag, to be able to use your discount at Fastaval.
+Please use the following link to <strong>upload a photo</strong> for it: <a href="<?= $this->participant_photo_upload_link;?>"><?= $this->participant_photo_upload_link;?></a>
 </p>
 <?php endif;?>
 <p>
@@ -79,39 +83,14 @@ When using the bank transfer option, remember to clearly state name and particip
 <tr><td colspan="2">Every-day pass</td></tr>
 <?php endif;?>
 <?php if (!empty($this->entrance['sleeping-partout'])) : ?>
-<tr><td colspan="2">Overnighting (all days)</td></tr>
+<tr><td colspan="2">Sleeping area (all-days)</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-01'])) : ?>
-<tr><td colspan="2">Entrance Wednesday Apr 1.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-01'])) : ?>
-<tr><td colspan="2">Overnighting Wednesday Apr 1.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-02'])) : ?>
-<tr><td colspan="2">Entrance Thursday Apr 2.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-02'])) : ?>
-<tr><td colspan="2">Overnatning Thursday Apr 2.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-03'])) : ?>
-<tr><td colspan="2">Entrance Friday Apr 3.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-03'])) : ?>
-<tr><td colspan="2">Overnighting Friday Apr 3.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-04'])) : ?>
-<tr><td colspan="2">Entrance Saturday Apr 4.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-04'])) : ?>
-<tr><td colspan="2">Overnighting Saturday Apr 4.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-05'])) : ?>
-<tr><td colspan="2">Entrance Sunday Apr 5.</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-05'])) : ?>
-<tr><td colspan="2">Overnighting Sunday Apr 5.</td></tr>
-<?php endif;?>
-
+<?php foreach($this->entrance['entrance-day'] as $date => $value) : ?>
+<tr><td colspan="2">Entrance <?=$this->days[date('N', $date)]?>  <?=date('d/n', $date)?> (<?=e($this->item_prices['entrance-single'])?>kr.)</td></tr>
+<?php endforeach;?>
+<?php foreach($this->entrance['sleeping-day'] as $date => $value) : ?>
+<tr><td colspan="2">Sleeping area <?=$this->days[date('N', $date)]?> <?=date('d/n', $date)?> (<?= e($this->item_prices['sleeping-single'])?>kr.)</td></tr>
+<?php endforeach;?>
 <?php if (!empty($this->food)) : ?>
 <tr><td colspan="2"><strong>FOOD:</strong></td></tr>
     <?php foreach ($this->food as $fooditem) : ?>
@@ -122,15 +101,15 @@ When using the bank transfer option, remember to clearly state name and particip
 <?php if (!empty($this->entrance['otto'])) : ?>
 <tr><td colspan="2"><strong>PARTY:</strong></td></tr>
     <?php if (!empty($this->entrance['ottofest'])) : ?>
-<tr><td colspan="2">I will attend the party (<?=$this->prices['party']?> kr)</td></tr>
+<tr><td colspan="2">I will attend the party (<?=$this->item_prices['party']?> kr)</td></tr>
     <?php endif; ?>
     <?php if (!empty($this->entrance['bubbles'])) : ?>
-<tr><td colspan="2">I would like bubbles for the party (<?=$this->prices['party-bubbles']?> kr)</td></tr>
+<tr><td colspan="2">I would like bubbles for the party (<?=$this->item_prices['party-bubbles']?> kr)</td></tr>
     <?php endif;?>
 <?php endif;?>
 <?php if (!empty($this->entrance['Leje af madras'])) : ?>
 <tr><td colspan="2"><strong>MISC:</strong></td></tr>
-<tr><td colspan="2">Renting a mattress (<?=$this->prices['mattres']?> kr)</td></tr>
+<tr><td colspan="2">Renting a mattress (<?=$this->item_prices['mattres']?> kr)</td></tr>
 <?php endif;?>
 </tbody></table>
 <div style="clear: both"></div>

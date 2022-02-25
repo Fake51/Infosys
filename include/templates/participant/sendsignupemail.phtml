@@ -14,7 +14,12 @@ Du kan betale nu via online-betalingen eller bankoverførsel, eller når du anko
     <?php endif;?>
 </p>
 <p>
-Betal nemt og hurtigt ved at benytte mobilepay - send ovenstående beløb til 438490.
+Ved betaling skal du HUSKE at anføre dit navn og deltagernummer som er: <b><?=$this->participant->id;?></b>
+</p>
+<p>
+Betal nemt og hurtigt ved at benytte mobilepay - send ovenstående beløb til 438490 (Alea).<br>
+Det er vigtigt, at du betaler fra samme telefonnummer, som du har angivet i din tilmelding. Hvis det ikke er muligt,
+skriv til <a href=mailto:andreas@fastaval.dk>andreas@fastaval.dk</a>, og så finder vi en løsning.
 </p>
 <p>
 Alternativt kan du betale via indbetalingskort eller bankoverførsel - bemærk at der er et gebyr på bankoverførsel på 20 kr (og betalingen bliver derfor <?= ($this->prices['total'] - $this->participant->betalt_beloeb + 20);?> kr.)<br/>
@@ -23,12 +28,11 @@ Alternativt kan du betale via indbetalingskort eller bankoverførsel - bemærk a
 * Ved indbetaling fra en bank UDENFOR Danmark så kontakt venligst bunker@fastaval.dk<br/>
 * deadline for indbetaling er her ligeledes <?= $this->payment_day;?>
 </p>
-<p>
-Ved alle muligheder skal du HUSKE at anføre dit navn og deltagernummer (<?= $this->participant->id;?>)
-</p>
 <?php endif;?>
 <?php if ($this->participant_photo_upload_link) : ?>
-<p>Som arrangør/forfatter/designer får du et <strong>Fastaval ID kort</strong>. Brug venligst dette link til at <strong>uploade et billede</strong> til det: <a href="<?= $this->participant_photo_upload_link;?>"><?= $this->participant_photo_upload_link;?></a>
+<p>
+Som arrangør/forfatter/designer skal du have et billede på dit navneskilt, for at kunne bruge din arrangørrabat på Fastaval.
+Brug venligst dette link til at <strong>uploade et billede</strong> til det: <a href="<?= $this->participant_photo_upload_link;?>"><?= $this->participant_photo_upload_link;?></a>
 </p>
 <?php endif;?>
 <p>
@@ -79,37 +83,12 @@ Ved alle muligheder skal du HUSKE at anføre dit navn og deltagernummer (<?= $th
 <?php if (!empty($this->entrance['sleeping-partout'])) : ?>
 <tr><td colspan="2">Overnatning (alle dage)</td></tr>
 <?php endif;?>
-<?php if (!empty($this->entrance['entrance-01'])) : ?>
-<tr><td colspan="2">Indgang onsdag 1/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-01'])) : ?>
-<tr><td colspan="2">Overnatning onsdag 1/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-02'])) : ?>
-<tr><td colspan="2">Indgang torsdag 2/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-02'])) : ?>
-<tr><td colspan="2">Overnatning torsdag 2/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-03'])) : ?>
-<tr><td colspan="2">Indgang fredag 3/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-03'])) : ?>
-<tr><td colspan="2">Overnatning fredag 3/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-04'])) : ?>
-<tr><td colspan="2">Indgang lørdag 4/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-04'])) : ?>
-<tr><td colspan="2">Overnatning lørdag 4/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['entrance-05'])) : ?>
-<tr><td colspan="2">Indgang søndag 5/4</td></tr>
-<?php endif;?>
-<?php if (!empty($this->entrance['sleeping-05'])) : ?>
-<tr><td colspan="2">Overnatning søndag 5/4</td></tr>
-<?php endif;?>
-
+<?php foreach($this->entrance['entrance-day'] as $date => $value) : ?>
+<tr><td colspan="2">Indgang <?=$this->days[date('N', $date)]?>  <?=date('d/n', $date)?> (<?=e($this->item_prices['entrance-single'])?>kr.)</td></tr>
+<?php endforeach;?>
+<?php foreach($this->entrance['sleeping-day'] as $date => $value) : ?>
+<tr><td colspan="2">Overnatning <?=$this->days[date('N', $date)]?> <?=date('d/n', $date)?> (<?= e($this->item_prices['sleeping-single'])?>kr.)</td></tr>
+<?php endforeach;?>
 <?php foreach ($this->entrance as $key => $item) : ?>
     <?php if (substr($key, 8) === 'entrance' || substr($key, 8) === 'sleeping') : ?>
     <?php endif;?>
@@ -124,15 +103,15 @@ Ved alle muligheder skal du HUSKE at anføre dit navn og deltagernummer (<?= $th
 <?php if (!empty($this->entrance['otto'])) : ?>
 <tr><td colspan="2"><strong>OTTOFESTEN:</strong></td></tr>
     <?php if (!empty($this->entrance['ottofest'])) : ?>
-<tr><td colspan="2">Jeg kommer til Ottofesten (<?=$this->prices['party']?> kr)</td></tr>
+<tr><td colspan="2">Jeg kommer til Ottofesten (<?=$this->item_prices['party']?> kr)</td></tr>
     <?php endif; ?>
     <?php if (!empty($this->entrance['bubbles'])) : ?>
-<tr><td colspan="2">Jeg vil gerne have bobler (<?=$this->prices['party-bubbles']?> kr)</td></tr>
+<tr><td colspan="2">Jeg vil gerne have bobler (<?=$this->item_prices['party-bubbles']?> kr)</td></tr>
     <?php endif;?>
 <?php endif;?>
 <?php if (!empty($this->entrance['Leje af madras'])) : ?>
 <tr><td colspan="2"><strong>ANDET:</strong></td></tr>
-<tr><td colspan="2">Leje af madras (<?=$this->prices['mattres']?> kr)</td></tr>
+<tr><td colspan="2">Leje af madras (<?=$this->item_prices['mattres']?> kr)</td></tr>
 <?php endif;?>
 </tbody></table>
 <div style="clear: both"></div>
