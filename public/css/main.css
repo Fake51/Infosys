@@ -515,6 +515,7 @@ div.edit_details table input.langbox {
 
 div.edit_details table label {
     padding-left: 10px;
+    display: inline-block;
 }
 
 /* indgang mad wear edit */
