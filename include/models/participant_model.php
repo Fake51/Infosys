@@ -2543,6 +2543,25 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         return $participants;
     }
 
+    public function filterOutRecentReminders(array $participants, $days = 0)
+    {
+        $select = $this->createEntity('LogItem')->getSelect();
+
+        $days = is_int($days) ? $days : 0;
+        $select->setWhere('message', 'LIKE', '%sent payment reminder%')
+            ->setRawWhere('DATE(created) > ADDDATE(NOW(), interval -'.$days.' day)', 'AND');
+
+        foreach ($this->createEntity('LogItem')->findBySelectMany($select) as $log_item) {
+            foreach ($participants as $id => $participant) {
+                if (stripos($log_item->message, '(ID: ' . $participant->id . ')') !== false) {
+                    unset($participants[$id]);
+                }
+            }
+        }
+
+        return $participants;
+    }
+
     /**
      * returns participants for cancellation/payment reminders
      * with volunteers filtered out
