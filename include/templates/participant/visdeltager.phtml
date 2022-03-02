@@ -42,7 +42,7 @@ $this->registerLateLoadJS('participant.js');
                     <td class='label'>Kaldenavn: </td><td colspan='2' id='nickname' class='editable text'><?= e($this->deltager->nickname);?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Kategori: </td><td class='editable usertype' id='brugerkategori_id'><?= $this->deltager_info['brugerkategori']->navn;?></td>
+                    <td class='label'>Kategori: </td><td colspan='2' class='editable usertype' id='brugerkategori_id'><?= $this->deltager_info['brugerkategori']->navn;?></td>
                     <td class='label'>Forudbetalt: </td><td id='betalt_beloeb' class='editable text'><?= e($this->deltager->betalt_beloeb);?></td>
                 </tr>
                 <tr>
