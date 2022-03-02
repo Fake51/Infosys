@@ -1990,5 +1990,71 @@ exit;
         $this->page->photos = $photos;
     }
 
+    /**
+     * Page for automatically registering payments from mobilepay
+     *
+     * @access public
+     * @return void
+     */
+    function registerMobilepay() {
+        if (!$this->model->getLoggedInUser()->hasRole('Admin')) {
+            $this->errorMessage('Kun admin kan lave batch registrering af betalinger');
+            $this->hardRedirect($this->url('deltagerehome'));
+        }
+
+        // if it's not a post request, don't do anything
+        if (!$this->page->request->isPost()){
+            return;
+        }
+        $session = $this->dic->get('Session');
+        $post = $this->page->request->post;
+
+        if (isset($post->importpayments)) {
+            // Did the user submit a file
+            $file = isset($_FILES['payments']) ? $_FILES['payments'] : null;
+            if($file == null || $file['error'] == UPLOAD_ERR_NO_FILE) {
+                $this->errorMessage('Ingen fil valgt.');
+                return;
+            }
+
+            $sheet_data = $this->model->parsePaymentSheet($file);
+            $session->payment_data = $this->model->matchPayments($sheet_data);
+        }
+
+        $this->page->registerEarlyLoadJS('register_mobilepay.js');
+        $this->page->payment_data = $session->payment_data;
+    }
+
+    public function ajaxConfirmPayment(){
+        // if it's not a post request, don't do anything
+        if (!$this->page->request->isPost()){
+            header("HTTP/1.0 400 Only accepts POST requests");
+            exit;
+        }
+
+        $list = $this->page->request->post->list;
+        if (!is_array($list) && empty($list)){
+            header("HTTP/1.0 400 list is empty or wrong format");
+            header('Content-Type: application/json; charset=UTF-8');
+            echo json_encode($list);
+            exit;
+        }
+
+        $result = [];
+        foreach($list as $entry) {
+            $pid = $entry['participant'];
+            $tid = $entry['transaction'];
+            $status = $this->model->confirmPayement($pid,$tid);
+            $result[] = [
+                'participant' => $pid,
+                'transaction' => $tid,
+                'status' => $status
+            ];
+        }
+        
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($result);
+        exit;
+    }
 
 }

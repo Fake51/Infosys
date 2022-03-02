@@ -537,6 +537,57 @@ div.edit_details #edit_pages table td.choice {
     width: 500px;
 }
 
+/* Payment registration*/
+div#register-mobile-pay div {
+    float: none;
+    width: fit-content;
+}
+
+div#register-mobile-pay div.category-list {
+    padding-top: 1px;
+}
+
+div#register-mobile-pay h3,
+div#register-mobile-pay div.confirm-group-top {
+    margin-top: 3rem;
+}
+
+div#register-mobile-pay div.confirm-group-bottom {
+    margin-top: 1rem;
+}
+
+div#register-mobile-pay div.confirm-group{
+    float: right;
+}
+
+div#register-mobile-pay td{
+    padding-right: 1rem;
+}
+
+div#register-mobile-pay tr.top-row td{
+    padding-top: 1rem;
+}
+
+div#register-mobile-pay td:nth-child(1){
+    font-weight: bold;
+}
+
+div#register-mobile-pay td span.match{
+    background-color: #67d18a;
+    padding: 2px 4px;
+}
+
+div#register-mobile-pay div.spacer{
+    clear: both;
+}
+
+div#register-mobile-pay table td label{
+    display: inline;
+}
+
+div#register-mobile-pay table td input{
+    width: 5em;
+}
 /* login page */
 div#loginbox {
     text-align: center;

@@ -3088,4 +3088,307 @@ WHERE (
         return $refundees;
     }
 
+    public function parsePaymentSheet($file){
+        $csv = file_get_contents($file['tmp_name']);
+        $lines = explode("\n", $csv);
+        $data = new stdClass();
+        
+        $data->header_ids = [];
+        $data->header_text= [];
+        foreach(explode(";", $lines[0]) as $index => $value){
+            $id = preg_replace("/\W+/","-", strtolower($value));
+            $data->header_ids[] = $id;
+            $data->header_text[$id] = $value;
+        }
+        unset($lines[0]);
+        
+        $data->rows = [];
+        foreach ($lines as $line) {
+            if ($line === '') continue;
+            $row = [];
+            foreach(explode(";", $line) as $index => $value) {
+                $row[$data->header_ids[$index]] = $value;
+            }
+            $data->rows[] = $row;
+        }
+        return $data;
+    }
+
+    public function matchPayments($data) {
+        $match_data = [
+            'id-phone-name-amount' => [],
+            'id-phone-amount' => [],
+            'id-name-amount' => [],
+            'id-phone-name' => [],
+            'phone-name-amount' => [],
+            'phone-amount' => [],
+            'phone-name' => [],
+            'phone-multi' => [],
+            'unknown' => [],
+            'processed' => [],
+            'all' => [],
+        ];
+
+        foreach($data->rows as $row) {
+            $match_data_row = [];
+            $match_data_row['sheet-row'] = $row;
+
+            // First check if we already processed this payment
+            $payment_id = $row['transactionid'];
+            $select = $this->createEntity('Deltagere')->getSelect();
+            $select->setWhere('paid_note','like',"%Transaktion:$payment_id%");
+            $deltager = $this->createEntity('Deltagere')->findBySelect($select);
+            if ($deltager) {
+                $participant_info = [];
+                $participant_info['object'] = $deltager;
+                $participant_info['name'] = $deltager->getName();
+                $participant_info['phone'] = $deltager->mobiltlf;
+                $participant_info['signup-amount'] = $deltager->calcSignupTotal();
+                $participant_info['real-amount'] = $deltager->calcRealTotal();
+                $participant_info['display-id'] = $deltager->id;
+                
+                $match_data_row['participant-info'][$deltager->id] = $participant_info;
+                $match_data['processed'][$payment_id] = $match_data_row;
+                $match_data['all'][$payment_id] = $match_data_row;
+                continue;
+            }
+
+            
+            $category = 'unknown';
+            $payment_amount = intval($row['amount']);
+
+            $deltager = null;
+            $matches = [];
+            if (preg_match("/\d+/", $row['comment'], $matches)) {
+                $id = $matches[0];
+                $deltager = $this->createEntity('Deltagere')->findById($id);
+            }
+
+            $last4 = null;
+            $matches = [];
+            if (preg_match("/\d{4}/", $row['mp-number'], $matches)) {
+                $last4 = $matches[0];
+            }
+
+            if ($deltager) {
+                $participant_info = [];
+                $participant_info['object'] = $deltager;
+                
+                // We know id matches
+                $participant_info['matches']['id'] = true;
+                $participant_info['display-id'] = "<span class='match matched-id'>$deltager->id</span>";
+                $participant_info['comment'] =
+                    str_replace( $deltager->id, $participant_info['display-id'], $row['comment']);
+
+                // Match payment phone number with participant number
+                $participant_info['phone'] = $deltager->mobiltlf;
+                if (preg_match("/\d{4}$last4/", $participant_info['phone'])) {
+                    $participant_info['matches']['phone'] = true;
+                    $participant_info['phone'] = str_replace(
+                        $last4,
+                        "<span class='match matched-phone'>$last4</span>",
+                        $participant_info['phone']
+                    );
+                }
+                
+                // Match payment amount with owed amount
+                $pay_match = self::matchpayment($deltager, $payment_amount);
+                $participant_info['matches'] = array_merge($participant_info['matches'], $pay_match['matches']);
+                $participant_info['signup-amount'] = $pay_match['signup-amount'];
+                $participant_info['real-amount'] = $pay_match['real-amount'];
+
+                // Match name with participant
+                $name_match = self::matchname($deltager, $row['customer-name'], $participant_info['comment']);
+                $participant_info['matches'] = array_merge($participant_info['matches'], $name_match['matches']);
+                $participant_info['name'] = $name_match['name'];
+                $participant_info['comment'] = $name_match['comment'];
+
+                $category = 'id';
+                $category .= $participant_info['matches']['phone'] ? '-phone' : '';
+                $category .= 
+                    $participant_info['matches']['firstname'] && $participant_info['matches']['surname'] ? '-name' : '';
+                $category .= $participant_info['matches']['amount'] ? '-amount' : '';
+                $match_data_row['participant-info'][$deltager->id] = $participant_info;
+            } else {
+                // Try to find particpant without ID
+                
+                // Find by number
+                $select = $this->createEntity('Deltagere')->getSelect();
+                $select->setWhere('mobiltlf','like',"%$last4");
+                $res = $this->createEntity('Deltagere')->findBySelectMany($select);
+                if ($res) {
+                    foreach ($res as $deltager) {
+                        $participant_info = [];
+                        $participant_info['object'] = $deltager;
+                        $participant_info['display-id'] = $deltager->id;
+
+                        // We know phone number matches
+                        $participant_info['phone'] = $deltager->mobiltlf;
+                        $participant_info['matches']['phone'] = true;
+                        $participant_info['phone'] = str_replace(
+                            $last4,
+                            "<span class='match matched-phone'>$last4</span>",
+                            $participant_info['phone']
+                        );
+
+                        // Match payment amount with owed amount
+                        $pay_match = self::matchpayment($deltager, $payment_amount);
+                        $participant_info['matches'] = $pay_match['matches'];
+                        $participant_info['signup-amount'] = $pay_match['signup-amount'];
+                        $participant_info['real-amount'] = $pay_match['real-amount'];
+
+                        
+                        // Match name
+                        $name_match = self::matchname($deltager, $row['customer-name'], $row['comment']);
+                        $participant_info['matches'] = array_merge($participant_info['matches'], $name_match['matches']);
+                        $participant_info['name'] = $name_match['name'];
+                        $participant_info['comment'] = $name_match['comment'];
+
+                        $match_data_row['participant-info'][$deltager->id] = $participant_info;
+                    }
+
+                    $category = 'phone';
+                    if (count($res) > 1) {
+                        $category .= '-multi';
+                    } else {
+                        $category .= 
+                            $participant_info['matches']['firstname'] && $participant_info['matches']['surname'] ? '-name' : '';
+                        $category .= $participant_info['matches']['amount'] ? '-amount' : '';
+                    }
+                }
+            }
+
+            $match_data[$category][$payment_id] = $match_data_row;
+            $match_data['all'][$payment_id] = $match_data_row;
+        }
+        return $match_data;
+    }
+
+    // helper function to match names of participant with payment
+    private static function matchname($deltager, $name, $comment){
+        $match_info = [];
+        $match_info['matches'] = [];
+
+        // Match name directly
+        if (str_contains($name, $deltager->fornavn)) {
+            $match_info['matches']['firstname-customer'] = true;
+            $match_info['name'] = "<span class='match matched-firstname'>$deltager->fornavn</span>";
+        } else {
+            $match_info['name'] = "$deltager->fornavn";
+        }
+
+        if (str_contains($name, $deltager->efternavn)) {
+            $match_info['matches']['surname-customer'] = true;
+            $match_info['name'] .= " <span class='match matched-firstname'>$deltager->efternavn</span>";
+        } else {
+            $match_info['name'] .= " $deltager->efternavn";
+        }
+
+        // Find name in comment
+        if (str_contains($comment, $deltager->fornavn)) {
+            $match_info['matches']['firstname-comment'] = true;
+            $match_info['comment'] = str_replace(
+                $deltager->fornavn,
+                "<span class='match matched-firstname'>$deltager->fornavn</span>",
+                $comment
+            );
+        } else {
+            $match_info['comment'] = $comment; 
+        }
+
+        if (str_contains($comment, $deltager->efternavn)) {
+            $match_info['matches']['surname-comment'] = true;
+            $match_info['comment'] = str_replace(
+                $deltager->efternavn,
+                "<span class='match matched-surname'>$deltager->efternavn</span>",
+                $match_info['comment']
+            );
+        }
+
+        $match_info['matches']['firstname'] = 
+            $match_info['matches']['firstname-customer'] || $match_info['matches']['firstname-comment'];
+        $match_info['matches']['surname'] = 
+            $match_info['matches']['surname-customer'] || $match_info['matches']['surname-comment'];
+        
+        return $match_info;
+    }
+
+    // helper function to match amounts of payment with what participant owes
+    private static function matchpayment($deltager, $payment_amount){
+        $match_info['matches'] = [];
+
+        $match_info['signup-amount'] = $deltager->calcSignupTotal() - $deltager->betalt_beloeb;
+        $match_info['real-amount'] = $deltager->calcRealTotal() - $deltager->betalt_beloeb;
+        if ($match_info['signup-amount'] === $payment_amount) {
+            $match_info['matches']['amount'] = true;
+            $match_info['signup-amount'] = 
+                "<span class='match matched-amount'>".$match_info['signup-amount']."</span>";
+        }
+        if ($match_info['real-amount'] === $payment_amount) {
+            $match_info['matches']['amount'] = true;
+            $match_info['real-amount'] = 
+                "<span class='match matched-amount'>".$match_info['real-amount']."</span>";
+        }
+
+        return $match_info;
+    }
+
+    /**
+     * Confirm MobilePay payment belongs to participant and save it in the system
+     *
+     * @param $pid ID of participant
+     * @param $tid ID of transaction
+     *
+     * @access public
+     * @return null|Deltagere
+     */
+    public function confirmPayement($pid, $tid) {
+        // Find transaction
+        $transactions = $this->dic->get('Session')->payment_data['all'];
+        if(!isset($transactions[$tid])) {
+            return ['error' => "Transaktion $tid findes ikke"];
+        }
+        $sheet_row = $transactions[$tid]['sheet-row'];
+
+        // Find participant
+        $participant = $this->createEntity('Deltagere')->findById($pid);
+        if(!$participant) {
+            return ['error' => "Ingen deltager med ID:$pid"];
+        }
+
+        // Check if we already processed this payment to avoid double processing
+        if(str_contains($participant->paid_note ,"Transaktion:$tid")) {
+            return ['success' => 'already processed'];    
+        }
+
+        // Update amount
+        $amount = intval($sheet_row['amount']);
+        $participant->betalt_beloeb = $participant->betalt_beloeb ? $participant->betalt_beloeb + $amount : $amount;
+        
+        // Update note with payment info
+        $note = "Payed with Mobilepay"
+            .PHP_EOL."Transaktion:$tid Dato:$sheet_row[date] Beløb:$sheet_row[amount] Navn:".$sheet_row['customer-name']." Nummer:".$sheet_row['mp-number']
+            .PHP_EOL."Kommentar:$sheet_row[comment]";
+        $participant->paid_note ? $participant->paid_note .= PHP_EOL.$note : $participant->paid_note = $note;
+        
+        // Update participant
+        if ($participant->update()) {
+            $this->log(
+                "MobilePay transaktion $tid blev bogført på deltager #$pid af {$this->getLoggedInUser()->user}",
+                'Betaling',
+                $this->getLoggedInUser()
+            );
+            return [
+                'success' => true,
+                'info' => [
+                    'name' => $participant->getName(),
+                    'phone' => $participant->mobiltlf,
+                    'signup-amount' => $participant->calcSignupTotal(),
+                    'real-amount' => $participant->calcRealTotal(),
+                    'display-id' => $participant->id,
+                ]
+            ];
+        }
+        return ['error' => "Kunne ikke opdatere deltager $pid"];
+    }
 }

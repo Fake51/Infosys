@@ -445,8 +445,14 @@ HTML;
             }
 
             $return .= <<<HTML
-
             <li><a href='{$this->url('name_tag_list')}'>Liste til navneskilte</a></li>
+HTML;
+            if ($this->user->hasRole('Admin')) {
+                $return .= <<<HTML
+            <li><a href='{$this->url('register_mobilepay_payments')}'>Registrer betalinger</a></li>
+HTML;
+            }
+            $return .= <<<HTML
         </ul>
     </li>
     <li class='topmenu-item'>

@@ -1,0 +1,138 @@
+<?php echo $this->getMessagesHtml();?>
+<div class='middleboxes' id='register-mobile-pay'>
+	<fieldset>
+		<legend>Registrer MobilePay Betalinger</legend>
+		<div class="outer-container">
+			<form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+				<div>
+					<label>Vælg en fil med udtræk fra MobilePay</label>
+					<input type="file" name="payments" id="payments_file" accept=".csv,text/csv">
+					<button type="submit" id="importpayments" name="importpayments" class="btn-submit">Importér</button>
+				</div>
+			</form>
+		</div>
+	</fieldset>
+  <?php 
+  if (!isset($this->payment_data)) { ?>
+</div>
+    <?php
+    return;
+  }
+
+  $headers = [
+    'customer-name' => 'Navn',
+    'mp-number' => 'Telefon',
+    'amount' => 'Beløb',
+    'comment' => 'Kommentar',
+    'transactionid' => 'ID',
+  ];
+  ?>
+  <fieldset>
+    <p>
+      Her er de beste gæt på hvor betalingerne hører til.<br>
+      De grønne markeringer er der hvor der er fundet et match mellem en række i arket og oplysninger på en deltager.<br>
+      <strong>Bemærk:</strong> der ikke er gemt noget og du skal godkende de enkelte forslag for rent faktisk at
+      foretage ændringer i infosys.
+    </p>
+    <div class="category-list">
+      <?php foreach($this->payment_data as $cid => $category) {
+        if(empty($category) || $cid === 'all') continue;
+        
+        $cat_header = str_replace("-", ", ", $cid);
+        $cat_header = str_replace("id", "Deltager ID", $cat_header);
+        $cat_header = str_replace("phone", "Telefonnummer", $cat_header);
+        $cat_header = str_replace("name", "Navn", $cat_header);
+        $cat_header = str_replace("amount", "Beløb", $cat_header);
+        $cat_header = str_replace(", multi", " (flere resultater)", $cat_header);
+        $cat_header = "Matcher: " . $cat_header;
+
+        $show_buttons = true;
+        if($cid === 'unknown') {
+          $unknown = true;
+          $show_buttons = false;
+          $cat_header = "Afvist eller ingen match og skal håndteres manuelt";
+        }
+
+        if ($cid === 'processed') {
+          $cat_header = "Godkendte og registrerede betalinger";
+          $show_buttons = false;
+        }
+
+        $multi = str_contains($cid, 'multi');
+        if (!$multi && $show_buttons) { ?>
+          <div class="confirm-group confirm-group-top">
+            Godkend alle i denne kategori
+            <button id="confirm-group-<?=$cid?>" class="group-button">Godkend Alle</button>
+          </div>
+        <?php } ?>
+        <h3><?=$cat_header?></h3>
+        <?php if($unknown || $multi) { ?>
+          <p>Du kan manuelt indtaste id på den deltager du vil bogføre betalingen hos</p>
+        <?php } ?>
+        <table id="<?=$cid?>" <?=$multi?'class="multi"':''?>>
+          <thead>
+            <tr>
+              <th></th>
+              <?php foreach($headers as $header) { ?>
+                <th><?=$header?></th>
+              <?php } ?>
+              <th colspan="2"></th>
+            </tr>
+          <thead>
+          <tbody>
+          <?php foreach($category as $pay_id => $payment) { ?>
+            <tr class="top-row" transactionid="<?=$pay_id?>">
+              <td>MobilePay</td>
+              <?php foreach($headers as $hid => $header) { ?>
+                <td><?=$payment['sheet-row'][$hid]?></td>
+              <?php } ?>
+              <?php if ($unknown || $multi) { ?>
+                <td>
+                  <label for="participant-<?=$pay_id?>">Deltager ID:</label>  
+                  <input id="participant-<?=$pay_id?>" type="number">
+                </td>
+                <td><button id="manual-button-<?=$pay_id?>" class="manual-confirm-button">Bogfør</button></td>
+              <?php } ?>
+            </tr>
+            <?php 
+              if (is_array($payment['participant-info'])) {
+                foreach($payment['participant-info'] as $id => $participant) { 
+                  ?>
+                  <tr participantid="<?=$id?>" transactionid="<?=$pay_id?>">
+                    <td>Deltager</td>
+                    <td><?=$participant['name']?></td>
+                    <td><?=$participant['phone']?></td>
+                    <td><?=$participant['signup-amount']?> / <?=$participant['real-amount']?></td>
+                    <td><?=$participant['comment']?></td>
+                    <td>ID:<?=$participant['display-id']?></td>
+                    <?php if ($show_buttons) { ?>
+                      <td><button id="confirm-<?=$pay_id?>-<?=$id?>" class="confirm-button" 
+                          transaction="<?=$pay_id?>" participant="<?=$id?>">
+                        Godkend
+                      </button></td>
+                      <?php if (!$multi) { ?>
+                        <td><button id="reject-<?=$pay_id?>-<?=$id?>" class="reject-button"
+                            transaction="<?=$pay_id?>" participant="<?=$id?>">
+                          Afvis
+                        </button></td>
+                      <?php } ?>
+                    <?php } ?>
+                  </tr>
+                  <?php
+                } 
+              }
+            }
+            ?>
+          </tbody>
+        </table>
+        <?php if (!$multi && $show_buttons) { ?>
+          <div class="confirm-group confirm-group-bottom">
+            Godkend alle i ovenstående kategori
+            <button id="confirm-group-<?=$cid?>" class="group-button">Godkend Alle</button>
+          </div>
+          <div class="spacer">&nbsp;</div>
+        <?php } ?>
+      <?php } ?>
+    </div>
+  </fieldset>
+</div>
