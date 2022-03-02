@@ -1771,11 +1771,11 @@ die('Not sending last payment reminders');
         $this->model->setupPaymentReminderEmail($participant, $this->page);
 
         if ($danish) {
-            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval 2018';
+            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval '.date('Y', strtotime($this->config->get('con.start')));
             $this->page->setTemplate('participant/' . $template . '-da');
 
         } else {
-            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval 2018';
+            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval '.date('Y', strtotime($this->config->get('con.start')));
             $this->page->setTemplate('participant/' . $template . '-en');
         }
 
