@@ -8,10 +8,10 @@
             </tr>
             <tr>
                 <th>&nbsp;</th>
+                <th class='wear-subheader'>Ialt</th>
                 <?php foreach ($this->sizes as $size) : ?>
                     <th class='wear-subheader'><?php echo $size['size_name_da'];?></th>
                 <?php endforeach;?>
-                <th class='wear-subheader'>Ialt</th>
             </tr>
         </thead>
         <tbody>
@@ -19,32 +19,35 @@
                 $ialt = 0;
             ?>
             <tr>
-                <td class='wear-type'><?=$wear->navn;?></td>
+                <td class='wear-type'>(<?=$wear->id?>) <?=$wear->navn;?></td>
+                <?php foreach($this->wear_data[$wear->id] as $antal) {
+                    $ialt += $antal;
+                } ?>
+                <td class='alt'><?php echo $ialt;?></td>
                 <?php if (empty($this->wear_data[$wear->id])) : 
                     foreach ($this->sizes as $size) :?>
                         <td>0</td>
                     <?php endforeach;?>
                 <?php else :
                     foreach ($this->sizes as $size) :
-                        $col_done = false;
-                            foreach ($this->wear_data[$wear->id] as $data) :
-                                if ($data['size'] == $size['size_id'] && $data['wear_id'] == $wear->id) : ?>
-                            <td class='alt'>
-                                <a href="<?php echo $this->url('detailed_mini_list', array('type' => $wear->id, 'size' => $size['size_id']));?>"><?php echo $data['antal'];?></a>
-                            </td>
+                        if (isset($this->wear_data[$wear->id][$size['size_id']])) {
+                            ?>
+                                <td class='alt'>
+                                    <a href="<?php echo $this->url('detailed_mini_list', array('type' => $wear->id, 'size' => $size['size_id']));?>">
+                                        <?=$this->wear_data[$wear->id][$size['size_id']]?>
+                                    </a>
+                                </td>
                             <?php
-                                $ialt += $data['antal'];
-                                $col_done = true;
-                                endif;
-                            endforeach;
-                        if (!$col_done) :?>
-                    <td>0</td>
-                        <?php endif;
+                        } else {
+                            ?>
+                                <td>0</td>
+                            <?php        
+                        }
                     endforeach; ?>
                 <?php endif;?>
-                <td class='alt'><?php echo $ialt;?></td>
             </tr>
             <?php endforeach;?>
         </tbody>
     </table>
 </div>
+<!-- <?php echo json_encode($this->wear_data, JSON_PRETTY_PRINT); ?> -->

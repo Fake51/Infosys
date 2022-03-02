@@ -66,7 +66,7 @@ class WearModel extends Model
         {
             foreach ($result as $row)
             {
-                $results[$row['wear_id']][] = $row;
+                $results[$row['wear_id']][$row['size']] = $row['antal'];
             }
         }
         return $results;
