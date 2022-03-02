@@ -22,6 +22,7 @@
 <table>
   <thead>
     <tr>
+      <th>ID:</th>
       <th>Kaldenavn:</th>
       <th>Stregkode:</th>
       <th>Område:</th>
@@ -39,6 +40,7 @@ foreach ($this->participants as $participant) {
   $class = 'class ="alterngrey"'
   ?>
     <tr <?=$count % 2 ? $class : ""?>>
+      <td><?=$participant->id?></td>
       <td><?=$nickname?></td>
       <td class='align-right'><img class='barcode-image' src='/participant/ean8sheet/<?= $participant->id;?>' alt='barcode'/></td>    
   <?php
