@@ -149,6 +149,8 @@ class Routes
         $this->routes['show_double_bookings']                       = array('url' => 'participant/check-double-bookings', 'controller' => 'Participant', 'method' => 'checkForDoubleBookings');
         $this->routes['show_refund']                                = array('url' => 'participant/show-refund', 'controller' => 'Participant', 'method' => 'showRefund');
         $this->routes['name_tag_list']                              = array('url' => 'participant/name-tag-list', 'controller' => 'Participant', 'method' => 'nameTagList');
+        $this->routes['register_mobilepay_payments']                = array('url' => 'participant/register-mobilepay', 'controller' => 'Participant', 'method' => 'registerMobilepay');
+        $this->routes['confirm_mobilepay_payments']                 = array('url' => 'participant/ajax/confirm-mobilepay', 'controller' => 'Participant', 'method' => 'ajaxConfirmPayment');
 
         $this->routes['participant_reset_password']                 = array('url' => 'participant/reset-password/:hash:', 'controller' => 'Participant', 'method' => 'resetParticipantPassword');
 
