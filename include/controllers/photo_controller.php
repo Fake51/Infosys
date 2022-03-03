@@ -50,6 +50,12 @@ class PhotoController extends Controller
      */
     public function showUploadForm()
     {
+        if(strtotime($this->config->get('con.signupend')) < strtotime('now')) {
+            echo "Det er for sent at uploade photo. Tilmeldingen er slut og navneskiltene er ved at blive lavet.<br>";
+            echo "It is too late to uploade a photo. Sign-up has ended and the name tags are already in the making<br>";
+            exit;
+        }
+
         if (!$this->checkIdentifier()) {
             return $this->send404();
         }
