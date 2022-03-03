@@ -1,36 +1,58 @@
-<h2>Reminder of payment for Fastaval 2018</h2>
-<p> </p>
+<h2>Reminder of payment for Fastaval <?=$this->year?></h2>
+
 <p>Hi <?= e($this->participant->fornavn);?> <?= e($this->participant->efternavn);?>,</p>
-<p> </p>
-<p>We&#39;re writing to you because we haven&#39;t registered a payment from you for Fastaval 2018, and so we thought we&#39;d take the opportunity to remind you.</p>
+
+<p>
+    We&#39;re writing to you because we haven&#39;t registered a payment from you for Fastaval <?=$this->year?>, and so
+    we thought we&#39;d take the opportunity to remind you.
+</p>
 
 <p>If you already paid, just ignore this email - we are just lagging a bit behind getting our information up-to-date.</p>
 
-<p>If you haven&#39;t already paid, remember that your deadline for paying is <?= $this->payment_day;?>. If you don&#39;t pay by this date your sign up will be canceled. You can pay here:</p>
+<p>
+    If you haven&#39;t already paid, remember that your deadline for paying is <?=$this->payment_day;?>.
+    If you don&#39;t pay by this date your sign up will be canceled.
+</p>
 
-<p><a href="<?= $this->payment_url;?>"><?= $this->payment_url;?></a></p>
 
-<p>The amount is <?= e($this->payment_remainder);?>DKK, and payment takes place through fritid.dk.</p>
+<p>The amount is <strong><?=$this->payment_remainder?></strong> DKK,</p>
+<p>
+    When paying remember to clearly state your name and participant ID which is :
+    <strong><?=$this->participant->id?></strong>
+</p>
+
+<p>
+    If you're using the Danish MobilePay, you can transfer the money to 438490 (Alea).<br>
+    It's important that you pay from the same number as the one you entered during sign-up. If this isn't possible,
+    please email <a href=mailto:andreas@fastaval.dk>andreas@fastaval.dk</a> and we'll figure something out.
+</p>
+
+<p>
+    You can also pay right away by using Paypal. Transfer to <a href=mailto:andreas@fastaval.dk>andreas@fastaval.dk</a>.
+    Remember that fees will be deducted, so you will have to transfer more than 100 DKK.
+</p>
 
 <h4>Payment by banktransfer</h4>
-<p>If you cannot pay online, it is also possible to pay through banktransfer. This is a bit more expensive, however, as it involves more work. Because of that, there is a fee of <?= e($this->banking_fee);?>DKK on bank transfers.</p>
+<p>
+    If you cannot pay using one of the above methods, it is also possible to pay through banktransfer. This is a bit
+    more expensive however, as it involves more work. Because of that, there is a fee of <?= e($this->banking_fee);?>DKK
+    on bank transfers.
+</p>
+
 <p>To pay by banktransfer, use the information below:</p>
 <ul>
-    <li>Payment due is <?= e($this->payment_remainder + floatval($this->banking_fee));?>DKK (<?= e($this->payment_remainder);?>DKK + <?= e($this->banking_fee);?>DKK fee)</li>
-    <li>From a Danish bank: Reg.: 9314 / Account: 4573884464</li>
-    <li>Paying from a bank outside of Denmark, you should use these details:
-        <ul>
-           <li>Spar Nord Bank A/S</li>
-           <li>International Division</li>
-           <li>Skelagervej 15, Postbox 162</li>
-           <li>DK-9100 Aalborg</li>
-           <li>BIC SPNODK2</li>
-           <li>IBAN DK6693144573884464</li>
-        </ul>
+    <li>
+        Payment due is <?= e($this->payment_remainder + floatval($this->banking_fee));?>DKK
+        (<?= e($this->payment_remainder);?>DKK + <?= e($this->banking_fee);?>DKK fee)
     </li>
-    <li>ALWAYS make sure to add your name and participant ID as message so we know who the payment was from</li>
+    <li>From a Danish bank: Reg.: 9314 / Account: 4573884464</li>
+    <li>Our bank information is IBAN DK6693144573884464 and BIC SPNODK22.</li>
+    <li>
+        ALWAYS make sure to add your name and participant ID <strong><?=$this->participant->id?></strong> as message so
+        we know who the payment was from
+    </li>
 </ul>
 <p> </p>
-<p><strong>We look forward to seeing you at Fastaval 2018!</strong></p>
+<p><strong>We look forward to seeing you at Fastaval <?=$this->year?>!</strong></p>
 <p>Best,</p>
 <p>Fastaval</p>

@@ -2481,7 +2481,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
     {
         $select = $this->createEntity('Deltagere')->getSelect();
 
-        $select->setRawWhere('DATE(signed_up) = DATE(NOW() - INTERVAL ' . intval($days_ago) . ' DAY)', 'AND')
+        $select->setRawWhere('DATE(signed_up) <= DATE(NOW() - INTERVAL ' . intval($days_ago) . ' DAY)', 'AND')
             ->setOrder('id', 'ASC');
 
         return $this->createEntity('Deltagere')->findBySelectMany($select);
@@ -2543,13 +2543,12 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         return $participants;
     }
 
-    public function filterOutRecentReminders(array $participants, $days = 0)
+    public function filterOutRecentReminders(array $participants, $days_ago = 0)
     {
         $select = $this->createEntity('LogItem')->getSelect();
 
-        $days = is_int($days) ? $days : 0;
         $select->setWhere('message', 'LIKE', '%sent payment reminder%')
-            ->setRawWhere('DATE(created) > ADDDATE(NOW(), interval -'.$days.' day)', 'AND');
+            ->setRawWhere('DATE(created) > ADDDATE(NOW(), INTERVAL -'.intval($days_ago).' day)', 'AND');
 
         foreach ($this->createEntity('LogItem')->findBySelectMany($select) as $log_item) {
             foreach ($participants as $id => $participant) {
@@ -2578,11 +2577,15 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         });
     }
 
-    public function getParticipantsForPaymentReminder()
+    /**
+     * 
+     */
+    public function getParticipantsForPaymentReminder($days_ago = 1)
     {
-        $participants = $this->filterOutPaidSignups($this->createEntity('Deltagere')->findAll());
+        $participants = $this->getParticipantsSignedupDaysAgo($days_ago);
+        $participants = $this->filterOutPaidSignups($participants);
         $participants = $this->filterOutGroups($participants);
-        $participants = $this->filterOutTodaysReminders($participants);
+        $participants = $this->filterOutRecentReminders($participants, $days_ago);
         $participants = $this->filterOutAnnulled($participants);
         $participants = $this->filterSignedUpToday($participants);
 

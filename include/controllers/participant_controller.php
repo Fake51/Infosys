@@ -1704,10 +1704,11 @@ class ParticipantController extends Controller
 
     public function sendFirstPaymentReminder()
     {
-die('Not sending first payment reminders');
 
-        $participants = $this->model->getParticipantsForPaymentReminder();
 
+        $participants = $this->model->getParticipantsForPaymentReminder(4);
+        // echo count($participants)."\n";
+        // die("Not actually sending reminders\n");
         $count = 0;
         $this->page->banking_fee = $this->model->findBankingFee()->pris;
 
@@ -1719,7 +1720,7 @@ die('Not sending first payment reminders');
             $count++;
         }
 
-        $this->log('7 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
+        $this->log('4 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
 
         exit;
     }
@@ -1770,12 +1771,14 @@ die('Not sending last payment reminders');
     {
         $this->model->setupPaymentReminderEmail($participant, $this->page);
 
+        $year = date('Y', strtotime($this->config->get('con.start')));
+        $this->page->year = $year;
         if ($danish) {
-            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval '.date('Y', strtotime($this->config->get('con.start')));
+            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval '.$year;
             $this->page->setTemplate('participant/' . $template . '-da');
 
         } else {
-            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval '.date('Y', strtotime($this->config->get('con.start')));
+            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval '.$year;
             $this->page->setTemplate('participant/' . $template . '-en');
         }
 
