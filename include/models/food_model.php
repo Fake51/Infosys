@@ -498,8 +498,6 @@ ORDER BY
 
         ksort($usage);
 
-        $early_categories = array('Vegetar');
-
         foreach ($participants as $participant) {
             foreach ($participant->getMadtider() as $madtid) {
                 $link = $participant->getFoodItemLink($madtid);
@@ -509,7 +507,7 @@ ORDER BY
                     continue;
                 }
 
-                if (in_array($food->kategori, $early_categories) || $participant->isBusyBetween($madtid->dato, date('Y-m-d H:i:s', strtotime($madtid->dato . ' + 2 hour')), 'spilleder')) {
+                if ($this->isEarlyCaregory($food->kategori) || $participant->isBusyBetween($madtid->dato, date('Y-m-d H:i:s', strtotime($madtid->dato . ' + 2 hour')), 'spilleder')) {
                     $link->time_type = 1;
                     $link->update();
                     $usage[$madtid->dato][1]++;
@@ -528,7 +526,16 @@ ORDER BY
 
     }
 
-    public function getTimeType(array $usage, MadTider $madtid) {
+    private function isEarlyCaregory($category) {
+        // TODO - change this from hardcoded to a setting on food page
+        // Like adding time ranges to food types
+        $vegie = stripos($category, 'vegetar') !== false;
+        $friday = stripos($category, 'fredag') !== false;
+
+        return $vegie && !$friday;
+    }
+
+    private function getTimeType(array $usage, MadTider $madtid) {
         $type = 0;
         $min  = 1000;
 

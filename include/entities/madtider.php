@@ -89,7 +89,7 @@ class Madtider extends DBObject
         }
 
         $hour = date('H', strtotime($this->dato));
-        return intval($hour) >= 17;
+        return intval($hour) >= 16;
     }
 
     public function isLunch()
