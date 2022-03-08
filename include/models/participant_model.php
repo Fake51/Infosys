@@ -3413,4 +3413,15 @@ WHERE (
         }
         return ['error' => "Kunne ikke opdatere deltager $pid"];
     }
+
+    /**
+     * 
+     */
+    public function findParticipantsByIds($ids = []) {
+        if (empty($ids)) return [];
+
+        $select = $this->createEntity('Deltagere')->getSelect();
+        $select->setWhere('id', 'in', $ids);
+        return $this->createEntity('Deltagere')->findBySelectMany($select);
+    }
 }

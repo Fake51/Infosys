@@ -124,6 +124,7 @@ class Routes
         $this->routes['update_participant_sleeping_post']           = array('url' => 'deltager/persistsleepingdata/:id:', 'controller' => 'Participant', 'method' => 'updateParticipantSleepingData');
         $this->routes['vis_alle_deltagere']                         = array('url' => 'deltager/visalle', 'controller' => 'Participant', 'method' => 'visAlle');
         $this->routes['show_search_result']                         = array('url' => 'deltager/search_result', 'controller' => 'Participant', 'method' => 'showSearchResult');
+        $this->routes['download_participant_sheet']                 = array('url' => 'deltager/spradsheet', 'controller' => 'Participant', 'method' => 'downloadSpreadSheet');
         $this->routes['vis_spilledere']                             = array('url' => 'deltager/visgms/', 'controller' => 'Participant', 'method' => 'listGMs');
         $this->routes['vis_fordelte_spilledere']                    = array('url' => 'deltager/visfordeltegms/:id:', 'controller' => 'Participant', 'method' => 'listAssignedGMs');
         $this->routes['visdeltager']                                = array('url' => 'deltager/visdeltager/:id:', 'controller' => 'Participant', 'method' => 'visDeltager');

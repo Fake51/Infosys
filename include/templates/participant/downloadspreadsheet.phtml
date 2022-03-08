@@ -1,0 +1,68 @@
+<?= $this->getMessagesHtml();?>
+<div class='middleboxes'>
+	<fieldset>
+		<legend>Download deltagerliste som regneark</legend>
+		<div class="outer-container">
+			<form action="" method="post" name="frmListExport" id="frmListExport" enctype="multipart/form-data">
+        <input type="hidden" id="ids" name="ids" value="<?=$this->id_ranges?>">
+				<div>
+					<label>Vælg Filtype</label>
+					<select name="filetype" id="participant_list_filetype">
+						<option value ="csv">Comma Seperated Values (.csv)</option>
+					</select>
+					<button type="submit" id="exportparticipantlist" name="exportparticipantlist" class="btn-submit">Download</button>
+				</div>
+			</form>
+		</div>
+	</fieldset>
+	<fieldset>
+    <div>
+      <table>
+        <thead>
+          <th>Navn</th>
+          <th>Kaldenavn</th>
+          <th>Fødselsdato</th>
+          <th>Kontakt person</th>
+          <th>Kommentar</th>
+          <th>Wear</th>
+          <th>Aktiviteter (tilmeldt)</th>
+          <th>Aktiviteter (pladser)</th>
+        </thead>
+        <tbody>
+          <?php foreach($this->participants as $p) { ?>
+            <tr>
+              <td><?=$p->getName()?></td>
+              <td><?=$p->nickname?></td>
+              <td><?=preg_replace("/ \d{2}:\d{2}:\d{2}/", "", $p->birthdate)?></td>
+              <td><?=str_replace("\n", "<br>", $p->note->junior_ward->content ?? "")?></td>
+              <td><?=str_replace("\n", "<br>", $p->note->comment->content ?? "")?></td>
+              <td>
+                <?php foreach($p->getWear() as $w) {
+                  echo $w->getWearName().($w->size != 1 ? " - ".$w->getSizeName() : "")."<br>";
+                } ?>
+              </td>
+              <td>
+                <?php foreach($p->getTilmeldinger() as $t) {
+                  $activity = $t->getAktivitet();
+                  $afvikling = $t->getAfvikling();
+                  preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
+                  preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
+                  echo $activity->navn." ($start[1] - $end[1])<br>";
+                } ?>
+              </td>
+              <td>
+                <?php foreach($p->getPladser() as $pl) {
+                  $activity = $pl->getAktivitet();
+                  $afvikling = $pl->getAfvikling();
+                  preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
+                  preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
+                  echo $activity->navn." ($start[1] - $end[1])<br>";
+                } ?>
+              </td>
+            </tr>
+          <?php } ?>
+        </tbody>
+      <table>
+    </div>
+  </fieldset>
+</div>

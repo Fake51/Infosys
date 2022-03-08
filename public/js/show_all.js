@@ -129,31 +129,30 @@ $(function() {
             }, error: function(jqXHR) {
             }
         });
-    });;
-
-    $('a.character-sheet').click(function(e) {
-        var range   = [],
-            address = $(this).attr('href');
-
-        e.preventDefault();
-
-        $('table.data-table tbody tr').each(function() {
-            range.push($(this).children().first().text());
-        });
-
-        window.open(address.replace(/id_range/, range.join('-')));
     });
 
-    $('.id-cards').click(function(e) {
+    function replaceIDs(element, event){
         var range   = [],
-            address = $(this).attr('href');
+            address = $(element).attr('href');
 
-        e.preventDefault();
+        event.preventDefault();
 
         $('table.data-table tbody tr').each(function() {
             range.push($(this).children().first().text());
         });
 
         window.open(address.replace(/id_range/, range.join('-')));
+    }
+
+    $('a.character-sheet.btn').click(function(e) {
+        replaceIDs(this, e);
+    });
+
+    $('a.id-cards.btn').click(function(e) {
+        replaceIDs(this, e);
+    });
+
+    $('a.spreadsheet.btn').click(function(e) {
+        replaceIDs(this, e);
     });
 });

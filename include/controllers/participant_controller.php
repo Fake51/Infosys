@@ -2067,4 +2067,73 @@ exit;
         exit;
     }
 
+    public function downloadSpreadSheet() {
+        
+        if($this->page->request->isGet()) {
+            if(!isset($this->page->request->get->ids)) return;
+            $id_ranges = $this->page->request->get->ids;
+        }
+
+        if($this->page->request->isPost()) {
+            if(!isset($this->page->request->post->ids)) return;
+            $id_ranges = $this->page->request->post->ids;
+        }
+        
+        $participants = $this->model->findParticipantsByIds(explode("-",$id_ranges));
+
+        if (isset($this->page->request->post->exportparticipantlist)) {
+            header('Content-Type: text/csv;charset=utf-8');
+            header('Content-Disposition: attachment;filename="deltagere.csv"');
+            header('Cache-Control: max-age=0');
+            
+            echo chr(0xEF).chr(0xBB).chr(0xBF); // UTF8 BOM
+            echo "\"Navn\";";
+            echo "\"Kaldenavn\";";
+            echo "\"Fødselsdato\";";
+            echo "\"Kontakt person\";";
+            echo "\"Kommentar\";";
+            echo "\"Wear\";";
+            echo "\"Aktiviteter (tilmeldt)\";";
+            echo "\"Aktiviteter (pladser)\";";
+            echo "\n";
+
+            foreach($participants as $p) {
+                echo "\"{$p->getName()}\";";
+                echo "\"{$p->nickname}\";";
+                $birth = preg_replace("/ \d{2}:\d{2}:\d{2}/", "", $p->birthdate);
+                echo "\"{$birth}\";";
+                echo "\"".($p->note->junior_ward->content ?? "")."\";";
+                echo "\"".($p->note->comment->content ?? "")."\";";
+                $wear = "";
+                foreach($p->getWear() as $w) {
+                    $wear.= $w->getWearName().($w->size != 1 ? " - ".$w->getSizeName() : "")."\n";
+                }
+                echo "\"{$wear}\";";
+                $signup = "";
+                foreach($p->getTilmeldinger() as $t) {
+                    $activity = $t->getAktivitet();
+                    $afvikling = $t->getAfvikling();
+                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
+                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
+                    $signup .= $activity->navn." ($start[1] - $end[1])\n";
+                }
+                echo "\"{$signup}\";";
+                $spots = "";
+                foreach($p->getPladser() as $pl) {
+                    $activity = $pl->getAktivitet();
+                    $afvikling = $pl->getAfvikling();
+                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
+                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
+                    $spots .= $activity->navn." ($start[1] - $end[1])\n";
+                }
+                echo "\"{$spots}\";";
+                echo "\n";
+            }
+            exit;
+        }
+
+        $this->page->id_ranges = $id_ranges;
+        $this->page->participants = $participants;
+    }
+
 }
