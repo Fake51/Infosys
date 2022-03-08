@@ -160,6 +160,20 @@ class Deltagere extends DBObject implements AgeFulfilment
         }
     }
 
+    public function __isset($var) {
+        if ($var == 'alder') {
+            return true;
+        } elseif($var == 'note') {
+            if (!isset($this->note_obj)) {
+                $this->note_obj = self::parseNote($this->deltager_note);
+            }
+            return isset($this->note_obj);
+
+        } else {
+            return array_key_exists($var, $this->storage);
+        }
+    }
+
     /**
      * returns first and last name concatenated
      *
