@@ -2863,7 +2863,7 @@ ORDER BY
         $vouchers = 0;
 
         foreach ($participant->getPladser() as $spot) {
-            if ($spot->type === 'spilleder') {
+            if ($spot->type === 'spilleder' && $spot->getAktivitet()->type !== 'braet') {
                 $vouchers++;
             }
 
