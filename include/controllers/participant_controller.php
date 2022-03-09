@@ -2090,11 +2090,12 @@ exit;
             echo "\"Navn\";";
             echo "\"Kaldenavn\";";
             echo "\"Fødselsdato\";";
-            echo "\"Kontakt person\";";
+            echo "\"Kontakt navn\";";
+            echo "\"Kontakt telefon\";";
+            echo "\"Kontakt mail\";";
             echo "\"Kommentar\";";
             echo "\"Wear\";";
             echo "\"Aktiviteter (tilmeldt)\";";
-            echo "\"Aktiviteter (pladser)\";";
             echo "\n";
 
             foreach($participants as $p) {
@@ -2102,11 +2103,14 @@ exit;
                 echo "\"{$p->nickname}\";";
                 $birth = preg_replace("/ \d{2}:\d{2}:\d{2}/", "", $p->birthdate);
                 echo "\"{$birth}\";";
-                echo "\"".($p->note->junior_ward->content ?? "")."\";";
-                echo "\"".($p->note->comment->content ?? "")."\";";
+                $contact = explode("\n", ($p->note->junior_ward->content ?? ""));
+                echo "\"".($contact[0] ?? "")."\";";
+                echo "\"".($contact[1] ?? "")."\";";
+                echo "\"".($contact[2] ?? "")."\";";
+                echo "\"".preg_replace("/\R/", "",($p->note->comment->content ?? ""))."\";";
                 $wear = "";
                 foreach($p->getWear() as $w) {
-                    $wear.= $w->getWearName().($w->size != 1 ? " - ".$w->getSizeName() : "")."\n";
+                    $wear.= $w->getWearName().($w->size != 1 ? " - ".$w->getSizeName() : "").", ";
                 }
                 echo "\"{$wear}\";";
                 $signup = "";
@@ -2115,18 +2119,10 @@ exit;
                     $afvikling = $t->getAfvikling();
                     preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
                     preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
-                    $signup .= $activity->navn." ($start[1] - $end[1])\n";
+                    $signup = $activity->navn." ($start[1] - $end[1])";
+                    echo "\"{$signup}\";";
                 }
-                echo "\"{$signup}\";";
-                $spots = "";
-                foreach($p->getPladser() as $pl) {
-                    $activity = $pl->getAktivitet();
-                    $afvikling = $pl->getAfvikling();
-                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
-                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
-                    $spots .= $activity->navn." ($start[1] - $end[1])\n";
-                }
-                echo "\"{$spots}\";";
+                
                 echo "\n";
             }
             exit;
