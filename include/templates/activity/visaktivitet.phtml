@@ -146,6 +146,7 @@ $this->registerLateLoadJS('activity.js');
                         <tr>
                             <td><i class="icon-meeple-king"></i></td>
                             <td class="name">Name</td>
+                            <td class='afviklingsbox-extras'>Pri</td>
                             <td class="karma"><i class="icon-balance-scale"></i></td>
                             <td class='afviklingsbox-extras'><i class="icon-ages"></i></td>
                             <td class='max-wanted'><i class="icon-heart-empty"></i></td>
@@ -179,15 +180,31 @@ $this->registerLateLoadJS('activity.js');
                                 $desired = '';
                             }
                         ;?>
-                                <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?> <?= $double_booked;?>" data-participant_id="<?= e($deltager->id);?>" data-participant_age="<?= e($deltager->alder);?>" data-age="<?= $deltager->alder;?>" data-language="<?= $deltager->sprog;?>" data-maxWanted="<?= $deltager->desired_activities;?>" data-participant_role="<?= e($type);?>" data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>" data-participant_priority="<?= e($tilmelding->prioritet);?>" data-participantNote="<?= e(trim($deltager->deltager_note));?>">
+                                <tr class="participant p<?= e($deltager->id);?> <?= $busy;?> <?= $displayed;?><?= $locked;?> <?= $double_booked;?>" 
+                                    data-participant_id="<?= e($deltager->id);?>"
+                                    data-participant_age="<?= e($deltager->alder);?>"
+                                    data-age="<?= $deltager->alder;?>"
+                                    data-language="<?= $deltager->sprog;?>"
+                                    data-maxWanted="<?= $deltager->desired_activities;?>"
+                                    data-participant_role="<?= e($type);?>"
+                                    data-participant_karma="<?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?>"
+                                    data-participant_priority="<?= e($tilmelding->prioritet);?>"
+                                    data-participantNote="<?= e(trim($deltager->note->comment->content));?>"
+                                >
                                     <td><?= $type === 'SL' ? '<i class="icon-meeple-king"></i>' : '';?></td>
-                                    <td class="name"><a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"<?= ($busy ? " title='Deltageren er optaget på dette tidspunkt'" : '');?>><?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?></a></td>
+                                    <td class="name">
+                                        <a href="<?= $this->url('visdeltager', array('id' => $deltager->id));?>"
+                                            <?= ($busy ? " title='Deltageren er optaget på dette tidspunkt'" : '');?>
+                                        >
+                                            <?= e($deltager->fornavn);?> <?= e($deltager->efternavn);?>
+                                        </a>
+                                    </td>
                                     <td class='afviklingsbox-extras'><?= $tilmelding->prioritet;?></td>
                                     <td class="karma"><?= isset($this->karma_stats[$deltager->id]) ? e($this->karma_stats[$deltager->id]) : 0 ;?></td>
                                     <td class='afviklingsbox-extras'><?= e($deltager->alder);?></td>
                                     <td class='max-wanted'><?= $desired;?></td>
                                     <td class='language'><i class="icon-<?= $language;?>"></i></td>
-                                    <td class='message'><?= trim($deltager->deltager_note) ? '<i class="icon-chat"></i>' : '';?></td>
+                                    <td class='message'><?= trim($deltager->note->comment->content) ? '<i class="icon-chat"></i>' : '';?></td>
                                 </tr>
                         <?php endforeach;?>
                     </tbody>
