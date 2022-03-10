@@ -19,6 +19,7 @@
     <div>
       <table>
         <thead>
+          <th>ID</th>
           <th>Navn</th>
           <th>Kaldenavn</th>
           <th>Fødselsdato</th>
@@ -31,6 +32,7 @@
         <tbody>
           <?php foreach($this->participants as $p) { ?>
             <tr>
+              <td><?=$p->id?></td>
               <td><?=$p->getName()?></td>
               <td><?=$p->nickname?></td>
               <td><?=preg_replace("/ \d{2}:\d{2}:\d{2}/", "", $p->birthdate)?></td>
@@ -42,22 +44,20 @@
                 } ?>
               </td>
               <td>
-                <?php foreach($p->getTilmeldinger() as $t) {
-                  $activity = $t->getAktivitet();
-                  $afvikling = $t->getAfvikling();
-                  preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
-                  preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
-                  echo $activity->navn." ($start[1] - $end[1])<br>";
-                } ?>
-              </td>
-              <td>
-                <?php foreach($p->getPladser() as $pl) {
-                  $activity = $pl->getAktivitet();
-                  $afvikling = $pl->getAfvikling();
-                  preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
-                  preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
-                  echo $activity->navn." ($start[1] - $end[1])<br>";
-                } ?>
+                <?php
+                  $tilmeldinger = $p->getTilmeldinger();
+                  uasort($tilmeldinger, function($a, $b) {
+                    return $a->prioritet - $b->prioritet;
+                  });
+
+                  foreach($tilmeldinger as $t) {
+                    $activity = $t->getAktivitet();
+                    $afvikling = $t->getAfvikling();
+                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
+                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
+                    echo "($t->prioritet) $activity->navn ($start[1] - $end[1])<br>";
+                  } 
+                ?>
               </td>
             </tr>
           <?php } ?>

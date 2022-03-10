@@ -2087,6 +2087,7 @@ exit;
             header('Cache-Control: max-age=0');
             
             echo chr(0xEF).chr(0xBB).chr(0xBF); // UTF8 BOM
+            echo "\"ID\";";
             echo "\"Navn\";";
             echo "\"Kaldenavn\";";
             echo "\"Fødselsdato\";";
@@ -2099,6 +2100,7 @@ exit;
             echo "\n";
 
             foreach($participants as $p) {
+                echo "\"{$p->id}\";";
                 echo "\"{$p->getName()}\";";
                 echo "\"{$p->nickname}\";";
                 $birth = preg_replace("/ \d{2}:\d{2}:\d{2}/", "", $p->birthdate);
@@ -2107,19 +2109,25 @@ exit;
                 echo "\"".($contact[0] ?? "")."\";";
                 echo "\"".($contact[1] ?? "")."\";";
                 echo "\"".($contact[2] ?? "")."\";";
-                echo "\"".preg_replace("/\R/", "",($p->note->comment->content ?? ""))."\";";
+                echo "\"".preg_replace("/\R/", " ",($p->note->comment->content ?? ""))."\";";
                 $wear = "";
                 foreach($p->getWear() as $w) {
                     $wear.= $w->getWearName().($w->size != 1 ? " - ".$w->getSizeName() : "").", ";
                 }
                 echo "\"{$wear}\";";
+
+                $tilmeldinger = $p->getTilmeldinger();
+                uasort($tilmeldinger, function($a, $b) {
+                  return $a->prioritet - $b->prioritet;
+                });
+
                 $signup = "";
-                foreach($p->getTilmeldinger() as $t) {
+                foreach($tilmeldinger as $t) {
                     $activity = $t->getAktivitet();
                     $afvikling = $t->getAfvikling();
                     preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
                     preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
-                    $signup = $activity->navn." ($start[1] - $end[1])";
+                    $signup = "$t->prioritet. prio $activity->navn ($start[1] - $end[1])";
                     echo "\"{$signup}\";";
                 }
                 
