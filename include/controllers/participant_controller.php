@@ -50,7 +50,21 @@ class ParticipantController extends Controller
      * @var array
      */
     protected $prerun_hooks = array(
-        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array('displayParticipantInfo', 'showSignupDetails', 'showSignupDetailsJson', 'listAssignedGMs', 'ean8SmallBarcode', 'ean8Barcode', 'ean8Badge', 'processPayment', 'registerPayment', 'showPaymentDone', 'resetParticipantPassword', 'sendFirstPaymentReminder', 'sendSecondPaymentReminder', 'sendLastPaymentReminder', 'cancelParticipantSignup')),
+        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array(
+            'displayParticipantInfo',
+            'showSignupDetails',
+            'showSignupDetailsJson',
+            'listAssignedGMs',
+            'ean8SmallBarcode',
+            'ean8Barcode',
+            'ean8Badge',
+            'processPayment',
+            'registerPayment',
+            'showPaymentDone',
+            'resetParticipantPassword',
+            'cronPaymentReminder',
+            'cancelParticipantSignup',
+        )),
     );
 
     /**
@@ -1700,12 +1714,23 @@ class ParticipantController extends Controller
         $this->page->updated = $updated;
     }
 
-    // todo add method for updating bank payment details, here, in routes, and in model
+    /**
+     * Function for sending out payment reminders.
+     * Meant to be called by a cron job requesting 'participant/payment-reminder/cron'
+     */
+    public function cronPaymentReminder() {
+        if(strtotime($this->config->get('con.paymentlimit')) < strtotime('now')) {
+            //echo "late\n";
+            $this->sendLatePaymentReminder();
+            exit;
+        }
+        //echo "not late\n";
+        $this->sendRegularPaymentReminder();
+        exit;
+    }
 
-    public function sendFirstPaymentReminder()
+    public function sendRegularPaymentReminder()
     {
-
-
         $participants = $this->model->getParticipantsForPaymentReminder(4);
         // echo count($participants)."\n";
         // die("Not actually sending reminders\n");
@@ -1713,7 +1738,7 @@ class ParticipantController extends Controller
         $this->page->banking_fee = $this->model->findBankingFee()->pris;
 
         foreach ($participants as $participant) {
-            $this->sendPaymentReminder($participant, 'firstpaymentreminder', $participant->speaksDanish());
+            $this->sendPaymentReminder($participant, 'paymentreminderregular', $participant->speaksDanish());
 
             $this->log('System sent payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
 
@@ -1724,6 +1749,28 @@ class ParticipantController extends Controller
 
         exit;
     }
+
+    public function sendLatePaymentReminder()
+    {
+        $participants = $this->model->getParticipantsForPaymentReminder(4);
+        //echo count($participants)."\n";
+        //die("Not actually sending reminders\n");
+        $count = 0;
+        $this->page->banking_fee = $this->model->findBankingFee()->pris;
+
+        foreach ($participants as $participant) {
+            $this->sendPaymentReminder($participant, 'paymentreminderlate', false);//$participant->speaksDanish());
+
+            $this->log('System sent late payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
+
+            $count++;
+        }
+
+        $this->log('4 day late payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
+
+        exit;
+    }
+
 
     public function sendSecondPaymentReminder()
     {

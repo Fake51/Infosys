@@ -2297,6 +2297,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $page->payment_remainder = $participant->calcSignupTotal() - $participant->betalt_beloeb;
         $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
         $page->payment_day = date('d/m-Y', $paytime);
+        $page->payment_day_en = date('M d, Y', $paytime);
 
         return $participant;
     }
@@ -2590,6 +2591,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $participants = $this->filterOutAnnulled($participants);
         $participants = $this->filterSignedUpToday($participants);
 
+        //return [$this->createEntity('Deltagere')->findById(1)];
         return $participants;
     }
 
