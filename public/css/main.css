@@ -588,6 +588,12 @@ div#register-mobile-pay table td label{
 div#register-mobile-pay table td input{
     width: 5em;
 }
+/* Name tag download*/
+div#nametag-forms fieldset {
+    display: inline-block;
+    width: 30rem;
+}
+
 /* login page */
 div#loginbox {
     text-align: center;

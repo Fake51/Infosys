@@ -1971,72 +1971,166 @@ exit;
         $participants = $this->model->findAll();
         $this->model->generateParticipantBarcodes($participants);
 
-        // Handle POST request to download spreadsheet
         if ($this->page->request->isPost()){
             $post = $this->page->request->post;
-            $file_dir = PUBLIC_PATH .'sheets';
-            $file_path = $file_dir .'/nametag_sheet.xlsx';
-
-            $spreadsheet = new Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-            $row = 1;
-            foreach ($participants as $participant) {
-                $sheet->setCellValue('A'.$row, $participant->id);
-                
-                $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName();
-                $sheet->setCellValue('B'.$row, $nickname);
-                
-                $barcode = $this->model->generateEan8SheetBarcode($participant->id);
-
-                $barcode_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-                $barcode_drawing->setName('Barcode'.$participant->id);
-                $barcode_drawing->setDescription('Barcode'.$participant->id);
-                $barcode_drawing->setPath($barcode); /* put your path and image here */
-                $barcode_drawing->setCoordinates('C'.$row);
-                $barcode_drawing->setHeight(82);
-                $barcode_drawing->setWorksheet($spreadsheet->getActiveSheet());
-                $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(83,'px');
-
-                // Extra stuff for organizers
-                if($participant->isArrangoer()){
-                    $sheet->setCellValue('D'.$row, $participant->arbejdsomraade);
-
-                    $photo = $this->model->fetchCroppedPhoto($participant);
-                    if($photo != '') {
-                        $photo_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-                        $photo_drawing->setName('Photo'.$participant->id);
-                        $photo_drawing->setDescription('Photo'.$participant->id);
-                        $photo_drawing->setPath(PUBLIC_PATH.$photo); /* put your path and image here */
-                        $photo_drawing->setCoordinates('E'.$row);
-                        $photo_drawing->setHeight(300,'px');
-                        $photo_drawing->setWorksheet($spreadsheet->getActiveSheet());
-                        $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(300,'px');
-                    }
-                    
-                }
-                $row++;
-            }
-
-            // Set autosize for collumns
-            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(TRUE);
-            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(TRUE);
-            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(140,'px');
-            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(TRUE);
-            $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(210,'px');
-            
-            $writer = new Xlsx($spreadsheet);
-            if (!file_exists($file_dir)) {
-                mkdir($file_dir, 0777, true);
-            }
-            $writer->save($file_path);
-
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="name-tag-list.xlsx"');
-            header('Cache-Control: max-age=0');
-            readfile($file_path);
-            exit;
         }
 
+        // Handle POST request to download spreadsheet
+        if (isset($post->download_tag_list)) {
+            // Handle CVS file
+            if ($post->filetype === "csv") {
+                $data = [ 0 => ["ID", "Kaldenavn", "Område"]];
+                foreach ($participants as $participant) {
+                    $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName();
+                    $work_area = $participant->arbejdsomraade ?? "";
+                    $data[] = [
+                        $participant->id,
+                        $nickname,
+                        $work_area,
+                    ];
+                }
+                $this->returnCSV($data, "nametag-list");
+                exit;
+            }
+
+            // Handle Excel spreadsheet
+            if ($post->filetype === "xlsx") {
+                $file_dir = PUBLIC_PATH .'sheets';
+                $file_path = $file_dir .'/nametag_sheet.xlsx';
+
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                $row = 1;
+                foreach ($participants as $participant) {
+                    $sheet->setCellValue('A'.$row, $participant->id);
+                    
+                    $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName();
+                    $sheet->setCellValue('B'.$row, $nickname);
+                    
+                    $barcode = $this->model->generateEan8SheetBarcode($participant->id);
+
+                    $barcode_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                    $barcode_drawing->setName('Barcode'.$participant->id);
+                    $barcode_drawing->setDescription('Barcode'.$participant->id);
+                    $barcode_drawing->setPath($barcode); /* put your path and image here */
+                    $barcode_drawing->setCoordinates('C'.$row);
+                    $barcode_drawing->setHeight(82);
+                    $barcode_drawing->setWorksheet($spreadsheet->getActiveSheet());
+                    $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(83,'px');
+
+                    // Extra stuff for organizers
+                    if($participant->isArrangoer()){
+                        $sheet->setCellValue('D'.$row, $participant->arbejdsomraade);
+
+                        $photo = $this->model->fetchCroppedPhoto($participant);
+                        if($photo != '') {
+                            $photo_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                            $photo_drawing->setName('Photo'.$participant->id);
+                            $photo_drawing->setDescription('Photo'.$participant->id);
+                            $photo_drawing->setPath(PUBLIC_PATH.$photo); /* put your path and image here */
+                            $photo_drawing->setCoordinates('E'.$row);
+                            $photo_drawing->setHeight(300,'px');
+                            $photo_drawing->setWorksheet($spreadsheet->getActiveSheet());
+                            $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(300,'px');
+                        }
+                        
+                    }
+                    $row++;
+                }
+
+                // Set autosize for collumns
+                $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(140,'px');
+                $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(210,'px');
+                
+                $writer = new Xlsx($spreadsheet);
+                if (!file_exists($file_dir)) {
+                    mkdir($file_dir, 0777, true);
+                }
+                $writer->save($file_path);
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="name-tag-list.xlsx"');
+                header('Cache-Control: max-age=0');
+                readfile($file_path);
+                exit;
+            }
+
+            $this->errorMessage('Ukendt filtype '. $post->filetype);
+        }
+
+        // Handle POST request to download images
+        if (isset($post->download_tag_images)) {
+            // Path and file names
+            $path = PUBLIC_PATH . 'uploads/';
+            $archive = $path.'nametag-images.zip';
+
+            // create new zip archive
+            $zip = new ZipArchive();
+            $zip->open($archive, ZIPARCHIVE::CREATE );
+            
+            if ($post->images === "both" || $post->images === "photos") {
+                $dir = "";
+                if ($post->images === "both") {
+                    $zip->addEmptyDir('fotos');
+                    $dir = "fotos/";
+                }
+
+                // Get all croped photos
+                $photos = glob($path.'photo-cropped-*');
+                foreach ($photos as $photo){
+                    // Get identifier and file type from photo
+                    preg_match("/photo-cropped-(.+)\.(.+)/", $photo, $matches);
+                    $identifier = $matches[1];
+                    $filetype = $matches[2];
+
+                    // Find the participant(organizer) the photo belongs to 
+                    if ($participant = $this->model->getParticipantFromPhotoidentifier($identifier)){
+                        // Add photo to zip file, with a more useful name
+                        $name = preg_replace("/\s+/","_", $participant->getName() );
+                        $filename = "{$participant->id}_$name.$filetype";
+                        $zip->addFile($photo,$dir.$filename);
+                    }
+                }
+            }
+
+            if ($post->images === "both" || $post->images === "barcodes") {
+                $dir = "";
+                if ($post->images === "both") {
+                    $zip->addEmptyDir('stregkoder');
+                    $dir = "stregkoder/";
+                }
+
+                foreach ($participants as $participant) {
+                    // Get barcode filename
+                    $barcode = $this->model->generateEan8SheetBarcode($participant->id);
+                    // Get filetype
+                    preg_match("/\.(.+)$/", $barcode, $matches);
+                    $filetype = $matches[1];
+                    // Create useful filename for barcode
+                    $name = preg_replace("/\s+/","_", $participant->getName() );
+                    $filename = "{$participant->id}_$name.$filetype";
+                    // Add barcode to zip file
+                    $zip->addFile($barcode,$dir.$filename);
+                } 
+            }
+
+            // Close the archive
+            $zip->close();
+            $attachement = "nametag_images_{$post->images}_".date("Ymd").".zip";
+            // Set headers for downloading the zip file
+            header("Content-type: application/zip"); 
+            header("Content-Disposition: attachment; filename=$attachement"); 
+            header("Pragma: no-cache"); 
+            header("Expires: 0");
+            // Add zip file to the response
+            readfile($archive);
+            // Delete the zip file afterwards
+            unlink($archive);
+            exit;
+        }
         
         $photos = [];
         foreach ($participants as $participant) {
