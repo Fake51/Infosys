@@ -53,7 +53,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2"><strong>Aldersbegrænsning:</strong> <label>Min: <input type="number" min="0" max="200" name="min_age" size="4" step="1" value="<?= e($this->aktivitet->getMinAge());?>"/></label> <label>Max: <input type="number" min="0" max="200" size="4" name="max_age" step="1" value="<?= e($this->aktivitet->getMaxAge());?>"/></label></td>
+                    <td><strong>Alder Min:</strong> <input type="number" min="0" max="200" name="min_age" size="4" step="1" value="<?= e($this->aktivitet->getMinAge());?>"/></td>
+                    <td><strong>Alder Max:</strong> <input type="number" min="0" max="200" size="4" name="max_age" step="1" value="<?= e($this->aktivitet->getMaxAge());?>"/></td>
                     <td><b>Max tilmeldinger</b><input type="number" min="0" max="1000" step="1" value="<?= e($this->aktivitet->max_signups);?>" name="aktivitet[max_signups]"/></td>
                 </tr>
                 <tr>
