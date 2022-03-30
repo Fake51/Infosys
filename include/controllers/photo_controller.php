@@ -50,15 +50,27 @@ class PhotoController extends Controller
      */
     public function showUploadForm()
     {
-        if(strtotime($this->config->get('con.signupend')) < strtotime('now')) {
-            echo "Det er for sent at uploade photo. Tilmeldingen er slut og navneskiltene er ved at blive lavet.<br>";
-            echo "It is too late to uploade a photo. Sign-up has ended and the name tags are already in the making<br>";
-            exit;
-        }
-
         if (!$this->checkIdentifier()) {
             return $this->send404();
         }
+
+        $user = $this->model->getLoggedInUser();
+        if(strtotime($this->config->get('con.signupend')) < strtotime('now')) {
+            $message_da = "Det er for sent at uploade photo. Tilmeldingen er slut og navneskiltene er ved at blive lavet.<br>";
+            $message_en = "It is too late to uploade a photo. Sign-up has ended and the name tags are already in the making<br>";
+
+            if ($user === false) {
+                echo $message_da;
+                echo $message_en;
+                exit;
+            }
+
+            if (!$user->hasRole('Infonaut')) {
+                $this->errorMessage("Tilmeldingen er lukket og kun infonauter kan uploade photo");
+                $this->hardRedirect($this->url('deltagerehome'));
+            }
+        }
+
 
         $this->page->clearEarlyLoadJs();
 
@@ -95,7 +107,13 @@ class PhotoController extends Controller
             $this->page->setStatus('500', 'Upload failed');
 
         } else {
-            $this->log('Deltager #' . $this->model->getParticipantIdFromIdentifier($this->vars['identifier']) . ' har uploadet originalt billede', 'Photo', null);
+            $user = $this->model->getLoggedInUser();
+            $id = $this->model->getParticipantIdFromIdentifier($this->vars['identifier']);
+            if($user === false) {
+                $this->log("Deltager #$id har uploadet originalt billede", 'Photo', null);
+            } else {
+                $this->log("$user->user uploadede originalt billede for deltager #$id", 'Photo', $user);
+            }
         }
     }
 
@@ -117,7 +135,13 @@ class PhotoController extends Controller
             $this->page->setStatus('500', 'Upload failed');
 
         } else {
-            $this->log('Deltager #' . $this->model->getParticipantIdFromIdentifier($this->vars['identifier']) . ' har uploadet tilpasset billede', 'Photo', null);
+            $user = $this->model->getLoggedInUser();
+            $id = $this->model->getParticipantIdFromIdentifier($this->vars['identifier']);
+            if($user === false) {
+                $this->log("Deltager #$id har uploadet tilpasset billede", 'Photo', null);
+            } else {
+                $this->log("$user->user uploadede tilpasset billede for deltager #$id", 'Photo', $user);
+            }
         }
     }
 

@@ -287,4 +287,24 @@ class Controller extends Common
 
         exit;
     }
+
+    /**
+     * Returns data as a csv file
+     * 
+     * @access public
+     * @return void
+     */
+    public function returnCSV($data, $filename = "infosys") {
+        header('Content-Type: text/csv;charset=utf-8');
+        header('Content-Disposition: attachment;filename="'.$filename.'.csv"');
+        header('Cache-Control: max-age=0');
+        
+        echo chr(0xEF).chr(0xBB).chr(0xBF); // UTF8 BOM
+        foreach($data as $row) {
+            foreach($row as $cell) {
+                echo "\"$cell\";";
+            }
+            echo "\n";
+        }
+    }
 }

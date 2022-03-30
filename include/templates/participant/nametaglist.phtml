@@ -1,6 +1,7 @@
+<?=$this->getMessagesHtml()?>
 <h1>Info til navneskilte</h1>
 
-<div class='middleboxes'>
+<div id="nametag-forms" class='middleboxes'>
 	<fieldset>
 		<legend>Hent som regneark</legend>
 		<div class="outer-container">
@@ -9,8 +10,25 @@
 					<label>Vælg Filtype</label>
 					<select name="filetype" id="tag_info_filetype">
 						<option value ="xlsx">Office Open XML (.xlsx) Excel 2007 and above</option>
+            <option value ="csv">CSV Tekstfil hvor celler er seppareret med semicolon</option>
 					</select>
-					<button type="submit" id="download_tag_info" name="download_tag_info" class="btn-submit">Hent</button>
+					<button type="submit" id="download_tag_list" name="download_tag_list" class="btn-submit">Hent</button>
+				</div>
+			</form>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Hent billeder</legend>
+		<div class="outer-container">
+			<form action="" method="post" name="frmImageDownload" id="frmImageDownload" enctype="multipart/form-data">
+				<div>
+					<label>Vælg billeder</label>
+					<select name="images" id="tag_info_images">
+						<option value ="both">Fotos og stregkoder</option>
+            <option value ="photos">Kun Fotos</option>
+            <option value ="barcodes">Kun Stregkoder</option>
+					</select>
+					<button type="submit" id="download_tag_images" name="download_tag_images" class="btn-submit">Hent</button>
 				</div>
 			</form>
 		</div>
@@ -48,7 +66,7 @@ foreach ($this->participants as $participant) {
   if ($participant->isArrangoer()) {
     ?>
       <td><?=$participant->arbejdsomraade?></td>
-      <td><img src="<?=$this->photos[$participant->id]?>?rand=<?=uniqid()?>" alt=""/></td>
+      <td><img src="<?=$this->photos[$participant->id]?>" alt=""/></td>
     <?php
   } else {
     ?>

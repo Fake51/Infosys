@@ -180,10 +180,11 @@ class Routes
         $this->routes['participant_register_payment']               = array('url' => 'participant/payment/register/:hash:', 'controller' => 'Participant', 'method' => 'registerPayment');
 
         // payment reminders
-        $this->routes['7-day_payment_reminder']                     = array('url' => 'participant/payment-reminder/first', 'controller' => 'Participant', 'method' => 'sendFirstPaymentReminder');
-        $this->routes['13-day_payment_reminder']                    = array('url' => 'participant/payment-reminder/second', 'controller' => 'Participant', 'method' => 'sendSecondPaymentReminder');
-        $this->routes['last_payment_reminder']                      = array('url' => 'participant/payment-reminder/last', 'controller' => 'Participant', 'method' => 'sendLastPaymentReminder');
-        $this->routes['payment_reminder_annulled']                  = array('url' => 'participant/payment-reminder/annulled', 'controller' => 'Participant', 'method' => 'cancelParticipantSignup');
+        $this->routes['cron_payment_reminder']                      = array('url' => 'participant/payment-reminder/cron', 'controller' => 'Participant', 'method' => 'cronPaymentReminder');
+        // $this->routes['regular_payment_reminder']                   = array('url' => 'participant/payment-reminder/regular', 'controller' => 'Participant', 'method' => 'sendRegularPaymentReminder');
+        // $this->routes['13-day_payment_reminder']                    = array('url' => 'participant/payment-reminder/second', 'controller' => 'Participant', 'method' => 'sendSecondPaymentReminder');
+        // $this->routes['last_payment_reminder']                      = array('url' => 'participant/payment-reminder/last', 'controller' => 'Participant', 'method' => 'sendLastPaymentReminder');
+        // $this->routes['payment_reminder_annulled']                  = array('url' => 'participant/payment-reminder/annulled', 'controller' => 'Participant', 'method' => 'cancelParticipantSignup');
 
         // bank transfer
         $this->routes['participant_register_bank_payment']          = array('url' => 'participant/register-bank-transfer/:id:', 'controller' => 'Participant', 'method' => 'registerBankTransfer');
