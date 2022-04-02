@@ -162,6 +162,11 @@ ORDER BY
             }
         }
 
+        $query = "SELECT AVG(TIMESTAMPDIFF(year, birthdate, NOW())) AS average_age FROM deltagere";
+        if (($result = $this->db->query($query)) && !empty($result[0])) {
+            $stats['average_age'] = $result[0]['average_age'];
+        }
+
         return $stats;
     }
 
