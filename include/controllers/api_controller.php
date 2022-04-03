@@ -37,8 +37,21 @@
 class ApiController extends Controller
 {
     protected $prerun_hooks = array(
-        array('method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup', 'requestPasswordReminder', 'getConfirmationData')),
+        ['method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup', 'requestPasswordReminder', 'getConfirmationData')],
+        ['method' => 'allowCrossSiteAccess', 'exclusive' => true, 'methodlist' => []], 
     );
+
+    /**
+     * sets the proper header to allow cross site
+     * access to the api
+     *
+     * @access public
+     * @return void
+     */
+    public function allowCrossSiteAccess()
+    {
+        header('Access-Control-Allow-Origin: *');
+    }
 
     /**
      * checks that the user connecting is authenticated
@@ -524,18 +537,6 @@ class ApiController extends Controller
     public function activityStructure()
     {
         $this->jsonOutput($this->model->getActivityStructure(), '200 Awesome', 'application/json');
-    }
-
-    /**
-     * sets the proper header to allow cross site
-     * access to the api
-     *
-     * @access public
-     * @return void
-     */
-    public function allowCrossSiteAccess()
-    {
-        header('Access-Control-Allow-Origin: *');
     }
 
     /**
