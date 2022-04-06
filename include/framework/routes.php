@@ -152,6 +152,7 @@ class Routes
         $this->routes['name_tag_list']                              = array('url' => 'participant/name-tag-list', 'controller' => 'Participant', 'method' => 'nameTagList');
         $this->routes['register_mobilepay_payments']                = array('url' => 'participant/register-mobilepay', 'controller' => 'Participant', 'method' => 'registerMobilepay');
         $this->routes['confirm_mobilepay_payments']                 = array('url' => 'participant/ajax/confirm-mobilepay', 'controller' => 'Participant', 'method' => 'ajaxConfirmPayment');
+        $this->routes['send_welcome_mail']                          = array('url' => 'participant/sendwelcomemail', 'controller' => 'Participant', 'method' => 'sendWelcomeMail');
 
         $this->routes['participant_reset_password']                 = array('url' => 'participant/reset-password/:hash:', 'controller' => 'Participant', 'method' => 'resetParticipantPassword');
 

@@ -1044,11 +1044,11 @@ class ParticipantController extends Controller
         }
 
         $this->page->layout_template = "external.phtml";
-        $this->page->setTemplate($deltager->international == 'ja' ? 'external_pass_en' : 'external_pass');
+        $this->page->setTemplate(!$deltager->speaksDanish() ? 'external_pass_en' : 'external_pass');
         if ($this->externalLogin($deltager)) {
             $this->page->deltager      = $deltager;
             $this->page->deltager_info = $this->model->findDeltagerInfo($deltager);
-            $this->page->setTemplate($deltager->international == 'ja' ? 'external_en' : 'external');
+            $this->page->setTemplate(!$deltager->speaksDanish() ? 'external_en' : 'external');
             $this->log("Deltager #{$deltager->id} har tjekket sine detaljer på den eksternt tilgængelige side", "Deltager", null);
         }
     }
@@ -1838,6 +1838,44 @@ die('Not sending last payment reminders');
             ->setBodyFromPage($this->page);
 
         return $mail->send();
+    }
+
+    public function sendWelcomeMail() {
+        $participants = $this->model->getParticipantsForwelcomeMail();
+        echo "Sending to ".count($participants)." participants<br>\n";
+die("Not actually sending welcome mail\n");
+        $count = 0;
+        foreach ($participants as $participant) {
+            $this->page->id = $participant->id;
+            $this->page->code = $participant->password;
+            $this->page->name = $participant->getName();
+
+            $year = date('Y', strtotime($this->config->get('con.start')));
+            if ($participant->speaksDanish()) {
+                $title = $danish_title ? $danish_title : "Så er det snart tid til Fastaval $year";
+                $this->page->setTemplate('participant/welcomemailda');
+            } else {
+                $title = $english_title ? $english_title : "Fastaval $year is almost here";
+                $this->page->setTemplate('participant/welcomemailen');
+            }
+    
+            $mail = new Mail($this->config);
+    
+            $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+                ->setRecipient($participant->email)
+                ->setSubject($title)
+                ->setBodyFromPage($this->page);
+    
+            $mail->send();
+    
+            $this->log('System sent welcome mail to participant (ID: ' . $participant->id . ')', 'Mail', null);
+
+            $count++;
+        }
+
+        $this->log("Welcome mail sent to $count participants", 'Mail', null);
+
+        exit;
     }
 
     public function registerBankTransfer()

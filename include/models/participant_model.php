@@ -2563,6 +2563,24 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         return $participants;
     }
 
+    public function filterOutRecentMails(array $participants, $days_ago = 0)
+    {
+        $select = $this->createEntity('LogItem')->getSelect();
+
+        $select->setWhere('message', 'LIKE', '%sent% to participant%')
+            ->setRawWhere('DATE(created) > ADDDATE(NOW(), INTERVAL -'.intval($days_ago).' day)', 'AND');
+
+        foreach ($this->createEntity('LogItem')->findBySelectMany($select) as $log_item) {
+            foreach ($participants as $id => $participant) {
+                if (stripos($log_item->message, '(ID: ' . $participant->id . ')') !== false) {
+                    unset($participants[$id]);
+                }
+            }
+        }
+
+        return $participants;
+    }
+
     /**
      * returns participants for cancellation/payment reminders
      * with volunteers filtered out
@@ -2592,6 +2610,17 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $participants = $this->filterSignedUpToday($participants);
 
         //return [$this->createEntity('Deltagere')->findById(1)];
+        return $participants;
+    }
+
+    public function getParticipantsForwelcomeMail()
+    {
+        //return [$this->createEntity('Deltagere')->findById(1)];
+
+        $participants = $this->createEntity('Deltagere')->findAll();
+        $participants = $this->filterOutRecentMails($participants, 1);
+        $participants = $this->filterOutAnnulled($participants);
+
         return $participants;
     }
 
