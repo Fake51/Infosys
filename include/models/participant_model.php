@@ -278,7 +278,10 @@ class ParticipantModel extends Model
                 $done = true;
                 break;
             case 'birthdate':
-                $compare = $search_vars->deltager_search['birthdate_range'] === 'before' ? '<=': '>=';
+                $range = $search_vars->deltager_search['birthdate_range'];
+                $compare = '=';
+                if ($range === 'before') $compare = '<=';
+                if ($range === 'after') $compare = '>=';
                 $select->setWhereDate('birthdate', $compare, "$dval");
                 $done = true;
                 break;
