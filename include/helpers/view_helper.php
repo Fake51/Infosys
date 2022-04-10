@@ -81,7 +81,14 @@ class ViewHelper extends Common
 
                     <tr>
                         <td><b>ID:</b> <input type='text' name='deltager_search[id]' value=""/></td>
-                        <td><b>Fødselsdato:</b> <input type='text' value='' name='deltager_search[birthdate]' /></td>
+                        <td>
+                            <b>Fødselsdato:</b>
+                            <select name='deltager_search[birthdate_range]' style='width: 4rem;'>
+                                <option value="before">Før</option>
+                                <option value="after">Efter</option>
+                            </select>
+                            <input type='text' value='' name='deltager_search[birthdate]' placeholder="åååå-mm-dd"/>
+                        </td>
                         <td><b>Kategori:</b>
                             <select name="deltager_search[brugerkategori_id]" class="doubleinput">
                                 <option value=""></option>

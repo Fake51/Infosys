@@ -274,6 +274,14 @@ class ParticipantModel extends Model
             $done = false;
 
             switch ($dvar) {
+            case 'birthdate_range': 
+                $done = true;
+                break;
+            case 'birthdate':
+                $compare = $search_vars->deltager_search['birthdate_range'] === 'before' ? '<=': '>=';
+                $select->setWhereDate('birthdate', $compare, "$dval");
+                $done = true;
+                break;
             case 'brugerkategori_id':
                 $select->setTableWhere('brugerkategorier.id', 'deltagere.brugerkategori_id');
                 $select->setFrom('brugerkategorier');
