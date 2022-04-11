@@ -86,6 +86,7 @@ class ViewHelper extends Common
                             <select name='deltager_search[birthdate_range]' style='width: 4rem;'>
                                 <option value="before">Før</option>
                                 <option value="after">Efter</option>
+                                <option value="same">Samme</option>
                             </select>
                             <input type='text' value='' name='deltager_search[birthdate]' placeholder="åååå-mm-dd"/>
                         </td>
