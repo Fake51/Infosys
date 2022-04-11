@@ -857,6 +857,7 @@ class ActivityController extends Controller
         }
 
         $this->model->createGmBriefings();
+        $this->model->createRuleBriefings();
 
         $this->hardRedirect($this->url('vis_alle_aktiviteter'));
     }

@@ -1468,6 +1468,28 @@ ORDER BY
     }
 
     /**
+     * creates/refreshes Gm briefings
+     *
+     * @access public
+     * @return ParticipantModel
+     */
+    public function createRuleBriefings()
+    {
+        // 1. get all boardgame activities
+        // 2. create or find related briefing activities
+        $activity_data = $this->getBriefingActivities($this->getActivitiesByType('braet'), 'braet');
+
+        // 3. create or find related schedules, 15 minutes prior
+        $briefing_schedules = $this->getBriefingSchedules($activity_data, 'braet');
+
+        //4. create a group for each schedule
+        $groups = $this->getBriefingGroups($briefing_schedules);
+
+        //5. add all gamemasters from original schedules, to newly created group
+        $this->addGmsToBriefingGroups($briefing_schedules, $groups);
+    }
+
+    /**
      * returns activities fetched by type
      *
      * @param string $type Type to search by
@@ -1493,13 +1515,21 @@ ORDER BY
      * @access public
      * @return array
      */
-    public function getBriefingActivities(array $activities)
+    public function getBriefingActivities(array $activities, $type = 'rolle')
     {
-        $mapper = function ($x) {
-            return 'Spillederbriefing for ' . $x->navn;
-        };
 
-        $names = array_map($mapper, $activities);
+        $text = $type === 'braet' ? 'Rægelformidlerbriefing for ' : 'Spillederbriefing for ';
+        $text_en = $type === 'braet' ? 'Rules explainer briefing for ' : 'Gamemaster briefing for ';
+
+        $names = [];
+        foreach($activities as $key => $a) {
+            $names[$key] = $text.$a->navn;
+        }
+        // $mapper = function ($x) {
+        //     return  $text.$x->navn;
+        // };
+
+        // $names = array_map($mapper, $activities);
 
         $originals = array_combine($names, $activities);
 
@@ -1523,12 +1553,12 @@ ORDER BY
             $activity->type                   = 'system';
             $activity->navn                   = $name;
             $activity->kan_tilmeldes          = 'nej';
-            $activity->varighed_per_afvikling = 0.5;
+            $activity->varighed_per_afvikling = $type === 'braet' ? 0.25 : 0.5;
             $activity->min_deltagere_per_hold = 0;
             $activity->max_deltagere_per_hold = 0;
             $activity->spilledere_per_hold    = 0;
             $activity->lokale_eksklusiv       = 'ja';
-            $activity->title_en               = 'Gamemaster briefing for ' . $originals[$name]->title_en;
+            $activity->title_en               = $text_en . $originals[$name]->title_en;
             $activity->tids_eksklusiv         = 'ja';
             $activity->sprog                  = $originals[$name]->sprog;
             $activity->hidden                 = 'nej';
@@ -1562,7 +1592,7 @@ ORDER BY
      * @access public
      * @return array
      */
-    public function getBriefingSchedules(array $activity_data)
+    public function getBriefingSchedules(array $activity_data, $type = 'rolle')
     {
         $original_id_mapper = function ($x) {
             return intval($x['original']->id);
@@ -1578,18 +1608,19 @@ ORDER BY
 
         $ids = array_map($original_id_mapper, $activity_data);
 
+        $time = $type === 'braet' ? 15 : 30;
         $query = '
 SELECT
     a1.id AS original_id,
     a1.aktivitet_id,
     CASE ' . implode(' ', array_map($case_mapper, $activity_data)) . ' END AS briefing_id,
-    a1.start - INTERVAL 30 MINUTE AS start,
+    a1.start - INTERVAL '.$time.' MINUTE AS start,
     a1.start AS slut,
     a1.lokale_id,
     a2.id
 FROM
     afviklinger AS a1
-    LEFT JOIN afviklinger AS a2 ON a2.start = a1.start - INTERVAL 30 MINUTE AND a2.slut = a1.start AND (' . implode(' OR ', array_map($clause_mapper, $activity_data)) . ')
+    LEFT JOIN afviklinger AS a2 ON a2.start = a1.start - INTERVAL '.$time.' MINUTE AND a2.slut = a1.start AND (' . implode(' OR ', array_map($clause_mapper, $activity_data)) . ')
 WHERE
     a1.aktivitet_id IN (' . implode(', ', $ids) . ')
 ';
