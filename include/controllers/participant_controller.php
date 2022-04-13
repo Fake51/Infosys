@@ -1852,11 +1852,15 @@ die("Not actually sending welcome mail\n");
 
             $year = date('Y', strtotime($this->config->get('con.start')));
             if ($participant->speaksDanish()) {
-                $title = $danish_title ? $danish_title : "Så er det snart tid til Fastaval $year";
-                $this->page->setTemplate('participant/welcomemailda');
+                //$title = $danish_title ? $danish_title : "Så er det snart tid til Fastaval $year";
+                //$this->page->setTemplate('participant/welcomemailda');
+                $title = $danish_title ? $danish_title : "Fastaval $year - Endelig deltagerseddel";
+                $this->page->setTemplate('participant/welcomemail2da');
             } else {
-                $title = $english_title ? $english_title : "Fastaval $year is almost here";
-                $this->page->setTemplate('participant/welcomemailen');
+                // $title = $english_title ? $english_title : "Fastaval $year is almost here";
+                // $this->page->setTemplate('participant/welcomemailen');
+                $title = $english_title ? $english_title : "Fastaval $year - Final participation note";
+                $this->page->setTemplate('participant/welcomemail2en');
             }
     
             $mail = new Mail($this->config);
