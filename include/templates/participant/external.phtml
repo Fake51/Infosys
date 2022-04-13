@@ -78,6 +78,16 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
     </table>
 </fieldset>
 <fieldset>
+    <legend>Beskeder fra Fastaval</legend>
+    <?php 
+        if(empty($this->deltager->beskeder)) {
+            echo "Du har ingen beskeder fra Fastaval";
+        } else {
+            echo nl2br(htmlentities($this->deltager->beskeder, ENT_QUOTES, "UTF-8"));
+        }
+    ?>
+</fieldset>
+<fieldset>
     <legend>Tildelte aktiviteter</legend>
     <table>
         <?php
