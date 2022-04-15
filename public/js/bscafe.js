@@ -474,14 +474,16 @@ var BSCafe = (function ($, window) {
             return date.getFullYear() + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day + ' ' + (hour < 10 ? '0' : '') + hour + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
         },
         getTime: function (timestamp) {
-            var date    = timestamp ? new Date(timestamp) : new Date(),
-                hours   = date.getHours(),
-                minutes = date.getMinutes();
+            var date_time     = timestamp ? new Date(timestamp) : new Date()
+            
+            var time_string   = date_time.getFullYear() + "-";
+            time_string      += ("" + date_time.getMonth()).padStart(2, '0') + "-";
+            time_string      += ("" + date_time.getDay()).padStart(2, '0') + " ";
+            time_string      += date_time.toLocaleTimeString("da-DK").replaceAll(".",":");
 
-            hours   = hours < 10 ? '0' + hours : hours;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
+            
+            return time_string;
 
-            return hours + '.' + minutes;
         },
         getGame: function (gameId) {
             var i      = 0,
@@ -898,6 +900,11 @@ var BSCafe = (function ($, window) {
                         }
 
                         temp = $.extend({barcode: '', designergame: false}, temp);
+                        if (temp.borrowed) {
+                            console.log(temp.borrowed.timestamp);
+                            //TODO This need to change if the database server doesn't run GMT
+                            temp.borrowed.timestamp = module.getTime(temp.borrowed.timestamp + " GMT");
+                        }
 
                         parsed.push(temp);
                         names[temp.owner] = true;
