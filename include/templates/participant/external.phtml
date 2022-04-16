@@ -113,7 +113,15 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
             
             $dates[$date][] = '
             <tr>
-                <td><strong>' . ($activity->wp_link ? '<a href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '') . e($activity->navn) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . e($plads->type) . '</em>. ' . $this->replaceDayNames(date('D H:i', strtotime($schedule->start))) . ' - ' . $this->replaceDayNames(date('D H:i', strtotime($schedule->slut))) . '</td></tr>
+                <td>
+                    <strong>' . ($activity->wp_link ? '<a href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '')
+                    .e($activity->navn) 
+                    .($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . e($plads->type).'</em>. '
+                    .$this->replaceDayNames(date('D H:i', strtotime($schedule->start))) . ' - ' 
+                    .$this->replaceDayNames(date('D H:i', strtotime($schedule->slut))).' &mdash; '
+                    .$schedule->getLokale().'
+                </td>
+            </tr>
 ';
 
             foreach ($schedule->getMultiBlok() as $block) {
