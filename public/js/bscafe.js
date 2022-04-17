@@ -477,8 +477,8 @@ var BSCafe = (function ($, window) {
             var date_time     = timestamp ? new Date(timestamp) : new Date()
             
             var time_string   = date_time.getFullYear() + "-";
-            time_string      += ("" + date_time.getMonth()).padStart(2, '0') + "-";
-            time_string      += ("" + date_time.getDay()).padStart(2, '0') + " ";
+            time_string      += ("" + (date_time.getMonth()+1)).padStart(2, '0') + "-";
+            time_string      += ("" + date_time.getDate()).padStart(2, '0') + " ";
             time_string      += date_time.toLocaleTimeString("da-DK").replaceAll(".",":");
 
             
