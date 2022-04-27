@@ -1882,6 +1882,49 @@ die("Not actually sending welcome mail\n");
         exit;
     }
 
+    public function sendReviewMail() {
+        $participants = $this->model->getParticipantsForwelcomeMail();
+        echo "Sending to ".count($participants)." participants<br>\n";
+die("Not actually sending review mail\n");
+        ignore_user_abort(true);
+        flush();
+        session_write_close();
+
+        $count = 0;
+        foreach ($participants as $participant) {
+            if(!$participant->email) continue;
+
+            $this->page->name = $participant->getName();
+
+            $year = date('Y', strtotime($this->config->get('con.start')));
+            $this->page->year = $year;
+            if ($participant->speaksDanish()) {
+                $title = $danish_title ? $danish_title : "Evaluering af Fastaval $year";
+                $this->page->setTemplate('participant/reviewda');
+            } else {
+                $title = $english_title ? $english_title : "Evaluation of Fastaval $year";
+                $this->page->setTemplate('participant/reviewen');
+            }
+    
+            $mail = new Mail($this->config);
+    
+            $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+                ->setRecipient($participant->email)
+                ->setSubject($title)
+                ->setBodyFromPage($this->page);
+    
+            $mail->send();
+    
+            $this->log('System sent evaluation mail to participant (ID: ' . $participant->id . ')', 'Mail', null);
+
+            $count++;
+        }
+
+        $this->log("Evaluation mail sent to $count participants", 'Mail', null);
+
+        exit;
+    }
+
     public function registerBankTransfer()
     {
         if (!$this->page->request->isPost()) {
