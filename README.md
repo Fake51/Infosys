@@ -7,7 +7,7 @@ use for a wider audience - hence it's opensource.
 
 Requirements
 ============
-PHP 5.6
+PHP 8.0
 - xml
 - mbstring
 
