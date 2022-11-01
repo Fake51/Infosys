@@ -1,0 +1,204 @@
+{
+    "order": 2,
+    "slug": {
+        "en": "Practical",
+        "da": "Praktisk"
+    },
+    "title": {
+        "en": "Practical information",
+        "da": "Praktisk information"
+    },
+    "sections": [
+        {
+            "headline": {
+                "en": "Contact information",
+                "da": "Kontaktoplysninger"
+            },
+            "items": [
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "First name",
+                        "da": "Fornavn"
+                    },
+                    "infosys_id": "fornavn",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Last name",
+                        "da": "Efternavn"
+                    },
+                    "infosys_id": "efternavn",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Nickname",
+                        "da": "Kaldenavn"
+                    },
+                    "infosys_id": "nickname"
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "The deadline for name-tags has been exceeded and the Nickname is therefore no longer in use.",
+                        "da": "Deadline for navneskilte er overskredet og kaldenavn-feltet er derfor ikke l\u00e6ngere i brug."
+                    }
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Address",
+                        "da": "Adresse"
+                    },
+                    "infosys_id": "adresse1",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "",
+                        "da": ""
+                    },
+                    "infosys_id": "adresse2"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Post code",
+                        "da": "Postnr."
+                    },
+                    "infosys_id": "postnummer",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "City",
+                        "da": "By"
+                    },
+                    "infosys_id": "by",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Country",
+                        "da": "Land"
+                    },
+                    "infosys_id": "land",
+                    "required": "true"
+                },
+                {
+                    "type": "telephone",
+                    "text": {
+                        "en": "Mobile",
+                        "da": "Mobil"
+                    },
+                    "infosys_id": "mobiltlf"
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I will bring a cell phone to Fastaval and can\nbe contacted by phone\n(unfortunately Fastaval SMS-alerts do not work with non-Danish phones) ",
+                        "da": "Jeg medbringer mobil p\u00e5 Fastaval og vil gerne have updates ang. spil og\nanden info, samt p\u00e5mindelser om spilstart\n(Bem\u00e6rk at sms-funktionen kun fungerer med danske telefonnumre)."
+                    },
+                    "infosys_id": "medbringer_mobil"
+                },
+                {
+                    "type": "date",
+                    "text": {
+                        "en": "Birthdate",
+                        "da": "F\u00f8dselsdato"
+                    },
+                    "infosys_id": "birthdate",
+                    "required": "true"
+                },
+                {
+                    "type": "email",
+                    "text": {
+                        "en": "Email",
+                        "da": "Email"
+                    },
+                    "infosys_id": "email",
+                    "required": "true"
+                },
+                {
+                    "type": "email",
+                    "text": {
+                        "en": "Email (repeat)",
+                        "da": "Email (gentag)"
+                    },
+                    "infosys_id": "email-confirm",
+                    "required": "true",
+                    "equals": "email",
+                    "no_submit": "true",
+                    "errors": {
+                        "match": {
+                            "en": "The email adresses are not the same",
+                            "da": "Emailadresserne er ikke ens"
+                        }
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you're\u00a0 attending Fastaval with\u00a0 your club\/school, fill out the name below\n",
+                        "da": "Hvis du er p\u00e5 Fastaval med din klub\/ungdomsskole, s\u00e5 udfyld navnet nedenfor\n"
+                    }
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Name of club\/school",
+                        "da": "Navn p\u00e5 klub\/ungdomsskole"
+                    },
+                    "infosys_id": "ungdomsskole"
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "Choose visitor type",
+                "da": "V\u00e6lg deltagertype"
+            },
+            "items": [
+                {
+                    "type": "radio",
+                    "text": {
+                        "en": "Which participant type are you?",
+                        "da": "Hvilken deltagertype er du? "
+                    },
+                    "infosys_id": "participant",
+                    "options": [
+                        {
+                            "value": "Deltager",
+                            "text": {
+                                "en": "I am a participant",
+                                "da": "Jeg er deltager"
+                            },
+                            "default": true
+                        },
+                        {
+                            "value": "Juniordeltager",
+                            "text": {
+                                "en": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r. LUKKE",
+                                "da": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r. LUKKE"
+                            }
+                        },
+                        {
+                            "value": "Organizer",
+                            "text": {
+                                "en": "I am an organizer, writer or board game designer etc.",
+                                "da": "Jeg er arrang\u00f8r, forfatter eller br\u00e6tspilsdesigner m.m."
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

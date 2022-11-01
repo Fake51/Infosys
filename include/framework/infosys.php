@@ -333,6 +333,9 @@ class Infosys
             $error->logException();
         }
 
+        $embedded = "<!--".$error->getMessage()."-->";
+        $embedded .= "\n<!-- File:".$error->getFile()." Line:".$error->getLine()."-->";
+
         echo <<<HTML
 <!DOCTYPE html 
      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

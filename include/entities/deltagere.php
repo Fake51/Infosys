@@ -471,14 +471,14 @@ class Deltagere extends DBObject implements AgeFulfilment
      * @access public
      * @return bool
      */
-    public function setGDSTilmelding(GDSCategory $gdscategory, $period) {
-        if (!$gdscategory->isLoaded() || !$this->isLoaded()) {
+    public function setGDSTilmelding(?GDSCategory $gdscategory, $period) {
+        if (($gdscategory != null && !$gdscategory->isLoaded()) || !$this->isLoaded()) {
             return false;
         }
 
         $gdstilmelding = $this->createEntity('DeltagereGDSTilmeldinger');
         $gdstilmelding->deltager_id = $this->id;
-        $gdstilmelding->category_id = $gdscategory->id;
+        $gdstilmelding->category_id = $gdscategory == null ? 0 : $gdscategory->id;
         $gdstilmelding->period      = $period;
         return $gdstilmelding->insert();
     }
@@ -1661,9 +1661,18 @@ WHERE
     }
 
     public function setNote($name, $content) {
-        $note = json_decode($this->deltager_note);
+        if (!empty($this->deltager_note)) {
+            $note = json_decode($this->deltager_note);
+        } else {
+            $note = new stdClass();
+        }
+        
         $note->$name = $content;
+        // Decode HTML special chars and save to storage
         parent::__set('deltager_note', json_encode($note));
+
+        // Update note object
+        $this->note_obj = self::parseNote($this->deltager_note);
     }
 
     public static function parseNote($note){
