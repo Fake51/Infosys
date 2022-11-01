@@ -326,13 +326,11 @@ class Infosys
     {
         header('HTTP/1.1 500 Fail');
 
-        $embedded = '';
+        $embedded = "<!--".$error->getMessage()."-->";
+        $embedded .= "\n<!-- File:".$error->getFile()." Line:".$error->getLine()."-->";
 
         if ($error instanceof FrameworkException) {
             $error->logException();
-        } else {
-            $embedded = "<!--".$error->getMessage()."-->";
-            $embedded .= "\n<!-- File:".$error->getFile()." Line:".$error->getLine()."-->";
         }
 
         echo <<<HTML
