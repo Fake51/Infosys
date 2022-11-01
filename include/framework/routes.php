@@ -425,14 +425,30 @@ class Routes
         $this->routes['boardgames_reporting']        = array('url' => 'boardgames/reporting', 'controller' => 'Boardgames', 'method' => 'showReporting');
 
         // loans
-        $this->routes['loans_overview']         = array('url' => 'loans', 'controller' => 'Loans', 'method' => 'overview');
-        $this->routes['loans_data']             = array('url' => 'loans/data', 'controller' => 'Loans', 'method' => 'fetchData');
-        $this->routes['loans_create']           = array('url' => 'loans/create', 'controller' => 'Loans', 'method' => 'createItem');
-        $this->routes['loans_update']           = array('url' => 'loans/update', 'controller' => 'Loans', 'method' => 'updateItem');
-        $this->routes['loans_edit']             = array('url' => 'loans/edit', 'controller' => 'Loans', 'method' => 'editItem');
-        $this->routes['loans_parse']            = array('url' => 'loans/parse', 'controller' => 'Loans', 'method' => 'parseSpreadsheet');
-        $this->routes['loans_update_note']      = array('url' => 'loans/update-note', 'controller' => 'Loans', 'method' => 'updateNote');
+        $this->routes['loans_overview']             = array('url' => 'loans', 'controller' => 'Loans', 'method' => 'overview');
+        $this->routes['loans_data']                 = array('url' => 'loans/data', 'controller' => 'Loans', 'method' => 'fetchData');
+        $this->routes['loans_create']               = array('url' => 'loans/create', 'controller' => 'Loans', 'method' => 'createItem');
+        $this->routes['loans_update']               = array('url' => 'loans/update', 'controller' => 'Loans', 'method' => 'updateItem');
+        $this->routes['loans_edit']                 = array('url' => 'loans/edit', 'controller' => 'Loans', 'method' => 'editItem');
+        $this->routes['loans_parse']                = array('url' => 'loans/parse', 'controller' => 'Loans', 'method' => 'parseSpreadsheet');
+        $this->routes['loans_update_note']          = array('url' => 'loans/update-note', 'controller' => 'Loans', 'method' => 'updateNote');
 
+        // Signup Admin
+        $this->routes['signup_pages']               = array('url' => 'signup/pages', 'controller' => 'SignupAdmin', 'method' => 'signupPages');
+        $this->routes['signup_pages_specific']      = array('url' => 'signup/pages/:page:', 'controller' => 'SignupAdmin', 'method' => 'signupPages');
+        $this->routes['signup_pages_add_element']   = array('url' => 'signup/pages/add-element', 'controller' => 'SignupAdmin', 'method' => 'addPageElement');
+        $this->routes['signup_pages_edit_text']     = array('url' => 'signup/pages/edit-text', 'controller' => 'SignupAdmin', 'method' => 'editText');
+
+        // Signup API
+        $this->routes['api_signup_config']          = array('url' => 'api/signup/config/:module:', 'controller' => 'SignupApi', 'method' => 'getConfig');
+        $this->routes['api_signup_page_list']       = array('url' => 'api/signup/pagelist', 'controller' => 'SignupApi', 'method' => 'getPageList');
+        $this->routes['api_signup_page']            = array('url' => 'api/signup/page/:page_id:', 'controller' => 'SignupApi', 'method' => 'getPage');
+        $this->routes['api_signup_food']            = array('url' => 'api/signup/food', 'controller' => 'SignupApi', 'method' => 'getFood');
+        $this->routes['api_signup_activities']      = array('url' => 'api/signup/activities', 'controller' => 'SignupApi', 'method' => 'getActivities');
+        $this->routes['api_signup_wear']            = array('url' => 'api/signup/wear', 'controller' => 'SignupApi', 'method' => 'getWear');
+        $this->routes['api_signup_submit']          = array('url' => 'api/signup/submit', 'controller' => 'SignupApi', 'method' => 'submitSignup');
+        $this->routes['api_signup_confirm']         = array('url' => 'api/signup/confirm', 'controller' => 'SignupApi', 'method' => 'confirmSignup');
+        $this->routes['api_signup_load']            = array('url' => 'api/signup/load', 'controller' => 'SignupApi', 'method' => 'loadSignup');
     }
 
     /**

@@ -178,11 +178,7 @@ class DBObject
      */
     public function __isset($property)
     {
-        if (isset($this->storage[$property])) {
-            return true;
-        }
-
-        return false;
+        return isset($this->storage[$property]);
     }
 
     /**
@@ -422,6 +418,20 @@ class DBObject
             return false;
         }
         return $this->loadObject($results[0], $this);
+    }
+
+    /**
+     * Find element where value == field_name
+     * 
+     * @param string $field_name - name of field to compare with
+     * @param string $value - value of the field on the element we're looking for
+     *
+     * @access public
+     * @return object|bool - false on fail
+     */
+    public function findByField($field_name, $value) {
+        $select = $this->getSelect()->setWhere($field_name, "=", $value);
+        return $this->findBySelect($select);
     }
 
     /**

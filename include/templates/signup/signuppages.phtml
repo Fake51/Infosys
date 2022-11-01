@@ -1,0 +1,68 @@
+<?php
+  $icon_name = [
+    'da' => 'dk',
+    'en' => 'uk',
+  ];
+?>
+<div id='page-admin-container'>
+  <legend>Administration af tilmeldingssider</legend>
+  <?php foreach($this->signup_pages as $page) { // Signup Pages ?>
+    <div class="page-wrapper closed" id="wrapper-<?=$page->file?>">
+      <i class="fold-button icon-"></i>
+      <fieldset id="page:<?=$page->file?>" class="signup-page">
+        <legend>Page : <?=$page->file?> </legend>
+        <?php foreach($page->title as $lang => $title) { // Page Title for each language?>
+          <div class="title-wrapper selectable lang-<?=$lang?>">
+            <i class="icon-<?=$icon_name[$lang]?>"></i>
+            <h1 class="page-title lang-<?=$lang?> editable"><?=$title?></h1>
+          </div>
+        <?php } // Title ?>
+        <?php foreach($page->sections as $skey => $section) { // Page Secions ?>
+          <fieldset id="page:<?=$page->file?>--section:<?=$skey?>" class="signup-page-section">
+            <legend><?=isset($section->module) ? 'Module : <span class="module-id editable">'.$section->module.'</span>' : "Section : $skey"?></legend>
+            <?php foreach($section->headline as $lang => $headline) { // Headline texts in each language ?>
+              <div class="headline-wrapper selectable lang-<?=$lang?>">
+                <i class="icon-<?=$icon_name[$lang]?>"></i>
+                <h2 class="section-headline lang-<?=$lang?> editable"><?=$headline?></h2>
+              </div>
+            <?php } // Headline ?>
+            <?php foreach($section->items as $ikey => $item) { // Section Items ?>
+              <fieldset id="page:<?=$page->file?>--section:<?=$skey?>--item:<?=$ikey?>" class="signup-page-item" item-type="<?=$item->type?>">
+                <legend>
+                  <?=$item->type?>
+                  <?=isset($item->infosys_id) ? ' : <span class="infosys-id editable">'.$item->infosys_id.'</span>' : ''?>
+                  <?php if(in_array($item->type, ['text_input', 'telephone', 'checkbox', 'date', 'email','radio'])) { // Input checkboxes?>
+                    <?php
+                      $checked = 'checked="checked"';
+                      $disabled = $item->disabled ? $checked : '';
+                      $required = $item->required ? $checked : '';
+                    ?>
+                    <label class="checkbox-label">Påkrævet <input type="checkbox" class="item-checkbox toggle-required" setting="required" <?=$required?>></label>
+                    <label class="checkbox-label">Deaktiveret <input type="checkbox" class="item-checkbox toggle-disabled" setting="disabled" <?=$disabled?>></label>
+                  <?php } // Checkboxes?>
+                </legend>
+                <?php foreach($item->text as $lang => $text) { // Item Texts in each language ?>
+                  <div class="item-wrapper selectable lang-<?=$lang?> item-type-<?=$item->type?>">
+                    <i class="icon-<?=$icon_name[$lang]?>"></i>
+                    <p class="item lang-<?=$lang?> editable"><?=str_replace("\n", "<br>", $item->text->$lang)?></p>
+                  </div>
+                <?php } // Texts ?>
+                <?php if (isset($item->options)) foreach($item->options as $okey => $option) {?>
+                  <fieldset id="page:<?=$page->file?>--section:<?=$skey?>--item:<?=$ikey?>--option:<?=$okey?>" class="signup-page-option">
+                  <legend>option : <span class="option-value editable"><?=$option->value?></span></legend>
+                  <?php foreach($item->text as $lang => $text) { // Item Texts in each language ?>
+                    <div class="option-wrapper selectable lang-<?=$lang?>">
+                      <i class="icon-<?=$icon_name[$lang]?>"></i>
+                      <p class="option lang-<?=$lang?> editable"><?=str_replace("\n", "<br>", $option->text->$lang)?></p>
+                    </div>
+                  <?php } // Texts ?>
+                  </fieldset>
+                <?php } // Texts ?>
+              </fieldset>
+            <?php } // Items ?>
+          </fieldset>
+        <?php } // Sections ?>
+      </fieldset>
+    </div>
+  <?php } // Pages ?>
+</div>
