@@ -198,15 +198,19 @@ WHERE
 
             if ($contents) {
                 // Match single line comments or multiline queries
-                preg_match_all('/^[ \n]--.+?$|^.+?;\s*$/ms', $contents . ';', $matches);
+                preg_match_all('/^[ \n]*--.+?$|^.+?;\s*$/ms', $contents . ';', $matches);
 
                 $this->log->logToFile('Running migration ' . $migration_file . ' with id ' . $id);
 
                 foreach ($matches[0] as $query) {
                     $query = trim($query, "\n ;");
-                    if (strpos($query, "--") === 0) continue; //Skip comment
+                    if (strpos($query, "--") === 0) {
+                        $this->log->logToFile('Skipping comment '.$query);
+                        continue; //Skip comment
+                    }
 
                     if ($query) {
+                        $this->log->logToFile('Executing query: '.$query);
                         $this->db->exec($query);
                     }
 
