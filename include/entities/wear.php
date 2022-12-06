@@ -46,12 +46,29 @@ class Wear extends DBObject
      * 
      * @var string
      */
-    protected $default_order = 'wear_order';
+    protected $default_order = 'position';
 
     /**
      * used for storing sizes once loaded from the database
      */
     private static $sizes = null;
+
+    /**
+     * display order of wear attributes
+     */
+    public function getAttributeOrder($with_size = false) {
+        $ordering = [
+            'model',
+            'design',
+            'color',
+        ];
+
+        if ($with_size) {
+            $ordering[] = 'size';
+        }
+        
+        return $ordering;
+    }
 
     /**
      * checks if a given size is within the sizerange of this wear-object
@@ -93,73 +110,7 @@ class Wear extends DBObject
         return $this->createEntity('WearPriser')->findBySelectMany($select);
     }
 
-    /**
-     * returns array of wear prices for the wear object, with only one price for organizers
-     *
-     * @param object $kategori - BrugerKategorier entity
-     * @access public
-     * @return array
-     */
-    public function getWearpriserSquashed()
-    {
-        if (!$this->isLoaded()) {
-            return array();
-        }
-
-        $select = $this->createEntity('BrugerKategorier')->getSelect();
-        $select->setWhere('arrangoer','=','ja');
-        $organizer_cats = $this->createEntity('BrugerKategorier')->findBySelectMany($select);
-
-        $select = $this->createEntity('WearPriser')->getSelect();
-        $select->setLeftJoin('brugerkategorier','brugerkategori_id', 'brugerkategorier.id');
-        $select->setWhere('wear_id', '=', $this->id);
-        $select->setWhere('arrangoer','=','nej');
-        $select->setField('wearpriser.id');
-        $select->setField('wearpriser.wear_id');
-        $select->setField('wearpriser.brugerkategori_id');
-        $select->setField('wearpriser.pris');
-        $participant_prices = $this->createEntity('WearPriser')->findBySelectMany($select);
-
-        $select = $this->createEntity('WearPriser')->getSelect();
-        $select->setLeftJoin('brugerkategorier','brugerkategori_id', 'brugerkategorier.id');
-        $select->setWhere('wear_id', '=', $this->id);
-        $select->setWhere('arrangoer','=','ja');
-        $select->setField('wearpriser.id');
-        $select->setField('wearpriser.wear_id');
-        $select->setField('wearpriser.brugerkategori_id');
-        $select->setField('wearpriser.pris');
-        $organizer_prices = $this->createEntity('WearPriser')->findBySelectMany($select);
-
-        // Check if we can combine all organizer prices into one
-        $combine_organizer = false;
-        if (count($organizer_cats) == count($organizer_prices)){
-            $combine_organizer = true;
-            $price = $organizer_prices[0]->pris;
-            for($i = 1; $i < count($organizer_prices); $i++) {
-                if ($price != $organizer_prices[$i]->pris) {
-                    $combine_organizer = false;
-                    break;
-                }
-            }
-        }
-        
-        // If all organizer prices are the same, add a single price for organizers and return
-        if ($combine_organizer) {
-            $organizer_price = (object) [
-                'id' => 0,
-                'brugerkategori_id' => 0,
-                'wear_id' => $this->id,
-                'pris' => $organizer_prices[0]->pris 
-            ];
-            $participant_prices[] = $organizer_price;
-            return $participant_prices;
-        }
-
-        // Return array with all individual prices
-        return array_merge($participant_prices,$organizer_prices);
-    }
-
-    /**
+     /**
      * returns array of user category id's that already have prices
      * set for them, for this wear item
      *
@@ -169,7 +120,7 @@ class Wear extends DBObject
     public function getUsedUserCategories()
     {
         $return = array();
-        $prices = $this->getWearpriserSquashed();
+        $prices = $this->getWearpriser();
         foreach ($prices as $price)
         {
             $return[] = $price->brugerkategori_id;
@@ -233,11 +184,37 @@ class Wear extends DBObject
     {
         if (!isset(self::$sizes)) {
             // Load sizes from DB
-            $query = "SELECT * FROM wear_sizes ORDER BY size_order";
+            $query = "SELECT * FROM wear_attributes WHERE attribute_type = 'size' ORDER BY position";
             self::$sizes = $this->db->query($query);
         }
 
         return self::$sizes;
+    }
+
+    public function getVariants() {
+        // Get all attributes available for this wear item
+        $wear_attributes = [];
+        $query = "SELECT * from wear_attribute_available as waa 
+            JOIN wear_attributes as wa on waa.attribute_id = wa.id
+            WHERE waa.wear_id = ?
+            ORDER BY variant, attribute_type, position";
+            
+        foreach($this->db->query($query, [$this->id]) as $attribute) {
+            $wear_attributes[$attribute['variant']][$attribute['attribute_type']][$attribute['attribute_id']] = $attribute;
+        }
+
+        // Sort the attributes by display order
+        $wear_variants = [];
+        $ordering = $this->getAttributeOrder(true);
+        foreach($wear_attributes as $variant_id => $attributes) {
+            foreach($ordering as $type) {
+                if (isset($wear_attributes[$variant_id][$type])) {
+                    $wear_variants[$variant_id][$type] = $wear_attributes[$variant_id][$type];
+                }
+            }
+        }
+
+        return $wear_variants;
     }
 
     /**
@@ -314,7 +291,27 @@ class Wear extends DBObject
     public function getSizeName($id, $english = false)
     {
         $sizes = $this->getWearSizes();
-        $size = $sizes[array_search($id, array_column($sizes, 'size_id'))];
-        return $english ? $size['size_name_en'] : $size['size_name_da'];
+        $size = $sizes[array_search($id, array_column($sizes, 'id'))];
+        return $english ? $size['desc_en'] : $size['desc_da'];
+    }
+
+    public function getImages() {
+        $query = 
+            "SELECT wi.id, wi.image_file, wic.attribute_id, wa.attribute_type FROM wear_image as wi 
+            JOIN wear_image_connection as wic ON wic.image_id = wi.id 
+            LEFT JOIN wear_attributes as wa ON wa.id = wic.attribute_id
+            WHERE wic.wear_id = {$this->id}";
+        $result = $this->db->query($query);
+        $list = [];
+        foreach($result as $row) {
+            if (!isset($list[$row['id']])) {
+                $list[$row['id']] = [
+                    'image_file' => $row['image_file'],
+                    'attributes' => [],
+                ];
+            }
+            $list[$row['id']]['attributes'][$row['attribute_type']][] = $row['attribute_id'];
+        }
+        return $list;
     }
 }

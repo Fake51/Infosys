@@ -35,42 +35,155 @@
 
 class WearModel extends Model
 {
-    public $allOrganizerCategory = "Alle arrangører";
-
     /**
      * returns array of info on ordered wear
      *
      * @access public
      * @return array
      */
-    public function getWearBreakdown()
-    {
-        $results = array();
-        $wear_types = $this->createEntity('Wear')->findAll();
-        foreach ($wear_types as $wear)
-        {
-            $results[$wear->id] = array();
-        }
-        $select = $this->createEntity('DeltagereWear')->getSelect();
-        $select->setFrom('wearpriser')->
-                 setTableWhere('wearpriser.id','deltagere_wear.wearpris_id')->
-                 setGroupBy('size')->
-                 setGroupBy('wear_id')->
-                 setField('size')->
-                 setField('wear_id')->
-                 setField('SUM(antal) AS antal',false)->
-                 setOrder('wear_id','asc')->
-                 setOrder('size','asc');
-        $DB = $this->db;
-        if ($result = $DB->query($select))
-        {
-            foreach ($result as $row)
-            {
-                $results[$row['wear_id']][$row['size']] = $row['antal'];
+    public function getWearBreakdown() {
+        // Display order of attributes (without 'size')
+        $attribute_order = $this->getAttributeOrder(false);
+
+        // Collect all wear orders
+        $order_list = [];
+        $wear_orders = $this->createEntity('DeltagereWear')->findAll();
+        foreach ($wear_orders as $order) {
+            // Get attributes for the order
+            $attributes = $order->getAttributes();
+
+            // Prepare a unique array key based on attributes
+            $combotext = "wear-".$order->getWear()->id;
+            foreach($attribute_order as $type) {
+                if (isset($attributes[$type])) {
+                    $combotext .= "--$type-".$attributes[$type]['id'];
+                }
+            }
+
+            // Add order to list - depending on whether the item has different sizes
+            if (isset($attributes['size'])) {
+                $order_list[$combotext][$attributes['size']['id']][$order->id] = $order->antal;
+            } else {
+                $order_list[$combotext]['none'][$order->id] = $order->antal;
             }
         }
-        return $results;
+
+        // Find all wear types
+        $result = [];
+        $wear_types = $this->createEntity('Wear')->findAll();
+        foreach ($wear_types as $wear) {
+            $collection = [];
+            $variants = $wear->getVariants();
+            if (empty($variants)) {
+                $combotext = "wear-".$wear->id;
+
+                // Count total number of orders
+                $total = 0;
+                $orders = [];
+                if (isset($order_list[$combotext])) {
+                    $orders = $order_list[$combotext];
+                    foreach($orders as $size_orders) {
+                        foreach($size_orders as $amount) {
+                            $total += $amount;
+                        }
+                    }
+
+                    // Remove asigned orders from the list
+                    unset($order_list[$combotext]);
+                }
+
+                // All variants for this wear id
+                $result['wear'][$wear->id] = [
+                    'variants' => [[
+                        'items' => [[
+                            'attributes' => [],
+                            'orders' => $orders,
+                            'total' => $total,
+                        ]],
+                        'sizes' => isset($var['size']) && is_array($var['size']) ? array_keys($var['size']): [],
+                    ]],
+                    'object' => $wear,
+                ];
+
+                continue;
+            }
+
+            foreach($variants as $key => $var) {
+                // Find each unique combination of attributes available
+                $combos = $this->createVariantCombinations(0, $var, $attribute_order);
+                
+                // Create an item for each combination
+                $items = [];
+                foreach ($combos as $attributes) {
+                    // Create the same unique array key to find any orders related to the item
+                    $combotext = "wear-".$wear->id;
+                    foreach($attribute_order as $type) {
+                        if (isset($attributes[$type])) {
+                            $combotext .= "--$type-".$attributes[$type];
+                        }
+                    }
+
+                    // Count total number of orders
+                    $total = 0;
+                    $orders = [];
+                    if (isset($order_list[$combotext])) {
+                        $orders = $order_list[$combotext];
+                        foreach($orders as $size_orders) {
+                            foreach($size_orders as $amount) {
+                                $total += $amount;
+                            }
+                        }
+
+                        // Remove asigned orders from the list
+                        unset($order_list[$combotext]);
+                    }
+
+                    // Attributes and orders for each item
+                    $items[] = [
+                        'attributes' => $attributes,
+                        'orders' => $orders,
+                        'total' => $total,
+                    ];
+                }
+
+                // Add items and sizes related to each variant to the variant collection
+                $collection[$key] = [
+                    'items' => $items,
+                    'sizes' => isset($var['size']) && is_array($var['size']) ? array_keys($var['size']): [],
+                ];
+            }
+            // All variants for this wear id
+            $result['wear'][$wear->id] = [
+                'variants' => $collection,
+                'object' => $wear,
+            ];
+        }
+
+        $result['sizes'] = $this->getWearSizes();
+
+        // In case we have orders that doesn't fit any items, we return them seperately for trouble shooting
+        $result['unasigned_orders'] = $order_list;
+
+        return $result;
+    }
+
+    private function createVariantCombinations($layer, $variant, $order) {
+        if ($layer >= count($order)) return [[]];
         
+        $sub_types = $this->createVariantCombinations($layer+1, $variant, $order);
+        $type = $order[$layer];
+        if (!isset($variant[$type])) return $sub_types;
+        
+        $combos = [];
+        foreach($variant[$type] as $value) {
+            foreach($sub_types as $sub) {
+                $combos[] = array_merge(
+                    ["$type" => $value['attribute_id']],
+                    $sub
+                );
+            }
+        }
+        return $combos;
     }
 
     /**
@@ -137,7 +250,6 @@ class WearModel extends Model
         $select = $this->createEntity('DeltagereWear')->getSelect();
         $select->setField('deltager_id');
         $select->setField('MAX(wearpris_id) as wearpris_id', false);
-        $select->setField('MAX(size) as size', false);
         $select->setGroupBy('deltager_id');
         $select->setOrder('deltager_id','asc');
         if ($unfilled) {
@@ -147,7 +259,7 @@ class WearModel extends Model
             $select->setWhere('wearpris_id', '=', $type);
         }
         if ($size) {
-            $select->setWhere('size', '=', strtoupper($size));
+//            $select->setWhere('size', '=', strtoupper($size));
         }
         return $this->createEntity('DeltagereWear')->findBySelectMany($select);
     }
@@ -161,18 +273,28 @@ class WearModel extends Model
      * @access public
      * @return array
      */
-    public function getWearOrders($type = null, $size = null)
+    public function getWearOrders($type = null, ?array $attributes)
     {
         $dw = $this->createEntity('DeltagereWear');
         $select = $dw->getSelect();
-        if ($type)
-        {
-            $select->setLeftJoin('wearpriser', 'wearpris_id', 'id');
+        if ($type) {
+            $select->setLeftJoin('wearpriser', 'wearpris_id', 'wearpriser.id');
             $select->setWhere('wear_id','=',$type);
         }
-        if ($size)
-        {
-            $select->setWhere('size','=',$size);
+        if ($attributes) {
+            $query = 
+                "SELECT order_id FROM deltagere_wear_order_attributes WHERE attribute_id = ?";
+            foreach($attributes as $type => $id) {
+                $ids = [];
+                $result = $this->db->query($query, [$id]);
+                foreach($result as $row) {
+                    $ids[] = $row['order_id'];
+                }
+                if (count($ids) > 0) {
+                    $select->setWhere("deltagere_wear_order.id",'IN', $ids);
+                }
+            }                
+            
         }
         return $dw->findBySelectMany($select);
     }
@@ -187,27 +309,35 @@ class WearModel extends Model
      */
     public function createWear(RequestVars $post)
     {
-        $wear         = $this->createEntity('Wear');
-        $size_array   = $wear->getWearSizes();
-        $max_size_pos = array_search($post->max_size, array_column($size_array, 'size_id'));
-        $min_size_pos = array_search($post->min_size, array_column($size_array, 'size_id'));
+        $wear = $this->createEntity('Wear');
 
-        if (empty($post->navn) || empty($post->min_size) || empty($post->max_size) || $max_size_pos === false ||  $min_size_pos === false || $min_size_pos > $max_size_pos) {
+        if (empty($post->navn)) {
             return false;
         }
 
-        $wear->min_size       = $post->min_size;
-        $wear->max_size       = $post->max_size;
         $wear->navn           = ((!empty($post->navn)) ? $post->navn : '');
         $wear->beskrivelse    = ((!empty($post->beskrivelse)) ? $post->beskrivelse : '');
         $wear->title_en       = ((!empty($post->title_en)) ? $post->title_en : '');
         $wear->description_en = ((!empty($post->description_en)) ? $post->description_en : '');
+        $wear->max_order      = ((!empty($post->max_order)) ? $post->max_order : 0);
 
-        $query = 'SELECT MAX(wear_order) as omax FROM wear;';
-        $max_order = $this->db->query($query)[0]['omax'];
-        $wear->wear_order = $max_order + 1;
+        $query = 'SELECT MAX(position) as plast FROM wear;';
+        $last_pos = $this->db->query($query)[0]['plast'];
+        $wear->position = $last_pos + 1;
 
-        if (!$wear->insert() || !$this->updatePrices($wear, $post)) {
+        if (!$wear->insert()) {
+            return false;
+        }
+
+        if (!$this->updateAttributes($wear, $post)) {
+            return false;
+        }
+
+        if (!$this->updateImages($wear, $post)) {
+            return false;
+        }
+
+        if (!$this->updatePrices($wear, $post)) {
             return false;
         }
 
@@ -225,30 +355,113 @@ class WearModel extends Model
      */
     public function updateWear(Wear $wear, RequestVars $post)
     {
-        if (!$wear->isLoaded()) {
+        if (!$wear->isLoaded() || empty($post->navn)) {
             return false;
         }
 
-        $size_array   = $wear->getWearSizes();
-        $max_size_pos = array_search($post->max_size, array_column($size_array, 'size_id'));
-        $min_size_pos = array_search($post->min_size, array_column($size_array, 'size_id'));
-
-        if (empty($post->navn) || empty($post->min_size) || empty($post->max_size) || $max_size_pos === false ||  $min_size_pos === false || $min_size_pos > $max_size_pos) {
-            return false;
-        }
-
-        $wear->min_size       = $post->min_size;
-        $wear->max_size       = $post->max_size;
         $wear->navn           = ((!empty($post->navn)) ? $post->navn : '');
         $wear->beskrivelse    = ((!empty($post->beskrivelse)) ? $post->beskrivelse : '');
         $wear->title_en       = ((!empty($post->title_en)) ? $post->title_en : '');
         $wear->description_en = ((!empty($post->description_en)) ? $post->description_en : '');
+        $wear->max_order      = ((!empty($post->max_order)) ? $post->max_order : 0);
 
         if (!$wear->update()) {
             return false;
         }
 
+        if (!$this->updateAttributes($wear, $post)) {
+            return false;
+        }
+
+        if (!$this->updateImages($wear, $post)) {
+            return false;
+        }
+
         return $this->updatePrices($wear, $post);
+    }
+
+    protected function updateAttributes(Wear $wear, RequestVars $post) {
+        $attribute_types = $this->getAttributes();
+        $current_attributes = $wear->getVariants();
+        
+        if (isset($post->attributes)) {
+            $vmax = max(count($current_attributes), count($post->attributes));
+        } else {
+            $vmax = count($current_attributes);
+        }
+        
+        for($i = 0 ; $i < $vmax; $i++) {
+            $selected_attributes = array_key_exists($i, $post->attributes) ? array_flip($post->attributes[$i]) : null;
+
+            foreach($attribute_types as $type => $attributes) {
+                foreach($attributes as $key => $value) {
+                    // Insert missing
+                    if (isset($selected_attributes[$key]) && !isset($current_attributes[$i][$type][$key])) {
+                        $query = "INSERT INTO wear_attribute_available (wear_id, attribute_id, variant) VALUES (?,?,?)";
+                        $args = [$wear->id, $key, $i];
+                        $this->db->exec($query, $args);
+                    }
+
+                    // Remove unselected
+                    if (!isset($selected_attributes[$key]) && isset($current_attributes[$i][$type][$key])) {
+                        $query = "DELETE FROM wear_attribute_available WHERE wear_id=? AND attribute_id=? AND variant=?";
+                        $args = [$wear->id, $key, $i];
+                        $this->db->exec($query, $args);
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    protected function updateImages(Wear $wear, RequestVars $post) {
+        $current_images = $wear->getImages();
+        $selected_images = $post->wear_image;
+
+        // Delete unselected and collect existing attributes
+        $current_attributes = [];
+        foreach($current_images as $id => $image) {
+            foreach($image['attributes'] as $type => $values) {
+                foreach($values as $value) {
+                    if (!isset($selected_images[$id]) || !in_array($value, $selected_images[$id])) {
+                        $query = "DELETE FROM wear_image_connection WHERE image_id = ? AND wear_id = ? AND attribute_id = ?";
+                        $args = [$id, $wear->id, $image['attribute_id']];
+                        $this->db->exec($query, $args);
+                    }
+                    $current_attributes[$id][] = $value;
+                }
+            }
+        }
+
+        // Insert missing
+        foreach($selected_images as $id => $attributes) {
+            foreach($attributes as $value) {
+                if (!isset($current_attributes[$id]) || !in_array($value, $current_attributes[$id])) {
+                    $query = "INSERT INTO wear_image_connection (image_id,wear_id,attribute_id) VALUES (?,?,?)";
+                    $args = [$id, $wear->id, $value];
+                    $this->db->exec($query, $args);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public function addImage($location) {
+        $query = "INSERT INTO wear_image (image_file) VALUES (?)";
+        $args = [$location];
+        $this->db->exec($query, $args);
+    }
+
+    public function getImages() {
+        $query = "SELECT id, image_file FROM wear_image ORDER BY image_file";
+        $result = $this->db->query($query);
+        $list = [];
+        foreach($result as $row) {
+            $list[$row['id']] = $row['image_file'];
+        }
+        return $list;
     }
 
     /**
@@ -263,35 +476,16 @@ class WearModel extends Model
     protected function updatePrices(Wear $wear, RequestVars $post)
     {
         $priser     = $wear->getWearpriser();
-        $pris_index = array_flip($this->extractIds($priser));
         $categories = array_flip($this->extractIds($priser, 'brugerkategori_id'));
         $success    = true;
 
+        // Update existing and insert new prices
         if (!empty($post->wearpriceid) && !empty($post->wearprice_category) && !empty($post->wearprice_price)) {
-            // Is the special all organizer category set?
-            if (false !== $key = array_search(0, $post->wearprice_category)){
-                $organizer_price = $post->wearprice_price[$key];
-                $organizers = $this->getAllOrganizerCategories();
-                $org_ids = [];
-                foreach ($organizers as $org) {
-                    $org_ids[$org->id] = true;
-                }
-            }
-
             foreach ($post->wearpriceid as $index => $id) {
                 $category = $post->wearprice_category[$index];
-
-                // Don't add seperate price for the "all organizers" category
-                if ($category === '0') continue;
-
-                // Do we use organizer price
-                if (isset($org_ids[$category])) {
-                    $price = $organizer_price;
-                    unset($org_ids[$category]);
-                } else {
-                    $price = $post->wearprice_price[$index];
-                }
+                $price = $post->wearprice_price[$index];
                 
+                // Existing price
                 if (isset($categories[$category])) {
                     $wearprice = $priser[$categories[$category]];
                     $wearprice->pris = $price;
@@ -300,11 +494,11 @@ class WearModel extends Model
                     unset($priser[$categories[$category]]);
 
                     continue;
-
                 } elseif ($id > 0) {
                     continue;
                 }
 
+                // New price
                 $new_wearprice                    = $this->createEntity('WearPriser');
                 $new_wearprice->wear_id           = $wear->id;
                 $new_wearprice->brugerkategori_id = $category;
@@ -320,30 +514,98 @@ class WearModel extends Model
             return false;
         }
 
+        // Delete unselected prices
         foreach ($priser as $pris) {
-            if (isset($org_ids[$pris->brugerkategori_id])) {
-                $pris->pris = $organizer_price;
-                $pris->update();
-                unset($org_ids[$pris->brugerkategori_id]);
-            } else {
-                $pris->delete();
-            }
+            $pris->delete();
         }
         
-        if (isset($org_ids) && is_array($org_ids)) {
-            foreach ($org_ids as $id => $value) {
-                $new_wearprice                    = $this->createEntity('WearPriser');
-                $new_wearprice->wear_id           = $wear->id;
-                $new_wearprice->brugerkategori_id = $id;
-                $new_wearprice->pris              = $organizer_price;
+        return $success;
+    }
 
-                if (!$new_wearprice->insert()) {
-                    $success = false;
-                }
+    public function getAttributeOrder($with_size = false) {
+        if ($with_size) {
+            if (!isset($this->attribute_order_size)) {
+                $this->attribute_order_size = $this->createEntity('Wear')->getAttributeOrder(true);
             }
+            return $this->attribute_order_size;
+        } else {
+            if (!isset($this->attribute_order)) {
+                $this->attribute_order = $this->createEntity('Wear')->getAttributeOrder(false);
+            }
+            return $this->attribute_order;
+        }
+    }
+
+    public function getAttributes() {
+        $query = "SELECT * from wear_attributes WHERE attribute_type <> 'special' ORDER BY attribute_type, position";
+
+        $attributes = $this->getAttributeOrder(true);
+
+        $wear_attributes = [];
+        foreach($attributes as $type) {
+            $wear_attributes[$type] = [];
         }
 
-        return $success;
+        foreach($this->db->query($query) as $attribute) {
+            $wear_attributes[$attribute['attribute_type']][$attribute['id']] = $attribute;
+        }
+
+        return $wear_attributes;
+    }
+
+    public function setAttribute($post) {
+        if ($post->id) {
+            $query = "UPDATE wear_attributes SET desc_da=?, desc_en=?";
+            $args = [
+                $post->da,
+                $post->en,
+            ];
+
+            // Add position if set
+            if($post->position) {
+                $query .= " position=?";
+                $args[] = $post->position;
+            }
+            
+            // Add where clause
+            $query .= " WHERE id =? AND attribute_type=?";
+            $args[] = $post->id;
+            $args[] = $post->type;
+
+            $this->db->exec($query, $args);
+
+            return (object) [
+                'success' => true,
+                'data' => [
+                    'id' => $post->id,
+                ]
+            ];
+        } else {
+            if (!$post->position) {
+                // Get last position of type and add one
+                $query = "SELECT MAX(position) as plast from wear_attributes WHERE attribute_type=?";
+                $position = $this->db->query($query, [$post->type])[0]['plast'] + 1;
+            } else {
+                $position = $post->position;
+            }
+
+            $query = "INSERT INTO wear_attributes (attribute_type, desc_da, desc_en, position) VALUES (?,?,?,?)";
+
+            $result = $this->db->exec($query, [
+                $post->type,
+                $post->da,
+                $post->en,
+                $position,
+            ]);
+
+            return (object) [
+                'success' => true,
+                'data' => [
+                    'id' => $result,
+                    'position' => $position,
+                ]
+            ];
+        }
     }
 
     /**
@@ -357,23 +619,15 @@ class WearModel extends Model
         $category = $this->createEntity('BrugerKategorier');
         $categories = $category->findAll();
         $categories = $categories ? $categories : array();
-        $category->navn = $this->allOrganizerCategory;
-        $category->id = 0;
-        $categories[] = $category;
 
         return $categories;
     }
 
     public function getAllOrganizerCategories(){
         $category = $this->createEntity('BrugerKategorier');
-        $categories = $category->findAll();
-        $categories = $categories ? $categories : array();
-        foreach($categories as $key => $category){
-            if (!$category->isArrangoer()){
-                unset($categories[$key]);
-            }
-        }
-        return $categories;
+        $select = $category->getSelect();
+        $select->setWhere('arrangoer', '=', 'ja');
+        return $category->findBySelectMany($select);
     }
 
     /**
@@ -438,7 +692,10 @@ class WearModel extends Model
             }
             $item->received = 't';
             $item->update();
-            $handout[] = '<strong>' . e($item->getWearName()) . ": {$item->antal} stk. i str. {$item->size}</strong> ({$item->getDeltager()->getBrugerKategori()->navn})";
+            $msg = '<strong>' . e($item->getWearName('da', false)) . ": {$item->antal} stk.";
+            $msg .= $item->size ? " i str. ".$item->getSizeName() : "";
+            $msg .= "</strong> ({$item->getDeltager()->getBrugerKategori()->navn})";
+            $handout[] =  $msg;
         }
         $this->log("Deltager #{$deltager->id} har fået wear udleveret af {$this->getLoggedInUser()->user}", 'Wear', $this->getLoggedInUser());
         return e($deltager->getName()) . " (ID: {$deltager->id}) markeret wear modtaget - hvis det er en fejl, så tryk på Undo-knappen. Wear, der skal udleveres:<ul><li>" . implode('</li><li>', $handout) . '</li></ul>';
@@ -491,7 +748,10 @@ class WearModel extends Model
             }
             $item->received = 'f';
             $item->update();
-            $handout[] = '<strong>' . e($item->getWearName()) . ": {$item->antal} stk. i str. {$item->size}</strong>";
+            $msg = '<strong>' . e($item->getWearName('da', false)) . ": {$item->antal} stk.";
+            $msg .= $item->size ? " i str. ".$item->getSizeName() : "";
+            $msg .= "</strong>";
+            $handout[] =  $msg;
         }
         $this->log("Deltager #{$deltager->id} har fået wear markeret ikke udleveret af {$this->getLoggedInUser()->user}", 'Wear', $this->getLoggedInUser());
         return htmlspecialchars($deltager->fornavn . " " . $deltager->efternavn, ENT_QUOTES) . " (ID: {$deltager->id}) har fået slettet markeringen for udlevering af wear. Wear markeret ikke udleveret:<ul><li>" . implode('</li><li>', $handout) . '</li></ul>';
@@ -514,7 +774,7 @@ SELECT
     dwp.size
 FROM
     deltagere AS d
-    JOIN deltagere_wear AS dwp ON dwp.deltager_id = d.id
+    JOIN deltagere_wear_order AS dwp ON dwp.deltager_id = d.id
     JOIN wearpriser AS wp ON wp.id = dwp.wearpris_id
     JOIN wear AS w on w.id = wp.wear_id
 WHERE
@@ -551,13 +811,13 @@ ORDER BY
         $source = $this->createEntity('Wear')->findById($source_id);
         $dest = $this->createEntity('Wear')->findById($dest_id);
 
-        echo "Moving wear with ID:$source->id from Position:$source->wear_order\n";
-        echo "To position of wear with ID:$dest->id with Position:$dest->wear_order\n";
+        echo "Moving wear with ID:$source->id from Position:$source->position\n";
+        echo "To position of wear with ID:$dest->id with Position:$dest->position\n";
 
-        $source_order = $source->wear_order;
-        $source->wear_order = $dest->wear_order;
+        $source_position = $source->position;
+        $source->position = $dest->position;
         $source->update();
-        $dest->wear_order = $source_order;
+        $dest->position = $source_position;
         $dest->update();
     }
 }
