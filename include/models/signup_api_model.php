@@ -2,33 +2,6 @@
 
 class SignupApiModel extends Model {
 
-  const ACTIVITY_CHOICES = [
-    'prio' => [
-      'en' => [
-        '1st prio',
-        '2nd prio',
-        '3rd prio',
-        '4th prio',
-      ],
-      'da' => [
-        '1. prio',
-        '2. prio',
-        '3. prio',
-        '4. prio',
-      ],
-    ],
-    'gm' => [
-      'default' => [
-        'en' => 'GM',
-        'da' => 'SL',
-      ],
-      'braet' => [
-        'en' => 'RG',
-        'da' => 'RF',
-      ],
-    ],
-  ];
-
   /**
    * Get general configuration related to signup
    */
@@ -193,7 +166,6 @@ class SignupApiModel extends Model {
       'en' => 'Activities',
     ];
     $result->day_cutoff = 4;
-    $result->choices = self::ACTIVITY_CHOICES;
     $result->link_text = [
       'en' => "Read more on the website",
       'da' => "Læs mere på hjemmesiden",
@@ -366,6 +338,10 @@ class SignupApiModel extends Model {
     $total = 0;
     $junior_note = "";
     $sprog = [];
+    $config = [
+      'main' => json_decode($this->getConfig('main')),
+      'activities' => json_decode($this->getConfig('activities')),
+    ];
 
     $participant->signed_up = date('Y-m-d H:i:s');
     // Reset orders
@@ -546,22 +522,21 @@ class SignupApiModel extends Model {
               $entry = $this->createEntity('Indgang');
               $select = $entry->getSelect();
               if ($key_item == 'partout') {
-                $config = json_decode($this->getConfig('main'));
-                $age = $participant->getAge(new DateTime($config->con_start));
+                $age = $participant->getAge(new DateTime($config['main']->con_start));
                 $select->setWhere('type', 'like', '%Indgang - Partout%');
-                if ($age < $config->age_young) {
-                  if ($age < $config->age_kid) {
+                if ($age < $config['main']->age_young) {
+                  if ($age < $config['main']->age_kid) {
                     $select->setWhere('type', 'like', '%Barn%');  
                   } else {
                     $select->setWhere('type', 'like', '%Ung%');
                   }
                 }
                 // NB! We assume Alea signup is earlier or same page
-                if ($age >= $config->age_kid && ($is_alea || $items->{'misc:alea'})) {
+                if ($age >= $config['main']->age_kid && ($is_alea || $items->{'misc:alea'})) {
                   $select->setWhere('type', 'like', '%Alea%');
                 }
                 // NB! We assume organizer setting is before this
-                if ($age >= $config->age_kid && $is_organizer) {
+                if ($age >= $config['main']->age_kid && $is_organizer) {
                   $select->setWhere('type', 'like', '%Arrangør%');
                 }
               } else {
@@ -592,7 +567,7 @@ class SignupApiModel extends Model {
               if ($key_item == 'partout') {
                 $select->setWhere('type', 'like', 'Overnatning - Partout%');
                 // NB! We assume organizer setting is before this
-                if ($age >= $config->age_kid && $is_organizer) {
+                if ($age >= $config['main']->age_kid && $is_organizer) {
                   $select->setWhere('type', 'like', '%Arrangør%');
                 }
               } else {
@@ -727,7 +702,7 @@ class SignupApiModel extends Model {
                 continue 2;
               }
               $value = intval($value);
-              $choice_count = count(self::ACTIVITY_CHOICES['prio'][$lang]);
+              $choice_count = count($config['activities']->choices->prio->$lang);
               if ($value <= $choice_count) {
                 $participant->setAktivitetTilmelding($run, $value, 'spiller');
               } else {
@@ -807,6 +782,9 @@ class SignupApiModel extends Model {
     $column_info = $participant->getColumnInfo();
     $signup = $errors = [];
     $entrance = false;
+    $config = [
+      'activities' => json_decode($this->getConfig('activities')),
+    ];
 
     foreach($this->getAllPages() as $page_id => $page_data) {
       $lookup = $this->createLookup($page_data);
@@ -969,7 +947,7 @@ class SignupApiModel extends Model {
       $prio = $run_signup->prioritet;
       $type = $run_signup->tilmeldingstype;
       if ($type == 'spilleder') {
-        $prio = count(self::ACTIVITY_CHOICES['prio']['en']) +1;
+        $prio = count($config['activities']->choices->prio->en) +1;
         if($run_signup->getAktivitet()->type == 'braet') {
           $signup['together:gm'] = 'on';
         } else {

@@ -1,0 +1,44 @@
+{
+  "choices": {
+    "prio": {
+      "en" : [
+        "1st prio",
+        "2nd prio",
+        "3rd prio",
+        "4th prio"
+      ],
+      "da" : [
+        "1. prio",
+        "2. prio",
+        "3. prio",
+        "4. prio"
+      ]
+    },
+    "gm" : {
+      "default" : {
+        "en" : "GM",
+        "da" : "SL"
+      },
+      "braet" : {
+        "en" : "RG",
+        "da" : "RF"
+      }
+    }
+  },
+  "errors": {
+    "no_days": {
+      "en": "You have not selected any day to attend Fastaval",
+      "da": "Du har ikke valgt hvilke dage du er på Fastaval"
+    },
+    "missing_task": {
+      "gm": {
+        "da": "Du har valgt at du gerne vil være spilleder, men du har ikke valgt nogen scenarier at være spilleder på.",
+        "en": "You have chosen to be a gamemaster, but you haven't chosen any scenarios to be gamemaster for."
+      },
+      "rules": {
+        "da": "Du har valgt at du gerne vil være regelformidler, men du har ikke valgt nogen brætspil at være regelformidler for.",
+        "en": "You have chosen to be a rules explainer, but you haven't chosen any board games to explain rules for."
+      }
+    }
+  }
+}
