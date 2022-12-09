@@ -53,37 +53,6 @@
                 "da": "Herunder kan du bestille morgenmad og aftensmad:"
             },
             "module": "food"
-        },
-        {
-            "headline": {
-                "en": "The Otto party",
-                "da": "Ottofesten"
-            },
-            "items": [
-                {
-                    "type": "paragraph",
-                    "text": {
-                        "en": "The Otto party takes place Sunday evening - this is where we congratulate each other, and spend the last energy while we party. The golden penguins will be handed out, and there will be dancing!\n\nThe show takes place sunday 7:30PM on the sportscenter. No food will be serves at the party.\n\nIt's possible to order a bottle of sparkling wine for an additional 99 kr.\n",
-                        "da": "En god Fastaval afsluttes bedst med et brag af en fest! Ottofesten holdes s\u00f8ndag aften - det er her vi hylder hinanden, det er her vi fyrer den sidste energi af og det er her Ottoerne uddeles.\n\nAfholdes s\u00f8ndag kl 19.30 p\u00e5 Idr\u00e6tscentret. Der serveres ikke mad til Ottofesten.\n\nDer er mulighed for at bestille en flaske mousserende vin til festen (+99 kr.)"
-                    }
-                },
-                {
-                    "type": "checkbox",
-                    "text": {
-                        "en": "I would like to attend the Otto party\n",
-                        "da": "Jeg vil gerne med til Ottofesten\n"
-                    },
-                    "infosys_id": "misc:party"
-                },
-                {
-                    "type": "checkbox",
-                    "text": {
-                        "en": "I would like sparkling wine at the party\n",
-                        "da": "Jeg vil gerne have mousserende vin til festen\n"
-                    },
-                    "infosys_id": "misc:bubbles"
-                }
-            ]
         }
-    ]
+   ]
 }
