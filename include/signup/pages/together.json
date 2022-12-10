@@ -8,6 +8,20 @@
         "en": "Fastaval Together",
         "da": "Et f\u00e6lles Fastaval"
     },
+    "page_logic": [
+        {
+            "type": "field_compare",
+            "enabled": false,
+            "input": "participant",
+            "compare": "equals",
+            "value": "Juniordeltager"
+        },
+        {
+            "type": "checkbox",
+            "enabled": true,
+            "input": "junior:plus"
+        }
+    ],
     "sections": [
         {
             "headline": {

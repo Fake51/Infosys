@@ -34,14 +34,6 @@
                     "required": "true"
                 },
                 {
-                    "type": "text_input",
-                    "text": {
-                        "en": "Nickname",
-                        "da": "Kaldenavn"
-                    },
-                    "infosys_id": "nickname"
-                },
-                {
                     "type": "paragraph",
                     "text": {
                         "en": "The deadline for name-tags has been exceeded and the Nickname is therefore no longer in use.",
@@ -157,6 +149,22 @@
                         "da": "Navn p\u00e5 klub\/ungdomsskole"
                     },
                     "infosys_id": "ungdomsskole"
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "What should your nametag say?",
+                "da": "Hvad skal der st\u00e5 p\u00e5 dit navneskilt?"
+            },
+            "items": [
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Nickname",
+                        "da": "Kaldenavn"
+                    },
+                    "infosys_id": "nickname"
                 }
             ]
         },
