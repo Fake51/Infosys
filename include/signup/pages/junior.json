@@ -29,6 +29,15 @@
             },
             "items": [
                 {
+                    "type": "hidden",
+                    "text": {
+                        "en": "Junior entrace",
+                        "da": "Junior indgang"
+                    },
+                    "infosys_id": "junior:entrance",
+                    "no_load": "true"
+                },
+                {
                     "type": "paragraph",
                     "text": {
                         "en": "[b]K\u00e6re deltager p\u00e5 Fastaval Junior[\/b]\n\nFastaval Junior melder udsolgt. Men ventelisten er \u00e5ben.\n Vi har begr\u00e6nset antal pladser p\u00e5 arrangementet Fastaval Junior, og vi har f\u00e5et rigtig mange tilmeldinger. Alle 60 pladser er nu besat, men du kan komme p\u00e5 venteliste, hvis du udfylder tilmeldingen her. \n\nArrangementet foreg\u00e5r l\u00f8rdag den 16. april fra kl. 10-15.",

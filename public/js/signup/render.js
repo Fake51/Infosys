@@ -45,6 +45,9 @@ class InfosysSignupRender {
     if(element.no_submit) {
       parsed.find('input').attr('no-submit', true);
     }
+    if(element.no_load) {
+      parsed.find('input').attr('no-load', true);
+    }
     if (element.errors) {
       for(const error in element.errors) {
         let error_type = error == 'required_if' ? 'required' : error;

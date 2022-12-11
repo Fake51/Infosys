@@ -498,6 +498,18 @@ class SignupApiModel extends Model {
 
           switch($key_cat) {
             case 'junior':
+
+              if ($key_item == 'entrance') {
+                // Add entry for junior participants
+                $entry = $this->createEntity('Indgang');
+                $select = $entry->getSelect();
+                $select->setWhere('type', 'like', '%Junior%');
+                $entry = $entry->findBySelect($select);
+                $participant->setIndgang($entry);
+                $price = $entry->pris;
+                break;
+              }
+
               if ($key_item == 'plus') {
                 $junior_plus = true;
                 break;
@@ -781,7 +793,7 @@ class SignupApiModel extends Model {
 
     $column_info = $participant->getColumnInfo();
     $signup = $errors = [];
-    $entrance = false;
+    $has_entrance = false;
     $config = [
       'activities' => json_decode($this->getConfig('activities')),
     ];
@@ -852,7 +864,7 @@ class SignupApiModel extends Model {
         case $entrance->isPartout():
           if ($entrance->isEntrance()) {
             $signup['entry:partout'] = 'on';
-            $entrance = true;
+            $has_entrance = true;
           } else {
             $signup['sleeping:partout'] = 'on';
           }
@@ -864,6 +876,10 @@ class SignupApiModel extends Model {
           $start = new DateTime($entrance->start);
           $day = intval($start->format('d')) -2;
           $signup["$type:$day"] = 'on';
+          break;
+
+        case $entrance->type == 'Indgang - Junior':
+          $signup['junior:entrance'] = 'on';
           break;
 
         case $entrance->type == 'Leje af madras':
@@ -1005,7 +1021,7 @@ class SignupApiModel extends Model {
     }
 
     // Check for junior:plus
-    if ($entrance && $signup['participant'] == 'Juniordeltager') {
+    if ($has_entrance && $signup['participant'] == 'Juniordeltager') {
       $signup['junior:plus'] = 'on';
     }
 

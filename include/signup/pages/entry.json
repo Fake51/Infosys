@@ -35,7 +35,8 @@
                         "en": "Ticket fee",
                         "da": "Billetgebyr"
                     },
-                    "infosys_id": "misc:ticket_fee"
+                    "infosys_id": "misc:ticket_fee",
+                    "no_load": "true"
                 },
                 {
                     "type": "checkbox",

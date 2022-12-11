@@ -113,6 +113,7 @@
                     },
                     "infosys_id": "gdpr_accept",
                     "required": "true",
+                    "no_load": "true",
                     "errors": {
                         "required": {
                             "en": "We cannot process your registration if we're not allowed to store your information",
