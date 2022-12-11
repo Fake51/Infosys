@@ -69,6 +69,20 @@
                     },
                     "infosys_id": "activity_language:skandinavisk"
                 }
+            ],
+            "display_logic": [
+                {
+                    "type": "field_compare",
+                    "status": "hidden",
+                    "input": "participant",
+                    "compare": "equals",
+                    "value": "Juniordeltager"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "junior:plus"
+                }
             ]
         },
         {
@@ -85,6 +99,20 @@
                     },
                     "infosys_id": "desired_activities"
                 }
+            ],
+            "display_logic": [
+                {
+                    "type": "field_compare",
+                    "status": "hidden",
+                    "input": "participant",
+                    "compare": "equals",
+                    "value": "Juniordeltager"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "junior:plus"
+                }
             ]
         },
         {
@@ -99,6 +127,20 @@
                         "en": "'GM' means you would like to gamemaster the activity. 'GM\/1.priority means, you would like to be a player if you can't be a GM.'",
                         "da": "'SL \/ RF' betyder at du gerne vil v\u00e6re spilleder p\u00e5 et rollespil eller regelformidler p\u00e5 et br\u00e6tspil, l\u00e6s mere om reglformidlerrollen nedenfor. 'SL \/ RF - 1. prioritet' betyder, at du gerne vil v\u00e6re spiller, hvis du ikke kan blive spilleder eller regelformidler p\u00e5 det."
                     }
+                }
+            ],
+            "display_logic": [
+                {
+                    "type": "field_compare",
+                    "status": "hidden",
+                    "input": "participant",
+                    "compare": "equals",
+                    "value": "Juniordeltager"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "junior:plus"
                 }
             ]
         },
@@ -121,6 +163,20 @@
                         "en": "  [color=lightgreen]Green [\/color]: Roleplaying\n[color=lightblue]Blue [\/color]: Board games\n[color=yellow]Yellow [\/color]: Events & workshops\n[color=mediumpurple]Purple [\/color]: Live Role Playing\n[color=darkgreen,white]Dark green [\/color]: Magic",
                         "da": " [color=lightgreen]Gr\u00f8n [\/color]: Rollespil\n[color=lightblue]Bl\u00e5 [\/color]: Br\u00e6tspil\n[color=yellow]Gul [\/color]: Events & Workshops\n[color=mediumpurple]Lilla [\/color]: Live Rollespil\n[color=darkgreen,white]M\u00f8rkegr\u00f8n [\/color]: Magic"
                     }
+                }
+            ],
+            "display_logic": [
+                {
+                    "type": "field_compare",
+                    "status": "hidden",
+                    "input": "participant",
+                    "compare": "equals",
+                    "value": "Juniordeltager"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "junior:plus"
                 }
             ]
         },

@@ -8,17 +8,17 @@
         "en": "Additional Information",
         "da": "Ekstra informationer"
     },
-    "page_logic": [
+    "display_logic": [
         {
             "type": "field_compare",
-            "enabled": false,
+            "status": "disabled",
             "input": "participant",
             "compare": "equals",
             "value": "Juniordeltager"
         },
         {
             "type": "checkbox",
-            "enabled": true,
+            "status": "normal",
             "input": "junior:plus"
         }
     ],

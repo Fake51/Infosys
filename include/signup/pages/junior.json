@@ -8,14 +8,14 @@
         "en": "Fastaval Junior - This page is not available in English\n",
         "da": "Fastaval Junior"
     },
-    "page_logic": [
+    "display_logic": [
       {
         "type": "default",
-        "enabled": false
+        "status": "disabled"
       },
       {
         "type": "field_compare",
-        "enabled": true,
+        "status": "normal",
         "input": "participant",
         "compare": "equals",
         "value": "Juniordeltager"

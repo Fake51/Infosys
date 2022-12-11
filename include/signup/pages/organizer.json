@@ -8,14 +8,14 @@
         "en": "Thank you for making Fastaval possible!",
         "da": "Tak fordi du g\u00f8r Fastaval mulig!"
     },
-    "page_logic": [
+    "display_logic": [
         {
             "type": "default",
-            "enabled": false
+            "status": "disabled"
         },
         {
             "type": "field_compare",
-            "enabled": "true",
+            "status": "normal",
             "input": "participant",
             "compare": "equals",
             "value": "Organizer"
