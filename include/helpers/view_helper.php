@@ -128,7 +128,7 @@ HTML;
                     <tr>
                         <td><b>Alt.Tlf:</b> <input type='text' value='' name='deltager_search[tlf]' /></td>
                         <td><b>Mobil:</b> <input type='text' value='' name='deltager_search[mobiltlf]' /></td>
-                        <td><b>Mobil med:</b> {$this->view->genSelect('deltager_search[medbringer_mobil]', array('', 'nej','ja'))}</td>
+                        <td><b>Tilmeldt SMS:</b> {$this->view->genSelect('deltager_search[medbringer_mobil]', array('', 'nej','ja'))}</td>
                     </tr>
 
                     <tr>

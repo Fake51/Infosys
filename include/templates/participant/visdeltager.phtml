@@ -59,7 +59,7 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'>International: </td><td id='international' class='editable yesno'><?= $this->deltager->international;?></td>
-                    <td class='label'>Mobil med: </td><td id='medbringer_mobil' class='editable yesno'><?= $this->deltager->medbringer_mobil;?></td>
+                    <td class='label'>Tilmeldt SMS: </td><td id='medbringer_mobil' class='editable yesno'><?= $this->deltager->medbringer_mobil;?></td>
                     <td class='label'>NødTlf: </td><td id='tlf' class='editable text'><?= e($this->deltager->tlf);?></td>
                 </tr>
                 <?php if (!($this->payment_edit || $this->is_read_only)) :?>
@@ -73,7 +73,6 @@ $this->registerLateLoadJS('participant.js');
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <!--<td class='label'>Scen. konk.: </td><td id='tilmeld_scenarieskrivning' class='editable yesno'><?= $this->deltager->tilmeld_scenarieskrivning;?></td>-->
                     <td class='label'>Sprog: </td><td colspan='2' id='sprog'><?= implode(', ', $this->deltager->getSprog());?></td>
                     <td>&nbsp;</td>
                 </tr>

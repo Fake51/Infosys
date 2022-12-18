@@ -39,7 +39,7 @@
                 <tr>
                     <td><b>Nødtlf:</b> <input type='text' value='<?php echo e($this->deltager->tlf);?>' name='deltager[tlf]' /></td>
                     <td><b>Mobil:</b> <input type='text' value='<?php echo e($this->deltager->mobiltlf);?>' name='deltager[mobiltlf]' /></td>
-                    <td><b>Mobil med:</b> <?php echo $this->genSelect('deltager[medbringer_mobil]',array('nej','ja'), $this->deltager->medbringer_mobil);?></td>
+                    <td><b>Tilmeldt SMS:</b> <?php echo $this->genSelect('deltager[medbringer_mobil]',array('nej','ja'), $this->deltager->medbringer_mobil);?></td>
                 </tr>
                 <tr>
                     <!--<td><b>Scen. konk.:</b> <?php echo $this->genSelect('deltager[tilmeld_scenarieskrivning]',array('nej','ja'), $this->deltager->tilmeld_scenarieskrivning);?></td>-->
