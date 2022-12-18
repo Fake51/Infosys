@@ -122,10 +122,10 @@ class DummyParticipant extends DBObject
     public function setWearOrder(DBObject $wearprice, $amount, ?array $attributes)
     {
         $this->wear[] = [
-                         'wearprice' => $wearprice,
-                         'size'      => $size,
-                         'attributes'=> $attributes,
-                        ];
+            'wearprice' => $wearprice,
+            'amount'      => $amount,
+            'attributes'=> $attributes,
+        ];
 
         return $this;
     }
