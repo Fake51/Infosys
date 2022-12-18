@@ -148,6 +148,15 @@ $(function() {
             onerror: updateError
         });
 
+        $('td.editable.lang').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: '{"da": "dansk", "en": "engelsk"}',
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError
+        });
+
         $('.editable.package_gds').editable(window.infosys_data.participant_editable_url, {
             type: 'select',
             data: '{"0":"Nej","1":"Ja"}',

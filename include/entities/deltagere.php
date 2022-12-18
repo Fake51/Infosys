@@ -93,6 +93,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         'desired_diy_shifts'            => 'Ønskede GDS',
         'nickname'                      => 'Kaldenavn',
         'financial_struggle'            => 'Økonomisk støtte',
+        'main_lang'                     => 'Foretrukket sprog',
     );
 
     /**
@@ -1481,7 +1482,7 @@ WHERE
 
     public function speaksDanish()
     {
-        return stripos($this->sprog, 'dansk') !== false || !$this->sprog;
+        return $this->main_lang == 'da';
     }
 
     public function getEan8Number()

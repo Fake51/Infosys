@@ -242,8 +242,8 @@ class DBObject
             return array('type' => 'text');
         }
 
-        if (substr(strtolower($info[$column]), 0, 3) === 'int') {
-            return array('type' => 'int', 'size' => substr($info[$column], 4, -1));
+        if (preg_match("/int\((\d+)\)/", $info[$column], $matches)) {
+            return array('type' => 'int', 'size' => $matches[1]);
         }
 
         if (substr(strtolower($info[$column]), 0, 7) === 'varchar') {

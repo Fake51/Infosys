@@ -23,6 +23,10 @@
     "en": "Waiting for all pages to load",
     "da": "Venter på at alle sider er hentet"
   },
+  "unknown": {
+    "en": "Unknown error, if this persists, please contact The Info at info@fastaval.dk for help.",
+    "da": "Ukendt fejl, hvis dette fortsætter, kontakt venligst Infoen på info@fastaval.dk for hjælp"
+  },
   "short_text": {
     "gdpr_accept": {
       "en": "I accept the GDPR terms",
@@ -35,6 +39,10 @@
     "tlf": {
       "en": "Emergency phone number",
       "da": "Nødkontakt telefonnummer"
+    },
+    "main_lang": {
+      "en": "Preferred language",
+      "da": "Foretrukket sprog"
     },
     "scenarie": {
       "en": "The title of your scenario/game",

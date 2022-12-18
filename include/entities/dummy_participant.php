@@ -341,7 +341,7 @@ class DummyParticipant extends DBObject
 
     public function speaksDanish()
     {
-        return stripos($this->sprog, 'dansk') !== false || !$this->sprog;
+        return $this->main_lang == 'da';
     }
 
     /**

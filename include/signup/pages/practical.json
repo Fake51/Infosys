@@ -149,6 +149,31 @@
                         "da": "Navn p\u00e5 klub\/ungdomsskole"
                     },
                     "infosys_id": "ungdomsskole"
+                },
+                {
+                    "type": "radio",
+                    "text": {
+                        "en": "In which languge would you prefer to communivate with Fastaval?",
+                        "da": "P\u00e5 hvilket sprog foretr\u00e6kker du at kommunikere med Fastaval?"
+                    },
+                    "infosys_id": "main_lang",
+                    "options": [
+                        {
+                            "value": "da",
+                            "text": {
+                                "en": "Danish",
+                                "da": "Dansk"
+                            },
+                            "default": true
+                        },
+                        {
+                            "value": "en",
+                            "text": {
+                                "en": "English",
+                                "da": "Engelsk"
+                            }
+                        }
+                    ]
                 }
             ]
         },

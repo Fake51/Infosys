@@ -1,0 +1,1 @@
+ALTER TABLE deltagere ADD main_lang enum('da','en');

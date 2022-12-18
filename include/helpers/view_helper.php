@@ -133,7 +133,7 @@ HTML;
 
                     <tr>
                         <td>
-                            <b>Sprog:</b>
+                            <b>Sprog (aktiviteter):</b>
 HTML;
             foreach ($model->getAvailableSprog() as $sprog) {
                 $output .= "

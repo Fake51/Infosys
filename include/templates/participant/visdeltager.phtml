@@ -46,7 +46,8 @@ $this->registerLateLoadJS('participant.js');
                     <td class='label'>Forudbetalt: </td><td id='betalt_beloeb' class='editable text'><?= e($this->deltager->betalt_beloeb);?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Adresse: </td><td colspan='3' id='address' class='editable text'><?= e($this->deltager->adresse1);?> <?= e($this->deltager->adresse2);?></td>
+                    <td class='label'>Adresse: </td><td colspan='2' id='address' class='editable text'><?= e($this->deltager->adresse1);?> <?= e($this->deltager->adresse2);?></td>
+                    <td class='label'>E-mail: </td><td colspan='2' id='email' class='editable text'><?= e($this->deltager->email);?></td>
                 </tr>
                 <tr>
                     <td class='label'>Postnr: </td><td id='postnummer' class='editable text'><?= e($this->deltager->postnummer);?></td>
@@ -55,12 +56,12 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'>Mobil: </td><td id='mobiltlf' class='editable text'><?= e($this->deltager->mobiltlf);?></td>
-                    <td class='label'>E-mail: </td><td colspan='3' id='email' class='editable text'><?= e($this->deltager->email);?></td>
-                </tr>
-                <tr>
-                    <td class='label'>International: </td><td id='international' class='editable yesno'><?= $this->deltager->international;?></td>
                     <td class='label'>Tilmeldt SMS: </td><td id='medbringer_mobil' class='editable yesno'><?= $this->deltager->medbringer_mobil;?></td>
                     <td class='label'>NødTlf: </td><td id='tlf' class='editable text'><?= e($this->deltager->tlf);?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Foretrukket sprog: </td><td id='main_lang' class='editable lang'><?= $this->deltager->main_lang;?></td>
+                    <td class='label'>International: </td><td id='international' class='editable yesno'><?= $this->deltager->international;?></td>
                 </tr>
                 <?php if (!($this->payment_edit || $this->is_read_only)) :?>
                 <tr>
@@ -73,7 +74,11 @@ $this->registerLateLoadJS('participant.js');
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <td class='label'>Sprog: </td><td colspan='2' id='sprog'><?= implode(', ', $this->deltager->getSprog());?></td>
+                    <td class='label'>Sprog (aktiviteter): </td><td colspan='2' id='sprog'><?= implode(', ', $this->deltager->getSprog());?></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class='label'>Soveområde: </td><td colspan='2' id='sleeping_area'><?= implode(', ', $this->deltager->getSleepingAreas());?></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>

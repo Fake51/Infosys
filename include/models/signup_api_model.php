@@ -316,12 +316,13 @@ class SignupApiModel extends Model {
   private function createLookup($page) {
     $lookup = [];
     foreach($page->sections as $skey => $section) {
+      if(!isset($section->items)) continue;
       foreach($section->items as $ikey => $item) {
         if (isset($item->infosys_id)) {
           $lookup[$item->infosys_id] = [
             'item' => $item,
-            'disabled' => $item->disabled || $section->disabled,
-            'required' => $item->required,
+            'disabled' => ($item->disabled ?? false) || ($section->disabled ?? false),
+            'required' => $item->required ?? false,
           ];
         }
       }
@@ -385,7 +386,7 @@ class SignupApiModel extends Model {
         $price = 0;
         $extra = [];
 
-        if ($lookup[$key]['disabled']) {
+        if (isset($lookup[$key]) && $lookup[$key]['disabled']) {
           $errors[$category][] = [
             'type' => 'disabled',
             'info' => $category." ".$key,
@@ -445,7 +446,7 @@ class SignupApiModel extends Model {
                   continue 3;
                 }
                 
-                if(!$participant->setWearOrder($wear_prices[0], $wear_order['amount'], $wear_order['attributes'])) {
+                if(!$participant->setWearOrder($wear_prices[0], $wear_order['amount'], $wear_order['attributes'] ?? [])) {
                   $errors[$category][] = [
                     'type' => 'wear_order_fail',
                     'info' => "wear_order",
@@ -465,7 +466,7 @@ class SignupApiModel extends Model {
                   'wear_id' => $wear->id,
                   'price' => $price,
                   'amount' => $wear_order['amount'],
-                  'attributes' => $wear_order['attributes'],
+                  'attributes' => $wear_order['attributes'] ?? [],
                   'single_price' => $wear_prices[0]->pris,
                 ];
         
@@ -483,19 +484,36 @@ class SignupApiModel extends Model {
               }
 
               $do_value = $value;
-              if ($value == 'on' && !$participant->is_dummy) {
+              if (!$participant->is_dummy) {
                 $valid = $participant->getValidColumnValues($key);
-                if ($valid['type'] == 'enum') {
-                  $do_value = 'ja';
+                if (isset($valid['type']) && $valid['type'] == 'enum') {
+                  $do_value = $value == 'on' ? 'ja' : $do_value;
+                  $do_value = $value == 'off' ? 'nej' : $do_value;
+                  if (!in_array($do_value, $valid['values'])) {
+                    $errors[$category][] = [
+                      'type' => 'wrong_enum',
+                      'id' => $key,
+                      'value' => $value,
+                      'valid' => $valid,
+                    ];
+                    continue 2;
+                  }
                 }
+                if (isset($valid['type']) && $valid['type'] == 'int' && $value == "") $do_value = 0;
               }
 
               $participant->$key = $do_value;
+              if ($value == "" || $value == 0 || $value == 'off') {
+                // No need to show empty fields on breakdown
+                continue 2;
+              }
           }
         } else {
           $key_cat = $key_parts[0];
           $key_item = $key_parts[1];
 
+          if ($value === 'off') continue;
+          
           switch($key_cat) {
             case 'junior':
 
@@ -696,7 +714,7 @@ class SignupApiModel extends Model {
                   'type' => 'unknown_time',
                   'info' => "$key_cat:$key_item $value",
                 ];
-                continue 2;
+                continue 3;
               }
 
               $participant->setGDSTilmelding(null, "$date_string $period");
@@ -732,6 +750,7 @@ class SignupApiModel extends Model {
 
             case 'note':
               $participant->setNote($key_item, $value);
+              if ($value == "") continue 2; // Don't show empty values on breakdown
               break;
 
             default:
@@ -792,7 +811,8 @@ class SignupApiModel extends Model {
     }
 
     $column_info = $participant->getColumnInfo();
-    $signup = $errors = [];
+    $signup = ['id' => $participant->id]; // We return participant id in case they used email for loading.
+    $errors = [];
     $has_entrance = false;
     $config = [
       'activities' => json_decode($this->getConfig('activities')),

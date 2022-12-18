@@ -45,8 +45,8 @@
                 </tr>
 
                 <tr>
-                    <!--<td><b>Scen. konk.:</b> <?php echo $this->genSelect('deltager[tilmeld_scenarieskrivning]', array('nej', 'ja'));?></td>-->
-                    <td colspan='2'><b>Sprog:</b>
+                    <td><b>Foretrukket sprog:</b> <?php echo $this->genSelect('deltager[main_lang]',array('da','en'));?></td>
+                    <td colspan='2'><b>Sprog (aktiviteter):</b>
                         <?php foreach ($this->model->getAvailableSprog() as $sprog) :?>
                             <label for='lang_<?php echo $sprog;?>'><?php echo substr($sprog, 0,3);?>.</label><input class='langbox' type='checkbox' name='deltager[lang][<?php echo $sprog;?>]' value='<?php echo $sprog;?>' id='lang_<?php echo $sprog;?>'/>
                         <?php endforeach;?>
