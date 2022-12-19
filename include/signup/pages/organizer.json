@@ -63,23 +63,6 @@
                         "en": "On behalf of the participants: Thank you so much for your hard work at Fastaval 2022!",
                         "da": "P\u00e5 vegne af alle deltagerne: Tusind tak for dit engagement i Fastaval 2022!"
                     }
-                },
-                {
-                    "type": "text_input",
-                    "text": {
-                        "en": "What is your organizational area at Fastaval?",
-                        "da": "Hvad er dit arrang\u00f8romr\u00e5de?\t\t\t"
-                    },
-                    "infosys_id": "arbejdsomraade",
-                    "required": "true"
-                },
-                {
-                    "type": "text_input",
-                    "text": {
-                        "en": "If you are a writer\/board game designer, what is the title of your scenario\/game?",
-                        "da": "Hvis du er forfatter\/br\u00e6tspilsdesigner, hvad er titlen p\u00e5 dit scenarie\/spil"
-                    },
-                    "infosys_id": "scenarie"
                 }
             ]
         },
@@ -97,13 +80,6 @@
                     },
                     "infosys_id": "organizercategory",
                     "options": [
-                        {
-                            "value": "2",
-                            "text": {
-                                "en": "I am an organizer\n",
-                                "da": "Jeg er arrang\u00f8r\n"
-                            }
-                        },
                         {
                             "value": "4",
                             "text": {
@@ -159,23 +135,67 @@
                                 "en": "I am a Fastaval Junior organizer\n",
                                 "da": "Jeg er Fastaval Junior arrang\u00f8r"
                             }
+                        },
+                        {
+                            "value": "2",
+                            "text": {
+                                "en": "Other (please specify below",
+                                "da": "Andet (uddyb nedenfor)"
+                            }
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "headline": {
-                "en": "One game, multiple writers?",
-                "da": "Et scenarie\/br\u00e6tspil, flere forfattere\/designere?"
-            },
-            "items": [
+                },
                 {
-                    "type": "paragraph",
+                    "type": "text_input",
                     "text": {
-                        "en": "All co-writers have the same discounts, as written above.",
-                        "da": "Alle medforfattere og designere f\u00e5r samme rabatmuligheder, som angivet ovenfor."
-                    }
+                        "en": "What is your organizational area at Fastaval?",
+                        "da": "Hvad er dit arrang\u00f8romr\u00e5de?\t\t\t"
+                    },
+                    "infosys_id": "arbejdsomraade",
+                    "required_if": {
+                        "field": "organizercategory",
+                        "logic": "equals",
+                        "value": "2"
+                    },
+                    "display_logic": [
+                        {
+                            "type": "default",
+                            "status": "hidden"
+                        },
+                        {
+                            "type": "field_compare",
+                            "status": "required",
+                            "input": "organizercategory",
+                            "compare": "equals",
+                            "value": "2"
+                        }
+                    ]               
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "What is the title of your scenario\/game?",
+                        "da": "Hvad er titlen p\u00e5 dit scenarie\/spil"
+                    },
+                    "infosys_id": "scenarie",
+                    "required_if": {
+                        "field": "organizercategory",
+                        "logic": "equals",
+                        "value": "4"
+                    },
+                    "display_logic": [
+                        {
+                            "type": "default",
+                            "status": "hidden"
+                        },
+                        {
+                            "type": "field_compare",
+                            "status": "required",
+                            "input": "organizercategory",
+                            "compare": "equals",
+                            "value": "4"
+                        }
+                    ]               
                 }
             ]
         }
