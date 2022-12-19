@@ -20,6 +20,12 @@
             "type": "checkbox",
             "status": "normal",
             "input": "junior:plus"
+        },
+        {
+            "type": "age",
+            "status": "disabled",
+            "compare": "less",
+            "value": 13
         }
     ],
     "sections": [
