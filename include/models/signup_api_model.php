@@ -27,6 +27,10 @@ class SignupApiModel extends Model {
           'da' => 'Må ikke vælges samtidig',
         ]
       ],
+      'input_error' => [
+        'en' => "There some issues with the input on the current page.\nDo you want to stay and fix them?",
+        'da' => "Der er nogle problemer med indtastningen på den nuværende side.\nVil du blive på siden og rette dem?",
+      ],
       'sub_total' => [
         'en' => 'Sub total',
         'da' => 'Sub total',
