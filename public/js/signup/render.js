@@ -25,9 +25,11 @@ class InfosysSignupRender {
     }
 
     // Add extra attributes
-    if(element.required) {
-      parsed.addClass('required');
-      parsed.find('input').attr('required', true);
+    if(element.required || element.required_if) {
+      if (element.required) {
+        parsed.addClass('required');
+        parsed.find('input').attr('required', true);
+      }
 
       // Add error text when input is empty/not selected
       if(!element.errors) element.errors = {};
@@ -50,9 +52,8 @@ class InfosysSignupRender {
     }
     if (element.errors) {
       for(const error in element.errors) {
-        let error_type = error == 'required_if' ? 'required' : error;
-        let error_div = jQuery('<div class="error-text" error-type="'+error_type+'"></div>');
-        error_div.text(element.errors[error_type][lang]);
+        let error_div = jQuery('<div class="error-text" error-type="'+error+'"></div>');
+        error_div.text(element.errors[error][lang]);
         error_div.hide();
         if(element.type == 'checkbox') {
           parsed.prepend(error_div);
