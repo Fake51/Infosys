@@ -67,6 +67,21 @@
                 "da": "Herunder kan du bestille morgenmad og aftensmad:"
             },
             "module": "food"
+        },
+        {
+            "headline": {
+                "en": "Meal details",
+                "da": "Detaljer om maden"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Food details here...",
+                        "da": "Skriv detaljer om maden her..."
+                    }
+                }
+            ]
         }
-   ]
+    ]
 }
