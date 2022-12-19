@@ -220,7 +220,22 @@
                             "text": {
                                 "en": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r. LUKKE",
                                 "da": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r. LUKKE"
-                            }
+                            },
+                            "display_logic": [
+                                {
+                                    "type": "age",
+                                    "status": "disabled",
+                                    "compare": "greater",
+                                    "value": 14
+                                },
+                                {
+                                    "type": "age",
+                                    "status": "disabled",
+                                    "compare": "less",
+                                    "value": 6
+                                }
+                
+                            ]
                         },
                         {
                             "value": "Organizer",
