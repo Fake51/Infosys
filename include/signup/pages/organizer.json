@@ -178,29 +178,6 @@
                     }
                 }
             ]
-        },
-        {
-            "headline": {
-                "en": "Dormitory for the organizers",
-                "da": "Arrang\u00f8rsovesalen"
-            },
-            "items": [
-                {
-                    "type": "paragraph",
-                    "text": {
-                        "en": "This year, you can get a spot in the organizer dormitory (organizers with shifts during Fastaval will be prioritized, in case there is a lack of spots)",
-                        "da": "I \u00e5r tilbydes en soveplads i arrang\u00f8rsovesalen (arrang\u00f8rer med j\u00e6vnlige vagter under Fastaval prioriteres, hvis der er mangel p\u00e5 pladser) "
-                    }
-                },
-                {
-                    "type": "checkbox",
-                    "text": {
-                        "en": "I would like a spot in the organizer dormitory\t\t\t",
-                        "da": "Jeg vil gerne have en plads i arrang\u00f8rsovesalen\t\t\t"
-                    },
-                    "infosys_id": "sovesal"
-                }
-            ]
         }
     ]
 }

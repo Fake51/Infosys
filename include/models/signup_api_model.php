@@ -339,6 +339,7 @@ class SignupApiModel extends Model {
     $total = 0;
     $junior_note = "";
     $sprog = [];
+    $sleeping_areas = [];
     $config = [
       'main' => json_decode($this->getConfig('main')),
       'activities' => json_decode($this->getConfig('activities')),
@@ -483,6 +484,11 @@ class SignupApiModel extends Model {
                 continue 2;
               }
 
+              if ($value == 'on') {
+                if ($key == 'sober_sleeping') $sleeping_areas[] = 'sober';
+                if ($key == 'sovesal') $sleeping_areas[] = 'organizer';
+              }
+
               $do_value = $value;
               if (!$participant->is_dummy) {
                 $valid = $participant->getValidColumnValues($key);
@@ -618,6 +624,10 @@ class SignupApiModel extends Model {
               }
               $participant->setIndgang($entry);
               $price = $entry->pris;
+              break;
+
+            case 'sleeping_area':
+              $sleeping_areas[] = $key_item;
               break;
 
             case 'misc':
@@ -781,6 +791,9 @@ class SignupApiModel extends Model {
 
     // Languages
     $participant->setSprog($sprog);
+
+    // Sleeping area
+    $participant->setSleepArea($sleeping_areas);
 
     // Notes
     if ($junior_note) $participant->setNote('junior_ward', $junior_note);
@@ -1001,6 +1014,11 @@ class SignupApiModel extends Model {
     // Activity languages
     foreach($participant->getSprog() as $sprog) {
       $signup['activity_language:'.$sprog] = 'on';
+    }
+
+    // Activity languages
+    foreach($participant->getSleepingAreas() as $area) {
+      $signup['sleeping_area:'.$area] = 'on';
     }
 
     // Collect wear orders

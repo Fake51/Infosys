@@ -59,6 +59,10 @@
     "misc:alea": {
       "en": "I would like to join Alea",
       "da": "Jeg vil gerne melde mig ind i Alea"
+    },
+    "note:sleeping": {
+      "en": "Comments for sleeping arrangements",
+      "da": "Bemærkninger til soveplads"
     }
   }
 }

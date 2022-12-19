@@ -206,6 +206,29 @@
                     "excludes": [
                         "sleeping:partout"
                     ]
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "Where do you want to sleep",
+                "da": "Hvor vil du overnatte"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Standard Dormitory[\/b]\nExplanation...",
+                        "da": "[b]Alm. Sovesal[\/b]\nForklaring..."
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I want to sleep in the standard dormitory",
+                        "da": "Jeg vil gerne sove i den alm. sovesal"
+                    },
+                    "infosys_id": "sleeping_area:regular"
                 },
                 {
                     "type": "paragraph",
@@ -236,6 +259,101 @@
                         "da": "Jeg vil gerne sove i sovesalen for folk der er \u00e6dru og stille\t\t\t"
                     },
                     "infosys_id": "sober_sleeping"
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Youth dormitory[\/b]\nExplanation...",
+                        "da": "[b]Ungdomssovesal[\/b]\nForklaring..."
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I would like to sleep in the youth dormitory",
+                        "da": "Jeg vil gerne sove i ungdomssovesalen"
+                    },
+                    "infosys_id": "sleeping_area:youth",
+                    "display_logic": [
+                        {
+                            "type": "age",
+                            "status": "disabled",
+                            "compare": "greater",
+                            "value": 17
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Organizer Dormitory[\/b]\nThis year, you can get a spot in the organizer dormitory (organizers with shifts during Fastaval will be prioritized, in case there is a lack of spots)",
+                        "da": "[b]Arrang\u00f8rsovesalen[\/b]\nI \u00e5r tilbydes en soveplads i arrang\u00f8rsovesalen (arrang\u00f8rer med j\u00e6vnlige vagter under Fastaval prioriteres, hvis der er mangel p\u00e5 pladser)"
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I would like a spot in the organizer dormitory\t\t\t",
+                        "da": "Jeg vil gerne have en plads i arrang\u00f8rsovesalen\t\t\t"
+                    },
+                    "infosys_id": "sovesal",
+                    "display_logic": [
+                        {
+                            "type": "default",
+                            "status": "disabled"
+                        },
+                        {
+                            "type": "field_compare",
+                            "status": "normal",
+                            "input": "participant",
+                            "compare": "equals",
+                            "value": "Organizer"
+                        }
+                    ]
+                },
+                {
+                    "type": "text_area",
+                    "text": {
+                        "en": "[b]Comments[\/b]\nIf you have any remarks about your sleeping arrangements, for instance if you'd rather sleep in a certain place compared to another, let us know here",
+                        "da": "[b]Bem\u00e6rkninger[\/b]\nHvis du har nogle bem\u00e6rkninger til hvor du skal sove, f.eks hvis du hellere vil sove et sted frem for et andet, s\u00e5 skriv det her"
+                    },
+                    "infosys_id": "note:sleeping"
+                }
+            ],
+            "display_logic": [
+                {
+                    "type": "default",
+                    "status": "hidden"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "sleeping:1"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "sleeping:2"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "sleeping:3"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "sleeping:4"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "sleeping:5"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "sleeping:partout"
                 }
             ]
         }

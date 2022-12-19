@@ -105,12 +105,14 @@ class Deltagere extends DBObject implements AgeFulfilment
         'da' => [
             'comment' => 'Andre kommentarer',
             'gds' => 'Kommentarer til GDS',
-            'junior_ward' => 'Kontakperson'
+            'junior_ward' => 'Kontakperson',
+            'sleeping' => 'Bemærkninger til soveplads',
         ],
         'en' => [
             'comment' => 'Other comments',
             'gds' => 'Comments regarding GDS',
-            'junior_ward' => 'Contact'
+            'junior_ward' => 'Contact',
+            'sleeping' => 'Comments about sleeping area',
         ]
     ];
 
@@ -277,6 +279,13 @@ class Deltagere extends DBObject implements AgeFulfilment
             return array();
         }
         $string = str_replace("'","", $this->sprog);
+        return explode(',', $string);
+    }
+
+    public function getSleepingAreas() {
+        if (!$this->isLoaded() || !is_string($this->sleeping_area)) return [];
+
+        $string = str_replace("'","", $this->sleeping_area);
         return explode(',', $string);
     }
 
@@ -461,6 +470,16 @@ class Deltagere extends DBObject implements AgeFulfilment
             }
         }
         $this->sprog = implode(',', $sprog_array);
+        return true;
+    }
+
+    public function setSleepArea(array $sleeping_areas) {
+        $accepted_areas = $this->getAvailableSleepAreas();
+        foreach ($sleeping_areas as &$area) {
+            $area = strtolower($area);
+            if (!in_array($area, $accepted_areas)) return false;
+        }
+        $this->sleeping_area = implode(',', $sleeping_areas);
         return true;
     }
 
@@ -916,6 +935,17 @@ class Deltagere extends DBObject implements AgeFulfilment
             $accepted_langs = explode(',',$matches[1]);
         }
         return $accepted_langs;
+    }
+
+    public function getAvailableSleepAreas() {
+        $cinfo = $this->getColumnInfo();
+        $areas = $cinfo['sleeping_area'];
+        $accepted_areas = [];
+        if (preg_match('/^set\((.*)\)$/i', $areas, $matches)) {
+            $matches[1] = str_replace("'", "", $matches[1]);
+            $accepted_areas = explode(',',$matches[1]);
+        }
+        return $accepted_areas;
     }
 
     /**
