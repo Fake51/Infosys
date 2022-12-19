@@ -1527,7 +1527,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'desired_activities' => $participant->desired_activities,
             'desired_diy_shifts' => $participant->desired_diy_shifts,
             'sovesal' => $participant->sovesal,
-            'sober_sleeping' => $participant->sovesal,
+            'sober_sleeping' => $participant->sober_sleeping,
             'ungdomsskole' => $participant->ungdomsskole,
             'original_price' => $participant->original_price,
             'scenarie' => $participant->scenarie,

@@ -26,5 +26,11 @@
   "load_success": {
     "en": "Your registration has been loaded",
     "da": "Din tilmelding er blevet hentet"
+  },
+  "errors": {
+    "wrong_info": {
+      "en": "There is no registration with the given email/id and password",
+      "da": "Der er ikke nogen tilmelding med den givne email/id og kodeord"
+    }
   }
 }
