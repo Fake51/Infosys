@@ -1,61 +1,54 @@
 "using strict";
 
 class InfosysSignupRender {
-  static render_element(element, lang, config) {
-    let html = "";
-    let text = InfosysTextPreprocessor.process_text(element.text[lang]);
+  static render_element(item, lang, config) {
+    let html;
+    item.processed = InfosysTextPreprocessor.process_text(item.text[lang]);
     
-    if(typeof this['render_'+element.type] === 'function') {
-      let item = { 
-        text: text, 
-        lang: lang
-      }
-      element.infosys_id  && (item.id = element.infosys_id);
-      element.options     && (item.options = element.options);
-
-      html = this['render_'+element.type](item);
+    if(typeof this['render_'+item.type] === 'function') {
+      html = this['render_'+item.type](item, lang);
     } else {
-      html = this.render_unknown(text, element.type)
+      html = this.render_unknown(item.processed, item.type)
     }
     
     // Convert html to jQuery
     let parsed = html;
-    if(!(html instanceof jQuery)) {
+    if(!(parsed instanceof jQuery)) {
       parsed = jQuery(jQuery.parseHTML(html.trim()));
     }
 
     // Add extra attributes
-    if(element.required || element.required_if) {
-      if (element.required) {
+    if(item.required || item.required_if) {
+      if (item.required) {
         parsed.addClass('required');
         parsed.find('input').attr('required', true);
       }
 
       // Add error text when input is empty/not selected
-      if(!element.errors) element.errors = {};
-      if(!element.errors.required) {
-        element.errors.required = config.errors.required;
+      if(!item.errors) item.errors = {};
+      if(!item.errors.required) {
+        item.errors.required = config.errors.required;
       }
     }
-    if(element.excludes) {
+    if(item.excludes) {
       // Add error text when input is empty/not selected
-      if(!element.errors) element.errors = {};
-      if(!element.errors.excludes) {
-        element.errors.excludes = config.errors.excludes;
+      if(!item.errors) item.errors = {};
+      if(!item.errors.excludes) {
+        item.errors.excludes = config.errors.excludes;
       }
     }
-    if(element.no_submit) {
+    if(item.no_submit) {
       parsed.find('input').attr('no-submit', true);
     }
-    if(element.no_load) {
+    if(item.no_load) {
       parsed.find('input').attr('no-load', true);
     }
-    if (element.errors) {
-      for(const error in element.errors) {
+    if (item.errors) {
+      for(const error in item.errors) {
         let error_div = jQuery('<div class="error-text" error-type="'+error+'"></div>');
-        error_div.text(element.errors[error][lang]);
+        error_div.text(item.errors[error][lang]);
         error_div.hide();
-        if(element.type == 'checkbox') {
+        if(item.type == 'checkbox') {
           parsed.prepend(error_div);
         } else {
           parsed.append(error_div);
@@ -72,66 +65,81 @@ class InfosysSignupRender {
     return "<p class='unknown'><strong>Unknown element of type: "+ type + "</strong><br>" + text +"</p>";
   }
 
-  static render_paragraph(item) {
-    return "<p>" + item.text + "</p>";
+  static render_paragraph(item, lang) {
+    return "<p>" + item.processed + "</p>";
   }
 
   static render_checkbox(item) {
     return `
       <div class="input-wrapper input-type-checkbox">
-        <input type="checkbox" id="${item.id}">
-        <label for="${item.id}">${item.text}</label>
+        <input type="checkbox" id="${item.infosys_id}">
+        <label for="${item.infosys_id}">${item.processed}</label>
       </div>
     `;
   }
 
   static render_text_input(item) {
-    item.text != "" && (item.text += ":");
-    return `
-      <div class="input-wrapper input-type-text">
-        <label for="${item.id}">${item.text}</label>
-        <input type="text" id="${item.id}">
-      </div>
-    `;
+    item.processed != "" && (item.processed += ":");
+    let wrapper = jQuery('<div class="input-wrapper input-type-text"></div>');
+    let input_id = item.infosys_id;
+    let no_submit = "";
+
+    if (item.autocomplete) {
+      wrapper.addClass('autocomplete');
+      wrapper.append('<div class="autocomplete-list"></div>');
+      wrapper.attr('autocomplete-list', item.autocomplete.list);
+      if (item.autocomplete.mode == "exhaustive") {
+        wrapper.append(`<input type="hidden" id="${item.infosys_id}">`);
+        input_id = item.infosys_id + "-display";
+        no_submit = 'no-submit="true"';
+      }
+    }
+
+    wrapper.append(`
+        <label for="${input_id}">${item.processed}</label>
+        <input type="text" id="${input_id}" ${no_submit}>
+    `);
+
+    return wrapper;
   }
 
   static render_telephone(item) {
-    item.text != "" && (item.text += ":");
+    item.processed != "" && (item.processed += ":");
     return `
       <div class="input-wrapper input-type-tele">
-        <label for="${item.id}">${item.text}</label>
-        <input type="tel" id="${item.id}">
+        <label for="${item.infosys_id}">${item.processed}</label>
+        <input type="tel" id="${item.infosys_id}">
       </div>
     `;
   }
 
   static render_date(item) {
-    item.text != "" && (item.text += ":");
+    item.processed != "" && (item.processed += ":");
     return `
       <div class="input-wrapper input-type-date">
-        <label for="${item.id}">${item.text}</label>
-        <input type="date" id="${item.id}">
+        <label for="${item.infosys_id}">${item.processed}</label>
+        <input type="date" id="${item.infosys_id}">
       </div>
     `;
   }
 
   static render_email(item) {
-    item.text != "" && (item.text += ":");
+    item.processed != "" && (item.processed += ":");
     return `
       <div class="input-wrapper input-type-email">
-        <label for="${item.id}">${item.text}</label>
-        <input type="email" id="${item.id}">
+        <label for="${item.infosys_id}">${item.processed}</label>
+        <input type="email" id="${item.infosys_id}">
       </div>
     `;
   }
 
-  static render_radio(item) {
+  static render_radio(item, lang) {
     let div = jQuery('<div class="input-wrapper input-type-radio"></div>');
-    div.append(`<p>${item.text}</p>`);
-    let hidden = jQuery(`<input type="hidden" id="${item.id}">`);
+    div.append(`<p>${item.processed}</p>`);
+    let hidden = jQuery(`<input type="hidden" id="${item.infosys_id}">`);
 
     item.options.forEach(function(element, index)  {
-      div.append(this.render_radio_option(item.id, index, element, item.lang));
+      div.append(this.render_radio_option(item.infosys_id, index, element, lang));
       if (element.default) hidden.val(element.value);
     }, this);
     div.append(hidden);
@@ -150,18 +158,18 @@ class InfosysSignupRender {
   }
 
   static render_text_area(item) {
-    item.text != "" && (item.text += ":");
+    item.processed != "" && (item.processed += ":");
     return `
       <div class="input-wrapper input-type-textarea">
-        <label for="${item.id}">${item.text}</label>
-        <textarea id="${item.id}" rows="6"></textarea>
+        <label for="${item.infosys_id}">${item.processed}</label>
+        <textarea id="${item.infosys_id}" rows="6"></textarea>
       </div>
     `;
   }
 
   static render_list(item) {
     let html = '<ul>';
-    let lines = item.text.split("<br>");
+    let lines = item.processed.split("<br>");
     lines.forEach(function(line) {
       line != '' && (html += '<li>' + line + '</li>');
     })
@@ -171,7 +179,7 @@ class InfosysSignupRender {
 
   static render_hidden(item) {
     let wrapper = jQuery('<div class="input-wrapper input-type-hidden"></div>');
-    let input = jQuery(`<input type="hidden" id="${item.id}" text="${item.text}" value="on">`);
+    let input = jQuery(`<input type="hidden" id="${item.infosys_id}" text="${item.processed}" value="on">`);
     wrapper.append(input);
     return wrapper;
   }

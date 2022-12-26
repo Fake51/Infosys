@@ -590,7 +590,7 @@ class SignupAdminControls {
         let index = item_id;
         while ((current = current.next()).length > 0) {
           index++;
-          new_item.attr('id', 'page:'+page_id+'--section:'+section_id+'--item:'+index);
+          current.attr('id', 'page:'+page_id+'--section:'+section_id+'--item:'+index);
         }
         SignupAdminControls.init_element(new_item);
     });
