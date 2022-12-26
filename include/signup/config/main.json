@@ -1,0 +1,41 @@
+{
+  "age_young": 18,
+  "age_kid": 13,
+  "birth": "birthdate",
+  "participant": "participant",
+  "organizer": "organizercategory",
+  "errors": {
+    "required": {
+      "en": "This input may not be empty",
+      "da": "Feltet må ikke være tomt"
+    },
+    "disabled": {
+      "en": "Has been disabled",
+      "da": "Skal ikke bruges"
+    },
+    "excludes": {
+      "en": "May not be selected at the same time",
+      "da": "Må ikke vælges samtidig"
+    },
+    "no_match": {
+      "en": "No matching categories",
+      "da": "Ingen kategorier der passer"
+    }
+  },
+  "input_error": {
+    "en": "There some issues with the input on the current page.\nDo you want to stay and fix them?",
+    "da": "Der er nogle problemer med indtastningen på den nuværende side.\nVil du blive på siden og rette dem?"
+  },
+  "sub_total": {
+    "en": "Sub total",
+    "da": "Sub total"
+  },
+  "pieces": {
+    "en": "pcs.",
+    "da": "stk."
+  },
+  "dkk": {
+    "en": "DKK",
+    "da": "kr."
+  }
+}

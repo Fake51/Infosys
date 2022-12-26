@@ -6,53 +6,21 @@ class SignupApiModel extends Model {
    * Get general configuration related to signup
    */
   public function getConfig($module) {
-    $config = (object)[
-      'age_young'   => 18,
-      'age_kid'     => 13,
-      'con_start'   => $this->config->get('con.start'),
-      'birth'       => 'birthdate',
-      'participant' => 'participant',
-      'organizer'   => 'organizercategory',
-      'errors' => [
-        'required' => [
-          'en' => 'This input may not be empty',
-          'da' => 'Feltet må ikke være tomt',
-        ],
-        'disabled' => [
-          'en' => 'Has been disabled',
-          'da' => 'Skal ikke bruges',
-        ],
-        'excludes' => [
-          'en' => 'May not be selected at the same time',
-          'da' => 'Må ikke vælges samtidig',
-        ]
-      ],
-      'input_error' => [
-        'en' => "There some issues with the input on the current page.\nDo you want to stay and fix them?",
-        'da' => "Der er nogle problemer med indtastningen på den nuværende side.\nVil du blive på siden og rette dem?",
-      ],
-      'sub_total' => [
-        'en' => 'Sub total',
-        'da' => 'Sub total',
-      ],
-      'pieces' => [
-        'en' => 'pcs.',
-        'da' => 'stk.'
-      ],
-      'dkk' => [
-        'en' => 'DKK',
-        'da' => 'kr.'
-      ]
-    ];
+    $config_file = SIGNUP_FOLDER."config/$module.json";
+    if(!is_file($config_file)) die("Config data not found");
+    $content = file_get_contents($config_file);
 
     if ($module == 'main') {
+      $config = json_decode($content);
+      $config->con_start = $this->config->get('con.start');
+      $config->autocomplete = [
+        'organizer_categories' => $this->loadOrganizerCategories(),
+      ];
+
       return json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 
-    $config_file = SIGNUP_FOLDER."config/$module.json";
-    if(!is_file($config_file)) die("Config data not found");
-
-    return file_get_contents($config_file);
+    return $content;
   }
 
   public function getAllPages() {
