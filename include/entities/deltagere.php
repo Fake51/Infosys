@@ -155,6 +155,14 @@ class Deltagere extends DBObject implements AgeFulfilment
             }
             return $this->note_obj;
 
+        } elseif($var == 'arbejdsomraade') {
+            if (!isset($this->work_area_text)) {
+                if ($this->storage['work_area'] == NULL) return "";
+                $result = $this->db->query('SELECT name_da FROM organizer_categories WHERE id = ?', [$this->storage['work_area']]);
+                $this->work_area_text = count($result) > 0 ? $result[0]['name_da'] : "";
+            }
+            return $this->work_area_text;
+
         } elseif (array_key_exists($var, $this->storage)) {
             return parent::__get($var);
 
@@ -267,25 +275,15 @@ class Deltagere extends DBObject implements AgeFulfilment
 //{{{ get info functions
 
     /**
-     * returns an array detailing which languages the user signed up for
+     * returns an array detailing which values are in the set
      *
      * @access public
      * @return array
      */
-    public function getSprog()
-    {
-        if (!$this->isLoaded() || !is_string($this->sprog))
-        {
-            return array();
-        }
-        $string = str_replace("'","", $this->sprog);
-        return explode(',', $string);
-    }
+    public function getCollection(string $column){
+        if (!$this->isLoaded() || !is_string($this->$column)) return [];
 
-    public function getSleepingAreas() {
-        if (!$this->isLoaded() || !is_string($this->sleeping_area)) return [];
-
-        $string = str_replace("'","", $this->sleeping_area);
+        $string = str_replace("'","", $this->$column);
         return explode(',', $string);
     }
 
@@ -448,38 +446,19 @@ class Deltagere extends DBObject implements AgeFulfilment
 // {{{ set info methods
 
     /**
-     * sets the sprog field, but doesn't update the deltager object
+     * sets the value of a field with type set
      *
-     * @param array $sprog_array - array of strings, each one a valid language
+     * @param array $values - array of values to be set, each must be a valid option
      * @access public
      * @return bool
      */
-    public function setSprog($sprog_array)
-    {
-        if (!is_array($sprog_array))
-        {
-            return false;
+    public function setCollection(string $column, array $values) {
+        $accepted = $this->getAvailableValues($column);
+        foreach ($values as &$value) {
+            $value = strtolower($value);
+            if (!in_array($value, $accepted)) return false;
         }
-        $accepted_langs = $this->getAvailableSprog();
-        foreach ($sprog_array as &$sprog)
-        {
-            $sprog = strtolower($sprog);
-            if (!in_array($sprog, $accepted_langs))
-            {
-                return false;
-            }
-        }
-        $this->sprog = implode(',', $sprog_array);
-        return true;
-    }
-
-    public function setSleepArea(array $sleeping_areas) {
-        $accepted_areas = $this->getAvailableSleepAreas();
-        foreach ($sleeping_areas as &$area) {
-            $area = strtolower($area);
-            if (!in_array($area, $accepted_areas)) return false;
-        }
-        $this->sleeping_area = implode(',', $sleeping_areas);
+        $this->$column = implode(',', $values);
         return true;
     }
 
@@ -918,34 +897,22 @@ class Deltagere extends DBObject implements AgeFulfilment
     }
 
     /**
-     * returns an array of languages that people can select from
-     * these are also the strings that will be accepted in the array for setSprog
+     * returns an array of values that people can select from
+     * these are also the strings that will be accepted in the array for setCollection
      *
      * @access public
      * @return array
      */
-    public function getAvailableSprog()
+    public function getAvailableValues($column)
     {
         $cinfo = $this->getColumnInfo();
-        $lang = $cinfo['sprog'];
-        $accepted_langs = array();
-        if (preg_match('/^set\((.*)\)$/i', $lang, $matches))
-        {
+        $values = $cinfo[$column];
+        $accepted = [];
+        if (preg_match('/^set\((.*)\)$/i', $values, $matches)) {
             $matches[1] = str_replace("'", "", $matches[1]);
-            $accepted_langs = explode(',',$matches[1]);
+            $accepted = explode(',',$matches[1]);
         }
-        return $accepted_langs;
-    }
-
-    public function getAvailableSleepAreas() {
-        $cinfo = $this->getColumnInfo();
-        $areas = $cinfo['sleeping_area'];
-        $accepted_areas = [];
-        if (preg_match('/^set\((.*)\)$/i', $areas, $matches)) {
-            $matches[1] = str_replace("'", "", $matches[1]);
-            $accepted_areas = explode(',',$matches[1]);
-        }
-        return $accepted_areas;
+        return $accepted;
     }
 
     /**

@@ -794,10 +794,10 @@ class SignupApiModel extends Model {
     }
 
     // Languages
-    $participant->setSprog($sprog);
+    $participant->setCollection('sprog', $sprog);
 
     // Sleeping area
-    $participant->setSleepArea($sleeping_areas);
+    $participant->setCollection('sleeping_area', $sleeping_areas);
 
     // Notes
     if ($junior_note) $participant->setNote('junior_ward', $junior_note);
@@ -871,13 +871,16 @@ class SignupApiModel extends Model {
               // Notice no break here
             default:
               if (!isset($column_info[$key])) {
-                // Value is the same as a different field
+                
+                // Value is the same as a different field (like email confirm)
                 if($equals = $lookup[$key]['item']->equals) {
                   $value = $participant->$equals;
                   break;
                 }
+                
                 // Value isn't submitted
-                if($lookup[$key]['item']->no_submit) break;
+                if($lookup[$key]['item']->no_submit) continue 2;
+                
                 $errors[] = [
                   'type' => 'no_field',
                   'info' => "participant $key",
@@ -1016,12 +1019,12 @@ class SignupApiModel extends Model {
     }
 
     // Activity languages
-    foreach($participant->getSprog() as $sprog) {
+    foreach($participant->getCollection('sprog') as $sprog) {
       $signup['activity_language:'.$sprog] = 'on';
     }
 
     // Activity languages
-    foreach($participant->getSleepingAreas() as $area) {
+    foreach($participant->getCollection('sleeping_area') as $area) {
       $signup['sleeping_area:'.$area] = 'on';
     }
 

@@ -44,8 +44,8 @@
                 <tr>
                     <td><b>Foretrukket sprog:</b> <?php echo $this->genSelect('deltager[main_lang]',array('da','en'), $this->deltager->main_lang);?></td>
                     <td colspan='2'><b>Sprog (aktiviteter):</b>
-                        <?php foreach ($this->deltager->getAvailableSprog() as $sprog) :?>
-                            <label for='lang_<?php echo $sprog;?>'><?php echo substr($sprog, 0, 3);?>.</label><input class='langbox' type='checkbox' name='deltager[lang][<?php echo $sprog;?>]' value='<?php echo $sprog;?>' id='lang_<?php echo $sprog;?>' <?php echo (in_array($sprog, $this->deltager->getSprog()) ? "checked='checked'" : '');?>/>
+                        <?php foreach ($this->deltager->getAvailableValues('sprog') as $sprog) :?>
+                            <label for='lang_<?php echo $sprog;?>'><?php echo substr($sprog, 0, 3);?>.</label><input class='langbox' type='checkbox' name='deltager[lang][<?php echo $sprog;?>]' value='<?php echo $sprog;?>' id='lang_<?php echo $sprog;?>' <?php echo (in_array($sprog, $this->deltager->getCollection('sprog')) ? "checked='checked'" : '');?>/>
                         <?php endforeach;?>
                     </td>
                 </tr>

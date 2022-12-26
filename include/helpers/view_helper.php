@@ -135,7 +135,7 @@ HTML;
                         <td>
                             <b>Sprog (aktiviteter):</b>
 HTML;
-            foreach ($model->getAvailableSprog() as $sprog) {
+            foreach ($model->getAvailableValues('sprog') as $sprog) {
                 $output .= "
                                 <label>
                                     <input class='langbox' type='checkbox' name='deltager_search[lang][".e($sprog)."]' value='".e($sprog)."'/>

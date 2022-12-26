@@ -594,7 +594,7 @@ class ParticipantModel extends Model
         }
 
         if (isset($post['lang']) && is_array($post['lang'])) {
-            $deltager->setSprog($post['lang']);
+            $deltager->setCollection('sprog', $post['lang']);
         }
 
         if (isset($post['adresse'])) {
@@ -627,14 +627,14 @@ class ParticipantModel extends Model
     }
 
     /**
-     * wrapper function for Deltagere::getAvailableSprog()
+     * wrapper function for Deltagere::getAvailableValues()
      *
      * @access public
      * @return array
      */
-    public function getAvailableSprog()
+    public function getAvailableValues($column)
     {
-        return $this->createEntity('Deltagere')->getAvailableSprog();
+        return $this->createEntity('Deltagere')->getAvailableValues($column);
     }
 
     /**
@@ -709,7 +709,7 @@ class ParticipantModel extends Model
         }
 
         if (isset($post->lang) && is_array($post->lang)) {
-            $deltager->setSprog($post->lang);
+            $deltager->setCollection('sprog', $post->lang);
         }
 
         if (isset($post->sovesal)) {

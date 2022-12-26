@@ -74,11 +74,11 @@ $this->registerLateLoadJS('participant.js');
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <td class='label'>Sprog (aktiviteter): </td><td colspan='2' id='sprog'><?= implode(', ', $this->deltager->getSprog());?></td>
+                    <td class='label'>Sprog (aktiviteter): </td><td colspan='2' id='sprog'><?= implode(', ', $this->deltager->getCollection('sprog'));?></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td class='label'>Soveområde: </td><td colspan='2' id='sleeping_area'><?= implode(', ', $this->deltager->getSleepingAreas());?></td>
+                    <td class='label'>Soveområde: </td><td colspan='2' id='sleeping_area'><?= implode(', ', $this->deltager->getCollection('sleeping_area'));?></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>

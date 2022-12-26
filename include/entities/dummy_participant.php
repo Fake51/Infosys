@@ -367,25 +367,12 @@ class DummyParticipant extends DBObject
         $this->notes[$name] = $content;
     }
 
-    public function setSprog($sprog_array)
+    public function setCollection(string $column, array $values)
     {
-        if (!is_array($sprog_array)) {
-            return false;
+        foreach ($values as &$value) {
+            $value = strtolower($value);
         }
-        foreach ($sprog_array as &$sprog) {
-            $sprog = strtolower($sprog);
-        }
-        $this->sprog = implode(',', $sprog_array);
+        $this->$column = implode(',', $values);
         return true;
     }
-
-    public function setSleepArea(array $sleep_areas)
-    {
-        foreach ($sleep_areas as &$area) {
-            $area = strtolower($area);
-        }
-        $this->sleeping_area = implode(',', $sleep_areas);
-        return true;
-    }
-
 }
