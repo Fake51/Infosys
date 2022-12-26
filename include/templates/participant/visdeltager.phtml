@@ -38,30 +38,32 @@ $this->registerLateLoadJS('participant.js');
                     <td class='label'>Fødselsdato: </td><td id='birthdate' class='editable text'><?= e(date('d-m-Y', strtotime($this->deltager->birthdate)));?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Navn: </td><td colspan='2' id='name' class='editable text'><?= e($this->deltager->fornavn);?> <?= e($this->deltager->efternavn);?></td>
-                    <td class='label'>Kaldenavn: </td><td colspan='2' id='nickname' class='editable text'><?= e($this->deltager->nickname);?></td>
-                </tr>
-                <tr>
                     <td class='label'>Kategori: </td><td colspan='2' class='editable usertype' id='brugerkategori_id'><?= $this->deltager_info['brugerkategori']->navn;?></td>
                     <td class='label'>Forudbetalt: </td><td id='betalt_beloeb' class='editable text'><?= e($this->deltager->betalt_beloeb);?></td>
                 </tr>
                 <tr>
+                    <td class='label'>Navn: </td><td colspan='2' id='name' class='editable text'><?= e($this->deltager->fornavn);?> <?= e($this->deltager->efternavn);?></td>
                     <td class='label'>Adresse: </td><td colspan='2' id='address' class='editable text'><?= e($this->deltager->adresse1);?> <?= e($this->deltager->adresse2);?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Postnr: </td><td colspan='2' id='postnummer' class='editable text'><?= e($this->deltager->postnummer);?></td>
+                    <td class='label'>By: </td><td colspan='2' id='by' class='editable text'><?= e($this->deltager->by);?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Mobil: </td><td colspan='2' id='mobiltlf' class='editable text'><?= e($this->deltager->mobiltlf);?></td>
+                    <td class='label'>Tilmeldt SMS: </td><td colspan='2' id='medbringer_mobil' class='editable yesno'><?= $this->deltager->medbringer_mobil;?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Land: </td><td colspan='2' id='land' class='editable text'><?= e($this->deltager->land);?></td>
                     <td class='label'>E-mail: </td><td colspan='2' id='email' class='editable text'><?= e($this->deltager->email);?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Postnr: </td><td id='postnummer' class='editable text'><?= e($this->deltager->postnummer);?></td>
-                    <td class='label'>By: </td><td id='by' class='editable text'><?= e($this->deltager->by);?></td>
-                    <td class='label'>Land: </td><td id='land' class='editable text'><?= e($this->deltager->land);?></td>
+                    <td class='label'>Kaldenavn: </td><td colspan='2' id='nickname' class='editable text'><?= e($this->deltager->nickname);?></td>
+                    <td class='label'>Pronomen: </td><td colspan='2' id='pronoun' class='editable pronoun'><?= $this->deltager->pronoun;?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Mobil: </td><td id='mobiltlf' class='editable text'><?= e($this->deltager->mobiltlf);?></td>
-                    <td class='label'>Tilmeldt SMS: </td><td id='medbringer_mobil' class='editable yesno'><?= $this->deltager->medbringer_mobil;?></td>
-                    <td class='label'>NødTlf: </td><td id='tlf' class='editable text'><?= e($this->deltager->tlf);?></td>
-                </tr>
-                <tr>
-                    <td class='label'>Foretrukket sprog: </td><td id='main_lang' class='editable lang'><?= $this->deltager->main_lang;?></td>
-                    <td class='label'>International: </td><td id='international' class='editable yesno'><?= $this->deltager->international;?></td>
+                    <td class='label'>Foretrukket sprog: </td><td colspan='2' id='main_lang' class='editable lang'><?= $this->deltager->main_lang;?></td>
+                    <td class='label'>International: </td><td colspan='2' id='international' class='editable yesno'><?= $this->deltager->international;?></td>
                 </tr>
                 <?php if (!($this->payment_edit || $this->is_read_only)) :?>
                 <tr>

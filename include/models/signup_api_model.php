@@ -853,6 +853,10 @@ class SignupApiModel extends Model {
               $value = substr($participant->birthdate, 0, 10);
               break;
 
+            case 'arbejdsomraade':
+              $value = $participant->arbejdsomraade; // Using the __get metod instead of checking DB table
+              break;
+
             case 'ready_mandag':
             case 'ready_tirsdag':
               $signup['together:prepare'] = 'on';

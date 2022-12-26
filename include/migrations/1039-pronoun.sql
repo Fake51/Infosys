@@ -1,0 +1,1 @@
+ALTER TABLE deltagere ADD pronoun enum('they','her', 'he');

@@ -190,6 +190,38 @@
                         "da": "Kaldenavn"
                     },
                     "infosys_id": "nickname"
+                },
+                {
+                    "type": "radio",
+                    "text": {
+                        "en": "Which pronoun do you want on your name tag",
+                        "da": "Hvilket pronomen skal der st\u00e5 p\u00e5 dit navneskilt"
+                    },
+                    "infosys_id": "pronoun",
+                    "options": [
+                        {
+                            "value": "they",
+                            "text": {
+                                "en": "de\/dem (they\/them)",
+                                "da": "de\/dem"
+                            },
+                            "default": true
+                        },
+                        {
+                            "value": "her",
+                            "text": {
+                                "en": "hun\/hende (she\/her)",
+                                "da": "hun\/hende"
+                            }
+                        },
+                        {
+                            "value": "he",
+                            "text": {
+                                "en": "han\/ham (he\/him)",
+                                "da": "han\/ham"
+                            }
+                        }
+                    ]
                 }
             ]
         },
