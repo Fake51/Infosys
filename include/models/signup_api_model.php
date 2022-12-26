@@ -311,7 +311,7 @@ class SignupApiModel extends Model {
     $total = 0;
     $junior_note = "";
     $sprog = [];
-    $sleeping_areas = [];
+    $sleeping_areas = $author = [];
     $config = [
       'main' => json_decode($this->getConfig('main')),
       'activities' => json_decode($this->getConfig('activities')),
@@ -373,19 +373,22 @@ class SignupApiModel extends Model {
           switch($key) {
             case 'participant':
               $bk  = $this->createEntity('BrugerKategorier');
-              if ($value != 'Organizer') {
-                $participant->brugerkategori_id = $bk->findByname($value)->id;
-              } else {
-                $is_organizer = true;
-                if(!isset($participant->brugerkategori_id)) {
-                  $participant->brugerkategori_id = $bk->getArrangoer()->id;
-                }
-              }
+              $participant->brugerkategori_id = $bk->findByname($value)->id;
+              $is_organizer = $value == 'Arrangør';
               break;
 
-            case 'organizercategory':
-              $is_organizer = true;
-              $participant->brugerkategori_id = $value;
+            case 'author':
+              if ($value == 'off') continue 2;
+              $author[] = 'role';
+              break;
+ 
+            case 'designer':
+              if ($value == 'off') continue 2;
+              $author[] = 'board';
+              break;
+
+            case 'organizer':
+              if ($value == 'off') continue 2;
               break;
 
             case 'wear_orders':
@@ -394,7 +397,7 @@ class SignupApiModel extends Model {
               if(!$user_category) {
                 $errors[$category][] = [
                   'type' => 'no_user_category',
-                  'info' => "$key_cat $key_item",
+                  'info' => "$key $value",
                 ];
                 continue 2;
               }
@@ -767,6 +770,19 @@ class SignupApiModel extends Model {
     // Sleeping area
     $participant->setCollection('sleeping_area', $sleeping_areas);
 
+    // Author of rpg or designer of board game
+    $participant->forfatter = count($author) > 0 ? 'ja' : 'nej';
+    if (count($author)) $participant->scenarie = "";
+    $participant->setCollection('author', $author);
+
+    // Check for actual organizer selection
+    if ($is_organizer && $participant->forfatter == 'nej' && !$participant->work_area) {
+      $errors['organizer'][] = [
+        'type' => 'no_organizer_selection',
+        'id' => 'participant',
+      ];
+    }
+
     // Notes
     if ($junior_note) $participant->setNote('junior_ward', $junior_note);
 
@@ -815,20 +831,24 @@ class SignupApiModel extends Model {
               $bid = $participant->brugerkategori_id;
               $bk  = $this->createEntity('BrugerKategorier')->findById($bid);
               if ($bk->isArrangoer()) {
-                $value = 'Organizer';
+                $value = 'Arrangør';
               } else {
                 $value = $bk->navn;
               }
               break;
 
-            case 'organizercategory':
-              $bid = $participant->brugerkategori_id;
-              $bk  = $this->createEntity('BrugerKategorier')->findById($bid);
-              if ($bk->isArrangoer()) {
-                $value = $participant->brugerkategori_id;
-              }
+            case 'organizer':
+              $value = $participant->arbejdsomraade ? 'on' : '';
               break;
-            
+
+            case 'author':
+              $value = in_array('role', $participant->getCollection('author'));
+              break;
+
+            case 'designer':
+              $value = in_array('board', $participant->getCollection('author'));
+              break;
+              
             case 'birthdate':
               $value = substr($participant->birthdate, 0, 10);
               break;
@@ -1042,5 +1062,20 @@ class SignupApiModel extends Model {
       'signup' => $signup,
       'errors' => $errors,
     ];
+  }
+
+  private function loadOrganizerCategories() {
+    $query = "SELECT id, name_da, name_en FROM organizer_categories";
+    $result = $this->db->query($query);
+    $categories = [];
+    foreach($result as $row) {
+      $categories[$row['id']] = [
+        'en' => $row['name_en'],
+        'da' => $row['name_da'],
+        'id' => $row['id'],
+      ];
+    }
+  
+    return $categories;
   }
 }

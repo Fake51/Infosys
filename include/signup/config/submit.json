@@ -44,6 +44,10 @@
       "en": "Preferred language",
       "da": "Foretrukket sprog"
     },
+    "participant": {
+      "en": "You've selected your role as organizer, author or designer",
+      "da": "Du har valgt at du er arrangør, forfatter eller designer"
+    },
     "scenarie": {
       "en": "The title of your scenario/game",
       "da": "Titlen på dit scenarie/spil"

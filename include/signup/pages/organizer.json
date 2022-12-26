@@ -1,7 +1,7 @@
 {
     "order": 4,
     "slug": {
-        "en": "Organizer",
+        "en": "Arrang\u00f8r",
         "da": "Arrang\u00f8r"
     },
     "title": {
@@ -18,7 +18,7 @@
             "status": "normal",
             "input": "participant",
             "compare": "equals",
-            "value": "Organizer"
+            "value": "Arrang\u00f8r"
         }
     ],
     "sections": [
@@ -73,77 +73,35 @@
             },
             "items": [
                 {
-                    "type": "radio",
+                    "type": "paragraph",
                     "text": {
-                        "en": "What kind of work are you contributing to Fastaval with?\n",
-                        "da": "Hvilken slags arbejde udf\u00f8rer du for Fastaval\n"
+                        "en": "What kind of work are you contributing to Fastaval with?",
+                        "da": "Hvilken slags arbejde udf\u00f8rer du for Fastaval"
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I'm a scenario author",
+                        "da": "Jeg er scenarieforfatter"
                     },
-                    "infosys_id": "organizercategory",
-                    "options": [
-                        {
-                            "value": "4",
-                            "text": {
-                                "en": "I am a writer or board game designer\n",
-                                "da": "Jeg er forfatter eller br\u00e6tspilsdesigner\n"
-                            }
-                        },
-                        {
-                            "value": "3",
-                            "text": {
-                                "en": "I am an infonaut\n",
-                                "da": "Jeg er infonaut\n"
-                            }
-                        },
-                        {
-                            "value": "6",
-                            "text": {
-                                "en": "I am a dirtbuster\n",
-                                "da": "Jeg er dirtbuster\n"
-                            }
-                        },
-                        {
-                            "value": "9",
-                            "text": {
-                                "en": "I work in the kiosk\n",
-                                "da": "Jeg arbejder i kiosken\n"
-                            }
-                        },
-                        {
-                            "value": "11",
-                            "text": {
-                                "en": "I work at Otto's Coffee House\n",
-                                "da": "Jeg arbejder i kaffekroen\n"
-                            }
-                        },
-                        {
-                            "value": "13",
-                            "text": {
-                                "en": "I work at the bar\n",
-                                "da": "Jeg st\u00e5r i baren\n"
-                            }
-                        },
-                        {
-                            "value": "14",
-                            "text": {
-                                "en": "I work at the Oasis\n",
-                                "da": "Jeg arbejder i Oasen\n"
-                            }
-                        },
-                        {
-                            "value": "12",
-                            "text": {
-                                "en": "I am a Fastaval Junior organizer\n",
-                                "da": "Jeg er Fastaval Junior arrang\u00f8r"
-                            }
-                        },
-                        {
-                            "value": "2",
-                            "text": {
-                                "en": "Other (please specify below",
-                                "da": "Andet (uddyb nedenfor)"
-                            }
-                        }
-                    ]
+                    "infosys_id": "author"
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I'm a board game designer",
+                        "da": "Jeg er br\u00e6tspilsdesigner"
+                    },
+                    "infosys_id": "designer"
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I'm an organizer",
+                        "da": "Jeg er arrang\u00f8r"
+                    },
+                    "infosys_id": "organizer"
                 },
                 {
                     "type": "text_input",
@@ -151,11 +109,11 @@
                         "en": "What is your organizational area at Fastaval?",
                         "da": "Hvad er dit arrang\u00f8romr\u00e5de?\t\t\t"
                     },
-                    "infosys_id": "arbejdsomraade",
+                    "infosys_id": "work_area",
                     "required_if": {
-                        "field": "organizercategory",
-                        "logic": "equals",
-                        "value": "2"
+                        "field": "organizer",
+                        "logic": "checkbox",
+                        "value": true
                     },
                     "display_logic": [
                         {
@@ -163,13 +121,16 @@
                             "status": "hidden"
                         },
                         {
-                            "type": "field_compare",
+                            "type": "checkbox",
                             "status": "required",
-                            "input": "organizercategory",
-                            "compare": "equals",
-                            "value": "2"
+                            "input": "organizer"
                         }
-                    ]               
+                    ],
+                    "autocomplete": {
+                        "list": "organizer_categories",
+                        "mode": "exhaustive",
+                        "value": "id"
+                    }
                 },
                 {
                     "type": "text_input",
@@ -178,24 +139,34 @@
                         "da": "Hvad er titlen p\u00e5 dit scenarie\/spil"
                     },
                     "infosys_id": "scenarie",
-                    "required_if": {
-                        "field": "organizercategory",
-                        "logic": "equals",
-                        "value": "4"
-                    },
+                    "required_if": [
+                        {
+                            "field": "author",
+                            "logic": "checkbox",
+                            "value": true
+                        },
+                        {
+                            "field": "designer",
+                            "logic": "checkbox",
+                            "value": true
+                        }
+                    ],
                     "display_logic": [
                         {
                             "type": "default",
                             "status": "hidden"
                         },
                         {
-                            "type": "field_compare",
+                            "type": "checkbox",
                             "status": "required",
-                            "input": "organizercategory",
-                            "compare": "equals",
-                            "value": "4"
+                            "input": "author"
+                        },
+                        {
+                            "type": "checkbox",
+                            "status": "required",
+                            "input": "designer"
                         }
-                    ]               
+                    ]
                 }
             ]
         }

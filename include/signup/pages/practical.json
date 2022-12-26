@@ -234,17 +234,22 @@
                                     "compare": "less",
                                     "value": 6
                                 }
-                
                             ]
                         },
                         {
-                            "value": "Organizer",
+                            "value": "Arrang\u00f8r",
                             "text": {
                                 "en": "I am an organizer, writer or board game designer etc.",
                                 "da": "Jeg er arrang\u00f8r, forfatter eller br\u00e6tspilsdesigner m.m."
                             }
                         }
-                    ]
+                    ],
+                    "errors": {
+                        "no_organizer_selection": {
+                            "en": "You haven't chosen your work category",
+                            "da": "Du har ikke valgt nogen arbejdskategori"
+                        }
+                    }
                 }
             ]
         },
@@ -284,7 +289,7 @@
                     "required_if": {
                         "field": "participant",
                         "logic": "equals",
-                        "value": "Organizer"
+                        "value": "Arrangør"
                     }
                 }
             ]

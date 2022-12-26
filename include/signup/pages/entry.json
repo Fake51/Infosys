@@ -307,7 +307,7 @@
                             "status": "normal",
                             "input": "participant",
                             "compare": "equals",
-                            "value": "Organizer"
+                            "value": "Arrangør"
                         }
                     ]
                 },
