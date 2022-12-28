@@ -772,7 +772,7 @@ class SignupApiModel extends Model {
 
     // Author of rpg or designer of board game
     $participant->forfatter = count($author) > 0 ? 'ja' : 'nej';
-    if (count($author)) $participant->scenarie = "";
+    if (count($author)  == 0) $participant->scenarie = "";
     $participant->setCollection('author', $author);
 
     // Check for actual organizer selection
