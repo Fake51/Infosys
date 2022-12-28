@@ -319,8 +319,9 @@
                         }
                     },
                     "required_if": {
-                        "field": "participant",
-                        "logic": "equals",
+                        "type": "field_compare",
+                        "compare": "equals",
+                        "input": "participant",
                         "value": "Arrangør"
                     }
                 }

@@ -121,7 +121,20 @@
                     "infosys_id": "together:prepare",
                     "no_submit": true
                 }
-            ]
+            ],
+            "section_id": "hero",
+            "require_one_if": {
+                "type": "field_compare",
+                "input": "participant",
+                "compare": "not_equals",
+                "value": "Arrangør",
+                "required": [
+                    "together:hero",
+                    "together:gm",
+                    "together:rules",
+                    "together:prepare"
+                ]
+            }
         },
         {
             "headline": {

@@ -853,10 +853,6 @@ class SignupApiModel extends Model {
               $value = substr($participant->birthdate, 0, 10);
               break;
 
-            case 'arbejdsomraade':
-              $value = $participant->arbejdsomraade; // Using the __get metod instead of checking DB table
-              break;
-
             case 'ready_mandag':
             case 'ready_tirsdag':
               $signup['together:prepare'] = 'on';
@@ -952,12 +948,7 @@ class SignupApiModel extends Model {
 
     // Collect food order
     foreach($participant->getMadtider() as $food) {
-      if ($food->isDinner()) {
-        $day = date('N', strtotime($food->dato));
-        $signup['food:dinner'.$day] = $food->id;
-      } else {
-        $signup['food:'.$food->id] = $food->id;
-      }
+      $signup['food'][] = $food->id;
     }
 
     // Collect hero-task signup

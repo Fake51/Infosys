@@ -37,6 +37,13 @@ class InfosysSignupRender {
         item.errors.excludes = config.errors.excludes;
       }
     }
+    if (item.autocomplete && item.autocomplete.mode == "exhaustive") {
+      // Add error text when input value is not on the exhaustive list
+      if(!item.errors) item.errors = {};
+      if(!item.errors.not_on_list) {
+        item.errors.not_on_list = config.errors.not_on_list;
+      }
+    }
     if(item.no_submit) {
       parsed.find('input').attr('no-submit', true);
     }
@@ -82,7 +89,7 @@ class InfosysSignupRender {
     item.processed != "" && (item.processed += ":");
     let wrapper = jQuery('<div class="input-wrapper input-type-text"></div>');
     let input_id = item.infosys_id;
-    let no_submit = "";
+    let extra = "";
 
     if (item.autocomplete) {
       wrapper.addClass('autocomplete');
@@ -91,13 +98,13 @@ class InfosysSignupRender {
       if (item.autocomplete.mode == "exhaustive") {
         wrapper.append(`<input type="hidden" id="${item.infosys_id}">`);
         input_id = item.infosys_id + "-display";
-        no_submit = 'no-submit="true"';
+        extra = 'no-submit="true" no-load="true"';
       }
     }
 
     wrapper.append(`
         <label for="${input_id}">${item.processed}</label>
-        <input type="text" id="${input_id}" ${no_submit}>
+        <input type="text" id="${input_id}" ${extra}>
     `);
 
     return wrapper;

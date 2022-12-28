@@ -111,9 +111,8 @@
                     },
                     "infosys_id": "work_area",
                     "required_if": {
-                        "field": "organizer",
-                        "logic": "checkbox",
-                        "value": true
+                        "type": "checkbox",
+                        "input": "organizer"
                     },
                     "display_logic": [
                         {
@@ -141,14 +140,12 @@
                     "infosys_id": "scenarie",
                     "required_if": [
                         {
-                            "field": "author",
-                            "logic": "checkbox",
-                            "value": true
+                            "type": "checkbox",
+                            "input": "author"
                         },
                         {
-                            "field": "designer",
-                            "logic": "checkbox",
-                            "value": true
+                            "type": "checkbox",
+                            "input": "designer"
                         }
                     ],
                     "display_logic": [
@@ -168,6 +165,12 @@
                         }
                     ]
                 }
+            ],
+            "section_id": "work",
+            "require_one": [
+                "author",
+                "designer",
+                "organizer"
             ]
         }
     ]
