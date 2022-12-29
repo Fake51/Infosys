@@ -579,6 +579,7 @@ class SignupApiModel extends Model {
                   break;
                 
                 case 'ticket_fee':
+                  if ($age < $config['main']->age_kid) continue 3; // No fee for kids
                   $select->setWhere('type', '=', 'Billetgebyr');
                   break;
 
