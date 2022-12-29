@@ -25,6 +25,53 @@
       }
     }
   },
+  "categories": {
+    "all": {
+      "da": "Alle Aktiviteter",
+      "en": "All Activities"
+    },
+    "rolle": {
+      "da": "Rollespil",
+      "en": "Roleplaying",
+      "color": "lightgreen",
+      "include": ["live"]
+    },
+    "live": {
+      "da": "Live Rollespil",
+      "en": "Live Roleplaying",
+      "color": "mediumpurple",
+      "nobutton": true
+    },
+    "braet": {
+      "da": "Brætspil",
+      "en": "Board games",
+      "color": "lightblue"
+    },
+    "magic": {
+      "da": "Magic",
+      "en": "Magic",
+      "color": "darkgreen"
+    },
+    "junior": {
+      "da": "Junior",
+      "en": "Junior",
+      "color": "lightgreen"
+    },
+    "default": {
+      "da": "Øvrige aktiviteter",
+      "en": "Other activities",
+      "color": "yellow"
+    }
+  },
+  "table_headline": {
+    "da": "Aktiviteter",
+    "en": "Activities"
+  },
+  "day_cutoff": 4,
+  "link_text": {
+    "en": "Read more on the website",
+    "da": "Læs mere på hjemmesiden"
+  },
   "errors": {
     "no_days": {
       "en": "You have not selected any day to attend Fastaval",

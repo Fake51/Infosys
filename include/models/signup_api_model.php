@@ -94,56 +94,6 @@ class SignupApiModel extends Model {
     // TODO Signup Maximum
     $result = (object)[];
 
-    // TODO make this a setting
-    $result->categories = [
-      'all' => [
-        'da' => 'Alle Aktiviteter',
-        'en' => 'All Activities',
-      ],
-      'rolle' => [
-        'da' => 'Rollespil',
-        'en' => 'Roleplaying',
-        'color' => 'lightgreen',
-        'include' => ['live'],
-      ],
-      'live' => [
-        'da' => 'Live Rollespil',
-        'en' => 'Live Roleplaying',
-        'color' => 'mediumpurple',
-        'nobutton' => true,
-      ],
-      'braet' => [
-        'da' => 'Brætspil',
-        'en' => 'Board games',
-        'color' => 'lightblue',
-      ],
-      'magic' => [
-        'da' => 'Magic',
-        'en' => 'Magic',
-        'color' => 'darkgreen',
-      ],
-      'junior' => [
-        'da' => 'Junior',
-        'en' => 'Junior',
-        'color' => 'lightgreen',
-      ],
-      'default' => [
-        'da' => 'Øvrige aktiviteter',
-        'en' => 'Other activities',
-        'color' => 'yellow'
-      ],
-    ];
-    $result->table_headline = [
-      'da' => 'Aktiviteter',
-      'en' => 'Activities',
-    ];
-    $result->day_cutoff = 4;
-    $result->link_text = [
-      'en' => "Read more on the website",
-      'da' => "Læs mere på hjemmesiden",
-    ];
-
-
     $activitities = $this->createEntity('Aktiviteter')->findAll();
     foreach ($activitities as $activity) {
       if ($activity->hidden == 'ja' || $activity->kan_tilmeldes == 'nej' || $activity->type == 'system') continue;
