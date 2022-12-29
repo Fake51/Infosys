@@ -96,8 +96,9 @@ class SignupApiModel extends Model {
 
     $activitities = $this->createEntity('Aktiviteter')->findAll();
     foreach ($activitities as $activity) {
-      if ($activity->hidden == 'ja' || $activity->kan_tilmeldes == 'nej' || $activity->type == 'system') continue;
+      if ($activity->hidden == 'ja' || $activity->type == 'system') continue;
       $activity_info = (object)[];
+      $activity_info->can_sign_up = $activity->kan_tilmeldes == 'ja';
       $activity_info->exclusive = $activity->tids_eksklusiv == 'ja';
       $activity_info->gm = $activity->spilledere_per_hold > 0;
       $activity_info->min_age = $activity->getMinAge();
