@@ -98,7 +98,7 @@ class InfosysSignupRender {
       if (item.autocomplete.mode == "exhaustive") {
         wrapper.append(`<input type="hidden" id="${item.infosys_id}">`);
         input_id = item.infosys_id + "-display";
-        extra = 'no-submit="true" no-load="true"';
+        extra = 'no-submit="true" no-load="true" autocomplete="off"';
       }
     }
 
