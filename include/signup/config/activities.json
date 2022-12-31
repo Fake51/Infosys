@@ -98,6 +98,14 @@
     "full_run": {
       "en": "This activity already have the maximum sign-ups",
       "da": "Denne aktivitet har allerede maximum antal tilmeldinger"
+    },
+    "age_max": {
+      "en": "You are too old to participate in this activity",
+      "da": "Du er for gammel til at deltage i denne aktivitet"
+    },
+    "age_min": {
+      "en": "You are too young to participate in this activity",
+      "da": "Du er for ung til at deltage i denne aktivitet"
     }
   }
 }

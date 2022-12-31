@@ -461,6 +461,12 @@ class SignupApiModel extends Model {
               }
 
               $participant->$key = $do_value;
+
+              // Save age for later
+              if ($key == 'birthdate') {
+                $age = $participant->getAge(new DateTime($config['main']->con_start));
+              }
+
               if ($value == "" || $value == 0 || $value == 'off') {
                 // No need to show empty fields on breakdown
                 continue 2;
@@ -510,7 +516,6 @@ class SignupApiModel extends Model {
               $entry = $this->createEntity('Indgang');
               $select = $entry->getSelect();
               if ($key_item == 'partout') {
-                $age = $participant->getAge(new DateTime($config['main']->con_start));
                 $select->setWhere('type', 'like', '%Indgang - Partout%');
                 if ($age < $config['main']->age_young) {
                   if ($age < $config['main']->age_kid) {
@@ -684,7 +689,7 @@ class SignupApiModel extends Model {
               break;
 
             case 'activity':
-              // TODO check for alder
+              // Check run id
               $run = $this->createEntity('Afviklinger')->findbyId($key_item);
               if (!$run) {
                 $errors[$category][] = [
@@ -693,6 +698,21 @@ class SignupApiModel extends Model {
                 ];
                 continue 2;
               }
+
+              // Check age
+              $activity = $run->getActivity();
+              if($age > $activity->getMaxAge() || $age < $activity->getMinAge()){
+                $errors[$category][] = [
+                  'type' => 'age_'.($age > $activity->getMaxAge() ? 'max' : 'min'),
+                  'age' => $age,
+                  'max_age' => $activity->getMaxAge(),
+                  'min_age' => $activity->getMinAge(),
+                  'activity' => $run->aktivitet_id,
+                  'module' => 'activities',
+                ];
+                continue 2;
+              }
+
               $value = intval($value);
               // Check if run is full
               if (isset($full_runs[$run->id]) && $value != $choice_count + 1) {
