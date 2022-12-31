@@ -72,6 +72,14 @@
     "en": "Read more on the website",
     "da": "Læs mere på hjemmesiden"
   },
+  "max_signup": {
+    "en": "Maximum # signups",
+    "da": "Max # tilmeldinger"
+  },
+  "full": {
+    "en": "Full",
+    "da": "Fyldt"
+  },
   "errors": {
     "no_days": {
       "en": "You have not selected any day to attend Fastaval",
@@ -86,6 +94,10 @@
         "da": "Du har valgt at du gerne vil være regelformidler, men du har ikke valgt nogen brætspil at være regelformidler for.",
         "en": "You have chosen to be a rules explainer, but you haven't chosen any board games to explain rules for."
       }
+    },
+    "full_run": {
+      "en": "This activity already have the maximum sign-ups",
+      "da": "Denne aktivitet har allerede maximum antal tilmeldinger"
     }
   }
 }

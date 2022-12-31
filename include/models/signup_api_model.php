@@ -91,9 +91,9 @@ class SignupApiModel extends Model {
    */
   public function getActivities() {
     // TODO Multiblock
-    // TODO Signup Maximum
     $result = (object)[];
 
+    // Collect activity info
     $activitities = $this->createEntity('Aktiviteter')->findAll();
     foreach ($activitities as $activity) {
       if ($activity->hidden == 'ja' || $activity->type == 'system') continue;
@@ -117,9 +117,20 @@ class SignupApiModel extends Model {
         'da' => $activity->navn,
         'en' => $activity->title_en
       ];
+      $activity_info->max_signups = $activity->max_signups;
 
       $result->activities[$activity->id] = $activity_info;
     }
+
+    // Collect signups
+    $query = "SELECT afvikling_id, count(deltager_id) AS signed_up FROM deltagere_tilmeldinger WHERE tilmeldingstype = 'spiller' GROUP BY afvikling_id";
+    $signups = $this->db->query($query);
+    $run_signups = [];
+    foreach($signups as $row) {
+      $run_signups[$row['afvikling_id']] = $row['signed_up'];
+    }
+
+    // Collect info on runs
     $runs = $this->createEntity('Afviklinger')->findAll();
     foreach ($runs as $run) {
       if (!isset($result->activities[$run->aktivitet_id])) continue;
@@ -138,6 +149,7 @@ class SignupApiModel extends Model {
         'min' => intval(date('i', strtotime($run->slut))),
         'stamp' => strtotime($run->slut),
       ];
+      $run_info->signups = $run_signups[$run->id] ?? 0;
       $day = $run_info->start['day'];
       if($run_info->start['hour'] < $result->day_cutoff) $day--; // Put runs that start late together with the day before
       $result->runs[$day][] = $run_info;
@@ -267,6 +279,7 @@ class SignupApiModel extends Model {
       'main' => json_decode($this->getConfig('main')),
       'activities' => json_decode($this->getConfig('activities')),
     ];
+    $choice_count = count($config['activities']->choices->prio->$lang);
 
     $participant->signed_up = date('Y-m-d H:i:s');
     // Reset orders
@@ -277,6 +290,19 @@ class SignupApiModel extends Model {
     $participant->removeDiySignup();
 
     $column_info = $this->createEntity('Deltagere')->getColumnInfo();
+
+    // Load full runs
+    $query = 
+      "SELECT afvikling_id, max_signups, count(deltager_id) AS signed_up
+      FROM deltagere_tilmeldinger AS dt
+      JOIN afviklinger AS af ON dt.afvikling_id = af.id
+      JOIN aktiviteter AS ak ON af.aktivitet_id = ak.id
+      WHERE tilmeldingstype = 'spiller' GROUP BY afvikling_id";
+    $run_signup_result = $this->db->query($query);
+    $full_runs = [];
+    foreach($run_signup_result as $row) {
+      if ($row['signed_up'] >= $row['max_signups']) $full_runs[$row['afvikling_id']] = true;
+    }
 
     foreach($data as $category => $items) {
       $entries = [];
@@ -659,7 +685,6 @@ class SignupApiModel extends Model {
 
             case 'activity':
               // TODO check for alder
-              // TODO check for max tilmeldinger 
               $run = $this->createEntity('Afviklinger')->findbyId($key_item);
               if (!$run) {
                 $errors[$category][] = [
@@ -669,7 +694,15 @@ class SignupApiModel extends Model {
                 continue 2;
               }
               $value = intval($value);
-              $choice_count = count($config['activities']->choices->prio->$lang);
+              // Check if run is full
+              if (isset($full_runs[$run->id]) && $value != $choice_count + 1) {
+                $errors[$category][] = [
+                  'type' => 'full_run',
+                  'activity' => $run->aktivitet_id,
+                  'module' => 'activities',
+                ];
+                continue 2;
+              }
               if ($value <= $choice_count) {
                 $participant->setAktivitetTilmelding($run, $value, 'spiller');
               } else {
