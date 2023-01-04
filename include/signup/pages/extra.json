@@ -37,20 +37,30 @@
                     }
                 },
                 {
-                    "type": "text_input",
+                    "type": "select",
                     "text": {
                         "en": "I wish to be one of Fastaval's known patrons and hereby donate an amount of money in addition to my ticket. I [b]would[\/b] like to be mentioned on Fastaval's website.\u00a0",
                         "da": "Jeg vil gerne v\u00e6re en af Fastavals offentlige st\u00f8tter og donerer hermed et ekstra bel\u00f8b oveni billetprisen. Som tak vil jeg [b]gerne[\/b] n\u00e6vnes p\u00e5 Fastavals hjemmeside."
                     },
-                    "infosys_id": "misc:extra_support"
+                    "infosys_id": "misc:extra_support",
+                    "range": {
+                        "step": 100,
+                        "start": 0,
+                        "end": 900
+                    }
                 },
                 {
-                    "type": "text_input",
+                    "type": "select",
                     "text": {
                         "en": "I wish to be one of Fastaval's secret patrons and hereby donate an amount of money in addition to my ticket. I will [b]not[\/b] be mentioned on Fastaval's website.\u00a0",
                         "da": "Jeg vil gerne v\u00e6re en af Fastavals hemmelige st\u00f8tter og donerer hermed et ekstra bel\u00f8b oveni billetprisen. Jeg vil [b]ikke[\/b] n\u00e6vnes p\u00e5 Fastavals hjemmeside."
                     },
-                    "infosys_id": "misc:secret_support"
+                    "infosys_id": "misc:secret_support",
+                    "range": {
+                        "step": 100,
+                        "start": 0,
+                        "end": 900
+                    }
                 }
             ]
         },
