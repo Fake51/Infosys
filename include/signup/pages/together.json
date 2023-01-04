@@ -158,12 +158,25 @@
                     }
                 },
                 {
-                    "type": "text_input",
+                    "type": "select",
                     "text": {
                         "en": "How many heroic deeds do you want to contribute with?",
                         "da": "Hvor mange helte-opgaver vil du udf\u00f8re p\u00e5 Fastaval?"
                     },
-                    "infosys_id": "desired_diy_shifts"
+                    "infosys_id": "desired_diy_shifts",
+                    "options": [
+                        {
+                            "text": {
+                                "en": "No limit",
+                                "da": "Ingen grænse"
+                            },
+                            "value": 0
+                        }
+                    ],
+                    "range": {
+                        "start": 1,
+                        "end": 10
+                    }
                 },
                 {
                     "type": "text_area",
@@ -208,12 +221,25 @@
                     "infosys_id": "supergm"
                 },
                 {
-                    "type": "text_input",
+                    "type": "select",
                     "text": {
                         "en": "Is there a maximum number of scenarios you want to facilitate?",
                         "da": "Er der et maksimalt antal scenarier du vil spillede?"
                     },
-                    "infosys_id": "gm_max"
+                    "infosys_id": "gm_max",
+                    "options": [
+                        {
+                            "text": {
+                                "en": "No limit",
+                                "da": "Ingen grænse"
+                            },
+                            "value": 0
+                        }
+                    ],
+                    "range": {
+                        "start": 1,
+                        "end": 10
+                    }
                 }
             ],
             "display_logic": [
