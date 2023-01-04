@@ -92,6 +92,7 @@ class SignupApiModel extends Model {
   public function getActivities() {
     // TODO Multiblock
     $result = (object)[];
+    $config = json_decode($this->getConfig('activities'));
 
     // Collect activity info
     $activitities = $this->createEntity('Aktiviteter')->findAll();
@@ -151,7 +152,7 @@ class SignupApiModel extends Model {
       ];
       $run_info->signups = $run_signups[$run->id] ?? 0;
       $day = $run_info->start['day'];
-      if($run_info->start['hour'] < $result->day_cutoff) $day--; // Put runs that start late together with the day before
+      if($run_info->start['hour'] < $config->day_cutoff) $day--; // Put runs that start late together with the day before
       $result->runs[$day][] = $run_info;
     }
     
@@ -626,6 +627,8 @@ class SignupApiModel extends Model {
 
                 case 'extra_support':
                   $amount = min(9, floor(intval($value) / 100));
+                  if ($amount == 0) continue 3;
+
                   $select->setWhere('type', '=', "Rig onkel - {$amount}00");
                   $participant->rig_onkel = 'ja';
                   $value = 'on';
@@ -633,6 +636,8 @@ class SignupApiModel extends Model {
   
                 case 'secret_support':
                   $amount = min(9, floor(intval($value) / 100));
+                  if ($amount == 0) continue 3;
+
                   $select->setWhere('type', '=', "Hemmelig onkel - {$amount}00");
                   $participant->hemmelig_onkel = 'ja';
                   $value = 'on';
@@ -905,6 +910,9 @@ class SignupApiModel extends Model {
     }
 
     // Collect entrance items
+    $signup['misc:extra_support'] = 0;
+    $signup['misc:secret_support'] = 0;
+
     foreach($participant->getIndgang() as $entrance) {
       switch(true) {
         case $entrance->isPartout():
