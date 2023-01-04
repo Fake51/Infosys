@@ -93,12 +93,7 @@ class SignupApiController extends Controller {
     $data['signup'] = $signup;
     [$result, $participant] = $this->model->confirmSignup($data);
     
-    $status = '400';
-    if (count($result['errors']) == 0) {
-      $status = '200';
-      $participant_controller = new ParticipantController($this->route, $this->config, $this->dic);
-      $participant_controller->sendEmailFromSignup($participant);
-    }
+    $status = count($result['errors']) == 0 ? '200' : '400';
 
     $this->jsonOutput([
       'result' => $result,
@@ -106,7 +101,17 @@ class SignupApiController extends Controller {
         'id' => $participant->id,
         'pass' => $participant->password,
       ],
-    ], $status);
+    ], $status, 'text/plain', true);
+
+    session_write_close();
+    fastcgi_finish_request(); // finish response to signup page before we send out email
+
+    if ($status == '200') {
+      $participant_controller = new ParticipantController($this->route, $this->config, $this->dic);
+      $participant_controller->sendEmailFromSignup($participant);
+    }
+
+    die();
   }
 
   public function loadSignup() {
