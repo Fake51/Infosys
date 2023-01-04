@@ -5,8 +5,8 @@
         "da": "Velkommen"
     },
     "title": {
-        "en": "Welcome to the Fastaval sign-up 2023",
-        "da": "Velkommen til Fastavals tilmelding 2023"
+        "en": "Welcome to the Fastaval sign-up",
+        "da": "Velkommen til Fastavals tilmelding"
     },
     "sections": [
         {
@@ -143,7 +143,7 @@
             "folding": {
                 "show": {
                     "en": "Read more...",
-                    "da": "Læs mere..."
+                    "da": "L\u00e6s mere..."
                 },
                 "hide": {
                     "en": "Show less",
