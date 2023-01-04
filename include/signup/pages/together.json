@@ -268,7 +268,17 @@
                     "status": "normal",
                     "input": "together:prepare"
                 }
-            ]
+            ],
+            "section_id": "prepare",
+            "require_one_if": {
+                "type": "checkbox",
+                "input": "together:prepare",
+                "required": [
+                    "ready_mandag",
+                    "ready_tirsdag"
+                ]
+            }
+
         }
     ]
 }

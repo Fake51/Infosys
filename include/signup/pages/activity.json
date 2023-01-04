@@ -53,13 +53,6 @@
             },
             "items": [
                 {
-                    "type": "paragraph",
-                    "text": {
-                        "en": "slet",
-                        "da": "slet"
-                    }
-                },
-                {
                     "type": "checkbox",
                     "text": {
                         "en": "Danish\n",
