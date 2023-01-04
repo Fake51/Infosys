@@ -105,7 +105,12 @@
                         "en": "When you sign up for Fastaval, or sign up your child, you agree to our samtykkerekl\u00e6ring about storage and management of personal data. Read our samtykkeerkl\u00e6ring here:",
                         "da": "N\u00e5r du tilmelder dig eller dit barn Fastaval, tilkendegiver du at v\u00e6re indforst\u00e5et med vores samtykkeerkl\u00e6ring om opbevaring og h\u00e5ndtering af personf\u00f8lgsomme oplysninger. L\u00e6s samtykkeerkl\u00e6ringen her:"
                     }
-                },
+                }
+            ]
+        },
+        {
+            "headline": null,
+            "items": [
                 {
                     "type": "paragraph",
                     "text": {
@@ -133,7 +138,22 @@
                         "en": "Because of economic law regulations, Alea will store your information up to five years (except information about health). After this, all information will be anonymized and hereafter only data for statistics will be stored; as a minimum, names, addresses and contact information will be deleted. Alea is responsible for managing your information correctly.",
                         "da": "Af regnskabsm\u00e6ssige \u00e5rsager opbevarer Alea dine informationer i op til fem \u00e5r (undtagen helbredsoplysninger). Herefter anonymiseres samtlige informationer og der gemmes derefter kun data som kan bruges til statistik; som minimum slettes navne, adresser og kontaktoplysninger. Alea er ansvarlige for, at dine oplysninger behandles korrekt."
                     }
+                }
+            ],
+            "folding": {
+                "show": {
+                    "en": "Read more...",
+                    "da": "Læs mere..."
                 },
+                "hide": {
+                    "en": "Show less",
+                    "da": "Vis mindre"
+                }
+            }
+        },
+        {
+            "headline": null,
+            "items": [
                 {
                     "type": "paragraph",
                     "text": {
