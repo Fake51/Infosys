@@ -67,6 +67,14 @@
     "note:sleeping": {
       "en": "Comments for sleeping arrangements",
       "da": "Bemærkninger til soveplads"
+    },
+    "misc:extra_support": {
+      "en": "Extra support",
+      "da": "Ekstra støtte"
+    },
+    "misc:secret_support": {
+      "en": "Secret support",
+      "da": "Hemmelig støtte"
     }
   }
 }
