@@ -206,6 +206,7 @@ class SignupApiModel extends Model {
 
   public function submitSignup($data) {
     $participant = $this->createEntity('DummyParticipant');
+    if (isset($data['info']['id'])) $participant->id = $data['info']['id'];
     return $this->applySignup($data['signup'], $participant, $data['lang']);
   }
 
@@ -292,16 +293,25 @@ class SignupApiModel extends Model {
     $column_info = $this->createEntity('Deltagere')->getColumnInfo();
 
     // Load full runs
+    $args = [];
+    $id_query = '';
+    if (isset($participant->id)) {
+      $id_query = "AND deltager_id <> ?";
+      $args[] = $participant->id;
+    }
+    
     $query = 
       "SELECT afvikling_id, max_signups, count(deltager_id) AS signed_up
       FROM deltagere_tilmeldinger AS dt
       JOIN afviklinger AS af ON dt.afvikling_id = af.id
       JOIN aktiviteter AS ak ON af.aktivitet_id = ak.id
-      WHERE tilmeldingstype = 'spiller' GROUP BY afvikling_id";
-    $run_signup_result = $this->db->query($query);
+      WHERE tilmeldingstype = 'spiller' $id_query GROUP BY afvikling_id";
+    $run_signup_result = $this->db->query($query, $args);
     $full_runs = [];
     foreach($run_signup_result as $row) {
-      if ($row['signed_up'] >= $row['max_signups']) $full_runs[$row['afvikling_id']] = true;
+      if ($row['max_signups'] != 0 && $row['signed_up'] >= $row['max_signups']) {
+        $full_runs[$row['afvikling_id']] = true;
+      } 
     }
 
     foreach($data as $category => $items) {
@@ -701,7 +711,10 @@ class SignupApiModel extends Model {
 
               // Check age
               $activity = $run->getActivity();
-              if($age > $activity->getMaxAge() || $age < $activity->getMinAge()){
+              if(
+                ($activity->getMaxAge() && $age > $activity->getMaxAge()) || 
+                ($activity->getMinAge() && $age < $activity->getMinAge())
+              ){
                 $errors[$category][] = [
                   'type' => 'age_'.($age > $activity->getMaxAge() ? 'max' : 'min'),
                   'age' => $age,
