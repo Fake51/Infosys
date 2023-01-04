@@ -164,6 +164,29 @@ class InfosysSignupRender {
     `;
   }
 
+  static render_select(item, lang) {
+    item.processed != "" && (item.processed += ":");
+    let wrapper = jQuery('<div class="input-wrapper input-type-select"></div>');
+
+    wrapper.append(`<label for="${item.infosys_id}">${item.processed}</label>`);
+    
+    let select = jQuery(`<select id="${item.infosys_id}"></select>`);
+    wrapper.append(select);
+
+    if (item.options && Array.isArray(item.options)) item.options.forEach( function (option) {
+      select.append(`<option value="${option.value}">${option.text[lang]}</option>`);
+    });
+
+    if (item.range) {
+      let step = item.range.step ?? 1;
+      for (let val = item.range.start; val <= item.range.end; val += step) {
+        select.append(`<option value="${val}">${val}</option>`);
+      }
+    }
+
+    return wrapper;
+  }
+
   static render_text_area(item) {
     item.processed != "" && (item.processed += ":");
     return `
