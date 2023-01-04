@@ -34,13 +34,6 @@
                     "required": "true"
                 },
                 {
-                    "type": "paragraph",
-                    "text": {
-                        "en": "The deadline for name-tags has been exceeded and the Nickname is therefore no longer in use.",
-                        "da": "Deadline for navneskilte er overskredet og kaldenavn-feltet er derfor ikke l\u00e6ngere i brug."
-                    }
-                },
-                {
                     "type": "text_input",
                     "text": {
                         "en": "Address",
@@ -95,8 +88,8 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I will bring a cell phone to Fastaval and can\nbe contacted by phone\n(unfortunately Fastaval SMS-alerts do not work with non-Danish phones) ",
-                        "da": "Jeg medbringer mobil p\u00e5 Fastaval og vil gerne have updates ang. spil og\nanden info, samt p\u00e5mindelser om spilstart\n(Bem\u00e6rk at sms-funktionen kun fungerer med danske telefonnumre)."
+                        "en": "I would like to receive text alerts about activities i have signed up for, as well as general updates\/info about Fastaval.(Note that Fastaval SMS-alerts do not work with non-Danish phones)",
+                        "da": "Jeg vil gerne modtaget SMS beskeder om aktiviteter jeg er tilmeldt, samt generelle opdateringer\/info om Fastaval.(Bem\u00e6rk at sms-funktionen kun fungerer med danske telefonnumre)."
                     },
                     "infosys_id": "medbringer_mobil"
                 },
@@ -192,10 +185,17 @@
                     "infosys_id": "nickname"
                 },
                 {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you wish to be called by a name other than your legal name, please provide that name in this field.\u00a0",
+                        "da": "Hvis du \u00f8nsker at tiltales med et andet navn end dit juridiske navn, s\u00e5 oplys det navn du vil tiltales som i dette felt."
+                    }
+                },
+                {
                     "type": "radio",
                     "text": {
-                        "en": "Which pronoun do you want on your name tag",
-                        "da": "Hvilket pronomen skal der st\u00e5 p\u00e5 dit navneskilt"
+                        "en": "Which pronoun do you want on your name tag?",
+                        "da": "Hvilket pronomen skal der st\u00e5 p\u00e5 dit navneskilt?"
                     },
                     "infosys_id": "pronoun",
                     "options": [
@@ -250,8 +250,8 @@
                         {
                             "value": "Juniordeltager",
                             "text": {
-                                "en": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r. LUKKE",
-                                "da": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r. LUKKE"
+                                "en": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r.\u00a0",
+                                "da": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r."
                             },
                             "display_logic": [
                                 {
@@ -271,8 +271,8 @@
                         {
                             "value": "Arrang\u00f8r",
                             "text": {
-                                "en": "I am an organizer, writer or board game designer etc.",
-                                "da": "Jeg er arrang\u00f8r, forfatter eller br\u00e6tspilsdesigner m.m."
+                                "en": "I am an organizer, scenario writer or board game designer.",
+                                "da": "Jeg er arrang\u00f8r, scenarieforfatter eller br\u00e6tspilsdesigner."
                             }
                         }
                     ],
@@ -287,22 +287,29 @@
         },
         {
             "headline": {
-                "en": "Why join Alea?",
-                "da": "Hvorfor melde sig ind i Alea?"
+                "en": "Become a part of Alea",
+                "da": "Bliv en del af Alea"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Alea is the organization behind Fastaval. The organization is a part of organizing Fastaval and also have a big responsibility to pass on important experience and resources to future Fastavals. We believe it is important at Fastaval and Alea stand together in tough times, and it is our way of supporting Bifrost, the National Organisation of Creative Development of Youth of which Alea is a member. The organization gets financial support based on membercount. \n A Membership costs 75 kr. And lasts until Fastaval next year. You get a 125 kr. discount on the entry fee for Fastaval as a member. \n Fastaval organizors have to be members for insurance reasons.",
-                        "da": "Alea er foreningen bag Fastaval. Foreningen er en del af at arrang\u00f8re Fastaval og har ogs\u00e5 et stort ansvar for at overlevere vigtig erfaring og ressourcer til fremtidige Fastavaller. Vi mener, at det er vigtigt, at Fastaval og Alea st\u00e5 sammen gennem h\u00e5rde tider, og det er vores m\u00e5de at st\u00f8tte Landsforeningen Bifrost, som Alea er medlem af. Foreningen modtager \u00f8konomisk st\u00f8tte baseret p\u00e5 vores medlemstal. \n Medlemskab koster 75 kr. og varer indtil Fastaval n\u00e6ste \u00e5r. Du f\u00e5r 125 kr. rabat p\u00e5 partout som medlem af Alea. \n Det er obligatorisk for fastavalarrang\u00f8rer at v\u00e6re medlem af forsikringsm\u00e6ssige \u00e5rsager."
+                        "en": "Alea is the organization behind Fastaval. Alea assists with practical problems, coordination and handling of ___. They also have a large responsibility in the handing over of important information, experiences and resources to future Fastavals. Alea is a member of Landsforeningen Bifrost.",
+                        "da": "Alea er foreningen bag Fastaval. Foreningen hj\u00e6lper med praktiske problemstillinger, overtager koordinerende opgaver og h\u00e5ndterer personsager. De har ligeledes et stort ansvar for at overlevering af vigtig erfaring og ressourcer til fremtidige Fastavaller. Alea er medlem af Landsforeningen Bifrost."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "As organizer you will not be able to participate to Fastaval without an Alea membership. Thank you for understanding.",
-                        "da": "Som arrang\u00f8r p\u00e5 Fastaval vil du ikke kunne v\u00e6lge medlemskab af ALEA fra. Tak for din forst\u00e5else."
+                        "en": "A membership costs 75 kr. and lasts until next years Fastaval. You get a 125 kr. discount on partout entry as a member of Alea.",
+                        "da": "Et medlemskab koster 75 kr. og varer indtil Fastaval n\u00e6ste \u00e5r. Du f\u00e5r 125 kr. rabat p\u00e5 partout adgang som medlem af Alea."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "For insurance reasons, organizers must be members of Alea.",
+                        "da": "Af forsikringsm\u00e6ssige \u00e5rsager er det obligatorisk for arrang\u00f8re at v\u00e6re medlemmer af Alea."
                     }
                 },
                 {
@@ -322,7 +329,7 @@
                         "type": "field_compare",
                         "compare": "equals",
                         "input": "participant",
-                        "value": "Arrangør"
+                        "value": "Arrang\u00f8r"
                     }
                 }
             ]

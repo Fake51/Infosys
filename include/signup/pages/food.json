@@ -32,8 +32,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "In 2022, Fastaval will have the evening meal delivered from [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] and will have the food delivery in the common area. The food will be served in the following time span:\n\nBreakfast: 8-10:30 AM \nDinner: 5-7 PM (sunday 4:30-6:30 PM)\nDinner will be served in rounds. You get your time slot on your participant sheet closer to Fastaval.\n\nBreakfast will be a breakfast buffet with hearty bread, spreads, boiled eggs, fruits and vegetable as well as cereal with yoghurt, milk or skyr.",
-                        "da": "Fastaval f\u00e5r i 2022 aftensmaden leveret fra [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] og kommer til at have mad-udlevering i f\u00e6llesomr\u00e5det.\n Maden udleveres i f\u00f8lgende tidsrum:\n\nMorgenmaden: kl. 8-10:30 \nAftensmaden: kl. 17-19:30 (s\u00f8ndag kl. 16:30-18:30)\nAftensmad udleveres i runder. Du f\u00e5r dit tidsrum p\u00e5 din deltagerseddel n\u00e5r vi n\u00e6rmer os Fastaval.\n\nMorgenmaden bliver en morgenmadsbuffet med groft br\u00f8d, p\u00e5l\u00e6g, kogte \u00e6g, frugt og gr\u00f8nt, samt morgenmadsprodukter med yoghurt, m\u00e6lk eller skyr."
+                        "en": "Fastaval will have the evening meal delivered from [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] and will have the food delivery in the common area.\u00a0\nThe food will be served in the following time span:\nBreakfast: 8.30-10.30 AM \nDinner: 5.30-7.30 PM (sunday 5-7 PM)\nDinner will be served in rounds. You get your time slot on your participant sheet closer to Fastaval.\n\nBreakfast will be a breakfast buffet with hearty bread, spreads, boiled eggs, fruits and vegetable as well as cereal with yoghurt, milk or skyr.",
+                        "da": "Fastaval f\u00e5r aftensmaden leveret fra [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] og kommer til at have mad-udlevering i f\u00e6llesomr\u00e5det.\n\n Maden udleveres i f\u00f8lgende tidsrum:\nMorgenmaden: kl. 08:30-10:30 \nAftensmaden: kl. 17:30-19:30 (s\u00f8ndag kl. 17:00-19:00)\nAftensmad udleveres i runder. Du f\u00e5r dit tidsrum p\u00e5 din deltagerseddel n\u00e5r vi n\u00e6rmer os Fastaval.\n\nMorgenmaden bliver en morgenmadsbuffet med groft br\u00f8d, p\u00e5l\u00e6g, kogte \u00e6g, frugt og gr\u00f8nt, samt morgenmadsprodukter med yoghurt, m\u00e6lk eller skyr."
                     }
                 }
             ]
@@ -47,8 +47,22 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "This year, the extra support from rich uncles and aunts, will go to funding people who would like to receive financial support* in the form of two paid dinners at Fastaval. In order to receive this support, please click the box \u201cI wish to receive financial support\u201d below and add a minimum on one (1) dinner. You will afterwards be refunded the amount, depending on how many who apply for a subsidized meal. If there is a greater number of applicants than there are funds, then the distribution will be decided by a lottery.\n \u2003 * including, but not limited to, students, unemployed, pensioners and other people on benefits. We will not require proof for your financial position.",
-                        "da": "I \u00e5r g\u00e5r st\u00f8tten fra rige onkler og tanter til et tilskud til folk, der har behov for et \u00f8konomisk bidrag* i form af to betalte aftensm\u00e5ltider under Fastaval. For at f\u00e5 denne \u00f8konomiske st\u00f8tte skal du krydse \u201cJeg \u00f8nsker at f\u00e5 \u00f8konomisk st\u00f8tte\u201d af herunder og tilf\u00f8je minimum \u00e9t aftensmadsm\u00e5ltid. Du vil efterf\u00f8lgende blive refunderet bel\u00f8bet alt efter, hvor mange, der s\u00f8ger puljen. Hvis flere s\u00f8ger puljen, en der er penge til, vil fordelingen af st\u00f8tten blive afgjort ved lodtr\u00e6kning.\n \u2003* blandt andet, men ikke begr\u00e6nset til, studerende, arbejdsl\u00f8se, pensionister og andre p\u00e5 offentlige ydelser. Vi kr\u00e6ver ikke bevis for din \u00f8konomiske situation."
+                        "en": "This year, the funds provided by the rich aunts and uncles (people who choose to contribute to Fastval with additional funds) will be used to give financial support to those who may need it. In practice, it will be possible to get 2 food-days (breakfast + dinner) paid for by Fastaval.",
+                        "da": "I \u00e5r g\u00e5r st\u00f8tten fra rige onkler og tanter (dem der v\u00e6lger at donere ekstra penge til Fastaval) til at give et \u00f8konomisk bidrag til dem der m\u00e5tte have behov for det. Konkret vil det v\u00e6re muligt at f\u00e5 betalt 2 mad-dage (morgenmad + aftensmad) under Fastaval."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "It is up to you to decide if you are eligible for financial support. The program is designed for, but not limited to, students, unemployed, pensioners and people on government assistance. We do not require documentation of your economic situation.",
+                        "da": "Om du har behov for st\u00f8tte er op til dig selv at vurdere. Ordningen er tilt\u00e6nkt, men ikke begr\u00e6nset til, studerende, arbejdsl\u00f8se, pensionister og andre personer p\u00e5 offentlige ydelser. Vi kr\u00e6ver ikke dokumentation for din \u00f8konomiske situation."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "To receive financial support, select the \"I wish to receive financial support\" checkbox bellow, and add at least two morning and evening meals to your sign-up.",
+                        "da": "For at f\u00e5 denne \u00f8konomiske st\u00f8tte skal du afkrydse \u201cJeg \u00f8nsker at f\u00e5 \u00f8konomisk st\u00f8tte\u201d af herunder samt tilf\u00f8je mindst to morgen- og aftenm\u00e5ltider til din tilmelding."
                     }
                 },
                 {
@@ -63,8 +77,8 @@
         },
         {
             "headline": {
-                "en": "Beneath you can order breakfast and dinner:",
-                "da": "Herunder kan du bestille morgenmad og aftensmad:"
+                "en": "Here you can order breakfast and dinner:",
+                "da": "Her kan du bestille morgenmad og aftensmad:"
             },
             "module": "food"
         },
@@ -77,8 +91,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Food details here...",
-                        "da": "Skriv detaljer om maden her..."
+                        "en": "Here you can read more about allergens, that you need to be aware of:",
+                        "da": "Her kan du se eventuelle allergener som du skal v\u00e6re opm\u00e6rksom p\u00e5:"
                     }
                 }
             ]

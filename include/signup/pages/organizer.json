@@ -24,22 +24,22 @@
     "sections": [
         {
             "headline": {
-                "en": "About discounts",
-                "da": "Om rabatterne\n"
+                "en": "Organizer discount",
+                "da": "Arrang\u00f8rrabat"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Fastaval is forever grateful for the great amount of work done by our many writers, designers and organizers. Therefore we offer some discount to our lovely organizers.\n Organizers under 18 receive both the youth and organizer discount on entrance.",
-                        "da": "Fastaval er dybt taknemlige for det arbejde du l\u00e6gger i at f\u00e5 vores alle sammen Val p\u00e5 benene igen! Derfor tilbyder vi ogs\u00e5 lidt rabat til vores dejlige arrang\u00f8rer.\n Arrang\u00f8rer under 18 f\u00e5r b\u00e5de arrang\u00f8r- og ungdomsrabat p\u00e5 partout."
+                        "en": "Fastaval is forever grateful for the great amount of work done by our many writers, designers and organizers. Therefore we offer some discounts to our lovely organizers.",
+                        "da": "Fastaval er dybt taknemlige for det arbejde du l\u00e6gger i at f\u00e5 vores alle sammens Fastaval til at ske. Derfor tilbyder vi nogle rabatter til vores dejlige arrang\u00f8rer."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]In addition, organizers and writers who work more than 48 hours before\/after Fastaval and \/or 24 hours during Fastaval will receive:[\/b]\n",
-                        "da": "[b]Arrang\u00f8rer og forfattere\/designere der arbejder mere end 48 timer f\u00f8r\/efter Fastaval og\/eller 24 timer p\u00e5 Fastaval modtager derudover:[\/b]\n"
+                        "en": "Organizers and writers who work more than 48 hours before\/after Fastaval and \/or 24 hours during Fastaval will receive:",
+                        "da": "Arrang\u00f8rer og forfattere\/designere der arbejder mere end 48 timer f\u00f8r\/efter Fastaval og\/eller 24 timer p\u00e5 Fastaval modtager:"
                     }
                 },
                 {
@@ -48,41 +48,40 @@
                         "en": "Discount on entrance and accommodation\nDiscount on t-shirts and at sales venues                    ",
                         "da": "Rabat p\u00e5 indgang og overnatning\nRabat p\u00e5 t-shirts og ved salgssteder"
                     }
-                }
-            ]
-        },
-        {
-            "headline": {
-                "en": "\n",
-                "da": "\n"
-            },
-            "items": [
+                },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "On behalf of the participants: Thank you so much for your hard work at Fastaval 2022!",
-                        "da": "P\u00e5 vegne af alle deltagerne: Tusind tak for dit engagement i Fastaval 2022!"
+                        "en": "Organizers under 18 receive both the youth and organizer discount on partout entrance.",
+                        "da": "Arrang\u00f8rer under 18 f\u00e5r b\u00e5de arrang\u00f8r- og ungdomsrabat p\u00e5 partout indgang."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "On behalf of the participants: Thank you so much for your hard work at Fastaval 2023!",
+                        "da": "P\u00e5 vegne af alle deltagerne: Tusind tak for dit engagement i Fastaval 2023!"
                     }
                 }
             ]
         },
         {
             "headline": {
-                "en": "Work Category\n",
-                "da": "Arbejdskategori\n"
+                "en": "Organizer area",
+                "da": "Arrang\u00f8romr\u00e5de"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "What kind of work are you contributing to Fastaval with?",
-                        "da": "Hvilken slags arbejde udf\u00f8rer du for Fastaval"
+                        "en": "What kind work do you do at Fastaval?",
+                        "da": "Hvilken slags arbejde udf\u00f8rer du for Fastaval?"
                     }
                 },
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I'm a scenario author",
+                        "en": "I am a scenario author",
                         "da": "Jeg er scenarieforfatter"
                     },
                     "infosys_id": "author"
@@ -90,7 +89,7 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I'm a board game designer",
+                        "en": "I am a board game designer",
                         "da": "Jeg er br\u00e6tspilsdesigner"
                     },
                     "infosys_id": "designer"
@@ -98,7 +97,7 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I'm an organizer",
+                        "en": "I am an organizer",
                         "da": "Jeg er arrang\u00f8r"
                     },
                     "infosys_id": "organizer"
@@ -134,8 +133,8 @@
                 {
                     "type": "text_input",
                     "text": {
-                        "en": "What is the title of your scenario\/game?",
-                        "da": "Hvad er titlen p\u00e5 dit scenarie\/spil"
+                        "en": "What is the title of your scenario\/board game?",
+                        "da": "Hvad er titlen p\u00e5 dit scenarie\/br\u00e6tspil"
                     },
                     "infosys_id": "scenarie",
                     "required_if": [

@@ -15,14 +15,42 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Last day of payment is also March 11th or right after sign-up.\nYour payment will be transferred back to you, in the unfortunate case that Fastaval gets cancelled or postponed.",
-                        "da": "Betalingen skal ogs\u00e5 ske senest 11. marts eller straks efter tilmelding.\nHvis Fastaval, mod alle forventninger, skulle blive aflyst eller omgjort til et online arrangement, vil din betaling blive krediteret."
+                        "en": "The sign-up is open until the February 20th. Until this date, you can add activities, food and order wear in your sign-up.",
+                        "da": "Tilmeldingen er \u00e5ben indtil den 20. februar. Frem til den dato kan du tilf\u00f8je aktiviteter, mad og wear til din tilmelding."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "You can always write us at [email]info@fastaval.dk[\/email]!",
+                        "en": "After February 20th, it will no longe be possible to sign up for activities, food or order wear, but you can still sign up for entrance and sleeping.\u00a0",
+                        "da": "Efter den 20. februar vil det ikke l\u00e6ngere v\u00e6re muligt at tilmelde sig aktiviteter, mad og wear, men du kan stadig tilmelde dig indgang og overnatning."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "You can go back and forth in your sign-up, by clicking the tabs. Red tabs indicate that you need to fill out required information on that tab. You can also change your sign-up at a later time, by using the login in your sign-up mail.\u00a0",
+                        "da": "Du kan g\u00e5 frem og tilbage i din tilmelding undervejs ved at trykke p\u00e5 fanerne. R\u00f8de faner betyder, at du mangler at udfylde noget p\u00e5 den fane. Du kan ogs\u00e5 \u00e6ndre din tilmelding efterf\u00f8lgende, ved at logge ind med den info du modtager i din tilmeldingsmail."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "All changes must be made before February 20th\u00a0",
+                        "da": "Alle rettelser skal v\u00e6re foretaget inden den 20. februar."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Last day of payment is March 1st, but we urge you to pay immediately after you sign-up. In the unfortunate case that Fastaval is cancelled or postponed, your payment will be returned.",
+                        "da": "Betalingen skal ske senest 1. marts, men vi opfordrer dig til at betale straks efter tilmelding. Hvis Fastaval skulle blive aflyst eller flyttet, vil du f\u00e5 din betaling retur."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you have trouble with your sign-up, you can always write us at [email]info@fastaval.dk[\/email]!",
                         "da": "L\u00f8ber du ind i problemer i l\u00f8bet af tilmeldingen kan du altid skrive til [email]info@fastaval.dk[\/email]!"
                     }
                 }
@@ -37,8 +65,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "You are not registered as a participant of Fastaval 2022, until you receive your confirmation email. If you do NOT receive the confirmation email from us, please E-mail us at [email]info@fastaval.dk[\/email], so that we can resend it to you or figure out where the error might be.",
-                        "da": "Du er f\u00f8rst registreret som deltager p\u00e5 Fastaval 2022, n\u00e5r du modtager din registreringsmail. Hvis du IKKE modtager en registreringsmail fra os, s\u00e5 skriv til os p\u00e5 [email]info@fastaval.dk[\/email], s\u00e5 kan vi eftersende den, eller finde ud af hvad fejlen kan v\u00e6re."
+                        "en": "You are not registered as a participant of Fastaval 2023, until you receive your confirmation email. If you do NOT receive the confirmation email from us, please E-mail us at [email]info@fastaval.dk[\/email], so that we can resend it to you or figure out where the error might be.",
+                        "da": "Du er f\u00f8rst registreret som deltager p\u00e5 Fastaval 2023, n\u00e5r du modtager din registreringsmail. Hvis du IKKE modtager en registreringsmail fra os, s\u00e5 skriv til os p\u00e5 [email]info@fastaval.dk[\/email], s\u00e5 kan vi eftersende den, eller finde ud af hvad fejlen kan v\u00e6re."
                     }
                 },
                 {
@@ -52,22 +80,37 @@
         },
         {
             "headline": {
-                "en": "GDPR (General Data Protection Regulation) \u2013 Information about storage and management of your information",
-                "da": "GDPR (General Data Protection Regulation) - Oplysning om opbevaring og h\u00e5ndtering af dine oplysninger"
+                "en": "Cashles Fastaval",
+                "da": "Kontantl\u00f8s Fastaval"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "When you sign up for Fastaval, or you sign up your child, you agree to: All information you give us in the following sign up can be accessed by the following persons:",
-                        "da": "N\u00e5r du tilmelder dig eller dit barn Fastaval, tilkendegiver du at v\u00e6re indforst\u00e5et med: "
+                        "en": "Please note that Fastaval 2023 has become cashless. It is only possible to pay by card or Mobilepay at the service and sales vendors at Fastaval.",
+                        "da": "Bem\u00e6rk at Fastaval 2023 er blevet kontantl\u00f8s. Du kan derfor kun betale med dankort eller Mobilepay ved service- og salgssteder under Fastaval.\u00a0"
+                    }
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "GDPR (General Data Protection Regulation)",
+                "da": "GDPR (General Data Protection Regulation)"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "When you sign up for Fastaval, or sign up your child, you agree to our samtykkerekl\u00e6ring about storage and management of personal data. Read our samtykkeerkl\u00e6ring here:",
+                        "da": "N\u00e5r du tilmelder dig eller dit barn Fastaval, tilkendegiver du at v\u00e6re indforst\u00e5et med vores samtykkeerkl\u00e6ring om opbevaring og h\u00e5ndtering af personf\u00f8lgsomme oplysninger. L\u00e6s samtykkeerkl\u00e6ringen her:"
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "The chairman and treasurer of Alea, the Bunker of Fastaval 2022 and the Infonauts on Fastaval 2022. Furthermore necessary information can be passed on to other relevant Fastaval-organizers (e.g. group-planners and scenario managers). Only information relevant to the organizers\u2019 work regarding Fastaval will be passed on to them.",
-                        "da": "Samtlige af de informationer du giver os i tilmeldingen vil kunne tilg\u00e5s af f\u00f8lgende: Aleas formand og kasserer, Fastavals Bunker 2022 og Fastavals Information. Derudover kan n\u00f8dvendige informationer videregives til \u00f8vrige relevante Fastaval-arrang\u00f8rer (eks. holdl\u00e6ggerne og spillederansvarlige). Kun information der er n\u00f8dvendig for arrang\u00f8rernes arbejde i forbindelse med Fastaval videresgives til disse."
+                        "en": "All information provided in the following sign up can be accessed by the following persons: The chairman and treasurer of Alea, the main organizers of Fastaval 2023 and the Infonauts on Fastaval 2023. Furthermore necessary information can be passed on to other relevant Fastaval-organizers (e.g. group-planners and scenario managers). Only information relevant to the organizer's work regarding Fastaval will be passed on to them.",
+                        "da": "Samtlige af de informationer du giver os i tilmeldingen vil kunne tilg\u00e5s af f\u00f8lgende: Aleas formand og kasserer, Fastavals hovedarrang\u00f8rer 2023 og Infonauterne p\u00e5 Fastaval 2023. Derudover kan n\u00f8dvendige informationer videregives til \u00f8vrige relevante Fastaval-arrang\u00f8rer (eks. holdl\u00e6ggerne og spillederansvarlige). Kun information der er n\u00f8dvendig for arrang\u00f8rernes arbejde i forbindelse med Fastaval videresgives til disse."
                     }
                 },
                 {
@@ -80,8 +123,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Information about your health will be deleted immediately after Fastaval 2022. We ask you to please only provide essential information about your health.",
-                        "da": "Dine helbredsinformationer slettes umiddelbart efter afvikling af Fastaval 2022. Du bedes om kun at oplyse absolut n\u00f8dvendige helbredsoplysninger."
+                        "en": "Information about your health will be deleted immediately after Fastaval 2023. We ask you to please only provide essential information about your health.",
+                        "da": "Dine helbredsinformationer slettes umiddelbart efter afvikling af Fastaval 2023. Du bedes om kun at oplyse absolut n\u00f8dvendige helbredsoplysninger."
                     }
                 },
                 {

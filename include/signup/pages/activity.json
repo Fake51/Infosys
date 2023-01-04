@@ -11,15 +11,22 @@
     "sections": [
         {
             "headline": {
-                "en": "\n",
-                "da": "\n"
+                "en": "",
+                "da": ""
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "This is where the fun begins! Here you can choose and prioritize what activities you would like to participate in.",
-                        "da": "Nu bliver det sjovt! Her kan du v\u00e6lge og prioritere de aktiviteter du gerne vil deltage i."
+                        "en": "Here you can sign up for board games, scenarios and other activities. You can prioritise which activities you want to participate in when.",
+                        "da": "Her tilmelder du dig br\u00e6tspil, scenarier og \u00f8vrige aktiviteter. Du kan prioriterer din tilmelding efter hvad du helst vil spille hvorn\u00e5r."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Click on the individual activities for a short description",
+                        "da": "Klik p\u00e5 de enkelte aktiviteter for at se en foromtale\/beskrivelse af aktiviteten.\u00a0"
                     }
                 }
             ]
@@ -33,8 +40,8 @@
                 {
                     "type": "list",
                     "text": {
-                        "en": "Click on the individual activity for a short description\nYou prioritize a given activity by clicking on the column next to it\nPriorities run from 1-4 (1 is highest, 4 lowest).\nYou can choose one 1st and 2nd priority in each time slot\nYou can choose as many 3rd and 4th priorities you'd like\nWould you like to choose everything, but prefer not to end up with too much, put a limit on it after this overview (See further down).",
-                        "da": "Klik p\u00e5 de enkelte aktivitetsnavne for at se en foromtale\/beskrivelse\nDu prioriterer ved at klikke p\u00e5 s\u00f8jlen ud for hver aktivitet\n1-4 indikerer din prioritering (1 er h\u00f8jest, 4 lavest).\nFor hver blok kan du v\u00e6lge \u00e9n 1. og 2. prioritet, men du kan v\u00e6lge s\u00e5 mange 3.\/4. prioriteter du har lyst til\nVil du gerne tilmelde dig det hele, men helst kun ende med et begr\u00e6nset antal spil? Efter oversigten kan du s\u00e6tte et max antal p\u00e5 (se l\u00e6ngere nede)."
+                        "en": "You prioritize a given activity by clicking on the column next to it\nPriorities run from 1-4 (1 is highest, 4 lowest).\nYou can choose one 1st and 2nd priority in each time slot\nYou can choose as many 3rd and 4th priorities you'd like",
+                        "da": "Du prioriterer ved at klikke p\u00e5 s\u00f8jlen ud for hver aktivitet\n1-4 indikerer din prioritering (1 er h\u00f8jest, 4 lavest).\nFor hver blok kan du v\u00e6lge \u00e9n 1. og 2. prioritet, men du kan v\u00e6lge s\u00e5 mange 3.\/4. prioriteter du har lyst til"
                     }
                 }
             ]
@@ -45,6 +52,13 @@
                 "da": "P\u00e5 hvilke sprog vil du gerne deltage i aktiviteter?\n"
             },
             "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "slet",
+                        "da": "slet"
+                    }
+                },
                 {
                     "type": "checkbox",
                     "text": {
@@ -87,10 +101,17 @@
         },
         {
             "headline": {
-                "en": "I want to sign up for a lot of games, but\u00a0 only join a limited number\n",
-                "da": "Jeg vil gerne tilmelde mig mange spil, men kun ende med at spille et begr\u00e6nset antal"
+                "en": "Maximum number of scenarios\/boardgames",
+                "da": "Maksimalt antal scenarier\/br\u00e6tspil"
             },
             "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you want to sign up for many scenarios\/boardgames, but only play a limited number in total, you can write down a maximum here.",
+                        "da": "Hvis du gerne vil tilmelde dig mange scenarier\/br\u00e6tspil, men kun spille et begr\u00e6nset antal i alt, kan du skrive et maksimum her."
+                    }
+                },
                 {
                     "type": "text_input",
                     "text": {
@@ -117,15 +138,22 @@
         },
         {
             "headline": {
-                "en": "Are you considering being a gamemaster?",
-                "da": "T\u00e6nker du p\u00e5 at v\u00e6re spilleder?"
+                "en": "Do you want to be a\u00a0scenario facilitator\/game guide?",
+                "da": "Vil du v\u00e6re spilleder\/reglformidler?"
             },
             "items": [
                 {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "\u00a0If you want to be a\u00a0scenario facilitator\/game guide (fx. if you have chosen it as part of 'Fastaval together'), you can input which scenarios\/board games you want to facilitate\/guide bellow.",
+                        "da": "Hvis du gerne vil v\u00e6re spilleder\/reglformidler (f.eks. fordi du har valgt det som en del af 'F\u00e6lles Fastaval'), kan du nedenfor ogs\u00e5 angive hvilke scenarier\/br\u00e6tspil du gerne vil spillede\/reglformidle.\u00a0"
+                    }
+                },
+                {
                     "type": "list",
                     "text": {
-                        "en": "'GM' means you would like to gamemaster the activity. 'GM\/1.priority means, you would like to be a player if you can't be a GM.'",
-                        "da": "'SL \/ RF' betyder at du gerne vil v\u00e6re spilleder p\u00e5 et rollespil eller regelformidler p\u00e5 et br\u00e6tspil, l\u00e6s mere om reglformidlerrollen nedenfor. 'SL \/ RF - 1. prioritet' betyder, at du gerne vil v\u00e6re spiller, hvis du ikke kan blive spilleder eller regelformidler p\u00e5 det."
+                        "en": "'SL\/RF' means you would like to be a scenario facilitator of a scenario or game guide for a board game.\n'SL\/RF - 1.priority' means you would like to be a player if you cannot be a facilitator\/guide.",
+                        "da": "'SL\/RF' betyder at du gerne vil v\u00e6re spilleder p\u00e5 et scenarie eller regelformidler p\u00e5 et br\u00e6tspil.\n'SL\/RF - 1. prioritet' betyder, at du gerne vil v\u00e6re spiller, hvis du ikke kan blive spilleder eller regelformidler."
                     }
                 }
             ],
@@ -160,8 +188,8 @@
                 {
                     "type": "list",
                     "text": {
-                        "en": "  [color=lightgreen]Green [\/color]: Roleplaying\n[color=lightblue]Blue [\/color]: Board games\n[color=yellow]Yellow [\/color]: Events & workshops\n[color=mediumpurple]Purple [\/color]: Live Role Playing\n[color=darkgreen,white]Dark green [\/color]: Magic",
-                        "da": " [color=lightgreen]Gr\u00f8n [\/color]: Rollespil\n[color=lightblue]Bl\u00e5 [\/color]: Br\u00e6tspil\n[color=yellow]Gul [\/color]: Events & Workshops\n[color=mediumpurple]Lilla [\/color]: Live Rollespil\n[color=darkgreen,white]M\u00f8rkegr\u00f8n [\/color]: Magic"
+                        "en": "[color=#b6d7a8] Gr\u00f8n [\/color]: Scenarios[color=#9fc5e8] Bl\u00e5 [\/color]: Board Games[color=#ffd966] Gul [\/color]:\u00a0Other activities[color=#b4a7d6]\u00a0Lilla [\/color]: Live roleplay[color=#ea9999] R\u00f8d [\/color]: Magic",
+                        "da": "[color=#b6d7a8] Gr\u00f8n [\/color]: Rollespil\n[color=#9fc5e8] Bl\u00e5 [\/color]: Br\u00e6tspil\n[color=#ffd966] Gul [\/color]: \u00d8vrige aktiviteter\n[color=#b4a7d6] Lilla [\/color]: Live Rollespil\n[color=#ea9999] R\u00f8d [\/color]: Magic"
                     }
                 }
             ],

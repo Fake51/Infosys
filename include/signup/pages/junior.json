@@ -9,17 +9,17 @@
         "da": "Fastaval Junior"
     },
     "display_logic": [
-      {
-        "type": "default",
-        "status": "disabled"
-      },
-      {
-        "type": "field_compare",
-        "status": "normal",
-        "input": "participant",
-        "compare": "equals",
-        "value": "Juniordeltager"
-      }
+        {
+            "type": "default",
+            "status": "disabled"
+        },
+        {
+            "type": "field_compare",
+            "status": "normal",
+            "input": "participant",
+            "compare": "equals",
+            "value": "Juniordeltager"
+        }
     ],
     "sections": [
         {
@@ -40,8 +40,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]K\u00e6re deltager p\u00e5 Fastaval Junior[\/b]\n\nFastaval Junior melder udsolgt. Men ventelisten er \u00e5ben.\n Vi har begr\u00e6nset antal pladser p\u00e5 arrangementet Fastaval Junior, og vi har f\u00e5et rigtig mange tilmeldinger. Alle 60 pladser er nu besat, men du kan komme p\u00e5 venteliste, hvis du udfylder tilmeldingen her. \n\nArrangementet foreg\u00e5r l\u00f8rdag den 16. april fra kl. 10-15.",
-                        "da": "[b]K\u00e6re deltager p\u00e5 Fastaval Junior[\/b]\n\nFastaval Junior melder udsolgt. Men ventelisten er \u00e5ben.\n Vi har begr\u00e6nset antal pladser p\u00e5 arrangementet Fastaval Junior, og vi har f\u00e5et rigtig mange tilmeldinger. Alle 60 pladser er nu besat, men du kan komme p\u00e5 venteliste, hvis du udfylder tilmeldingen her. \n\nArrangementet foreg\u00e5r l\u00f8rdag den 16. april fra kl. 10-15."
+                        "en": "[b]K\u00e6re deltager p\u00e5 Fastaval Junior[\/b]\n\nArrangementet foreg\u00e5r l\u00f8rdag den 16. april fra kl. 10-15.",
+                        "da": "[b]K\u00e6re deltager p\u00e5 Fastaval Junior[\/b]\n\u00a0\n\nArrangementet foreg\u00e5r l\u00f8rdag den 16. april fra kl. 10-15."
                     }
                 }
             ]
@@ -55,16 +55,16 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Vi vil g\u00f8re alt, hvad vi kan, for at der ogs\u00e5 bliver plads til dig, men vi kan ikke love noget, og vi kan f\u00f8rst give endelig besked, n\u00e5r vi har lavet hold til de enkelte aktiviteter. \nDu f\u00e5r en mail med svar hurtigst muligt derefter. Det kan ogs\u00e5 v\u00e6re, vi ringer, hvis det skal g\u00e5 rigtig st\u00e6rkt. \n\n OBS: Er du mellem 13 og 14 \u00e5r og vil spille med p\u00e5 Fastaval de \u00f8vrige dage? S\u00e5 skal du udfylde tilmeldingen to gange: som hhv. Junior-deltager og som almindelig deltager. B\u00f8rn p\u00e5 12 \u00e5r eller under har gratis adgang til Fastaval, men kan ikke tilmelde sig andre aktiviteter end Fastaval Junior.",
-                        "da": "Vi vil g\u00f8re alt, hvad vi kan, for at der ogs\u00e5 bliver plads til dig, men vi kan ikke love noget, og vi kan f\u00f8rst give endelig besked, n\u00e5r vi har lavet hold til de enkelte aktiviteter. \nDu f\u00e5r en mail med svar hurtigst muligt derefter. Det kan ogs\u00e5 v\u00e6re, vi ringer, hvis det skal g\u00e5 rigtig st\u00e6rkt. \n\n OBS: Er du mellem 13 og 14 \u00e5r og vil spille med p\u00e5 Fastaval de \u00f8vrige dage? S\u00e5 skal du udfylde tilmeldingen to gange: som hhv. Junior-deltager og som almindelig deltager. B\u00f8rn p\u00e5 12 \u00e5r eller under har gratis adgang til Fastaval, men kan ikke tilmelde sig andre aktiviteter end Fastaval Junior."
+                        "en": "Nu kommer vi til det sjove, hvor I skal v\u00e6lge, hvad I gerne vil spille p\u00e5 dagen. Vi skal ogs\u00e5 vide, hvilken st\u00f8rrelse T-shirt, I skal have, og endelig skal vi have navn og kontaktinformationer p\u00e5 den voksne, som er med jer p\u00e5 Fastaval p\u00e5 dagen.\n N\u00e5r vi n\u00e6rmer os Fastaval, modtager dine for\u00e6ldre et infobrev samt program, s\u00e5 I ved, hvad I skal spille p\u00e5 dagen. S\u00e5 husk at holde \u00f8je med mailen.",
+                        "da": "Nu kommer vi til det sjove, hvor I skal v\u00e6lge, hvad I gerne vil spille p\u00e5 dagen. Vi skal ogs\u00e5 vide, hvilken st\u00f8rrelse T-shirt, I skal have, og endelig skal vi have navn og kontaktinformationer p\u00e5 den voksne, som er med jer p\u00e5 Fastaval p\u00e5 dagen.\n N\u00e5r vi n\u00e6rmer os Fastaval, modtager dine for\u00e6ldre et infobrev samt program, s\u00e5 I ved, hvad I skal spille p\u00e5 dagen. S\u00e5 husk at holde \u00f8je med mailen."
                     }
                 }
             ]
         },
         {
             "headline": {
-                "en": "Hold \u00f8je med mailen - du h\u00f8rer fra os inden udgangen af marts",
-                "da": "Hold \u00f8je med mailen - du h\u00f8rer fra os inden udgangen af marts"
+                "en": "Vi gl\u00e6der os til at se dig til Fastaval Junior!",
+                "da": "Vi gl\u00e6der os til at se dig til Fastaval Junior!"
             },
             "items": [
                 {
@@ -85,15 +85,15 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Hvis du ogs\u00e5 deltager i den almindelige Fastaval, skal du markere feltet nedenfor\u00a0 ",
-                        "da": "Hvis du ogs\u00e5 deltager i den almindelige Fastaval, skal du markere feltet nedenfor\u00a0 \n"
+                        "en": "If you are 13 years or more, you can also participate in the \"regular\" Fastaval.\u00a0If you also want participate in the regular Fastaval, please check the box bellow.",
+                        "da": "Er du 13 \u00e5r eller over kan du ogs\u00e5 deltage i det \"almindelige\" Fastaval.\u00a0Hvis du ogs\u00e5 vil deltage i den almindelige Fastaval, skal du markere feltet nedenfor\u00a0"
                     }
                 },
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "Jeg\u00a0 deltager ogs\u00e5 i den almindelige Fastaval",
-                        "da": "Jeg\u00a0 deltager ogs\u00e5 i den almindelige Fastaval\n"
+                        "en": "I also want to participate in the regular Fastaval",
+                        "da": "Jeg vil ogs\u00e5 deltage i det almindelige Fastaval"
                     },
                     "infosys_id": "junior:plus"
                 }

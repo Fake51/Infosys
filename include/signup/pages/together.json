@@ -81,8 +81,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "New Item",
-                        "da": "V\u00e6lg minimum \u00e9n af nedenst\u00e5ende, men gerne flere hvis du har lyst.\nHvis du regner med at ankomme i ops\u00e6tningsdagene skal du notere det som \u201cops\u00e6tningshold\u201d"
+                        "en": "Choose at least one of the options below. You are welcome to choose multiple options, if you want to help out more.If you plan on arriving in the set-up days (monday-tuesday) and help out, choose \"preparation crew\"",
+                        "da": "V\u00e6lg minimum \u00e9n af nedenst\u00e5ende, men gerne flere hvis du har lyst.\nHvis du regner med at ankomme i ops\u00e6tningsdagene og give en h\u00e5nd med, skal du notere det som \u201cops\u00e6tningshold\u201d"
                     }
                 },
                 {
@@ -127,7 +127,7 @@
                 "type": "field_compare",
                 "input": "participant",
                 "compare": "not_equals",
-                "value": "Arrangør",
+                "value": "Arrang\u00f8r",
                 "required": [
                     "together:hero",
                     "together:gm",
@@ -138,7 +138,7 @@
         },
         {
             "headline": {
-                "en": "New Section",
+                "en": "The Hero Force",
                 "da": "Heltestyrken"
             },
             "module": "hero",
@@ -146,14 +146,21 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "New Item",
-                        "da": "[b]OBS! INGEN HELTE-OPGAVER ER MERE END 3 TIMER LANGE[\/b]"
+                        "en": "Thank you for your contribution to the Hero Force! You must help with at least one shift, but you are more than welcome to do more.\u00a0",
+                        "da": "Tak for at bidrage til heltestyrken! Du skal hj\u00e6lpe til med mindst \u00e9n vagt, men du er mere end velkommen til at tage flere.\u00a0"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Note: No heroic deeds take more than 3 hours[\/b]",
+                        "da": "[b]Bem\u00e6rk: Ingen helteopgaver er mere end 3 timer lange[\/b]"
                     }
                 },
                 {
                     "type": "text_input",
                     "text": {
-                        "en": "New Item",
+                        "en": "How many heroic deeds do you want to contribute with?",
                         "da": "Hvor mange helte-opgaver vil du udf\u00f8re p\u00e5 Fastaval?"
                     },
                     "infosys_id": "desired_diy_shifts"
@@ -161,105 +168,105 @@
                 {
                     "type": "text_area",
                     "text": {
-                        "en": "New Item",
-                        "da": "Hvis der er noget vi skal vide i forhold til din evne til at udf\u00f8re\u00a0 en helte-opgave, typen af opgaver du foretr\u00e6kker e.lign., s\u00e5 skriv dem her"
+                        "en": "If there is anything we should know regarding your ability to perform heroic deeds, prefference for certain areas etc., then note them here.",
+                        "da": "Hvis der er noget vi skal vide i forhold til din evne til at udf\u00f8re\u00a0 en helte-opgave, typen af opgaver du foretr\u00e6kker mm., s\u00e5 skriv dem her."
                     },
                     "infosys_id": "note:gds"
                 }
             ],
             "display_logic": [
                 {
-                  "type": "default",
-                  "status": "hidden"
+                    "type": "default",
+                    "status": "hidden"
                 },
                 {
-                  "type": "checkbox",
-                  "status": "normal",
-                  "input": "together:hero"
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "together:hero"
                 }
             ]
         },
         {
             "headline": {
-                "en": "New Section",
+                "en": "Scenario facilitator",
                 "da": "Spilleder"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "New Item",
-                        "da": "Vil du v\u00e6re super-spilleder?"
+                        "en": "Thank you for your help with facilitating Fastaval's scenarios. You can choose which scenarios you want to facilitate under the \"activities\" tab.",
+                        "da": "Tak for at hj\u00e6lpe til med at spillede Fastavals scenarier. Du skal v\u00e6lge hvilke scenarier du gerne vil spillede under fanen \"aktiviteter\"."
                     }
                 },
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "New Item",
-                        "da": "Ja, absolut. Fastaval m\u00e5 gerne kontakte mig, hvis der mangler ekstra spilledere"
+                        "en": "I want to be a super scenario facilitator. Fastaval may contact me, if there is need for additional scenario facilitators.",
+                        "da": "Jeg vil gerne v\u00e6re super-spilleder. Fastaval m\u00e5 gerne kontakte mig, hvis der mangler ekstra spilledere."
                     },
                     "infosys_id": "supergm"
                 },
                 {
                     "type": "text_input",
                     "text": {
-                        "en": "New Item",
-                        "da": "Er der et maksimum antal scenarier du vil spillede?"
+                        "en": "Is there a maximum number of scenarios you want to facilitate?",
+                        "da": "Er der et maksimalt antal scenarier du vil spillede?"
                     },
                     "infosys_id": "gm_max"
                 }
             ],
             "display_logic": [
                 {
-                  "type": "default",
-                  "status": "hidden"
+                    "type": "default",
+                    "status": "hidden"
                 },
                 {
-                  "type": "checkbox",
-                  "status": "normal",
-                  "input": "together:gm"
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "together:gm"
                 }
             ]
         },
         {
             "headline": {
-                "en": "New Section",
+                "en": "Set-up",
                 "da": "Ops\u00e6tning"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "New Item",
+                        "en": "Please select which days you will be on location to assist with setting up Fastaval.\u00a0",
                         "da": "Angiv hvilke dage du kommer til ops\u00e6tningen:"
                     }
                 },
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "New Item",
-                        "da": "Klarg\u00f8ring mandag"
+                        "en": "Set-up monday",
+                        "da": "Ops\u00e6tning mandag"
                     },
                     "infosys_id": "ready_mandag"
                 },
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "New Item",
-                        "da": "Klarg\u00f8ring tirsdag"
+                        "en": "Set-up tuesday",
+                        "da": "Ops\u00e6tning tirsdag"
                     },
                     "infosys_id": "ready_tirsdag"
                 }
             ],
             "display_logic": [
                 {
-                  "type": "default",
-                  "status": "hidden"
+                    "type": "default",
+                    "status": "hidden"
                 },
                 {
-                  "type": "checkbox",
-                  "status": "normal",
-                  "input": "together:prepare"
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "together:prepare"
                 }
             ]
         }
