@@ -317,7 +317,7 @@ class Controller extends Common
      * @access protected
      * @return void
      */
-    protected function jsonOutput($data, $http_status = '200', $content_type = 'text/plain') {
+    protected function jsonOutput($data, $http_status = '200', $content_type = 'text/plain', $keep_alive = false) {
         if (!is_string($data)) {
             $data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT );
         }
@@ -325,6 +325,7 @@ class Controller extends Common
         header('Content-Type: ' . $content_type . '; charset=UTF-8');
         header('Content-Length: ' . strlen($data));
         echo $data;
-        exit;
+        
+        if (!$keep_alive) exit;
     }
 }
