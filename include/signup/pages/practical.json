@@ -88,8 +88,8 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I would like to receive text alerts about activities i have signed up for, as well as general updates\/info about Fastaval.(Note that Fastaval SMS-alerts do not work with non-Danish phones)",
-                        "da": "Jeg vil gerne modtaget SMS beskeder om aktiviteter jeg er tilmeldt, samt generelle opdateringer\/info om Fastaval.(Bem\u00e6rk at sms-funktionen kun fungerer med danske telefonnumre)."
+                        "en": "I would like to receive text alerts about activities i have signed up for, as well as general updates\/info about Fastaval. (Note that Fastaval SMS-alerts do not work with non-Danish phones)",
+                        "da": "Jeg vil gerne modtaget SMS beskeder om aktiviteter jeg er tilmeldt, samt generelle opdateringer\/info om Fastaval. (Bem\u00e6rk at sms-funktionen kun fungerer med danske telefonnumre)."
                     },
                     "infosys_id": "medbringer_mobil"
                 },
@@ -127,21 +127,6 @@
                             "da": "Emailadresserne er ikke ens"
                         }
                     }
-                },
-                {
-                    "type": "paragraph",
-                    "text": {
-                        "en": "If you're\u00a0 attending Fastaval with\u00a0 your club\/school, fill out the name below\n",
-                        "da": "Hvis du er p\u00e5 Fastaval med din klub\/ungdomsskole, s\u00e5 udfyld navnet nedenfor\n"
-                    }
-                },
-                {
-                    "type": "text_input",
-                    "text": {
-                        "en": "Name of club\/school",
-                        "da": "Navn p\u00e5 klub\/ungdomsskole"
-                    },
-                    "infosys_id": "ungdomsskole"
                 },
                 {
                     "type": "radio",
@@ -282,6 +267,21 @@
                             "da": "Du har ikke valgt nogen arbejdskategori"
                         }
                     }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you're\u00a0 attending Fastaval with\u00a0 your club\/school, fill out the name below\n",
+                        "da": "Hvis du er p\u00e5 Fastaval med din klub\/ungdomsskole, s\u00e5 udfyld navnet nedenfor\n"
+                    }
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Name of club\/school",
+                        "da": "Navn p\u00e5 klub\/ungdomsskole"
+                    },
+                    "infosys_id": "ungdomsskole"
                 }
             ]
         },
