@@ -93,6 +93,14 @@
         "en": "You have chosen to be a rules explainer, but you haven't chosen any board games to explain rules for."
       }
     },
+    "missing_junior": {
+      "en": "You haven't selected any Fastaval Junior activities",
+      "da": "Du har ikke valgt nogen Fastaval Junior aktiviteter",
+      "label": {
+        "en": "Fastaval Junior Activities",
+        "da": "Fastaval Junior Aktiviteter"
+      }
+    },
     "full_run": {
       "en": "This activity already have the maximum sign-ups",
       "da": "Denne aktivitet har allerede maximum antal tilmeldinger"
