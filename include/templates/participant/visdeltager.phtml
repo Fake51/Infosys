@@ -73,6 +73,10 @@ $this->registerLateLoadJS('participant.js');
                     <td class='label'>Arrangørområde: </td><td colspan='2' id='arbejdsomraade' class='editable text'><?= e($this->deltager->arbejdsomraade);?></td>
                 </tr>
                 <tr>
+                    <td class='label'>Forfatter/Designer: </td><td id='forfatter' class='editable yesno'><?= $this->deltager->forfatter;?></td>
+                    <td class='label'>Scenarie: </td><td colspan='3' id='scenarie' class='editable text'><?= e($this->deltager->scenarie);?></td>
+                </tr>
+                <tr>
                     <td class='label'>Extra vouchers: </td><td colspan='2' id='extra_vouchers' class='editable text'><?= $this->deltager->extra_vouchers;?></td>
                 </tr>
                 <tr>
@@ -90,29 +94,23 @@ $this->registerLateLoadJS('participant.js');
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <td class='label'>SuperGDS: </td><td id='supergds' class='editable yesno'><?= $this->deltager->supergds;?></td>
-                    <td class='label'>Altid GDS: </td><td id='package_gds' class='editable package_gds'><?= $this->deltager->package_gds ? 'Ja' : 'Nej';?></td>
-                    <td class='label'>SuperGM: </td><td id='supergm' class='editable yesno'><?= $this->deltager->supergm;?></td>
+                    <td class='label'>Super GDS: </td><td id='supergds' class='editable yesno'><?= $this->deltager->supergds;?></td>
+                    <td class='label'>Ønsket antal GDS:</td><td id='desired_diy_shifts' class='editable text'><?= e($this->deltager->desired_diy_shifts);?></td>
+                    <td class='label'>Ønsket antal aktiviteter:</td><td id='desired_activities' class='editable text'><?= e($this->deltager->desired_activities);?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Super GM: </td><td id='supergm' class='editable yesno'><?=$this->deltager->supergm?></td>
+                    <td class='label'>Maks GM Scenarier: </td><td id='gm_max' class='editable text'><?=$this->deltager->gm_max?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Super RF:</td><td id='super_rules_guide' class='editable yesno'><?=$this->deltager->super_rules_guide?></td>
+                    <td class='label'>Maks RF Spil:</td><td id='rules_guide_max' class='editable text'><?=$this->deltager->rules_guide_max?></td>
                 </tr>
                 <tr>
                     <td class='label'>Hjælper mandag: </td><td id='ready_mandag' class='editable yesno'><?= $this->deltager->ready_mandag;?></td>
                     <td class='label'>Hjælper tirsdag: </td><td id='ready_tirsdag' class='editable yesno'><?= $this->deltager->ready_tirsdag;?></td>
+                    <td class='label'>Økonomisk støtte:</td><td id='financial_struggle' class='editable yesno'><?= e($this->deltager->financial_struggle);?></td>
                 </tr>
-                <tr>
-                    <td class='label'>Arr. næste år: </td><td id='arrangoer_naeste_aar' class='editable yesno'><?= $this->deltager->arrangoer_naeste_aar;?></td>
-                    <td class='label'>Arr. sovesal: </td><td id='sovesal' class='editable yesno'><?= $this->deltager->sovesal;?></td>
-                    <td class='label'>Ædru sovesal: </td><td id='sober_sleeping' class='editable yesno'><?= $this->deltager->sober_sleeping;?></td>
-                </tr>
-                <tr>
-                    <td class='label'>Forfatter: </td><td id='forfatter' class='editable yesno'><?= $this->deltager->forfatter;?></td>
-                    <td class='label'><strong>Ønsket antal aktiviteter:</strong> </td><td id='desired_activities' class='editable text'><?= e($this->deltager->desired_activities);?></td>
-                    <td class='label'><strong>Ønsket antal GDS:</strong> </td><td id='desired_diy_shifts' class='editable text'><?= e($this->deltager->desired_diy_shifts);?></td>
-                </tr>
-                <tr>
-                    <td class='label'><strong>Simultantolk:</strong> </td><td id='interpreter' class='editable yesno'><?= e($this->deltager->interpreter);?></td>
-                    <td class='label'><strong>Økonomisk støtte:</strong> </td><td id='financial_struggle' class='editable yesno'><?= e($this->deltager->financial_struggle);?></td>
-                </tr>
-
                 <tr>
                     <td colspan='6'><hr/></td>
                 </tr>
@@ -130,9 +128,6 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'>Ungdomsskole: </td><td colspan='5' id='ungdomsskole' class='editable text'><?= e($this->deltager->ungdomsskole);?></td>
-                </tr>
-                <tr>
-                    <td class='label'>Scenarie: </td><td colspan='5' id='scenarie' class='editable text'><?= e($this->deltager->scenarie);?></td>
                 </tr>
                 <?php endif;?>
             </table>

@@ -168,7 +168,7 @@
                         {
                             "text": {
                                 "en": "No limit",
-                                "da": "Ingen grænse"
+                                "da": "Ingen gr\u00e6nse"
                             },
                             "value": 0
                         }
@@ -231,7 +231,7 @@
                         {
                             "text": {
                                 "en": "No limit",
-                                "da": "Ingen grænse"
+                                "da": "Ingen gr\u00e6nse"
                             },
                             "value": 0
                         }
@@ -251,6 +251,61 @@
                     "type": "checkbox",
                     "status": "normal",
                     "input": "together:gm"
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "Rules guide",
+                "da": "Regelformidler"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Thank you for your help with explaining rules for Fastaval's board games. You can choose which games you want to explain rules for under the \"activities\" tab.",
+                        "da": "Tak for at hj\u00e6lpe til med at forklare regler til Fastavals br\u00e6tspil. Du skal v\u00e6lge hvilke br\u00e6tspil du gerne vil forklare regler til under fanen \"aktiviteter\"."
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I want to be a super rules guide. Fastaval may contact me, if there is a need for additional rules guides.",
+                        "da": "Jeg vil gerne v\u00e6re regelformidler. Fastaval m\u00e5 gerne kontakte mig, hvis der mangler ekstra regelformidlere."
+                    },
+                    "infosys_id": "super_rules_guide"
+                },
+                {
+                    "type": "select",
+                    "text": {
+                        "en": "Is there a maximum number of borad games you want to explain rules for?",
+                        "da": "Er der et maksimalt antal br\u00e6tspil du vil forklare regler til?"
+                    },
+                    "infosys_id": "rules_guide_max",
+                    "options": [
+                        {
+                            "text": {
+                                "en": "No limit",
+                                "da": "Ingen gr\u00e6nse"
+                            },
+                            "value": 0
+                        }
+                    ],
+                    "range": {
+                        "start": 1,
+                        "end": 10
+                    }
+                }
+            ],
+            "display_logic": [
+                {
+                    "type": "default",
+                    "status": "hidden"
+                },
+                {
+                    "type": "checkbox",
+                    "status": "normal",
+                    "input": "together:rules"
                 }
             ]
         },
@@ -304,7 +359,6 @@
                     "ready_tirsdag"
                 ]
             }
-
         }
     ]
 }
