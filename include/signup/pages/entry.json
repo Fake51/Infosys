@@ -41,15 +41,15 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "At Fastaval, you can either buy a ticket for all days (partout) or to the individual days seperately. Organizers and participants bellow the age of 18, receive a 100 kr. discount on partout entry. These discounts can be combined for organizers bellow 18.",
-                        "da": "Til Fastaval kan du enten k\u00f8be billet til alle dage (partout) eller til de enkelte dage hver for sig. V\u00e6r opm\u00e6rksom p\u00e5 at der er et billetgebyr p\u00e5 15 kr."
+                        "en": "At Fastaval, you can either buy a ticket for all days (partout) or to the individual days separately.\u00a0 Note that a ticket fee og 15 kr. is placed on all sign-ups.",
+                        "da": "Til Fastaval kan du enten k\u00f8be billet til alle dage (partout) eller til de enkelte dage hver for sig. V\u00e6r opm\u00e6rksom p\u00e5, at der p\u00e5l\u00e6gges et billetgebyr p\u00e5 15 kr. til alle tilmeldinger."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "New Item",
-                        "da": "En partout-billet koster 350 kr.\u00a0\u00a0Arrang\u00f8rer og deltagere under 18 \u00e5r, f\u00e5r 100 kr. rabat p\u00e5 en partout-billet\nEr du arrang\u00f8r under 18 \u00e5r f\u00e5 du b\u00e5de ungdoms- og arrang\u00f8rrabat."
+                        "en": "A partout ticket costs 350 kr.\u00a0Organizers and participants bellow the age of 18, receive a 100 kr. discount on partout entry. These discounts can be combined for organizers bellow 18.",
+                        "da": "En partout-billet koster 350 kr.\u00a0\u00a0Arrang\u00f8rer og deltagere under 18 \u00e5r, f\u00e5r 100 kr. rabat p\u00e5 en partout-billet.\u00a0Er du arrang\u00f8r under 18 \u00e5r f\u00e5 du b\u00e5de ungdoms- og arrang\u00f8rrabat."
                     }
                 },
                 {
@@ -145,10 +145,17 @@
                     }
                 },
                 {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Sleeping at Fastaval for the whole event costs 200 kr. for participants and 50 kr. for organizers.",
+                        "da": "Overnatning p\u00e5 hele Fastaval koster 200 kr. for deltagere og 50 kr. for arrang\u00f8rer."
+                    }
+                },
+                {
                     "type": "checkbox",
                     "text": {
-                        "en": "I will be sleeping at Fastaval all days: Participants (200 kr.) Organizers (50 kr.)",
-                        "da": "Jeg overnatter alle dage p\u00e5 Fastaval: Deltager (200 kr.) Arrang\u00f8rer (50 kr.)"
+                        "en": "I will be sleeping at Fastaval all days.",
+                        "da": "Jeg overnatter alle dage p\u00e5 Fastaval."
                     },
                     "infosys_id": "sleeping:partout",
                     "excludes": [

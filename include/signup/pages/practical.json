@@ -162,19 +162,33 @@
             },
             "items": [
                 {
-                    "type": "text_input",
+                    "type": "paragraph",
                     "text": {
-                        "en": "Nickname",
-                        "da": "Kaldenavn"
-                    },
-                    "infosys_id": "nickname"
+                        "en": "If you sign up for before the 20th of february, you will receive a nametag upon check-in at Fastaval.",
+                        "da": "Hvis du tilmelder dig inden d. 20. februar, vil du f\u00e5 et navneskilt n\u00e5r du checker ind p\u00e5 Fastaval.\u00a0\u00a0"
+                    }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "If you wish to be called by a name other than your legal name, please provide that name in this field.\u00a0",
-                        "da": "Hvis du \u00f8nsker at tiltales med et andet navn end dit juridiske navn, s\u00e5 oplys det navn du vil tiltales som i dette felt."
+                        "en": "The nametag will display you name and preferred pronouns. If your full name is too long to fit on the tag, only your first and last name will be used.",
+                        "da": "P\u00e5 navneskiltet vil der fremg\u00e5 dit navn og fortrukne pronomen (stedord). Er dit fulde navn for langt til at passe p\u00e5 skiltet, vil dit fornavn og efternavn blive brugt."
                     }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you wish to be called by a name other than your legal name, or fx. your middle name, please provide that (full) name in this field.\u00a0",
+                        "da": "Hvis du \u00f8nsker at tiltales med et andet navn end dit juridiske navn, eller f.eks. med dit mellemnavn, s\u00e5 oplys det (fulde) navn du vil tiltales som i dette felt."
+                    }
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Used name",
+                        "da": "Kaldenavn"
+                    },
+                    "infosys_id": "nickname"
                 },
                 {
                     "type": "radio",
