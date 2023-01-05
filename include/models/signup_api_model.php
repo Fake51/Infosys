@@ -721,7 +721,7 @@ class SignupApiModel extends Model {
                 ($activity->getMinAge() && $age < $activity->getMinAge())
               ){
                 $errors[$category][] = [
-                  'type' => 'age_'.($age > $activity->getMaxAge() ? 'max' : 'min'),
+                  'type' => 'age_'.(($activity->getMaxAge() && $age > $activity->getMaxAge()) ? 'max' : 'min'),
                   'age' => $age,
                   'max_age' => $activity->getMaxAge(),
                   'min_age' => $activity->getMinAge(),
