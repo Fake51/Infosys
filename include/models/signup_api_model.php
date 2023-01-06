@@ -607,12 +607,13 @@ class SignupApiModel extends Model {
                   $select->setWhere('type', '=', 'Leje af madras');
                   break;
 
-                case 'party':
-                  $select->setWhere('type', '=', 'Ottofest');
-                  break;
-  
-                case 'bubbles':
-                  $select->setWhere('type', '=', 'Ottofest - Champagne');
+                case 'party1':
+                case 'party2':
+                case 'party3':
+                  $match = "";
+                  preg_match("/party(\d)/", $key_item, $match);
+                  $id = 80 + intval($match[1]);
+                  $select->setWhere('id', '=', $id);
                   break;
 
                 case 'alea':
@@ -630,7 +631,6 @@ class SignupApiModel extends Model {
                   if ($amount == 0) continue 3;
 
                   $select->setWhere('type', '=', "Rig onkel - {$amount}00");
-                  $participant->rig_onkel = 'ja';
                   $value = 'on';
                   break;
   
@@ -639,7 +639,6 @@ class SignupApiModel extends Model {
                   if ($amount == 0) continue 3;
 
                   $select->setWhere('type', '=', "Hemmelig onkel - {$amount}00");
-                  $participant->hemmelig_onkel = 'ja';
                   $value = 'on';
                   break;
 
@@ -940,14 +939,6 @@ class SignupApiModel extends Model {
           $signup['misc:mattres'] = 'on';
           break;
 
-        case $entrance->type == 'Ottofest':
-          $signup['misc:party'] = 'on';
-          break;
-
-        case $entrance->type == 'Ottofest - Champagne':
-          $signup['misc:bubbles'] = 'on';
-          break;
-
         case $entrance->type == 'Alea medlemskab':
           $signup['misc:alea'] = 'on';
           break;
@@ -962,6 +953,10 @@ class SignupApiModel extends Model {
 
         case preg_match("/Hemmelig onkel - (\d+)/", $entrance->type, $matches):
           $signup['misc:secret_support'] = $matches[1];
+          break;
+
+        case in_array($entrance->id, [81, 82, 83]): // Ottofest extra
+          $signup['misc:party'.($entrance->id - 80)] = 'on';
           break;
 
         default:

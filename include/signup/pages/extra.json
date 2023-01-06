@@ -25,6 +25,59 @@
     "sections": [
         {
             "headline": {
+                "en": "Otto party extra",
+                "da": "Tilbeh\u00f8r til Ottofesten"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Description of extra item 1",
+                        "da": "Beskrivelse af tilbeh\u00f8r 1"
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "Extra item 1",
+                        "da": "Tilbeh\u00f8r 1"
+                    },
+                    "infosys_id": "misc:party1"
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Description of extra item 2",
+                        "da": "Beskrivelse af tilbeh\u00f8r 2"
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "Extra item 2",
+                        "da": "Tilbeh\u00f8r 2"
+                    },
+                    "infosys_id": "misc:party2"
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Description of extra item 3",
+                        "da": "Beskrivelse af tilbeh\u00f8r 3"
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "Extra item 3",
+                        "da": "Tilbeh\u00f8r 3"
+                    },
+                    "infosys_id": "misc:party3"
+                }
+            ]
+        },
+        {
+            "headline": {
                 "en": "Support Fastaval as a rich aunt\/uncle",
                 "da": "St\u00f8t Fastaval som rig tante\/onkel"
             },
