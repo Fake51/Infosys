@@ -410,6 +410,21 @@ class SignupApiModel extends Model {
                   continue 3;
                 }
                 
+                // Check for allowed amount 
+                $wear_count = intval($wear_order['amount']);
+                $max = $wear->max_order > 0 ? $wear->max_order : 10;
+                if ($wear_count > $max || $wear_count < 1) {
+                  $errors[$category][] = [
+                    'type' => 'wear_order_range',
+                    'amount' => $wear_order['amount'],
+                    'max_order' => $max,
+                    'wear_id' => $wear->id,
+                    'attributes' => $wear_order['attributes'],
+                    'module' => 'wear',
+                  ];
+                  continue 3;
+                }
+
                 if(!$participant->setWearOrder($wear_prices[0], $wear_order['amount'], $wear_order['attributes'] ?? [])) {
                   $errors[$category][] = [
                     'type' => 'wear_order_fail',

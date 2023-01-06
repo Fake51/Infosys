@@ -23,6 +23,10 @@
         "en": "You're not allowed to order more than",
         "da": "Du må ikke bestille mere end"
     },
+    "range_error": {
+        "en": "Amount must be a number between 1 and ",
+        "da": "Antal skal være et tal mellem 1 og "
+    },
     "attribute_type": {
         "model": {
             "en": "Model",
