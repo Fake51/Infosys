@@ -116,7 +116,7 @@
                         {
                             "text": {
                                 "en": "No limit",
-                                "da": "Ingen grænse"
+                                "da": "Ingen gr\u00e6nse"
                             },
                             "value": 0
                         }
@@ -158,7 +158,7 @@
                 {
                     "type": "list",
                     "text": {
-                        "en": "'SL\/RF' means you would like to be a scenario facilitator of a scenario or game guide for a board game.\n'SL\/RF - 1.priority' means you would like to be a player if you cannot be a facilitator\/guide.",
+                        "en": "'SL\/RF' means you would like to be a scenario facilitator (SL) of a scenario or game guide (RF) for a board game.\n'SL\/RF - 1.priority' means you would like to be a player if you cannot be a facilitator\/guide.",
                         "da": "'SL\/RF' betyder at du gerne vil v\u00e6re spilleder p\u00e5 et scenarie eller regelformidler p\u00e5 et br\u00e6tspil.\n'SL\/RF - 1. prioritet' betyder, at du gerne vil v\u00e6re spiller, hvis du ikke kan blive spilleder eller regelformidler."
                     }
                 }
@@ -194,7 +194,7 @@
                 {
                     "type": "list",
                     "text": {
-                        "en": "[color=#b6d7a8] Gr\u00f8n [\/color]: Scenarios[color=#9fc5e8] Bl\u00e5 [\/color]: Board Games[color=#ffd966] Gul [\/color]:\u00a0Other activities[color=#b4a7d6]\u00a0Lilla [\/color]: Live roleplay[color=#ea9999] R\u00f8d [\/color]: Magic",
+                        "en": "[color=#b6d7a8] Gr\u00f8n [\/color]: Scenarios\n[color=#9fc5e8] Bl\u00e5 [\/color]: Board Games\n[color=#ffd966] Gul [\/color]:\u00a0Other activities\n[color=#b4a7d6]\u00a0Lilla [\/color]: Live roleplay\n[color=#ea9999] R\u00f8d [\/color]: Magic",
                         "da": "[color=#b6d7a8] Gr\u00f8n [\/color]: Rollespil\n[color=#9fc5e8] Bl\u00e5 [\/color]: Br\u00e6tspil\n[color=#ffd966] Gul [\/color]: \u00d8vrige aktiviteter\n[color=#b4a7d6] Lilla [\/color]: Live Rollespil\n[color=#ea9999] R\u00f8d [\/color]: Magic"
                     }
                 }

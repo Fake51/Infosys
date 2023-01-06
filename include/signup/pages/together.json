@@ -39,13 +39,13 @@
                     "type": "paragraph",
                     "text": {
                         "en": "New Item",
-                        "da": "Vi er alle sammen f\u00e6lles om Fastaval... bla bla mere tekst..\nL\u00e6s mere om de forskellige helte-roller nedenfor."
+                        "da": "Fastaval kan kun eksistere, hvis vi alle giver en hj\u00e6lpende h\u00e5nd med. Vi har samlet fire sp\u00e6ndende helte-opgaver som du frit kan v\u00e6lge imellem. Dette er ogs\u00e5 en rigtig god mulighed for at l\u00e6re mere om Fastaval og f\u00e5 nye bekendtskaber.\u00a0Hvis du ikke er arrang\u00f8r er det et krav at v\u00e6lge \u00e9n af nedenst\u00e5ende opgaver. Vi s\u00f8rger selvf\u00f8lgelig for at din tildelte opgave ikke ligger samtidig med dine andre aktiviteter.\u00a0L\u00e6s mere om de forskellige helte-opgaver her:"
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "New Item",
+                        "en": "[b]What is The Hero Force?[\/b]Forklarende tekst... Kort beskrivelse af omr\u00e5d",
                         "da": "[b]Hvad er Heltestyrken?[\/b]\nForklarende tekst... Kort beskrivelse af omr\u00e5derne og link til hjemmeside"
                     }
                 },
@@ -74,21 +74,21 @@
         },
         {
             "headline": {
-                "en": "New Section",
+                "en": "How do you want to be a hero at Fastaval?",
                 "da": "Hvordan vil du v\u00e6re en helt p\u00e5 Fastaval?"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Choose at least one of the options below. You are welcome to choose multiple options, if you want to help out more.If you plan on arriving in the set-up days (monday-tuesday) and help out, choose \"preparation crew\"",
-                        "da": "V\u00e6lg minimum \u00e9n af nedenst\u00e5ende, men gerne flere hvis du har lyst.\nHvis du regner med at ankomme i ops\u00e6tningsdagene og give en h\u00e5nd med, skal du notere det som \u201cops\u00e6tningshold\u201d"
+                        "en": "Choose at least one of the options below. You are welcome to choose multiple options, if you want to help out more. If you plan on arriving in the set-up days (monday-tuesday) and help out, choose \"preparation crew\"",
+                        "da": "V\u00e6lg minimum \u00e9n af nedenst\u00e5ende, men gerne flere hvis du har lyst.\nHvis du regner med at ankomme i ops\u00e6tningsdagene (mandag-tirsdag) og give en h\u00e5nd med, skal du notere det som \u201cops\u00e6tningshold\u201d"
                     }
                 },
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "New Item",
+                        "en": "I want to be a part of The Hero Force",
                         "da": "Jeg vil v\u00e6re en del af Heltestyrken"
                     },
                     "infosys_id": "together:hero",
@@ -97,7 +97,7 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "New Item",
+                        "en": "I want to be a Scenario Facilitator",
                         "da": "Jeg vil v\u00e6re spilleder"
                     },
                     "infosys_id": "together:gm",
@@ -106,7 +106,7 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "New Item",
+                        "en": "I want to be a Game Guide",
                         "da": "Jeg vil v\u00e6re regelformidler"
                     },
                     "infosys_id": "together:rules",
@@ -115,7 +115,7 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "New Item",
+                        "en": "I want to be on the Set-up Team",
                         "da": "Jeg vil v\u00e6re p\u00e5 ops\u00e6tningsholdet"
                     },
                     "infosys_id": "together:prepare",
@@ -201,7 +201,7 @@
         },
         {
             "headline": {
-                "en": "Scenario facilitator",
+                "en": "Scenario Facilitator",
                 "da": "Spilleder"
             },
             "items": [
@@ -256,7 +256,7 @@
         },
         {
             "headline": {
-                "en": "Rules guide",
+                "en": "Game Guide",
                 "da": "Regelformidler"
             },
             "items": [
@@ -270,8 +270,8 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I want to be a super rules guide. Fastaval may contact me, if there is a need for additional rules guides.",
-                        "da": "Jeg vil gerne v\u00e6re regelformidler. Fastaval m\u00e5 gerne kontakte mig, hvis der mangler ekstra regelformidlere."
+                        "en": "I want to be a super game guide. Fastaval may contact me, if there is a need for additional rules guides.",
+                        "da": "Jeg vil gerne v\u00e6re super-regelformidler. Fastaval m\u00e5 gerne kontakte mig, hvis der mangler ekstra regelformidlere."
                     },
                     "infosys_id": "super_rules_guide"
                 },

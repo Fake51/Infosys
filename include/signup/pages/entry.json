@@ -295,8 +295,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]Youth dormitory[\/b]\nIf you are under 18 years and don\u2019t drink alcohol during Fastaval you will be able to sleep in the youth dormitory at Mariagerfjord Gymnasium.",
-                        "da": "[b]Ungdomssovesal[\/b]\nHvis du er under 18 \u00e5r og ikke drikker alkohol p\u00e5 Fastaval, har du mulighed for at overnatte i en ungdomssovesal p\u00e5 Mariagerfjord Gymnasium."
+                        "en": "[b]Youth dormitory[\/b]\nIf you are under 18 years, you will be able to sleep in the youth dormitory at Mariagerfjord Gymnasium.",
+                        "da": "[b]Ungdomssovesal[\/b]\nHvis du er under 18 \u00e5r har du mulighed for at overnatte i en ungdomssovesal p\u00e5 Mariagerfjord Gymnasium."
                     }
                 },
                 {
@@ -318,8 +318,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]Organizer Dormitory[\/b]\nIf you are an organizer, you can sleep in the organizer dormitory at the high school. (organizers with shifts during Fastaval will be prioritized, in case there is a lack of spots)",
-                        "da": "[b]Arrang\u00f8rsovesalen[\/b]\nHvis du er arrang\u00f8r kan du sove i arrang\u00f8rsovesalen p\u00e5 Mariagerfjord gymnasium. (arrang\u00f8rer med j\u00e6vnlige vagter under Fastaval prioriteres, hvis der er mangel p\u00e5 pladser)"
+                        "en": "[b]Organizer Dormitory[\/b]\nIf you are an organizer, you can sleep in the organizer dormitory at the high school (organizers with shifts during Fastaval will be prioritized, in case there is a lack of spots)",
+                        "da": "[b]Arrang\u00f8rsovesalen[\/b]\nHvis du er arrang\u00f8r kan du sove i arrang\u00f8rsovesalen p\u00e5 Mariagerfjord gymnasium (arrang\u00f8rer med j\u00e6vnlige vagter under Fastaval prioriteres, hvis der er mangel p\u00e5 pladser)"
                     }
                 },
                 {
