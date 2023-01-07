@@ -2339,12 +2339,11 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
      */
     public function setupSignupEmail(DBObject $participant, Page $page)
     {
-        $pay_by_time  = strtotime($this->config->get('con.paymentlimit'));
         $signup_time = strtotime($participant->signed_up) + 86400;
         $signup_end_time = strtotime($this->config->get('con.signupend'));        
         $constart = strtotime($this->config->get('con.start'));
 
-        $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
+        $paytime = $signup_end_time > $signup_time ? $signup_end_time : $signup_time;
         if ($paytime < time()) {
             $paytime = time() + 86400;
         }

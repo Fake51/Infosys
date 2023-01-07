@@ -12,6 +12,7 @@ class SignupApiModel extends Model {
 
     if ($module == 'main') {
       $config = json_decode($content);
+      $config->signup_end = $this->config->get('con.signupend');
       $config->con_start = $this->config->get('con.start');
       $config->autocomplete = [
         'organizer_categories' => $this->loadOrganizerCategories(),
