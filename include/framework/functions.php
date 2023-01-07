@@ -25,18 +25,52 @@
  */
 
 /**
- * replaces short output names from date() with long Danish names
+ * replaces output names from date() with Danish names of same length
  *
  * @param string $string String with names to replace
  *
  * @return string
  */
-function danishDayNames($string)
-{
+function danishDayNames($string){
     return str_ireplace(
         array('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'),
         array('Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'),
-        $string);
+        $string
+    );
+}
+
+function danishMonthNames($string){
+    return str_ireplace(
+        ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'oct'],
+        ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December', 'Okt'],
+        $string
+    );
+}
+
+function getWeekDay($day, $english = false) {
+    if ($english) {
+        $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    } else {
+        $days = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
+    }
+    return $days[$day];
+}
+
+function getWeekDayShort($day, $english = false) {
+    return substr(getWeekDay($day, $english), 0, 3);
+}
+
+function getMonthText($month, $english = false) {
+    if ($english) {
+        $months = ['December', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    } else {
+        $months = ['December', 'Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December'];
+    }
+    return $months[$month];
+}
+
+function getMonthTextShort($month, $english = false) {
+    return substr(getMonthText($month, $english), 0, 3);
 }
 
 /**
