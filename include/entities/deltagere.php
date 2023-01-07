@@ -284,7 +284,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         if (!$this->isLoaded() || !is_string($this->$column)) return [];
 
         $string = str_replace("'","", $this->$column);
-        return explode(',', $string);
+        return $string == '' ? [] : explode(',', $string);
     }
 
     /**
