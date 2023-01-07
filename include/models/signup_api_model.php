@@ -1042,7 +1042,7 @@ class SignupApiModel extends Model {
       $signup['activity_language:'.$sprog] = 'on';
     }
 
-    // Activity languages
+    // Sleeping areas
     foreach($participant->getCollection('sleeping_area') as $area) {
       $signup['sleeping_area:'.$area] = 'on';
     }
