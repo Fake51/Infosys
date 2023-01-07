@@ -116,9 +116,9 @@ class DeltagereGDSTilmeldinger extends DBObject
     protected function makePeriod($timestamp)
     {
         $periods = array(
-            '04' => '12',
+            '7' => '12',
             '12' => '17',
-            '17' => '04',
+            '17' => '24',
         );
 
         $hour = date('H', $timestamp);
@@ -209,13 +209,13 @@ class DeltagereGDSTilmeldinger extends DBObject
         $parts = explode(' ', $this->period);
 
         switch ($parts[1]) {
-        case '04-12':
+        case '7-12':
             return $lang === 'en' ? 'Morning' : 'Morgen';
 
         case '12-17':
-            return $lang === 'en' ? 'Midday' : 'Middag';
+            return $lang === 'en' ? 'Afternoon' : 'Eftermiddag';
 
-        case '17-04':
+        case '17-24':
             return $lang === 'en' ? 'Evening' : 'Aften';
 
         }
