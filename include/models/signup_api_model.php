@@ -50,23 +50,30 @@ class SignupApiModel extends Model {
    */
   public function getFood() {
     $result = (object)[];
-    
-    // TODO make this a setting
-    $category = [
-      5 => "breakfast",
-      12 => "dinner",
-      18 => "dinner",
-    ];
-    $result->categories = [
-      'breakfast' => [
-        'en' => 'breakfast',
-        'da' => 'morgenmad',
+
+    // TODO add translations to food entity
+    $categories = [
+      5 => [
+        'en' => 'Breakfast',
+        'da' => 'Morgenmad',
       ],
-      'dinner' => [
-        'en' => 'dinner',
-        'da' => 'aftensmad',
-      ]
+      12 => [
+        'en' => 'Dinner - Regular',
+        'da' => 'Aftensmad - Standard',
+        'exclude' => 18,
+      ],
+      18 => [
+        'en' => 'Dinner - Vegetarian',
+        'da' => 'Aftensmad - Vegetar',
+        'exclude' => 12,
+      ],
     ];
+    $food_categories = $this->createEntity('Mad')->findAll();
+    foreach($food_categories as $category) {
+      $categories[$category->id]['price'] = $category->pris;
+    }
+
+    $result->categories = $categories;
 
     $food =  $this->createEntity('Madtider')->findAll();
     usort($food, function($a, $b) {
@@ -80,9 +87,8 @@ class SignupApiModel extends Model {
         'da' => $fooditem->description_da,
         'en' => $fooditem->description_en,
       ];
-      $cat = $category[$fooditem->mad_id];
       $day = date('N', strtotime($fooditem->dato));
-      $result->days[$day][$cat][] = $resultitem;
+      $result->days[$day][$fooditem->mad_id] = $resultitem;
     }
     return $result;
   }
@@ -985,7 +991,7 @@ class SignupApiModel extends Model {
 
     // Collect food order
     foreach($participant->getMadtider() as $food) {
-      $signup['food'][] = $food->id;
+      $signup['food:'.$food->id] = 'on';
     }
 
     // Collect hero-task signup

@@ -77,12 +77,12 @@ class InfosysSignupRender {
   }
 
   static render_checkbox(item) {
-    return `
-      <div class="input-wrapper input-type-checkbox">
-        <input type="checkbox" id="${item.infosys_id}">
-        <label for="${item.infosys_id}">${item.processed}</label>
-      </div>
-    `;
+    let wrapper = jQuery('<div class="input-wrapper input-type-checkbox"></div>')
+    wrapper.append(`
+      <input type="checkbox" id="${item.infosys_id}">
+      <label for="${item.infosys_id}">${item.processed}</label>
+    `);
+    return wrapper;
   }
 
   static render_text_input(item) {

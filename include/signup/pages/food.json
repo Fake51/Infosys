@@ -80,6 +80,28 @@
                 "en": "Here you can order breakfast and dinner:",
                 "da": "Her kan du bestille morgenmad og aftensmad:"
             },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "You can read more about the individual meals at the bottom of the page",
+                        "da": "Du kan l\u00e6se ynderligere detaljer om de enkelte m\u00e5ltider i bunden af siden"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Thursday is vegetarian day and therefore only has the vegetarian option",
+                        "da": "Torsdag er vegetardag og har derfor kun mulighed for vegetarmad"
+                    }
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "",
+                "da": ""
+            },
             "module": "food"
         },
         {
