@@ -32,8 +32,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Fastaval will have the evening meal delivered from [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] and will have the food delivery in the common area.\u00a0\nThe food will be served in the following time span:\nBreakfast: 8.30-10.30 AM \nDinner: 5.30-7.30 PM (sunday 5-7 PM)\nDinner will be served in rounds. You get your time slot on your participant sheet closer to Fastaval.\n\nBreakfast will be a breakfast buffet with hearty bread, spreads, boiled eggs, fruits and vegetable as well as cereal with yoghurt, milk or skyr.",
-                        "da": "Fastaval f\u00e5r aftensmaden leveret fra [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] og kommer til at have mad-udlevering i f\u00e6llesomr\u00e5det.\n\n Maden udleveres i f\u00f8lgende tidsrum:\nMorgenmaden: kl. 08:30-10:30 \nAftensmaden: kl. 17:30-19:30 (s\u00f8ndag kl. 17:00-19:00)\nAftensmad udleveres i runder. Du f\u00e5r dit tidsrum p\u00e5 din deltagerseddel n\u00e5r vi n\u00e6rmer os Fastaval.\n\nMorgenmaden bliver en morgenmadsbuffet med groft br\u00f8d, p\u00e5l\u00e6g, kogte \u00e6g, frugt og gr\u00f8nt, samt morgenmadsprodukter med yoghurt, m\u00e6lk eller skyr."
+                        "en": "Fastaval will have the evening meal delivered from [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] and will have the food delivery in the common area.\u00a0\nThe food will be served in the following time span:\nBreakfast: 8.30-10.30 AM \nDinner: 5.30-7.30 PM (sunday 5-7 PM)\nDinner will be served in rounds. You get your time slot on your participant sheet closer to Fastaval.",
+                        "da": "Fastaval f\u00e5r aftensmaden leveret fra [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] og kommer til at have mad-udlevering i f\u00e6llesomr\u00e5det.\n\n Maden udleveres i f\u00f8lgende tidsrum:\nMorgenmaden: kl. 08:30-10:30 \nAftensmaden: kl. 17:30-19:30 (s\u00f8ndag kl. 17:00-19:00)\nAftensmad udleveres i runder. Du f\u00e5r dit tidsrum p\u00e5 din deltagerseddel n\u00e5r vi n\u00e6rmer os Fastaval."
                     }
                 }
             ]
@@ -85,14 +85,14 @@
                     "type": "paragraph",
                     "text": {
                         "en": "You can read more about the individual meals at the bottom of the page",
-                        "da": "Du kan l\u00e6se ynderligere detaljer om de enkelte m\u00e5ltider i bunden af siden"
+                        "da": "Du kan l\u00e6se yderligere detaljer om de enkelte m\u00e5ltider i bunden af siden"
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Thursday is vegetarian day and therefore only has the vegetarian option",
-                        "da": "Torsdag er vegetardag og har derfor kun mulighed for vegetarmad"
+                        "en": "Friday is vegetarian day and therefore only has the vegetarian option",
+                        "da": "Fredag er vegetardag og har derfor kun mulighed for vegetarmad"
                     }
                 }
             ]
@@ -113,8 +113,85 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Here you can read more about allergens, that you need to be aware of:",
-                        "da": "Her kan du se eventuelle allergener som du skal v\u00e6re opm\u00e6rksom p\u00e5:"
+                        "en": "[b]Breakfast (all days) [\/b]",
+                        "da": "[b] Morgenmad (alle dage)[\/b]"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Breakfast will be a breakfast buffet with hearty bread, spreads, boiled eggs, fruits and vegetable as well as cereal with yoghurt, milk or skyr.",
+                        "da": "Morgenmaden bliver en morgenmadsbuffet med groft br\u00f8d, p\u00e5l\u00e6g, kogte \u00e6g, frugt og gr\u00f8nt, samt morgenmadsprodukter med yoghurt, m\u00e6lk eller skyr."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Dinner Wednesday[\/b]",
+                        "da": "[b]Aftensmad Onsdag[\/b]"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Pasta Cacio e Pepe with chicken\u00a0\nVegetarian: Pasta Cacio e Pepe\nCourse with Italian inspired salat",
+                        "da": "Pasta Cacio e Pepe med kylling\u00a0\nVegetar: Pasta Cacio e Pepe\nTilh\u00f8rende salat: Italiensk inspireret salat"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Dinner Thursday [\/b]",
+                        "da": "[b]Aftensmad Torsdag[\/b]"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Chili sin Carne with steamed rice & cr\u00e8me fra\u00eeche with Mexican salat",
+                        "da": "Chili sin Carne med dampede ris, cr\u00e8me fraiche og Mexikansk salat"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Dinner Friday [\/b]",
+                        "da": "[b]Aftensmad Fredag [\/b]"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Red curry chicken with wholegrains noodles and sweet chili sauce\u00a0\nVegetarian: Tofu in red thai curry, wholegrains noodles and sweet chili sauce\nCourse with Thai salat",
+                        "da": "Kylling i r\u00f8d thai karry med fuldkornsnudler og s\u00f8d chili sauce\nVegetar: Tofu i r\u00f8d thai karry med fuldkornsnudler og s\u00f8d chili sauce\nTilh\u00f8rende salat: Thai salat"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Dinner Saturday [\/b]",
+                        "da": "[b]Aftensmad L\u00f8rdag [\/b]"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Lasagne\nVegetarian: Lasagne with\u00a0spinach\nCourse with italian inspired salat",
+                        "da": "Lasagne\nVegetar: Lasagne med spinat\nTilh\u00f8rende salat: Italiensk inspireret salat"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Dinner Sunday [\/b]",
+                        "da": "[b]Aftensmad S\u00f8ndag [\/b]"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Meatballs in curry sauce with steamed rice and chutney\nVegetarian: Celeriac in curry with steamed rice & chutney\nCourse with this seasons fresh salat",
+                        "da": "Boller i karry med dampede ris og chutney\nVegetar: Selleri i karry med dampede ris og chutney\nTilh\u00f8rende salat: S\u00e6sonens friske salat"
                     }
                 }
             ]

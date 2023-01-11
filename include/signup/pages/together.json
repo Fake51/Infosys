@@ -6,7 +6,7 @@
     },
     "title": {
         "en": "Fastaval Together",
-        "da": "Et f\u00e6lles Fastaval"
+        "da": "F\u00e6lles Fastaval"
     },
     "display_logic": [
         {
@@ -38,15 +38,22 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Fastaval can only exist if everyone helps out. We have gathered four exciting heroic deeds that you can\u00a0choose among. This is also a good opportunity to learn more about Fastaval and get new\u00a0acquaintances. If you are not an organizer, it is required to choose one of the mentioned heroic deeds. We make sure your deed do not take place at the same time as your other activities. Read more about the different heroic deeds here:",
-                        "da": "Fastaval kan kun eksistere, hvis vi alle giver en hj\u00e6lpende h\u00e5nd med. Vi har samlet fire sp\u00e6ndende helte-opgaver som du frit kan v\u00e6lge imellem. Dette er ogs\u00e5 en rigtig god mulighed for at l\u00e6re mere om Fastaval og f\u00e5 nye bekendtskaber.\u00a0Hvis du ikke er arrang\u00f8r er det et krav at v\u00e6lge \u00e9n af nedenst\u00e5ende opgaver. Vi s\u00f8rger selvf\u00f8lgelig for at din tildelte opgave ikke ligger samtidig med dine andre aktiviteter.\u00a0L\u00e6s mere om de forskellige helte-opgaver her:"
+                        "en": "[b] Important [\/b] If you are an organizer arriving during the set-up days (monday, tuesday) you must sign up for the set-up crew, even if you are just setting up for the area you work in.",
+                        "da": "[b] Vigtigt [\/b] Hvis du er arrang\u00f8r og kommer i ops\u00e6tningsdagene (mandag, tirsdag) s\u00e5 skal du tilmelde dig ops\u00e6tningsholdet, ogs\u00e5 selvom du s\u00e6tter dit eget omr\u00e5de op.\u00a0"
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]What is The Hero Force?[\/b]You become a part of a network of participants who help the organizers out around Fastaval, to keep the congress running. You will get assigned a hero-task at one of Fastavals many sales and service venues, according to the timespans you choose in your sign-up. You are more than welcome to take more heroic deeds than one. Read more about The Hero Force here.",
-                        "da": "[b]Hvad er Heltestyrken?[\/b]\nDu bliver en del af et netv\u00e6rk af andre deltagere, Helte, som hj\u00e6lper arrang\u00f8rerne rundt omkring p\u00e5 Fastaval, for at f\u00e5 Fastaval til at k\u00f8re rundt. Du vil f\u00e5 tildelt en helte-opgave p\u00e5 en af Fastavals salgs- eller servicesteder, alt efter de tidsrum, som du noterer i din tilmelding. Man er ogs\u00e5 velkommen til at tage flere opgaver end \u00e9n. L\u00e6s mere om Heltestyrken her."
+                        "en": "Fastaval can only exist if everyone helps out. We have gathered four exciting heroic deeds that you can\u00a0choose among. This is also a good opportunity to learn more about Fastaval and get new\u00a0acquaintances.\nIf you are [b]not [\/b] an organizer, it is required to choose one of the mentioned heroic deeds. We make sure your deed do not take place at the same time as your other activities. Read more about the different heroic deeds \u00a0[url=https:\/\/www.fastaval.dk\/en\/praktisk\/faelles-fastaval\/]here[\/url]:",
+                        "da": "Fastaval kan kun eksistere, hvis vi alle giver en hj\u00e6lpende h\u00e5nd. Vi har samlet fire sp\u00e6ndende helte-opgaver som du frit kan v\u00e6lge imellem. Dette er ogs\u00e5 en rigtig god mulighed for at l\u00e6re mere om Fastaval og f\u00e5 nye bekendtskaber.\nHvis du [b]ikke [\/b] er arrang\u00f8r er det et krav at v\u00e6lge \u00e9n af nedenst\u00e5ende opgaver. Vi s\u00f8rger selvf\u00f8lgelig for at din tildelte opgave ikke ligger samtidig med dine andre aktiviteter.\u00a0L\u00e6s mere om de forskellige helte-opgaver \u00a0[url=https:\/\/www.fastaval.dk\/praktisk\/faelles-fastaval\/]her[\/url]:"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]What is The Hero Force?[\/b]You become a part of a network of participants who help the organizers out around Fastaval, to keep the congress running. You will get assigned a hero-task at one of Fastavals many sales and service venues, according to the timespans you choose in your sign-up. You are more than welcome to take more heroic deeds than one. Read more about The Hero Force \u00a0[url=https:\/\/www.fastaval.dk\/en\/praktisk\/faelles-fastaval\/]here[\/url].",
+                        "da": "[b]Hvad er Heltestyrken?[\/b]\nDu bliver en del af et netv\u00e6rk af andre deltagere, Helte, som hj\u00e6lper arrang\u00f8rerne rundt omkring p\u00e5 Fastaval, for at f\u00e5 Fastaval til at k\u00f8re rundt. Du vil f\u00e5 tildelt en helte-opgave p\u00e5 en af Fastavals salgs- eller servicesteder, alt efter de tidsrum, som du noterer i din tilmelding. Man er ogs\u00e5 velkommen til at tage flere opgaver end \u00e9n. L\u00e6s mere om Heltestyrken\u00a0[url=https:\/\/www.fastaval.dk\/praktisk\/faelles-fastaval\/]her[\/url]."
                     }
                 },
                 {
@@ -59,15 +66,15 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]What is a Game Guide?[\/b]\u00a0When playing a boardgame for the first time, it is often a great help if one of the other players already knows the game and its rules. As a Game Guide, you are this player for one of this year\u2019s designer boardgames and you are responsible for helping your table run well. You get an opportunity to help Fastaval by doing what many boardgames do best: create a good atmosphere and help everyone have a great time by\u00a0\u00a0Read more about Game Guide here.",
-                        "da": "[b]Hvad er en regelformidler?[\/b]\nN\u00e5r man spiller et br\u00e6tspil for f\u00f8rste gang er det ofte en stor hj\u00e6lp at have en medspiller ved bordet som allerede kender spillet og dets regler. Som regelformidler i en spilblok er du denne spiller, for et af \u00e5rets designerbr\u00e6tspil, og du har ansvaret for at dit bord k\u00f8rer bedst muligt. Du f\u00e5r mulighed for at bidrage til Fastaval ved at g\u00f8re det mange br\u00e6tspillere g\u00f8r bedst: skab en god stemning om bordet og hj\u00e6lp medspillere med at have en god spiloplevelse. L\u00e6s mere om Regelformidler her."
+                        "en": "[b]What is a Game Guide?[\/b]\u00a0When playing a boardgame for the first time, it is often a great help if one of the other players already knows the game and its rules. As a Game Guide, you are this player for one of this year\u2019s designer boardgames and you are responsible for helping your table run well. You get an opportunity to help Fastaval by doing what many boardgames do best: create a good atmosphere and help everyone have a great time by\u00a0\u00a0Read more about Game Guide \u00a0[url=https:\/\/www.fastaval.dk\/en\/praktisk\/faelles-fastaval\/]here[\/url].",
+                        "da": "[b]Hvad er en regelformidler?[\/b]\nN\u00e5r man spiller et br\u00e6tspil for f\u00f8rste gang er det ofte en stor hj\u00e6lp at have en medspiller ved bordet som allerede kender spillet og dets regler. Som regelformidler i en spilblok er du denne spiller, for et af \u00e5rets designerbr\u00e6tspil, og du har ansvaret for at dit bord k\u00f8rer bedst muligt. Du f\u00e5r mulighed for at bidrage til Fastaval ved at g\u00f8re det mange br\u00e6tspillere g\u00f8r bedst: skab en god stemning om bordet og hj\u00e6lp medspillere med at have en god spiloplevelse. L\u00e6s mere om Regelformidler \u00a0[url=https:\/\/www.fastaval.dk\/praktisk\/faelles-fastaval\/]her[\/url]."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "b]What is the Set-up Team?[\/b]Forklarende tekst...",
-                        "da": "[b]Hvad er ops\u00e6tningsholdet?[\/b]\nForklarende tekst..."
+                        "en": "b]What is the Set-up Team?[\/b]Be a part of the team that sets up Fastaval and create the physical settings. The Common area needs to be made cosy, the class rooms changes to scenario rooms, sleeping areas need to be set up as well as paper around the school and other stuff needs to be moved around. We do it all together and after dinner, there we will socialize and play board games. During the set-up days there will be 3 daily meals and some snacks.",
+                        "da": "[b]Hvad er ops\u00e6tningsholdet?[\/b]\nV\u00e6r med til at g\u00f8re klar til Fastaval og skabe de fysiske rammer. F\u00e6llesomr\u00e5der skal g\u00f8res hyggelige, klasselokaler skal laves til spillokaler, sovesalene skal s\u00e6ttes op, papir skal h\u00e6nges op og ting skal flyttes. Vi l\u00f8fter i flok, og efter aftensmaden er der hygge og br\u00e6tspil.\u00a0Under ops\u00e6tning er der 3 daglige m\u00e5ltider og diverse snacks.\u00a0"
                     }
                 }
             ]
