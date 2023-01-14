@@ -320,6 +320,7 @@ class WearModel extends Model
         $wear->title_en       = ((!empty($post->title_en)) ? $post->title_en : '');
         $wear->description_en = ((!empty($post->description_en)) ? $post->description_en : '');
         $wear->max_order      = ((!empty($post->max_order)) ? $post->max_order : 0);
+        $wear->is_required    = ((!empty($post->is_required)) ? 1 : 0);
 
         $query = 'SELECT MAX(position) as plast FROM wear;';
         $last_pos = $this->db->query($query)[0]['plast'];
@@ -364,6 +365,7 @@ class WearModel extends Model
         $wear->title_en       = ((!empty($post->title_en)) ? $post->title_en : '');
         $wear->description_en = ((!empty($post->description_en)) ? $post->description_en : '');
         $wear->max_order      = ((!empty($post->max_order)) ? $post->max_order : 0);
+        $wear->is_required    = ((!empty($post->is_required)) ? 1 : 0);
 
         if (!$wear->update()) {
             return false;

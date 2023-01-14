@@ -1,4 +1,4 @@
-<?php echo $this->getMessagesHtml();?>
+<?=$this->getMessagesHtml()?>
 <div id='wear-details'>
   <fieldset>
     <legend><?php echo (isset($this->wear) ? 'Opdater' : 'Opret');?> wear</legend>
@@ -8,6 +8,7 @@
       <span class='label'>Engelsk titel:</span> <span class='detail'><input type='text' name='title_en' value='<?php echo (isset($this->wear) ? $this->wear->title_en : '');?>'/></span><br/>
       <span class='label'>Engelsk beskrivelse:</span> <span class='detail'><input type='text' name='description_en' value='<?php echo (isset($this->wear) ? $this->wear->description_en : '');?>'/></span><br/>
       <span class='label'>Maks Bestilling:</span> <span class='detail'><input type='number' name='max_order' value='<?php echo (isset($this->wear) ? $this->wear->max_order : 0);?>'/></span><br/>
+      <span class='label'>Påkrævet:</span> <span class='detail'><input type='checkbox' name='is_required' value='true' <?=$this->wear->is_required ? 'checked': ''?>></span><br/>
       <hr/>
       <div class="folding-section">
         <h2>Varianter</h2>
@@ -140,13 +141,13 @@
                 ?>
                   <tr>
                     <td>
-                      <input name='wearpriceid[]' value='<?php echo $price->id;?>' type='hidden'/>
-                      <input name='wearprice_category[]' value='<?php echo $price->brugerkategori_id;?>' type='hidden'/>
+                      <input name='wearpriceid[]' value='<?=$price->id?>' type='hidden'/>
+                      <input name='wearprice_category[]' value='<?=$price->brugerkategori_id?>' type='hidden'/>
                       <input value='<?=$navn;?>' type='hidden'/>
-                      <input type='hidden' value='<?php echo $price->wear_id;?>' name='wearprice_wearid[]'/>
+                      <input type='hidden' value='<?=$price->wear_id?>' name='wearprice_wearid[]'/>
                       <?=$navn;?>
                     </td>
-                    <td><input type='text' name='wearprice_price[]' value='<?php echo $price->pris;?>'/></td>
+                    <td><input type='text' name='wearprice_price[]' value='<?=$price->pris?>'/></td>
                     <td><input type='button' value='Slet' class='remove-wearprice' /></td>
                   </tr>
             <?php
@@ -159,7 +160,7 @@
                 <select id='category-select'>
                   <?php foreach ($this->model->getAllParticipantCategories() as $cat) :
                     if (!isset($this->wear) || !in_array($cat->id, $this->wear->getUsedUserCategories())) : ?>
-                      <option value='<?php echo $cat->id;?>'><?php echo $cat->navn;?></option>
+                      <option value='<?=$cat->id?>'><?=$cat->navn?></option>
                     <?php endif;
                   endforeach; ?>
                 </select>
@@ -182,6 +183,6 @@
     </form>
   </fieldset>
 </div>
-<script type='text/javascript' src="<?php echo $this->JSLink('wear.js');?>"></script>
+<script type='text/javascript' src="<?=$this->JSLink('wear.js')?>"></script>
 <script type='text/javascript'>wear_object.attributes = JSON.parse('<?=json_encode($all_attributes)?>')</script>
 

@@ -197,6 +197,7 @@ class SignupApiModel extends Model {
         'position' => $item->position,
         'prices' => [],
         'max_order' => $item->max_order,
+        'required' => $item->is_required,
         'variants' => $item->getVariants(),
         'images' => $item->getImages(),
       ];
@@ -411,11 +412,12 @@ class SignupApiModel extends Model {
                 if (count($wear_prices) == 0) {
                   $errors[$category][] = [
                     'type' => 'no_wear_price',
+                    'module' => 'wear',
                     'info' => "wear_order",
                     'user_category_id' => $user_category->id,
                     'wear_id' => $wear->id,
                   ];
-                  continue 3;
+                  continue;
                 }
                 
                 // Check for allowed amount 
