@@ -255,4 +255,4 @@ INSERT INTO countries (code, name_en, name_da) VALUES('AX', 'Ã…land Islands', 'Ã
 
 ALTER TABLE deltagere DROP COLUMN land;
 ALTER TABLE deltagere ADD country CHAR(2) NOT NULL DEFAULT 'DK';
-ALTER TABLE deltagere ADD CONSTRAINT `deltagere_ibfk_4` FOREIGN KEY (`country`) REFERENCES `countries` (`code`)
+ALTER TABLE deltagere ADD CONSTRAINT `deltagere_ibfk_4` FOREIGN KEY (`country`) REFERENCES `countries` (`code`);
