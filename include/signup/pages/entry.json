@@ -5,7 +5,7 @@
         "da": "Entre & overnatning"
     },
     "title": {
-        "en": "Entry and sleeping",
+        "en": "Entry and accomodation",
         "da": "Entre og overnatning"
     },
     "display_logic": [
@@ -133,21 +133,21 @@
         },
         {
             "headline": {
-                "en": "Sleeping arrangements\n",
+                "en": "Accomodation",
                 "da": "Overnatning"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "At Fastaval, we have four different sleeping areas. You can find a detailed description of each on the [url=https:\/\/www.fastaval.dk\/en\/praktisk\/praktiske-informationer\/]website[\/url]",
-                        "da": "P\u00e5 Fastaval har du fire forskellige overnatningsmuligheder. Du kan l\u00e6se mere detaljeret om dem p\u00e5\u00a0[url=https:\/\/www.fastaval.dk\/praktisk\/praktiske-informationer\/]hjemmesiden[\/url]"
+                        "en": "At Fastaval, we have four different sleeping areas. You can find a detailed description of each on the [url=https:\/\/www.fastaval.dk\/en\/praktisk\/praktiske-informationer\/]website[\/url].",
+                        "da": "P\u00e5 Fastaval har du fire forskellige overnatningsmuligheder. Du kan l\u00e6se mere detaljeret om dem p\u00e5\u00a0[url=https:\/\/www.fastaval.dk\/praktisk\/praktiske-informationer\/]hjemmesiden[\/url]."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Sleeping at Fastaval for the whole event costs 200 kr. for participants and 50 kr. for organizers.",
+                        "en": "Accomodation at Fastaval for the whole event costs 200 kr. for participants and 50 kr. for organizers.",
                         "da": "Overnatning p\u00e5 hele Fastaval koster 200 kr. for deltagere og 50 kr. for arrang\u00f8rer."
                     }
                 },
@@ -246,16 +246,16 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I want to sleep in the standard dormitory",
-                        "da": "Jeg vil gerne sove i den almindelige sovesal"
+                        "en": "I want to sleep in the standard dormitory.",
+                        "da": "Jeg vil gerne sove i den almindelige sovesal."
                     },
                     "infosys_id": "sleeping_area:regular"
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "If you sleep in the standard dormitory, you can rent a mattress for use during Fastaval. The mattress may not be moved to other dormitories.\u00a0",
-                        "da": "Hvis du sover i den almindelige sovesal, kan du leje en madras til brug under Fastaval. Madrassen m\u00e5 ikke flyttes til andre sovesale."
+                        "en": "If you sleep in the standard dormitory, you can rent a mattress for use during Fastaval. The mattress may not be moved to other dormitories. The matresses are not especially good, but they are better than the floor. Rent at your own risk.\u00a0",
+                        "da": "Hvis du sover i den almindelige sovesal, kan du leje en madras til brug under Fastaval. Madrassen m\u00e5 ikke flyttes til andre sovesale. Madrasserne er ikke specielt gode, men de er bedre end et gulv. Leje p\u00e5 eget ansvar."
                     }
                 },
                 {
@@ -280,8 +280,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]quiet and sober dormitory[\/b]\nThis year there will be a sober dormitory for people who can stay sober, quiet and prefer others to do the same.",
-                        "da": "[b]Stille- og \u00e6drusovesal[\/b]\nI \u00e5r vil der v\u00e6re en s\u00e6rlig sovesal for folk der \u00f8nsker at holde sig \u00e6dru, stille og \u00f8nsker at andre g\u00f8r det samme."
+                        "en": "[b]quiet and sober dormitory[\/b]\nThis year there will be a sober dormitory for people who want to stay sober, quiet and prefer others to do the same. The quiet\/sober dormitory is located at Mariagerfjord Gymnasium.\u00a0",
+                        "da": "[b]Stille- og \u00e6drusovesal[\/b]\nI \u00e5r vil der v\u00e6re en s\u00e6rlig sovesal for folk der \u00f8nsker at holde sig \u00e6dru, stille og \u00f8nsker at andre g\u00f8r det samme. Stille\/\u00e6dru sovesalen ligger p\u00e5 Mariagerfjord Gymnasium."
                     }
                 },
                 {
@@ -302,8 +302,8 @@
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I would like to sleep in the youth dormitory",
-                        "da": "Jeg vil gerne sove i ungdomssovesalen"
+                        "en": "I would like to sleep in the youth dormitory.",
+                        "da": "Jeg vil gerne sove i ungdomssovesalen."
                     },
                     "infosys_id": "sleeping_area:youth",
                     "display_logic": [
@@ -318,15 +318,15 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]Organizer Dormitory[\/b]\nIf you are an organizer, you can sleep in the organizer dormitory at the high school (organizers with shifts during Fastaval will be prioritized, in case there is a lack of spots)",
-                        "da": "[b]Arrang\u00f8rsovesalen[\/b]\nHvis du er arrang\u00f8r kan du sove i arrang\u00f8rsovesalen p\u00e5 Mariagerfjord gymnasium (arrang\u00f8rer med j\u00e6vnlige vagter under Fastaval prioriteres, hvis der er mangel p\u00e5 pladser)"
+                        "en": "[b]Organizer Dormitory[\/b]\nIf you are an organizer, you can sleep in the organizer dormitory at the high school (organizers with shifts during Fastaval will be prioritized, in case there is a lack of spots).",
+                        "da": "[b]Arrang\u00f8rsovesalen[\/b]\nHvis du er arrang\u00f8r kan du sove i arrang\u00f8rsovesalen p\u00e5 Mariagerfjord gymnasium (arrang\u00f8rer med j\u00e6vnlige vagter under Fastaval prioriteres, hvis der er mangel p\u00e5 pladser)."
                     }
                 },
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "I would like a spot in the organizer dormitory\t\t\t",
-                        "da": "Jeg vil gerne have en plads i arrang\u00f8rsovesalen\t\t\t"
+                        "en": "I would like a spot in the organizer dormitory.",
+                        "da": "Jeg vil gerne have en plads i arrang\u00f8rsovesalen."
                     },
                     "infosys_id": "sovesal",
                     "display_logic": [
@@ -346,8 +346,8 @@
                 {
                     "type": "text_area",
                     "text": {
-                        "en": "[b]Comments[\/b]\nIf you have any remarks about your sleeping arrangements, for instance if you'd rather sleep in a certain place compared to another, or have special sleeping needs, let us know here",
-                        "da": "[b]Bem\u00e6rkninger[\/b]\nHvis du har nogle bem\u00e6rkninger til hvor du skal sove, f.eks hvis du hellere vil sove et sted frem for et andet, eller har s\u00e6rlige sovebehov, s\u00e5 skriv det her"
+                        "en": "[b]Comments[\/b]\nIf you have any remarks about your sleeping arrangements, for instance if you would rather sleep in a certain place compared to another, or have special sleeping needs, let us know here.",
+                        "da": "[b]Bem\u00e6rkninger[\/b]\nHvis du har nogle bem\u00e6rkninger til hvor du skal sove, f.eks hvis du hellere vil sove et sted frem for et andet, eller har s\u00e6rlige sovebehov, s\u00e5 skriv det her."
                     },
                     "infosys_id": "note:sleeping"
                 }

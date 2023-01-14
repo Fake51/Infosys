@@ -16,6 +16,13 @@
             },
             "items": [
                 {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Please sign-up using your legal name.",
+                        "da": "Brug venligst dit juridiske navn i tilmeldingen."
+                    }
+                },
+                {
                     "type": "text_input",
                     "text": {
                         "en": "First name",
@@ -131,7 +138,7 @@
                 {
                     "type": "radio",
                     "text": {
-                        "en": "In which languge would you prefer to communivate with Fastaval?",
+                        "en": "In which language would you prefer to communicate with Fastaval?",
                         "da": "P\u00e5 hvilket sprog foretr\u00e6kker du at kommunikere med Fastaval?"
                     },
                     "infosys_id": "main_lang",
@@ -171,15 +178,15 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "The nametag will display you name and preferred pronouns. If your full name is too long to fit on the tag, only your first and last name will be used.",
+                        "en": "The nametag will display your name and preferred pronouns. If your full name is too long to fit on the tag, only your first and last name will be used.",
                         "da": "P\u00e5 navneskiltet vil der fremg\u00e5 dit navn og fortrukne pronomen (stedord). Er dit fulde navn for langt til at passe p\u00e5 skiltet, vil dit fornavn og efternavn blive brugt."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "If you wish to be called by a name other than your legal name, or fx. your middle name, please provide that (full) name in this field.\u00a0",
-                        "da": "Hvis du \u00f8nsker at tiltales med et andet navn end dit juridiske navn, eller f.eks. med dit mellemnavn, s\u00e5 oplys det (fulde) navn du vil tiltales som i dette felt."
+                        "en": "The name on the nametag does not have to be your legal name. If\u00a0you want to use a name other than your legal name, or fx. your middle name, please provide that (full) name in this field.\u00a0",
+                        "da": "Navnet p\u00e5 navneskiltet beh\u00f8ver ikke at v\u00e6re dit juridiske navn. Hvis du \u00f8nsker at bruge et andet navn end dit juridiske navn, eller f.eks. med dit mellemnavn, s\u00e5 oplys det (fulde) navn i dette felt."
                     }
                 },
                 {
@@ -233,7 +240,7 @@
                 {
                     "type": "radio",
                     "text": {
-                        "en": "Which participant type are you?",
+                        "en": "Which type of participant are you?",
                         "da": "Hvilken deltagertype er du? "
                     },
                     "infosys_id": "participant",
@@ -249,8 +256,8 @@
                         {
                             "value": "Juniordeltager",
                             "text": {
-                                "en": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r.\u00a0",
-                                "da": "Fastaval Junior (175 kr.) for b\u00f8rn fra 6 til 14 \u00e5r."
+                                "en": "I want to participate in Fastaval Junior (175 kr.)\u00a0 [b]not available in english[\/b]",
+                                "da": "Jeg vil gerne deltage i Fastaval Junior (175 kr.) - For b\u00f8rn fra 6 til 14 \u00e5r."
                             },
                             "display_logic": [
                                 {
@@ -285,7 +292,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "If you're\u00a0 attending Fastaval with\u00a0 your club\/school, fill out the name below\n",
+                        "en": "If you are\u00a0 attending Fastaval with your club\/school, fill out the name below",
                         "da": "Hvis du er p\u00e5 Fastaval med din klub\/ungdomsskole, s\u00e5 udfyld navnet nedenfor\n"
                     }
                 },
@@ -323,8 +330,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Alea is the organization behind Fastaval. Alea assists with practical problems, coordination and handling of ___. They also have a large responsibility in the handing over of important information, experiences and resources to future Fastavals. Alea is a member of Landsforeningen Bifrost.",
-                        "da": "Alea er foreningen bag Fastaval. Foreningen hj\u00e6lper med praktiske problemstillinger, overtager koordinerende opgaver og h\u00e5ndterer personsager. De har ligeledes et stort ansvar for at overlevering af vigtig erfaring og ressourcer til fremtidige Fastavaller. Alea er medlem af Landsforeningen Bifrost."
+                        "en": "Alea is the organization behind Fastaval. Alea assists with practical problems, coordination and handling of ___. They also have a large responsibility in the handing over of important information, experiences and resources to future Fastavals. Alea is a member of [url=https:\/\/landsforeningenbifrost.dk\/] Landsforeningen Bifrost [\/url]. Membership of Alea automatically makes you a member of Landsforeningen Bifrost.",
+                        "da": "Alea er foreningen bag Fastaval. Foreningen hj\u00e6lper med praktiske problemstillinger, overtager koordinerende opgaver og h\u00e5ndterer personsager. De har ligeledes et stort ansvar for at overlevering af vigtig erfaring og ressourcer til fremtidige Fastavaller. Alea er medlem af [url=https:\/\/landsforeningenbifrost.dk\/] Landsforeningen Bifrost [\/url]. Medlemskab af Alea g\u00f8r dig automatisk til medlem af Landsforeningen Bifrost."
                     }
                 },
                 {
@@ -338,7 +345,7 @@
                     "type": "paragraph",
                     "text": {
                         "en": "For insurance reasons, organizers must be members of Alea.",
-                        "da": "Af forsikringsm\u00e6ssige \u00e5rsager er det obligatorisk for arrang\u00f8re at v\u00e6re medlemmer af Alea."
+                        "da": "Af forsikringsm\u00e6ssige \u00e5rsager er det obligatorisk for arrang\u00f8re, at v\u00e6re medlemmer af Alea."
                     }
                 },
                 {

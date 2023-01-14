@@ -32,8 +32,22 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Fastaval will have the evening meal delivered from [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] and will have the food delivery in the common area.\u00a0\nThe food will be served in the following time span:\nBreakfast: 8.30-10.30 AM \nDinner: 5.30-7.30 PM (sunday 5-7 PM)\nDinner will be served in rounds. You get your time slot on your participant sheet closer to Fastaval.",
-                        "da": "Fastaval f\u00e5r aftensmaden leveret fra [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url] og kommer til at have mad-udlevering i f\u00e6llesomr\u00e5det.\n\n Maden udleveres i f\u00f8lgende tidsrum:\nMorgenmaden: kl. 08:30-10:30 \nAftensmaden: kl. 17:30-19:30 (s\u00f8ndag kl. 17:00-19:00)\nAftensmad udleveres i runder. Du f\u00e5r dit tidsrum p\u00e5 din deltagerseddel n\u00e5r vi n\u00e6rmer os Fastaval."
+                        "en": "Fastaval will have the evening meal delivered from [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url]. The food will be served in the common area, in the following time span:",
+                        "da": "Fastaval f\u00e5r aftensmaden leveret fra [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url]. Maden serveres i f\u00e6llesomr\u00e5det, i f\u00f8lgende tidsrum:"
+                    }
+                },
+                {
+                    "type": "list",
+                    "text": {
+                        "en": "Breakfast: 08.30-10.30\nDinner: 17.30-19.30 PM (sunday 17:00 - 19:00)",
+                        "da": "Morgenmaden: kl. 08:30-10:30\nAftensmaden: kl. 17:30-19:30 (s\u00f8ndag kl. 17:00-19:00)"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Dinner will be served in rounds. Your time slot will appear on your participant sheet closer to Fastaval.",
+                        "da": "Aftensmad udleveres i runder. Du f\u00e5r dit tidsrum p\u00e5 din deltagerseddel n\u00e5r vi n\u00e6rmer os Fastaval."
                     }
                 }
             ]
@@ -47,8 +61,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "This year, the funds provided by the rich aunts and uncles (people who choose to contribute to Fastval with additional funds) will be used to give financial support to those who may need it. In practice, it will be possible to get 2 food-days (breakfast + dinner) paid for by Fastaval.",
-                        "da": "I \u00e5r g\u00e5r st\u00f8tten fra rige onkler og tanter (dem der v\u00e6lger at donere ekstra penge til Fastaval) til at give et \u00f8konomisk bidrag til dem der m\u00e5tte have behov for det. Konkret vil det v\u00e6re muligt at f\u00e5 betalt 2 mad-dage (morgenmad + aftensmad) under Fastaval."
+                        "en": "This year, the funds provided by the rich aunts and uncles (people who choose to contribute to Fastaval with additional funds) will be used to give financial support to those who may need it. In practice, it will be possible to get 2 food-days (breakfast + dinner) paid for by Fastaval.",
+                        "da": "I \u00e5r g\u00e5r st\u00f8tten fra rige onkler og tanter (personer der v\u00e6lger at donere ekstra penge til Fastaval) til at give et \u00f8konomisk bidrag til dem der m\u00e5tte have behov for det. Konkret vil det v\u00e6re muligt at f\u00e5 betalt 2 mad-dage (morgenmad + aftensmad) under Fastaval."
                     }
                 },
                 {
@@ -84,8 +98,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "You can read more about the individual meals at the bottom of the page",
-                        "da": "Du kan l\u00e6se yderligere detaljer om de enkelte m\u00e5ltider i bunden af siden"
+                        "en": "You can read more about the individual meals at the bottom of the page.",
+                        "da": "Du kan l\u00e6se yderligere detaljer om de enkelte m\u00e5ltider i bunden af siden."
                     }
                 },
                 {
@@ -113,7 +127,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]Breakfast (all days) [\/b]",
+                        "en": "[b]Breakfast (all days)[\/b]",
                         "da": "[b] Morgenmad (alle dage)[\/b]"
                     }
                 },

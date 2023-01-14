@@ -25,6 +25,13 @@
                 {
                     "type": "paragraph",
                     "text": {
+                        "en": "Returning participants at Fastaval may notice that some activities, such as receptions and the Otto party, do not appear here. This is because they do not require sign-up. Such activities will instead appear in the program, and on your personal participant's note, if relevant (ie. the authors reception will only appear if you are an author, while the Otto party will appear for everyone).",
+                        "da": "Tideligere deltagere p\u00e5 Fastaval vil m\u00e5ske bem\u00e6rke, at forskellige aktiviteter, s\u00e5 som receptioner, Ottofesten og andre ting ikke fremg\u00e5r af listen her. Det g\u00f8r de ikke, fordi de ikke kr\u00e6ver tilmelding. De p\u00e5g\u00e6ldende aktiviteter vil i stedet fremg\u00e5 af programmet, og din personlige deltagerseddel, hvis relevant (ie. forfatterreceptionen st\u00e5r kun p\u00e5 scenarieforfatteres sedler, mens Ottofesten st\u00e5r p\u00e5 alles)."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
                         "en": "Click on the individual activities for a short description",
                         "da": "Klik p\u00e5 de enkelte aktiviteter for at se en foromtale\/beskrivelse af aktiviteten.\u00a0"
                     }
@@ -40,8 +47,8 @@
                 {
                     "type": "list",
                     "text": {
-                        "en": "You prioritize a given activity by clicking on the column next to it\nPriorities run from 1-4 (1 is highest, 4 lowest).\nYou can choose one 1st and 2nd priority in each time slot\nYou can choose as many 3rd and 4th priorities you'd like",
-                        "da": "Du prioriterer ved at klikke p\u00e5 s\u00f8jlen ud for hver aktivitet\n1-4 indikerer din prioritering (1 er h\u00f8jest, 4 lavest).\nFor hver blok kan du v\u00e6lge \u00e9n 1. og 2. prioritet, men du kan v\u00e6lge s\u00e5 mange 3.\/4. prioriteter du har lyst til"
+                        "en": "You prioritize a given activity by clicking on the column next to it\nPriorities run from 1-4 (1 is highest, 4 lowest).\nYou can choose one 1st and 2nd priority in each time slot\nYou can choose as many 3rd and 4th priorities as you would like",
+                        "da": "Du prioriterer ved at klikke p\u00e5 s\u00f8jlen ud for hver aktivitet\n1-4 indikerer din prioritering (1 er h\u00f8jest, 4 lavest).\nFor hver blok kan du v\u00e6lge en 1. og 2. prioritet\nDu kan v\u00e6lge s\u00e5 mange 3. og 4. prioriteter du har lyst til"
                     }
                 }
             ]
