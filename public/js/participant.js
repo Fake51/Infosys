@@ -166,6 +166,15 @@ $(function() {
             onerror: updateError
         });
 
+        $('td.editable.country').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: countries,
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError
+        });
+
         $('td.editable.pronoun').editable(window.infosys_data.participant_editable_url, {
             type: 'select',
             data: '{"they": "de/dem", "her": "hun/hende", "he": "han/ham"}',

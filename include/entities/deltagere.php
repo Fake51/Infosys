@@ -163,6 +163,14 @@ class Deltagere extends DBObject implements AgeFulfilment
             }
             return $this->work_area_text;
 
+        } elseif($var == 'land') {
+            if (!isset($this->country_text)) {
+                if ($this->storage['country'] == NULL) return "";
+                $result = $this->db->query('SELECT name_da FROM countries WHERE code = ?', [$this->storage['country']]);
+                $this->country_text = count($result) > 0 ? $result[0]['name_da'] : "";
+            }
+            return $this->country_text;
+
         } elseif (array_key_exists($var, $this->storage)) {
             return parent::__get($var);
 
@@ -180,6 +188,15 @@ class Deltagere extends DBObject implements AgeFulfilment
                     $this->storage['work_area'] = $result[0]['id'];
                 } else {
                     throw new FrameworkException('Work area name not recognized');
+                }
+                break;
+
+            case 'land':
+                $result = $this->db->query('SELECT code FROM countries WHERE name_da = ?', [$value]);
+                if (count($result) == 1) {
+                    $this->storage['country'] = $result[0]['code'];
+                } else {
+                    throw new FrameworkException('Country name not recognized');
                 }
                 break;
 
@@ -1703,5 +1720,10 @@ WHERE
         }
 
         return null;
+    }
+
+    public static function getCountry($lang) {
+        $result = $this->db->query("SELECT * FROM countries WHERE code = ?", [$this->storage['country']]);
+        return count($result) === 1 ? $result[0]["name_$lang"] : "";
     }
 }

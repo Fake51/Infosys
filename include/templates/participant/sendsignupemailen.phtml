@@ -70,7 +70,7 @@ Please use the following link to <strong>upload a photo</strong> for it:
 <?php endif;?>
 <tr><td colspan="2">Postalcode:                             </td><td><?=$this->participant->postnummer?></td></tr>
 <tr><td colspan="2">City:                                   </td><td><?=$this->participant->by?></td></tr>
-<tr><td colspan="2">Country:                                </td><td><?=$this->participant->land?></td></tr>
+<tr><td colspan="2">Country:                                </td><td><?=$this->participant->getCountry('en')?></td></tr>
 <?php if ($this->participant->mobiltlf) : ?>
 <tr><td colspan="2">Mobile:                                 </td><td><?=$this->participant->mobiltlf?></td></tr>
 <tr><td colspan="2">SMS-service during Fastaval:            </td><td><?=$this->participant->medbringer_mobil === 'ja' ? 'Yes' : 'No'?></td></tr>

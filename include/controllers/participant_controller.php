@@ -97,6 +97,12 @@ class ParticipantController extends Controller
     public function visDeltager()
     {
         if (!empty($this->vars['id']) && ($deltager = $this->model->findDeltager($this->vars['id']))) {
+            $countries = [];
+            foreach($this->model->getCountries() as $country) {
+                $countries[$country['name_da']] = $country['name_da'];
+            }            
+            $this->page->countries = json_encode($countries);
+            
             $work_areas = [];
             foreach($this->model->getWorkAreas() as $area) {
                 $work_areas[$area['name_da']] = $area['name_da'];

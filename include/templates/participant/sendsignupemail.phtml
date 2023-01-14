@@ -69,7 +69,7 @@ Brug venligst dette link til at <strong>uploade et billede</strong> til det:
 <?php endif;?>
 <tr><td colspan="2">Postnummer:                             </td><td><?=$this->participant->postnummer?></td></tr>
 <tr><td colspan="2">By:                                     </td><td><?=$this->participant->by?></td></tr>
-<tr><td colspan="2">Land:                                   </td><td><?=$this->participant->land?></td></tr>
+<tr><td colspan="2">Land:                                   </td><td><?=$this->participant->getCountry('da')?></td></tr>
 <?php if ($this->participant->mobiltlf) : ?>
 <tr><td colspan="2">Mobil:                                  </td><td><?=$this->participant->mobiltlf?></td></tr>
 <tr><td colspan="2">SMS-service under Fastaval:             </td><td><?=$this->participant->medbringer_mobil === 'ja' ? 'Ja' : 'Nej'?></td></tr>

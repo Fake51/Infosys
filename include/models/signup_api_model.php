@@ -16,6 +16,7 @@ class SignupApiModel extends Model {
       $config->con_start = $this->config->get('con.start');
       $config->autocomplete = [
         'organizer_categories' => $this->loadOrganizerCategories(),
+        'countries' => $this->loadCountries(),
       ];
 
       return json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
@@ -1116,4 +1117,20 @@ class SignupApiModel extends Model {
   
     return $categories;
   }
+
+  private function loadCountries() {
+    $query = "SELECT code, name_da, name_en FROM countries";
+    $result = $this->db->query($query);
+    $countries = [];
+    foreach($result as $row) {
+      $countries[$row['code']] = [
+        'en' => $row['name_en'],
+        'da' => $row['name_da'],
+        'code' => $row['code'],
+      ];
+    }
+  
+    return $countries;
+  }
+
 }

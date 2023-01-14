@@ -3547,6 +3547,13 @@ WHERE (
         return $res;
     }
 
+    public function getCountries($sort = 'da') {
+        if ($sort == 'da') $sort = " ORDER BY name_da COLLATE utf8mb4_danish_ci";
+        if ($sort == 'en') $sort = " ORDER BY name_en";
+
+        return $this->db->query("SELECT code, name_en, name_da FROM countries $sort");
+    }
+
     public function getWorkAreas($sort = 'da') {
         if ($sort == 'da') $sort = " ORDER BY name_da COLLATE utf8mb4_danish_ci";
         if ($sort == 'en') $sort = " ORDER BY name_en";

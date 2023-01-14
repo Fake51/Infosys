@@ -778,7 +778,7 @@ HAVING
 
         $deltager                    = $this->createEntity('Deltagere');
         $deltager->email             = $data['email'];
-        $deltager->fornavn           = $deltager->efternavn = $deltager->adresse1 = $deltager->postnummer = $deltager->by = $deltager->land = '';
+        $deltager->fornavn           = $deltager->efternavn = $deltager->adresse1 = $deltager->postnummer = $deltager->by = '';
         $deltager->medical_note      = $deltager->gcm_id = '';
         $deltager->password          = sprintf('%06d', mt_rand(100, 1000000));
         $deltager->brugerkategori_id = $bk->id;
