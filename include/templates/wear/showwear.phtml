@@ -1,13 +1,14 @@
-<?php echo $this->getMessagesHtml();?>
+<?=$this->getMessagesHtml()?>
 <div id='wear-details'>
     <fieldset>
-        <legend>Wear: <?php echo $this->wear->navn;?> - <a href="<?php echo $this->url('edit_wear',array('id' => $this->wear->id));?>">ret/slet</a></legend>
-        <span class='label'>Id:</span> <span class='detail'><?php echo $this->wear->id;?></span><br class='clearit'/>
-        <span class='label'>Navn:</span> <span class='detail'><?php echo $this->wear->navn;?></span><br class='clearit'/>
-        <span class='label'>Engelsk titel:</span> <span class='detail'><?php echo $this->wear->title_en;?></span><br class='clearit'/>
-        <span class='label'>Beskrivelse:</span> <span class='detail'><?php echo $this->wear->beskrivelse;?></span><br class='clearit'/>
-        <span class='label'>Engelsk beskrivelse:</span> <span class='detail'><?php echo $this->wear->description_en;?></span><br class='clearit'/>
-        <span class='label'>Maks bestilling:</span> <span class='detail'><?php echo $this->wear->max_order;?></span><br class='clearit'/>
+        <legend>Wear: <?=$this->wear->navn?> - <a href="<?=$this->url('edit_wear',array('id' => $this->wear->id))?>">ret/slet</a></legend>
+        <span class='label'>Id:</span> <span class='detail'><?=$this->wear->id?></span><br class='clearit'/>
+        <span class='label'>Navn:</span> <span class='detail'><?=$this->wear->navn?></span><br class='clearit'/>
+        <span class='label'>Engelsk titel:</span> <span class='detail'><?=$this->wear->title_en?></span><br class='clearit'/>
+        <span class='label'>Beskrivelse:</span> <span class='detail'><?=$this->wear->beskrivelse?></span><br class='clearit'/>
+        <span class='label'>Engelsk beskrivelse:</span> <span class='detail'><?=$this->wear->description_en?></span><br class='clearit'/>
+        <span class='label'>Maks bestilling:</span> <span class='detail'><?=$this->wear->max_order?></span><br class='clearit'/>
+        <span class='label'>Påkrævet:</span> <span class='detail'><?=$this->wear->is_required ? 'Ja' : 'Nej'?></span><br class='clearit'/>
         <hr/>
         <div id="attributes">
             <?php
@@ -44,10 +45,10 @@
                         foreach ($prices as $price) :
                             $navn = $price->getCategory()->navn;
                 ?>
-                <tr id='wp_<?php echo $price->id;?>'>
-                    <td><?php echo $price->id;?></td>
+                <tr id='wp_<?=$price->id?>'>
+                    <td><?=$price->id?></td>
                     <td><?=$navn;?></td>
-                    <td><?php echo $price->pris;?></td>
+                    <td><?=$price->pris?></td>
                 </tr>
                 <?php endforeach;
                 endif;?>

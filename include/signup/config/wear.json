@@ -19,9 +19,21 @@
         "en": "Delete",
         "da": "Slet"
     },
+    "no_wear_price": {
+        "en": "The wear type isn't availble to this type of participant",
+        "da": "Wear typen tilbydes ikke til denne type deltager"
+    },
     "max_error": {
         "en": "You're not allowed to order more than",
         "da": "Du må ikke bestille mere end"
+    },
+    "missing_error": {
+        "en": "You have to select a",
+        "da": "Du skal huske at vælge en"
+    },
+    "required": {
+        "en": "Required",
+        "da": "Påkrævet"
     },
     "range_error": {
         "en": "Amount must be a number between 1 and ",
