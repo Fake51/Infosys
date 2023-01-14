@@ -511,7 +511,7 @@ ORDER BY
                     continue;
                 }
 
-                if ($this->isEarlyCaregory($food->kategori) || $participant->isBusyBetween($madtid->dato, date('Y-m-d H:i:s', strtotime($madtid->dato . ' + 2 hour')), 'spilleder')) {
+                if ($this->isEarlyTime($food->kategori, $madtid->dato) || $participant->isBusyBetween($madtid->dato, date('Y-m-d H:i:s', strtotime($madtid->dato . ' + 2 hour')), 'spilleder')) {
                     $link->time_type = 1;
                     $link->update();
                     $usage[$madtid->dato][1]++;
@@ -530,11 +530,11 @@ ORDER BY
 
     }
 
-    private function isEarlyCaregory($category) {
+    private function isEarlyTime($category, $time) {
         // TODO - change this from hardcoded to a setting on food page
         // Like adding time ranges to food types
         $vegie = stripos($category, 'vegetar') !== false;
-        $friday = stripos($category, 'fredag') !== false;
+        $friday = date('N', strtotime($time)) == '5';
 
         return $vegie && !$friday;
     }

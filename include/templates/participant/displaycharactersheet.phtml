@@ -175,7 +175,7 @@
                             <tr class="heading">
                                 <td colspan="3" class='align-center'>
                                     (If there's no queue or you have an activity you need to get to, you're allowed to
-                                    pick up your dinner during the entire period from 5pm to 7:30pm)
+                                    pick up your dinner during the entire period from 5:30pm to 7:30pm)
                                 </td>
                             </tr>
                             <tr>
@@ -195,7 +195,7 @@
 
                                 foreach ($food as $madtid) :
                                     if (substr($madtid->dato, 0, 10) == $date && $madtid->isBreakfast()) :?>
-                                        <td class='align-left'>Yes (8:00am - 10:30am)</td>
+                                        <td class='align-left'>Yes (8:30am - 10:30am)</td>
                                     <?php $done = true;
                                         break;
                                     endif;
@@ -532,7 +532,7 @@
                             <tr class="heading">
                                 <td colspan='3' class='align-center'>
                                     (Hvis der ikke er kø, eller du skal nå et scenarie, må du gerne hente din mad i hele
-                                    perioden mellem 17 og 19:30)
+                                    perioden mellem 17:30 og 19:30)
                                 </td>
                             </tr>
                             <tr>
@@ -554,7 +554,7 @@
 
                                 foreach ($food as $madtid) :
                                     if (substr($madtid->dato, 0, 10) == $date && $madtid->isBreakfast()) :?>
-                                        <td class='align-left'>Ja (kl. 8-10:30)</td>
+                                        <td class='align-left'>Ja (kl. 8:30 - 10:30)</td>
                                     <?php
                                         $done = true;
                                         break;
