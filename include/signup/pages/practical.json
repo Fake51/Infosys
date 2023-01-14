@@ -81,8 +81,13 @@
                         "en": "Country",
                         "da": "Land"
                     },
-                    "infosys_id": "land",
-                    "required": "true"
+                    "infosys_id": "country",
+                    "required": "true",
+                    "autocomplete": {
+                        "list": "countries",
+                        "mode": "exhaustive",
+                        "value": "code"
+                    }
                 },
                 {
                     "type": "telephone",

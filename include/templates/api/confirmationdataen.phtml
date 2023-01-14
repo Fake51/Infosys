@@ -7,7 +7,7 @@
 <tr><td>Postal code:                               </td><td><?= e($this->participant->postnummer);?></td></tr>
 <tr><td>City:                                    </td><td><?= e($this->participant->by);?></td></tr>
 <?php endif;?>
-<tr><td>Country:                                  </td><td><?= e($this->participant->land);?></td></tr>
+<tr><td>Country:                                  </td><td><?= e($this->participant->getCountry('en'));?></td></tr>
 <?php if ($this->participant->mobiltlf) : ?>
 <tr><td>Mobile:    </td><td><?= e($this->participant->mobiltlf);?> (<?= $this->participant->medbringer_mobil === 'ja' ? 'Yes' : 'No';?>)</td></tr>
 <?php endif;?>

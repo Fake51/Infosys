@@ -7,7 +7,7 @@
 <tr><td>Postnr.:                               </td><td><?= e($this->participant->postnummer);?></td></tr>
 <tr><td>By:                                    </td><td><?= e($this->participant->by);?></td></tr>
 <?php endif;?>
-<tr><td>Land:                                  </td><td><?= e($this->participant->land);?></td></tr>
+<tr><td>Land:                                  </td><td><?= e($this->participant->getCountry('da'));?></td></tr>
 <?php if ($this->participant->mobiltlf) : ?>
 <tr><td>Mobil (SMS-service under Fastaval):    </td><td><?= e($this->participant->mobiltlf);?> (<?= $this->participant->medbringer_mobil === 'ja' ? 'Ja' : 'Nej';?>)</td></tr>
 <?php endif;?>

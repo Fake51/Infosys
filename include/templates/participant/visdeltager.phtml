@@ -7,6 +7,8 @@ $this->registerLateLoadJS('participant.js');
     var participant = {
         id: <?= $this->deltager->id;?>
     };
+    var countries = <?=$this->countries?>;
+    var work_areas = <?=$this->work_areas?>;
 </script>
 <div class="prev-next-buttons">
         <a class="btn btn-danger" href="<?= $this->url('spillersedler', array('id_range' => $this->deltager->id));?>" target="_blank">Print spillerseddel</a>
@@ -54,7 +56,7 @@ $this->registerLateLoadJS('participant.js');
                     <td class='label'>Tilmeldt SMS: </td><td colspan='2' id='medbringer_mobil' class='editable yesno'><?= $this->deltager->medbringer_mobil;?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Land: </td><td colspan='2' id='land' class='editable text'><?= e($this->deltager->land);?></td>
+                    <td class='label'>Land: </td><td colspan='2' id='land' class='editable country'><?= e($this->deltager->land);?></td>
                     <td class='label'>E-mail: </td><td colspan='2' id='email' class='editable text'><?= e($this->deltager->email);?></td>
                 </tr>
                 <tr>
@@ -70,7 +72,7 @@ $this->registerLateLoadJS('participant.js');
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <td class='label'>Arrangørområde: </td><td colspan='2' id='arbejdsomraade' class='editable text'><?= e($this->deltager->arbejdsomraade);?></td>
+                    <td class='label'>Arrangørområde: </td><td colspan='2' id='arbejdsomraade' class='editable work'><?= e($this->deltager->arbejdsomraade);?></td>
                 </tr>
                 <tr>
                     <td class='label'>Forfatter/Designer: </td><td id='forfatter' class='editable yesno'><?= $this->deltager->forfatter;?></td>
