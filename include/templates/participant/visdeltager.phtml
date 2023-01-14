@@ -7,6 +7,7 @@ $this->registerLateLoadJS('participant.js');
     var participant = {
         id: <?= $this->deltager->id;?>
     };
+    var work_areas = <?=$this->work_areas?>;
 </script>
 <div class="prev-next-buttons">
         <a class="btn btn-danger" href="<?= $this->url('spillersedler', array('id_range' => $this->deltager->id));?>" target="_blank">Print spillerseddel</a>

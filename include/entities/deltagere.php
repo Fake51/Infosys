@@ -172,6 +172,23 @@ class Deltagere extends DBObject implements AgeFulfilment
         }
     }
 
+    public function __set($varname, $value) {
+        switch ($varname) {
+            case 'arbejdsomraade':
+                $result = $this->db->query('SELECT id FROM organizer_categories WHERE name_da = ?', [$value]);
+                if (count($result) == 1) {
+                    $this->storage['work_area'] = $result[0]['id'];
+                } else {
+                    throw new FrameworkException('Work area name not recognized');
+                }
+                break;
+
+            default:
+                parent::__set($varname, $value);
+
+        }
+    }
+
     public function __isset($var) {
         if ($var == 'alder') {
             return true;

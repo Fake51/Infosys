@@ -148,6 +148,15 @@ $(function() {
             onerror: updateError
         });
 
+        $('td.editable.work').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: work_areas,
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError
+        });
+
         $('td.editable.lang').editable(window.infosys_data.participant_editable_url, {
             type: 'select',
             data: '{"da": "dansk", "en": "engelsk"}',
