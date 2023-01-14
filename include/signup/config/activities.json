@@ -80,8 +80,8 @@
   },
   "errors": {
     "no_days": {
-      "en": "You have not selected any day to attend Fastaval",
-      "da": "Du har ikke valgt hvilke dage du er på Fastaval"
+      "en": "There are no activities on the days you're attending Fastaval that matches the current category.",
+      "da": "Der er ingen aktiviteter de dage du er på Fastaval der matcher den valgte kategori."
     },
     "missing_task": {
       "gm": {
