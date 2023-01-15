@@ -652,7 +652,7 @@ class SignupApiModel extends Model {
                   break;
 
                 case 'extra_support':
-                  $amount = min(9, floor(intval($value) / 100));
+                  $amount = min(15, floor(intval($value) / 100));
                   if ($amount == 0) continue 3;
 
                   $select->setWhere('type', '=', "Rig onkel - {$amount}00");
@@ -660,7 +660,7 @@ class SignupApiModel extends Model {
                   break;
   
                 case 'secret_support':
-                  $amount = min(9, floor(intval($value) / 100));
+                  $amount = min(15, floor(intval($value) / 100));
                   if ($amount == 0) continue 3;
 
                   $select->setWhere('type', '=', "Hemmelig onkel - {$amount}00");
