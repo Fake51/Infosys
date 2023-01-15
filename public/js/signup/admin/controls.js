@@ -51,7 +51,10 @@ class SignupAdminControls {
     },
     add$radio_option: {
       text: "Tilføj Valgmulighed",
-      need: 'item:radio',
+      need: [
+        'item:radio',
+        'tiem:select',
+      ],
     },
     add$list: {
       text: "Tilføj liste",
@@ -73,7 +76,11 @@ class SignupAdminControls {
       let menuitem = jQuery('<div class="menu-item"><div>');
       menuitem.text(def.text);
       menuitem.attr('id', id);
-      menuitem.attr('need', def.need);
+      if (Array.isArray(def.need)) {
+        menuitem.attr('need', def.need.join(' '));
+      } else {
+        menuitem.attr('need', def.need);
+      }
       context_menu.append(menuitem);
     }
     jQuery('body').append(context_menu);
@@ -88,14 +95,16 @@ class SignupAdminControls {
       let selected_type = selection ? selection.closest('fieldset.signup-page-item').attr('item-type') : "";
       context_menu.find('.menu-item').each(function (){
         let element = jQuery(this)
-        let need = element.attr('need');
-        if (need) {
+        let needs = element.attr('need');
+        if (needs === undefined) return;
+        
+        needs = needs.split(' ');
+        for (const need of needs) {
           let [item, type] = need.split(":")
-          if (selected_id.includes(item) && (!type || type == selected_type)) {
-            element.show();
-          } else {
-            element.hide();
-          }
+          if (!selected_id.includes(item) || (type && type != selected_type)) continue;
+            
+          element.show();
+          return;
         }
       })
 
