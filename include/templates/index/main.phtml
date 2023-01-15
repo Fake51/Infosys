@@ -23,9 +23,15 @@ $this->registerLateLoadJS('index.js');
             <li><strong><?= $age;?>:</strong> <?= $count;?></li>
         <?php endforeach;?>
         <?php if(isset($this->participant_data['average_age'])) : ?>
-            <li><strong>Gennemsnit:</strong> <?=$this->participant_data['average_age']?></li>
+            <li><strong>Gennemsnit:</strong> <?=round($this->participant_data['average_age'],1)?></li>
         <?php endif;?>
         <!--<li><strong>Graf?</strong> <em><a href="<?= $this->url('graph_participant_shares');?>" class="graph-link">Ja tak!</a></em></li>-->
+    </ul>
+    <h3>Hvor har du hørt om Fastaval?:</h3>
+    <ul>
+        <?php foreach ($this->participant_data['knows_fastaval_from'] as $cat => $count) : ?>
+            <li><strong><?=$cat?>:</strong> <?=$count?></li>
+        <?php endforeach;?>
     </ul>
 </div>
 

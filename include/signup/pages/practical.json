@@ -318,11 +318,77 @@
             },
             "items": [
                 {
-                    "type": "paragraph",
+                    "type": "select",
                     "text": {
-                        "en": "OPTIONS HERE",
-                        "da": "OPTIONS HER"
-                    }
+                        "en": "",
+                        "da": ""
+                    },
+                    "infosys_id": "knows_fastaval_from",
+                    "options": [
+                        {
+                            "value": "0",
+                            "text": {
+                                "en": "",
+                                "da": "Ingen valgt"
+                            }
+                        },
+                        {
+                            "value": "1",
+                            "text": {
+                                "en": "New Option",
+                                "da": "Jeg har v\u00e6ret p\u00e5 Fastaval f\u00f8r"
+                            }
+                        },
+                        {
+                            "value": "2",
+                            "text": {
+                                "en": "New Option",
+                                "da": "P\u00e5 mit uddannelsessted"
+                            }
+                        },
+                        {
+                            "value": "3",
+                            "text": {
+                                "en": "New Option",
+                                "da": "I min rollespilsforening"
+                            }
+                        },
+                        {
+                            "value": "4",
+                            "text": {
+                                "en": "New Option",
+                                "da": "Til scenarier, kongresser m.m."
+                            }
+                        },
+                        {
+                            "value": "5",
+                            "text": {
+                                "en": "New Option",
+                                "da": "Folk jeg kender"
+                            }
+                        },
+                        {
+                            "value": "6",
+                            "text": {
+                                "en": "New Option",
+                                "da": "Reklamer i butikker"
+                            }
+                        },
+                        {
+                            "value": "7",
+                            "text": {
+                                "en": "New Option",
+                                "da": "Sociale Medier"
+                            }
+                        },
+                        {
+                            "value": "8",
+                            "text": {
+                                "en": "New Option",
+                                "da": "Internettet"
+                            }
+                        }
+                    ]
                 }
             ]
         },

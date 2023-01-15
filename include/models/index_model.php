@@ -167,6 +167,34 @@ ORDER BY
             $stats['average_age'] = $result[0]['average_age'];
         }
 
+        $page_file = SIGNUP_FOLDER."pages/practical.json";
+        if(is_file($page_file)) {
+            $page = json_decode(file_get_contents($page_file));
+            if (isset($page->sections)) foreach($page->sections as $section) {
+                if (isset($section->items)) foreach($section->items as $item) {
+                    if (isset($item->infosys_id) && $item->infosys_id === 'knows_fastaval_from') {
+                        $cat_select = $item;
+                        break 2;
+                    }
+                }
+            }
+
+            if (isset($cat_select)) {
+                $cat = [];
+                foreach ($cat_select->options as $option) {
+                    $cat[$option->value] = $option->text->da;
+                } 
+            }
+        }
+
+        $query = "SELECT knows_fastaval_from, COUNT(*) as count FROM deltagere GROUP BY knows_fastaval_from";
+        if (($result = $this->db->query($query)) && !empty($result[0])) {
+            foreach ($result as $row) {
+                $category = $cat[$row['knows_fastaval_from']] ?? $row['knows_fastaval_from'];
+                $stats['knows_fastaval_from'][$category] = $row['count'];
+            }
+        }
+
         return $stats;
     }
 

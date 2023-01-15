@@ -48,6 +48,10 @@
       "en": "You've selected your role as organizer, author or designer",
       "da": "Du har valgt at du er arrangør, forfatter eller designer"
     },
+    "knows_fastaval_from": {
+      "en": "Where have you heard about Fastaval?",
+      "da": "Hvor har du h\u00f8rt om Fastaval?"
+    },
     "scenarie": {
       "en": "The title of your scenario/game",
       "da": "Titlen på dit scenarie/spil"
