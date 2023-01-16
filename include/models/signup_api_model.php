@@ -902,7 +902,7 @@ class SignupApiModel extends Model {
 
             case 'ready_mandag':
             case 'ready_tirsdag':
-              $signup['together:prepare'] = 'on';
+              if ($participant->$key == 'ja') $signup['together:prepare'] = 'on';
               // Notice no break here
             default:
               if (!isset($column_info[$key])) {
@@ -1000,7 +1000,7 @@ class SignupApiModel extends Model {
     // Collect hero-task signup
     foreach($participant->getGDSTilmeldinger() as $hero_signup) {
       $period = $hero_signup->period;
-      preg_match("/(\d{4}-\d{2}-\d{2}) (\d{2}-\d{2})/", $period, $match);
+      preg_match("/(\d{4}-\d{2}-\d{2}) (\d{1,2}-\d{2})/", $period, $match);
       $day = date('N', strtotime($match[1]));
       switch($match[2]) {
         case "7-12":
@@ -1019,6 +1019,7 @@ class SignupApiModel extends Model {
           $errors[] = [
             'type' => 'unknown_time',
             'period' => $period,
+            'match' => $match,
           ];
           continue 2;
       }
