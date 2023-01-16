@@ -65,6 +65,7 @@
     "da": "Aktiviteter",
     "en": "Activities"
   },
+  "junior_min": 4,
   "day_cutoff": 4,
   "link_text": {
     "en": "Read more on the website",
@@ -94,8 +95,8 @@
       }
     },
     "missing_junior": {
-      "en": "You haven't selected any Fastaval Junior activities",
-      "da": "Du har ikke valgt nogen Fastaval Junior aktiviteter",
+      "en": "You have to select at least # junior activities",
+      "da": "Du skal vælge mindst # junior aktiviteter",
       "label": {
         "en": "Fastaval Junior Activities",
         "da": "Fastaval Junior Aktiviteter"
