@@ -106,12 +106,14 @@ class Deltagere extends DBObject implements AgeFulfilment
             'comment' => 'Andre kommentarer',
             'gds' => 'Kommentarer til GDS',
             'junior_ward' => 'Kontakperson',
+            'junior_comment' => 'Kommentar til Fastaval Junior',
             'sleeping' => 'Bemærkninger til soveplads',
         ],
         'en' => [
             'comment' => 'Other comments',
             'gds' => 'Comments regarding GDS',
             'junior_ward' => 'Contact',
+            'junior_comment' => 'Fastaval Junior Comment',
             'sleeping' => 'Comments about sleeping area',
         ]
     ];

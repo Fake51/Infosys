@@ -140,6 +140,29 @@
                     "required": "true"
                 }
             ]
+        },
+        {
+            "headline": {
+                "en": "Kommentar til Junior arrang\u00f8rene",
+                "da": "Kommentar til Junior arrang\u00f8rene"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Hvis du har nogen ekstra kommentarer til\u00a0 arrang\u00f8rene af Fastaval Junior (f.eks. i forhold til \u00f8nsker om aktiviteter), s\u00e5 skriv dem nedenfor.",
+                        "da": "Hvis du har nogen ekstra kommentarer til\u00a0 arrang\u00f8rene af Fastaval Junior (f.eks. i forhold til \u00f8nsker om aktiviteter), s\u00e5 skriv dem nedenfor."
+                    }
+                },
+                {
+                    "type": "text_area",
+                    "text": {
+                        "en": "Kommentar til Junior",
+                        "da": "Kommentar til Junior"
+                    },
+                    "infosys_id": "note:junior_comment"
+                }
+            ]
         }
     ]
 }

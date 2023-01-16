@@ -283,7 +283,7 @@ class SignupApiModel extends Model {
     $errors = $categories = [];
     $is_alea = $is_organizer = $junior_plus = false;
     $total = 0;
-    $junior_note = "";
+    $junior_contact = "";
     $sprog = [];
     $sleeping_areas = $author = [];
     $config = [
@@ -545,7 +545,7 @@ class SignupApiModel extends Model {
                 ];
                 continue 2;
               }
-              $junior_note .= "$labels[$key_item]: $value\n";
+              $junior_contact .= "$labels[$key_item]: $value\n";
               break;
 
             case 'entry':
@@ -831,7 +831,7 @@ class SignupApiModel extends Model {
     }
 
     // Notes
-    if ($junior_note) $participant->setNote('junior_ward', $junior_note);
+    if ($junior_contact) $participant->setNote('junior_ward', $junior_contact);
 
     return [
       'errors' => $errors,
