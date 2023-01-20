@@ -80,7 +80,7 @@ class InfosysSignupRender {
   static render_checkbox(item) {
     let wrapper = jQuery('<div class="input-wrapper input-type-checkbox"></div>')
     wrapper.append(`
-      <input type="checkbox" id="${item.infosys_id}">
+      <input type="checkbox" id="${item.infosys_id}" name="${item.infosys_id}">
       <label for="${item.infosys_id}">${item.processed}</label>
     `);
     return wrapper;
@@ -105,7 +105,7 @@ class InfosysSignupRender {
 
     wrapper.append(`
         <label for="${input_id}">${item.processed}</label>
-        <input type="text" id="${input_id}" ${extra}>
+        <input type="text" id="${input_id}" name="${input_id}" ${extra}>
     `);
 
     return wrapper;
@@ -116,7 +116,7 @@ class InfosysSignupRender {
     return `
       <div class="input-wrapper input-type-tele">
         <label for="${item.infosys_id}">${item.processed}</label>
-        <input type="tel" id="${item.infosys_id}">
+        <input type="tel" id="${item.infosys_id}" name="${item.infosys_id}">
       </div>
     `;
   }
@@ -126,7 +126,7 @@ class InfosysSignupRender {
     return `
       <div class="input-wrapper input-type-date">
         <label for="${item.infosys_id}">${item.processed}</label>
-        <input type="date" id="${item.infosys_id}">
+        <input type="date" id="${item.infosys_id}" name="${item.infosys_id}">
       </div>
     `;
   }
@@ -136,7 +136,7 @@ class InfosysSignupRender {
     return `
       <div class="input-wrapper input-type-email">
         <label for="${item.infosys_id}">${item.processed}</label>
-        <input type="email" id="${item.infosys_id}">
+        <input type="email" id="${item.infosys_id} name="${item.infosys_id}"">
       </div>
     `;
   }
@@ -171,7 +171,7 @@ class InfosysSignupRender {
 
     wrapper.append(`<label for="${item.infosys_id}">${item.processed}</label>`);
     
-    let select = jQuery(`<select id="${item.infosys_id}"></select>`);
+    let select = jQuery(`<select id="${item.infosys_id}" name="${item.infosys_id}"></select>`);
     wrapper.append(select);
 
     if (item.options && Array.isArray(item.options)) item.options.forEach( function (option) {
@@ -193,7 +193,7 @@ class InfosysSignupRender {
     return `
       <div class="input-wrapper input-type-textarea">
         <label for="${item.infosys_id}">${item.processed}</label>
-        <textarea id="${item.infosys_id}" rows="6"></textarea>
+        <textarea id="${item.infosys_id}" name="${item.infosys_id}" rows="6"></textarea>
       </div>
     `;
   }
