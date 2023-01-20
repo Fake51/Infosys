@@ -1,7 +1,16 @@
 {
-  "table_header": {
-    "en": "In which time slots can you perform your hero tasks?",
-    "da": "Hvilke tidsintervaller kan du udføre dine helte-opgaver?"
+  "pre_table": {
+    "en": "In which time slots can you perform your hero tasks? Select at least # options.",
+    "da": "Hvilke tidsintervaller kan du udføre dine helte-opgaver? Vælg minimum # muligheder."
+  },
+  "selected": {
+    "en": "Selections",
+    "da": "Antal valgt"
+  },
+  "min_select": 3,
+  "min_error": {
+    "en": "You must select at least # options.",
+    "da": "Du skal vælge minimum # muligheder."
   },
   "times": [
     {
