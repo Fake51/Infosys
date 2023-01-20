@@ -277,64 +277,6 @@
         },
         {
             "headline": {
-                "en": "Types of activities",
-                "da": "Typer af aktiviteter"
-            },
-            "items": [
-                {
-                    "type": "paragraph",
-                    "text": {
-                        "en": "Each activity on the chart has a color code:",
-                        "da": "Hver aktivitet p\u00e5 oversigten har en farvekode:"
-                    }
-                },
-                {
-                    "type": "list",
-                    "text": {
-                        "en": "[color=#b6d7a8] Gr\u00f8n [\/color]: Scenarios\n[color=#9fc5e8] Bl\u00e5 [\/color]: Board Games\n[color=#ffd966] Gul [\/color]:\u00a0Other activities",
-                        "da": "[color=#b6d7a8] Gr\u00f8n [\/color]: Rollespil\n[color=#9fc5e8] Bl\u00e5 [\/color]: Br\u00e6tspil\n[color=#ffd966] Gul [\/color]: \u00d8vrige aktiviteter"
-                    }
-                }
-            ],
-            "display_logic": [
-                {
-                    "type": "field_compare",
-                    "status": "hidden",
-                    "input": "participant",
-                    "compare": "equals",
-                    "value": "Juniordeltager"
-                },
-                {
-                    "type": "checkbox",
-                    "status": "normal",
-                    "input": "junior:plus"
-                }
-            ]
-        },
-        {
-            "items": [
-                {
-                    "type": "list",
-                    "text": {
-                        "en": "[color=#ea9999] Red [\/color]: Fastaval Junior",
-                        "da": "[color=#ea9999] R\u00f8d [\/color]: Fastaval Junior"
-                    }
-                }
-            ],
-            "display_logic": [
-                {
-                    "type": "default",
-                    "status": "hidden"
-                },
-                {
-                    "type": "checkbox",
-                    "status": "normal",
-                    "input": "junior:plus"
-                }
-            ]
-        },
-        {
-            "headline": {
                 "en": "\n",
                 "da": "\n"
             },
