@@ -53,7 +53,8 @@ class InfosysSignupRender {
     if (item.errors) {
       for(const error in item.errors) {
         let error_div = jQuery('<div class="error-text" error-type="'+error+'"></div>');
-        error_div.text(item.errors[error][lang]);
+        let error_text = InfosysTextPreprocessor.process_text(item.errors[error][lang]);
+        error_div.html(error_text);
         error_div.hide();
         if(item.type == 'checkbox') {
           parsed.prepend(error_div);
