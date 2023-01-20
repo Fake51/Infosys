@@ -30,10 +30,6 @@
     ],
     "sections": [
         {
-            "headline": {
-                "en": "\n",
-                "da": "\n"
-            },
             "items": [
                 {
                     "type": "paragraph",
@@ -41,7 +37,24 @@
                         "en": "[b] Important![\/b] If you are an organizer arriving during the set-up days (monday, tuesday) you must sign up for the set-up crew, even if you are just setting up for the area you work in.",
                         "da": "[b] Vigtigt![\/b] Hvis du er arrang\u00f8r og kommer i ops\u00e6tningsdagene (mandag, tirsdag) s\u00e5 skal du tilmelde dig ops\u00e6tningsholdet, ogs\u00e5 selvom du s\u00e6tter dit eget omr\u00e5de op.\u00a0"
                     }
-                },
+                }
+            ],
+            "display_logic": [
+                {
+                    "type": "field_compare",
+                    "input": "participant",
+                    "compare": "not_equals",
+                    "value": "Arrang\u00f8r",
+                    "status": "hidden"
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "\n",
+                "da": "\n"
+            },
+            "items": [
                 {
                     "type": "paragraph",
                     "text": {
