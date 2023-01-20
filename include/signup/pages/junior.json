@@ -108,8 +108,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Inden Fastaval starter sender vi Junior-programmet ud til alle deltagere, s\u00e5 alle ved, hvad de skal spille. Skriv info p\u00e5 den voksne kontaktperson, vi kan kontakte f\u00f8r Fastaval\n\n Mens Fastaval Junior k\u00f8rer, skal alle deltagere have en ansvarlig voksen til stede p\u00e5 Fastaval, som vi kan tilkalde, hvis der er behov for det. Hvis det ikke er den samme som nedenst\u00e5ende, bedes du skrive dennes navn og telefonnummer i kommentarfeltet p\u00e5 tilmeldingen.\u00a0",
-                        "da": "Inden Fastaval starter sender vi Junior-programmet ud til alle deltagere, s\u00e5 alle ved, hvad de skal spille. Skriv info p\u00e5 den voksne kontaktperson, vi kan kontakte f\u00f8r Fastaval\n\n Mens Fastaval Junior k\u00f8rer, skal alle deltagere have en ansvarlig voksen til stede p\u00e5 Fastaval, som vi kan tilkalde, hvis der er behov for det. Hvis det ikke er den samme som nedenst\u00e5ende, bedes du skrive dennes navn og telefonnummer i kommentarfeltet p\u00e5 tilmeldingen.\u00a0"
+                        "en": "Inden Fastaval starter sender vi Junior-programmet ud til alle deltagere, s\u00e5 alle ved, hvad de skal spille. Skriv info p\u00e5 den voksne kontaktperson, vi kan kontakte f\u00f8r Fastaval.\n\n Mens Fastaval Junior k\u00f8rer, skal alle deltagere have en ansvarlig voksen til stede p\u00e5 Fastaval, som vi kan tilkalde, hvis der er behov for det. Hvis det ikke er den samme som nedenst\u00e5ende, bedes du skrive dennes navn og telefonnummer i kommentarfeltet nedenfor.\u00a0",
+                        "da": "Inden Fastaval starter sender vi Junior-programmet ud til alle deltagere, s\u00e5 alle ved, hvad de skal spille. Skriv info p\u00e5 den voksne kontaktperson, vi kan kontakte f\u00f8r Fastaval.\n\n Mens Fastaval Junior k\u00f8rer, skal alle deltagere have en ansvarlig voksen til stede p\u00e5 Fastaval, som vi kan tilkalde, hvis der er behov for det. Hvis det ikke er den samme som nedenst\u00e5ende, bedes du skrive dennes navn og telefonnummer i kommentarfeltet nedenfor.\u00a0"
                     }
                 },
                 {
@@ -143,22 +143,22 @@
         },
         {
             "headline": {
-                "en": "Kommentar til Junior arrang\u00f8rene",
-                "da": "Kommentar til Junior arrang\u00f8rene"
+                "en": "Er der noget, vi skal vide?\u00a0",
+                "da": "Er der noget, vi skal vide?\u00a0"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Hvis du har nogen ekstra kommentarer til\u00a0 arrang\u00f8rene af Fastaval Junior (f.eks. i forhold til \u00f8nsker om aktiviteter), s\u00e5 skriv dem nedenfor.",
-                        "da": "Hvis du har nogen ekstra kommentarer til\u00a0 arrang\u00f8rene af Fastaval Junior (f.eks. i forhold til \u00f8nsker om aktiviteter), s\u00e5 skriv dem nedenfor."
+                        "en": "Her kan du skrive hvis du har s\u00e6rlige behov eller \u00f8nsker, f.eks. nogen du gerne vil spille sammen med. Du skal ogs\u00e5 skrive navn og telefonnummer p\u00e5 den kontaktperson, der er til stede p\u00e5 Fastaval, hvis det ikke er den samme som angivet ovenfor.",
+                        "da": "Her kan du skrive hvis du har s\u00e6rlige behov eller \u00f8nsker, f.eks. nogen du gerne vil spille sammen med. Du skal ogs\u00e5 skrive navn og telefonnummer p\u00e5 den kontaktperson, der er til stede p\u00e5 Fastaval, hvis det ikke er den samme som angivet ovenfor."
                     }
                 },
                 {
                     "type": "text_area",
                     "text": {
-                        "en": "Kommentar til Junior",
-                        "da": "Kommentar til Junior"
+                        "en": "Skriv kommentar til Junior tanterne her",
+                        "da": "Skriv kommentar til Junior tanterne her"
                     },
                     "infosys_id": "note:junior_comment"
                 }
