@@ -22,8 +22,8 @@
       "da": "Ingen kategorier der passer"
     },
     "not_on_list": {
-      "en": "The content of this field is not on the list of allowed options",
-      "da": "Indholdet af feltet er ikke på listen over gyldige muligheder"
+      "en": "The content of this field is not on the list of allowed options.\n(Make sure to check the spelling and select a valid option from the list as you type)",
+      "da": "Indholdet af feltet er ikke på listen over gyldige muligheder.\n(Kontroller stavning og vælg en værdi fra listen der dukker op mens du skriver)"
     },
     "require_one": {
       "en": "You must choose atleast one of the options",
