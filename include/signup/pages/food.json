@@ -87,6 +87,15 @@
                     },
                     "infosys_id": "financial_struggle"
                 }
+            ],
+            "display_logic": [
+                {
+                    "type": "config",
+                    "config": "current_financial_support",
+                    "status": "hidden",
+                    "compare": "greater",
+                    "value": 84
+                }
             ]
         },
         {

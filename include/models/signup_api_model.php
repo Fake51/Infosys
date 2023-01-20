@@ -19,6 +19,12 @@ class SignupApiModel extends Model {
         'countries' => $this->loadCountries(),
       ];
 
+      $query = "SELECT COUNT(*) as count FROM deltagere WHERE financial_struggle = 'ja'";
+      $result = $this->db->query($query);
+      if (count($result) == 1) {
+        $config->current_financial_support = $result[0]['count'];
+      }
+
       return json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 
