@@ -35,25 +35,15 @@
       "en": "Roleplaying",
       "color": "#b6d7a8"
     },
-    "live": {
-      "da": "Live Rollespil",
-      "en": "Live Roleplaying",
-      "color": "#b4a7d6"
-    },
     "braet": {
       "da": "Brætspil",
       "en": "Board games",
       "color": "#9fc5e8"
     },
-    "magic": {
-      "da": "Magic",
-      "en": "Magic",
-      "color": "#ea9999"
-    },
     "junior": {
       "da": "Junior",
       "en": "Junior",
-      "color": "#b6d7a8"
+      "color": "#ea9999"
     },
     "default": {
       "da": "Øvrige aktiviteter",
