@@ -4,9 +4,11 @@
     <legend><?php echo (isset($this->wear) ? 'Opdater' : 'Opret');?> wear</legend>
     <form action='' method='post'>
       <span class='label'>Navn:</span> <span class='detail'><input type='text' name='navn' value='<?php echo (isset($this->wear) ? $this->wear->navn : '');?>'/></span><br/>
-      <span class='label'>Beskrivelse:</span> <span class='detail'><input type='text' name='beskrivelse' value='<?php echo (isset($this->wear) ? $this->wear->beskrivelse : '');?>'/></span><br/>
+      <span class='label'>Beskrivelse:</span><br>
+      <span class='detail'><textarea rows="3" name='beskrivelse' style="width: 100%; box-sizing: border-box;"><?=(isset($this->wear) ? $this->wear->beskrivelse : '')?></textarea></span><br/>
       <span class='label'>Engelsk titel:</span> <span class='detail'><input type='text' name='title_en' value='<?php echo (isset($this->wear) ? $this->wear->title_en : '');?>'/></span><br/>
-      <span class='label'>Engelsk beskrivelse:</span> <span class='detail'><input type='text' name='description_en' value='<?php echo (isset($this->wear) ? $this->wear->description_en : '');?>'/></span><br/>
+      <span class='label'>Engelsk beskrivelse:</span><br>
+      <span class='detail'><textarea rows="3" name='description_en' style="width: 100%; box-sizing: border-box;"><?=(isset($this->wear) ? $this->wear->description_en : '')?></textarea></span><br/>
       <span class='label'>Maks Bestilling:</span> <span class='detail'><input type='number' name='max_order' value='<?php echo (isset($this->wear) ? $this->wear->max_order : 0);?>'/></span><br/>
       <span class='label'>Påkrævet:</span> <span class='detail'><input type='checkbox' name='is_required' value='true' <?=$this->wear->is_required ? 'checked': ''?>></span><br/>
       <hr/>
