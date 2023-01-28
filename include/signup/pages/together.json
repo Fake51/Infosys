@@ -72,6 +72,13 @@
                 {
                     "type": "paragraph",
                     "text": {
+                        "en": "If you have questions regarding Fastaval Together, you can contact the Hero Force responsible at __INSERT MAIL__.\u00a0",
+                        "da": "Hvis du har sp\u00f8rgsm\u00e5l om F\u00e6lles Fastaval kan du kontakte den ansvarlige for heltestyrken p\u00e5 __INDS\u00c6T MAIL__.\u00a0"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
                         "en": "[b]What is The Hero Force?[\/b]\nYou become a part of a network of participants who help the organizers out around Fastaval, to keep the congress running. You will get assigned a hero-task at one of Fastavals many sales and service venues, according to the timespans you choose in your sign-up. You are more than welcome to take more heroic deeds than one. Read more about The Hero Force \u00a0[url=https:\/\/www.fastaval.dk\/en\/praktisk\/faelles-fastaval\/#heltestyrken]here[\/url].",
                         "da": "[b]Hvad er Heltestyrken?[\/b]\nDu bliver en del af et netv\u00e6rk af andre deltagere, Helte, som hj\u00e6lper arrang\u00f8rerne rundt omkring p\u00e5 Fastaval, for at f\u00e5 Fastaval til at k\u00f8re rundt. Du vil f\u00e5 tildelt en helte-opgave p\u00e5 en af Fastavals salgs- eller servicesteder, alt efter de tidsrum, som du noterer i din tilmelding. Man er ogs\u00e5 velkommen til at tage flere opgaver end \u00e9n. L\u00e6s mere om Heltestyrken\u00a0[url=https:\/\/www.fastaval.dk\/praktisk\/faelles-fastaval\/#heltestyrken\/]her[\/url]."
                     }
@@ -79,8 +86,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "[b]What is a Game Master?[\/b]\u00a0Read more about Game master \u00a0[url=https:\/\/www.fastaval.dk\/en\/praktisk\/faelles-fastaval\/#spilleder]here[\/url].",
-                        "da": "[b]Hvad er en spilleder?[\/b]\nL\u00e6s mere om spilleder \u00a0[url=https:\/\/www.fastaval.dk\/praktisk\/faelles-fastaval\/#spilleder]her[\/url]."
+                        "en": "[b]What is a Game Master?[\/b]\u00a0\nThe majority of the scenarios at Fastaval are designed to be run by a Game Master. The Game Master reads the scenario beforehand, makes herself familiar with story, mechanics, roles and so on. The scenario functions kind of like a manual, which the Game Master follows and interprets when playing the scenario in pracsis. The Game Master is the person conveys the scenario to the players, and makes sure it moves forward in the right direction. They typically don\u2019t have a main role in the scenario, but can sometimes be expected to play smaller supporting roles.Often it is an important part of the job for the Game Master to set the scenes - which means describing the setting and what is going on, and to cut the scenes when they are played out. Read more about Game Master \u00a0[url=https:\/\/www.fastaval.dk\/en\/praktisk\/faelles-fastaval\/#spilleder]here[\/url].",
+                        "da": "[b]Hvad er en spilleder?[\/b]\nLangt de fleste scenarier p\u00e5 Fastaval er designet, s\u00e5 der er en spilleder til scenariet. Spillederen er den der har l\u00e6st scenariet p\u00e5 forh\u00e5nd, sat sig ind i fort\u00e6lling, virkemidler, roller osv. Scenariet er en slags manual\/drejebog, som spillederen f\u00f8lger og fortolker i praksis. Spillederen er den person, der formidler scenariet videre og i den rigtige retning. De har typisk ikke en rolle i scenariet, men kan spille fx flere sm\u00e5 biroller.Det er tit ogs\u00e5 en vigtig opgave for spillederen at s\u00e6tte scenerne - alts\u00e5 beskriver hvor og hvad der foreg\u00e5r, og klippe scenerne, n\u00e5r de er spillet f\u00e6rdig. L\u00e6s mere om spilleder \u00a0[url=https:\/\/www.fastaval.dk\/praktisk\/faelles-fastaval\/#spilleder]her[\/url]."
                     }
                 },
                 {

@@ -24,15 +24,15 @@
     "sections": [
         {
             "headline": {
-                "en": "Organizer discount",
-                "da": "Arrang\u00f8rrabat"
+                "en": "Organizer benefits",
+                "da": "Arrang\u00f8rfordele"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Fastaval is forever grateful for the extraordinary work done by our many writers, designers and organizers. Therefore we offer some discounts to our lovely organizers.",
-                        "da": "Fastaval er dybt taknemlige for det ekstraordin\u00e6re arbejde som vores mange forfattere, designere og arrang\u00f8rer l\u00e6gger i vores alle sammens Fastaval. Derfor tilbyder vi nogle rabatter til vores dejlige arrang\u00f8rer."
+                        "en": "Fastaval is forever grateful for the extraordinary work done by our many writers, designers and organizers. Therefore we offer some benefits and discounts to our lovely organizers.",
+                        "da": "Fastaval er dybt taknemlige for det ekstraordin\u00e6re arbejde som vores mange forfattere, designere og arrang\u00f8rer l\u00e6gger i vores alle sammens Fastaval. Derfor tilbyder vi nogle fordele og rabatter til vores dejlige arrang\u00f8rer."
                     }
                 },
                 {
@@ -45,8 +45,8 @@
                 {
                     "type": "list",
                     "text": {
-                        "en": "Discount on entrance and accommodation\nDiscount on t-shirts and at sales venues                    ",
-                        "da": "Rabat p\u00e5 indgang og overnatning\nRabat p\u00e5 t-shirts og ved salgssteder"
+                        "en": "Access to the organizers lounge\nDiscount on entrance and accommodation\nDiscount on t-shirts\nDiscount on hot drinks in Otto's Coffee Inn",
+                        "da": "Adgang til arrang\u00f8rloungen\nRabat p\u00e5 indgang og overnatning\nRabat p\u00e5 t-shirts\n\nRabat p\u00e5 varme drikke i Kaffekroen"
                     }
                 },
                 {
