@@ -104,7 +104,6 @@ class SignupApiModel extends Model {
    * Get all activities available for signup
    */
   public function getActivities() {
-    // TODO Multiblock
     $result = (object)[];
     $config = json_decode($this->getConfig('activities'));
 
@@ -145,6 +144,22 @@ class SignupApiModel extends Model {
       $run_signups[$row['afvikling_id']] = $row['signed_up'];
     }
 
+    // Get info on multiblock runs
+    $has_multi = [];
+    $multiblocks = $this->createEntity('AfviklingerMultiblok')->findAll();
+    if (count($multiblocks) > 0) foreach ($multiblocks as $key => $multiblock) {
+      $has_multi[$multiblock->afvikling_id][] = $key;
+    }
+
+    $set_time = function($time) {
+      return [
+        'day' => date('N', strtotime($time)),
+        'hour' => intval(date('H', strtotime($time))),
+        'min' => intval(date('i', strtotime($time))),
+        'stamp' => strtotime($time),
+      ];
+    };
+
     // Collect info on runs
     $runs = $this->createEntity('Afviklinger')->findAll();
     foreach ($runs as $run) {
@@ -152,22 +167,29 @@ class SignupApiModel extends Model {
       $run_info = (object)[];
       $run_info->id = $run->id;
       $run_info->activity = $run->aktivitet_id;
-      $run_info->start = [
-        'day' => date('N', strtotime($run->start)),
-        'hour' => intval(date('H', strtotime($run->start))),
-        'min' => intval(date('i', strtotime($run->start))),
-        'stamp' => strtotime($run->start),
-      ];
-      $run_info->end = [
-        'day' => date('N', strtotime($run->slut)),
-        'hour' => intval(date('H', strtotime($run->slut))),
-        'min' => intval(date('i', strtotime($run->slut))),
-        'stamp' => strtotime($run->slut),
-      ];
+      $run_info->start = $set_time($run->start);
+      $run_info->end = $set_time($run->slut);
       $run_info->signups = $run_signups[$run->id] ?? 0;
       $day = $run_info->start['day'];
       if($run_info->start['hour'] < $config->day_cutoff) $day--; // Put runs that start late together with the day before
-      $result->runs[$day][] = $run_info;
+      
+      if(!empty($has_multi[$run->id])) {
+        $run_info->multi = true;
+        $result->runs[$day][] = $run_info;
+
+        // Copy info for each multi block
+        foreach ($has_multi[$run->id] as $multi_id) {
+          $multirun = $multiblocks[$multi_id];
+          $run_info = clone $run_info;
+          $run_info->start = $set_time($multirun->start);
+          $run_info->end = $set_time($multirun->slut);
+          $day = $run_info->start['day'];
+          if($run_info->start['hour'] < $config->day_cutoff) $day--; // Put runs that start late together with the day before
+          $result->runs[$day][] = $run_info;
+        } 
+      } else {
+        $result->runs[$day][] = $run_info;
+      }
     }
     
     foreach($result->runs as $day => $runs) {
