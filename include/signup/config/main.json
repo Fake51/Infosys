@@ -28,6 +28,10 @@
     "require_one": {
       "en": "You must choose atleast one of the options",
       "da": "Du skal vælge mindst en af mulighederne"
+    },
+    "sleeping_too_young": {
+      "en": " years is too young to be allowed to sleep at Fastaval",
+      "da": " år er for ung til at måtte overnatte på Fastaval"
     }
   },
   "input_error": {

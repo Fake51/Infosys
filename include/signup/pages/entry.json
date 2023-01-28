@@ -228,6 +228,14 @@
                         "sleeping:partout"
                     ]
                 }
+            ],
+            "display_logic":[
+                {
+                    "type": "age",
+                    "status": "hidden",
+                    "compare": "less",
+                    "value": 13
+                }        
             ]
         },
         {
@@ -386,6 +394,12 @@
                     "type": "checkbox",
                     "status": "normal",
                     "input": "sleeping:partout"
+                },
+                {
+                    "type": "age",
+                    "status": "hidden",
+                    "compare": "less",
+                    "value": 13
                 }
             ]
         }

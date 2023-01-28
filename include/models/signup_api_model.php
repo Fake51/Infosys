@@ -622,6 +622,16 @@ class SignupApiModel extends Model {
               break;
 
             case 'sleeping':
+              // Check age
+              if ($age < $config['main']->age_kid) {
+                $errors[$category][] = [
+                  'type' => 'sleeping_too_young',
+                  'id' => "$key",
+                  'age'  => $age,
+                ];
+                continue 2;
+              }
+
               $entry = $this->createEntity('Indgang');
               $select = $entry->getSelect();
               if ($key_item == 'partout') {
@@ -800,6 +810,11 @@ class SignupApiModel extends Model {
                 }
               }
               $price = $run->getAktivitet()->pris;
+
+              // Add multiblock info
+              if ($run->hasMultiBlok()) {
+                $extra['multi'] = true;
+              }
               break;
 
             case 'activity_language':
