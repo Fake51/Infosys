@@ -483,6 +483,9 @@ class SignupApiModel extends Model {
                 if ($key == 'sovesal') $sleeping_areas[] = 'organizer';
               }
 
+              // Shorten nickname
+              if ($key == 'nickname') $value = substr($value, 0, 17);
+
               $do_value = $value;
               if (!$participant->is_dummy) {
                 $valid = $participant->getValidColumnValues($key);

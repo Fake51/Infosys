@@ -103,6 +103,10 @@ class InfosysSignupRender {
       }
     }
 
+    if (item.maxlength) {
+      extra += ` maxlength="${item.maxlength}"`
+    }
+
     wrapper.append(`
         <label for="${input_id}">${item.processed}</label>
         <input type="text" id="${input_id}" name="${input_id}" ${extra}>
@@ -136,7 +140,7 @@ class InfosysSignupRender {
     return `
       <div class="input-wrapper input-type-email">
         <label for="${item.infosys_id}">${item.processed}</label>
-        <input type="email" id="${item.infosys_id} name="${item.infosys_id}"">
+        <input type="email" id="${item.infosys_id}" name="${item.infosys_id}">
       </div>
     `;
   }

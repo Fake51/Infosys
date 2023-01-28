@@ -197,10 +197,11 @@
                 {
                     "type": "text_input",
                     "text": {
-                        "en": "Used name",
-                        "da": "Kaldenavn"
+                        "en": "Used name (max 17 characters)",
+                        "da": "Kaldenavn (maks 17 tegn)"
                     },
-                    "infosys_id": "nickname"
+                    "infosys_id": "nickname",
+                    "maxlength": 17
                 },
                 {
                     "type": "radio",
