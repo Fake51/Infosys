@@ -642,12 +642,7 @@ class SignupApiModel extends Model {
                   break;
 
                 case 'party1':
-                case 'party2':
-                case 'party3':
-                  $match = "";
-                  preg_match("/party(\d)/", $key_item, $match);
-                  $id = 80 + intval($match[1]);
-                  $select->setWhere('id', '=', $id);
+                  $select->setWhere('id', '=', 81); // Sparkling wine ID
                   break;
 
                 case 'alea':

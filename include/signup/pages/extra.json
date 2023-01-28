@@ -32,47 +32,17 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Description of extra item 1",
-                        "da": "Beskrivelse af tilbeh\u00f8r 1"
+                        "en": "This year\u2019s bottle carefully selected for the occasion. We\u2019ll make sure to select the best bottle the money can buy.",
+                        "da": "\u00c5rets fest flaske, s\u00e6rligt udvalgt til lejligheden. Vi s\u00f8rger for at f\u00e5 den bedste flaske til prisen."
                     }
                 },
                 {
                     "type": "checkbox",
                     "text": {
-                        "en": "Extra item 1",
-                        "da": "Tilbeh\u00f8r 1"
+                        "en": "Sparkling wine ( DKK 99,- )",
+                        "da": "Mousserende vin ( DKK 99,- )"
                     },
                     "infosys_id": "misc:party1"
-                },
-                {
-                    "type": "paragraph",
-                    "text": {
-                        "en": "Description of extra item 2",
-                        "da": "Beskrivelse af tilbeh\u00f8r 2"
-                    }
-                },
-                {
-                    "type": "checkbox",
-                    "text": {
-                        "en": "Extra item 2",
-                        "da": "Tilbeh\u00f8r 2"
-                    },
-                    "infosys_id": "misc:party2"
-                },
-                {
-                    "type": "paragraph",
-                    "text": {
-                        "en": "Description of extra item 3",
-                        "da": "Beskrivelse af tilbeh\u00f8r 3"
-                    }
-                },
-                {
-                    "type": "checkbox",
-                    "text": {
-                        "en": "Extra item 3",
-                        "da": "Tilbeh\u00f8r 3"
-                    },
-                    "infosys_id": "misc:party3"
                 }
             ]
         },
