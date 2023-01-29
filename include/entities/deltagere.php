@@ -1724,7 +1724,7 @@ WHERE
         return null;
     }
 
-    public static function getCountry($lang) {
+    public function getCountry($lang) {
         $result = $this->db->query("SELECT * FROM countries WHERE code = ?", [$this->storage['country']]);
         return count($result) === 1 ? $result[0]["name_$lang"] : "";
     }
