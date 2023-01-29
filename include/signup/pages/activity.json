@@ -18,7 +18,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Here you can sign up for board games, scenarios and other activities. You can prioritise which activities you want to participate in when.",
+                        "en": "Here you can sign up for board games, scenarios and other activities. You can prioritise which activities you want to participate in and when.",
                         "da": "Her tilmelder du dig br\u00e6tspil, scenarier og \u00f8vrige aktiviteter. Du kan prioritere din tilmelding efter hvad du helst vil spille hvorn\u00e5r."
                     }
                 }
@@ -53,8 +53,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Click on the individual activities for a short description og find an overview on the website.",
-                        "da": "Klik p\u00e5 de enkelte aktiviteter for at se en foromtale\/beskrivelse af aktiviteten eller se en oversigt p\u00e5 hjemmesiden.\u00a0"
+                        "en": "Click on the individual activities for a short description og find an overview on the [url=https:\/\/www.fastaval.dk\/en\/]website[\/url].",
+                        "da": "Klik p\u00e5 de enkelte aktiviteter for at se en foromtale\/beskrivelse af aktiviteten eller se en oversigt p\u00e5 \u00a0[url=https:\/\/www.fastaval.dk\/]hjemmesiden[\/url].\u00a0"
                     }
                 }
             ]

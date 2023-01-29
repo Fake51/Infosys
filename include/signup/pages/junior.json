@@ -157,8 +157,8 @@
                 {
                     "type": "text_area",
                     "text": {
-                        "en": "Skriv kommentar til Junior tanterne her",
-                        "da": "Skriv kommentar til Junior tanterne her"
+                        "en": "Skriv kommentar til Pingvintanterne her",
+                        "da": "Skriv kommentar til Pingvintanterne her"
                     },
                     "infosys_id": "note:junior_comment"
                 }

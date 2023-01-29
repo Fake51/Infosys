@@ -41,7 +41,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "At Fastaval, you can either buy a ticket for all days (partout) or to the individual days separately.\u00a0 Note that a ticket fee og 15 kr. is placed on all sign-ups.",
+                        "en": "At Fastaval, you can either buy a ticket for all days (partout) or to the individual days separately.\u00a0 Note that a ticket fee of 15 kr. is placed on all sign-ups.",
                         "da": "Til Fastaval kan du enten k\u00f8be billet til alle dage (partout) eller til de enkelte dage hver for sig. V\u00e6r opm\u00e6rksom p\u00e5, at der p\u00e5l\u00e6gges et billetgebyr p\u00e5 15 kr. til alle tilmeldinger."
                     }
                 },
@@ -229,13 +229,13 @@
                     ]
                 }
             ],
-            "display_logic":[
+            "display_logic": [
                 {
                     "type": "age",
                     "status": "hidden",
                     "compare": "less",
                     "value": 13
-                }        
+                }
             ]
         },
         {

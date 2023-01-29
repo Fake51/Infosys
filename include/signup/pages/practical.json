@@ -336,56 +336,56 @@
                         {
                             "value": "1",
                             "text": {
-                                "en": "New Option",
+                                "en": "I have attended Fastaval before",
                                 "da": "Jeg har v\u00e6ret p\u00e5 Fastaval f\u00f8r"
                             }
                         },
                         {
                             "value": "2",
                             "text": {
-                                "en": "New Option",
+                                "en": "From my place of education",
                                 "da": "P\u00e5 mit uddannelsessted"
                             }
                         },
                         {
                             "value": "3",
                             "text": {
-                                "en": "New Option",
+                                "en": "Through my RPG club",
                                 "da": "I min rollespilsforening"
                             }
                         },
                         {
                             "value": "4",
                             "text": {
-                                "en": "New Option",
+                                "en": "At a scenario, convention etc.",
                                 "da": "Til scenarier, kongresser m.m."
                             }
                         },
                         {
                             "value": "5",
                             "text": {
-                                "en": "New Option",
+                                "en": "From acquaintances",
                                 "da": "Folk jeg kender"
                             }
                         },
                         {
                             "value": "6",
                             "text": {
-                                "en": "New Option",
+                                "en": "Add in store",
                                 "da": "Reklamer i butikker"
                             }
                         },
                         {
                             "value": "7",
                             "text": {
-                                "en": "New Option",
+                                "en": "Social Media",
                                 "da": "Sociale Medier"
                             }
                         },
                         {
                             "value": "8",
                             "text": {
-                                "en": "New Option",
+                                "en": "The Internet",
                                 "da": "Internettet"
                             }
                         }
@@ -402,8 +402,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Alea is the organization behind Fastaval. Alea assists with practical problems, coordination and handling of ___. They also have a large responsibility in the handing over of important information, experiences and resources to future Fastavals. Alea is a member of [url=https:\/\/landsforeningenbifrost.dk\/] Landsforeningen Bifrost [\/url]. Membership of Alea automatically makes you a member of Landsforeningen Bifrost.",
-                        "da": "Alea er foreningen bag Fastaval. Foreningen hj\u00e6lper med praktiske problemstillinger, overtager koordinerende opgaver og h\u00e5ndterer personsager. De har ligeledes et stort ansvar for at overlevering af vigtig erfaring og ressourcer til fremtidige Fastavaller. Alea er medlem af [url=https:\/\/landsforeningenbifrost.dk\/] Landsforeningen Bifrost [\/url]. Medlemskab af Alea g\u00f8r dig automatisk til medlem af Landsforeningen Bifrost."
+                        "en": "Alea is the organization behind Fastaval, with has the responsibility of the overall coordination and in the handing over of important information, experiences and resources to future Fastavals. Alea is a member of [url=https:\/\/landsforeningenbifrost.dk\/] Landsforeningen Bifrost [\/url]. Membership of Alea automatically makes you a member of Landsforeningen Bifrost.",
+                        "da": "Alea er foreningen bag Fastava, som har ansvaret for den overordnede koordinering, vidensopsamling og overlevering af vigtig erfaring og ressourcer til fremtidige Fastavaller. L\u00e6s mere om Alea p\u00e5 alea.fastaval.dk. Alea er medlem af [url=https:\/\/landsforeningenbifrost.dk\/] Landsforeningen Bifrost [\/url]. Medlemskab af Alea g\u00f8r dig automatisk til medlem af Landsforeningen Bifrost."
                     }
                 },
                 {

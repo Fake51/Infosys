@@ -15,14 +15,14 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "The sign-up is open until February 20th. Until this date, you can add activities, food and order wear in your sign-up.",
+                        "en": "The sign-up is open until February 20th. Until this date, you can add activities and food and order wear in your sign-up.",
                         "da": "Tilmeldingen er \u00e5ben indtil den 20. februar. Frem til den dato kan du tilf\u00f8je aktiviteter, mad og wear til din tilmelding."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "After February 20th, it will no longe be possible to sign up for activities, food or order wear, but you can still sign up for entrance and sleeping.\u00a0",
+                        "en": "After February 20th, it will no longer be possible to sign up for activities or food or order wear, but you can still sign up for entrance and accomodations.\u00a0",
                         "da": "Efter den 20. februar vil det ikke l\u00e6ngere v\u00e6re muligt at tilmelde sig aktiviteter, mad og wear, men du kan stadig tilmelde dig indgang og overnatning."
                     }
                 },
@@ -43,7 +43,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Last day of payment is also February 20th, but we urge you to pay immediately after you sign-up. In the unfortunate case that Fastaval is cancelled or postponed, your payment will be returned.",
+                        "en": "Last day of payment is also February 20th, but we urge you to pay immediately after you sign-up. In the unfortunate case that Fastaval is cancelled or postponed, your payment will be refunded.",
                         "da": "Betalingen skal ogs\u00e5 ske senest 20. februar, men vi opfordrer dig til at betale straks efter tilmelding. Hvis Fastaval skulle blive aflyst eller flyttet, vil du f\u00e5 din betaling retur."
                     }
                 },
@@ -128,15 +128,15 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Information about your health will be deleted immediately after Fastaval 2023. We ask you to please only provide essential information about your health.",
-                        "da": "Dine helbredsinformationer slettes umiddelbart efter afvikling af Fastaval 2023. Du bedes om kun at oplyse absolut n\u00f8dvendige helbredsoplysninger."
+                        "en": "Any comments will be deleted immediately after Fastaval 2023. We ask you to please only provide essential information about yourself.",
+                        "da": "Eventuelle bem\u00e6rkninger slettes umiddelbart efter afvikling af Fastaval 2023. Du bedes om kun at oplyse absolut n\u00f8dvendige oplysninger omkring dig selv."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Because of economic law regulations, Alea will store your information for up to five years (except information about health). After this, all information will be anonymised and hereafter only data for statistics will be stored; as a minimum, names, addresses and contact information will be deleted. Alea is responsible for managing your information correctly.",
-                        "da": "Af regnskabsm\u00e6ssige \u00e5rsager opbevarer Alea dine informationer i op til fem \u00e5r (undtagen helbredsoplysninger). Herefter anonymiseres samtlige informationer og der gemmes derefter kun data som kan bruges til statistik; som minimum slettes navne, adresser og kontaktoplysninger. Alea er ansvarlige for, at dine oplysninger behandles korrekt."
+                        "en": "Because of economic law regulations, Alea will store your information for up to five years. After this, all information will be anonymised and hereafter only data for statistics will be stored; as a minimum, names, addresses and contact information will be deleted. Alea is responsible for managing your information correctly.",
+                        "da": "Af regnskabsm\u00e6ssige \u00e5rsager opbevarer Alea dine informationer i op til fem \u00e5r. Herefter anonymiseres samtlige informationer og der gemmes derefter kun data som kan bruges til statistik; som minimum slettes navne, adresser og kontaktoplysninger. Alea er ansvarlige for, at dine oplysninger behandles korrekt."
                     }
                 }
             ],
@@ -157,7 +157,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "If you sign up you child, you also declare yourself to being responsible for the preservation and handling of your child\u2019s information. If you are bellow the age of 18, your parent have to authorize your sign-up.",
+                        "en": "If you sign up you child, you also declare yourself to being responsible for the preservation and handling of your child\u2019s information. If you are bellow the age of 18, a\u00a0 parent or legal guardian has to authorize your sign-up.",
                         "da": "Tilmelder du dit barn tilkendegiver du, at v\u00e6re sidste ansvarshavende for korrekt opbevaring og h\u00e5ndtering af informationerne givet i tilmeldingen. Er du under 18 skal din for\u00e6ldremyndighedshaver eller v\u00e6rge godkende din tilmelding."
                     }
                 },
