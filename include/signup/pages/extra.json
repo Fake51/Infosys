@@ -42,7 +42,15 @@
                         "en": "Sparkling wine ( DKK 99,- )",
                         "da": "Mousserende vin ( DKK 99,- )"
                     },
-                    "infosys_id": "misc:party1"
+                    "infosys_id": "misc:party1",
+                    "display_logic": [
+                        {
+                            "type": "age",
+                            "status": "disabled",
+                            "compare": "less",
+                            "value": 18
+                        }
+                    ]
                 }
             ]
         },

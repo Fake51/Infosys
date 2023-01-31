@@ -32,6 +32,10 @@
     "sleeping_too_young": {
       "en": " years is too young to be allowed to sleep at Fastaval",
       "da": " år er for ung til at måtte overnatte på Fastaval"
+    },
+    "wine_too_young": {
+      "en": " years is too young to be allowed to buy wine",
+      "da": " år er for ung til at måtte købe vin"
     }
   },
   "input_error": {
