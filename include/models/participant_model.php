@@ -794,7 +794,6 @@ class ParticipantModel extends Model
         $this->db->exec($query);
 
         if (!empty($post->wear)) {
-            $this->fileLog(print_r($post->wear, true));
             foreach ($post->wear as $wear) {
                 $order = $this->createEntity('DeltagereWear');
                 $price = $this->findEntity('WearPriser', $wear['price']);
