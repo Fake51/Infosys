@@ -674,6 +674,15 @@ class SignupApiModel extends Model {
                   break;
 
                 case 'party1':
+                  // Check age
+                  if ($age < 18) {
+                    $errors[$category][] = [
+                      'type' => 'wine_too_young',
+                      'id' => "$key",
+                      'age'  => $age,
+                    ];
+                    continue 2;
+                  }
                   $select->setWhere('id', '=', 81); // Sparkling wine ID
                   break;
 
