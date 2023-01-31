@@ -1,7 +1,7 @@
 {
   "header": {
-    "en": "Load/save signup information",
-    "da": "Hent/gem tilmelding"
+    "en": "Load registration",
+    "da": "Hent tilmelding"
   },
   "from_server": {
     "en": "Load a submitted sign-up registration",
