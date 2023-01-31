@@ -183,15 +183,15 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "The nametag will display your name and preferred pronouns. If your full name is too long to fit on the tag, only your first and last name will be used. If a problem still occurs, we will reach out to you on email.",
+                        "en": "The nametag will display your name and preferred pronouns. If your full name is too long to fit on the tag, only your first and last name will be used. If a problem still occurs, we will reach out to you by email.",
                         "da": "P\u00e5 navneskiltet vil der fremg\u00e5 dit navn og fortrukne pronomen (stedord). Er dit fulde navn for langt til at passe p\u00e5 skiltet, vil dit fornavn og efternavn blive brugt. Hvis der er problemer, vil vi kontakte dig p\u00e5 mail."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "The name on the nametag does not have to be your legal name. If\u00a0you want to use a name other than your legal name, or fx. your middle name, please provide that (full) name in this field.\u00a0",
-                        "da": "Navnet p\u00e5 navneskiltet beh\u00f8ver ikke at v\u00e6re dit juridiske navn. Hvis du \u00f8nsker at bruge et andet navn end dit juridiske navn, eller f.eks. med dit mellemnavn, s\u00e5 oplys det (fulde) navn i dette felt."
+                        "en": "The name on the nametag does not have to be your legal name. If you want to use a name other than your legal name, fx. a middle name, or to avoid deadnaming,\u00a0please provide the full name that you want to use in this field.",
+                        "da": "Navnet p\u00e5 navneskiltet beh\u00f8ver ikke at v\u00e6re dit juridiske navn. Hvis du \u00f8nsker at bruge et andet navn end dit juridiske navn, fx. et mellemnavn, eller for at undg\u00e5 deadnaming, s\u00e5 oplys det fulde navn du gerne vil bruge i dette felt."
                     }
                 },
                 {
@@ -239,7 +239,7 @@
         },
         {
             "headline": {
-                "en": "Choose visitor type",
+                "en": "Choose participant type",
                 "da": "V\u00e6lg deltagertype"
             },
             "items": [

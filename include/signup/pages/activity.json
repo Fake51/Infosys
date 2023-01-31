@@ -53,7 +53,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Click on the individual activities for a short description og find an overview on the [url=https:\/\/www.fastaval.dk\/en\/]website[\/url].",
+                        "en": "Click on the individual activities for a short description and find an overview on the [url=https:\/\/www.fastaval.dk\/en\/]website[\/url].",
                         "da": "Klik p\u00e5 de enkelte aktiviteter for at se en foromtale\/beskrivelse af aktiviteten eller se en oversigt p\u00e5 \u00a0[url=https:\/\/www.fastaval.dk\/]hjemmesiden[\/url].\u00a0"
                     }
                 }
@@ -248,7 +248,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "\u00a0If you want to be a\u00a0scenario facilitator\/game guide (fx. if you have chosen it as part of 'Fastaval together'), you can input which scenarios\/board games you want to facilitate\/guide bellow.",
+                        "en": "\u00a0If you want to be a\u00a0scenario facilitator\/game guide (eg. if you have chosen it as part of 'Fastaval together'), you can input which scenarios\/board games you want to facilitate\/guide bellow.",
                         "da": "Hvis du gerne vil v\u00e6re spilleder\/regelformidler (f.eks. fordi du har valgt det som en del af 'F\u00e6lles Fastaval'), kan du nedenfor ogs\u00e5 angive hvilke scenarier\/br\u00e6tspil du gerne vil spillede\/regelformidler.\u00a0"
                     }
                 },

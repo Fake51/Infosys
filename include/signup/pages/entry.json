@@ -41,15 +41,15 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "At Fastaval, you can either buy a ticket for all days (partout) or to the individual days separately.\u00a0 Note that a ticket fee of 15 kr. is placed on all sign-ups.",
+                        "en": "At Fastaval, you can either buy a ticket for all days (partout) or to the individual days separately.  Note that a ticket fee og 15 kr. is placed on all sign-ups.",
                         "da": "Til Fastaval kan du enten k\u00f8be billet til alle dage (partout) eller til de enkelte dage hver for sig. V\u00e6r opm\u00e6rksom p\u00e5, at der p\u00e5l\u00e6gges et billetgebyr p\u00e5 15 kr. til alle tilmeldinger."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "A partout ticket costs 350 kr.\u00a0Organizers and participants bellow the age of 18, receive a 100 kr. discount on partout entry. These discounts can be combined for organizers bellow 18.\u00a0Members of ALEA gain a 125 kr. discount.",
-                        "da": "En partout-billet koster 350 kr.\u00a0\u00a0Arrang\u00f8rer og deltagere under 18 \u00e5r, f\u00e5r 100 kr. rabat p\u00e5 en partout-billet.\u00a0Er du arrang\u00f8r under 18 \u00e5r f\u00e5 du b\u00e5de ungdoms- og arrang\u00f8rrabat.\u00a0Medlemmer af ALEA f\u00e5r 125 kr. rabat."
+                        "en": "A partout ticket costs 350 kr. Organizers and participants below the age of 18, receive a 100 kr. discount on partout entry. These discounts can be combined for organizers below the age of 18. Members of ALEA also get a 125 kr. discount.",
+                        "da": "En partout-billet koster 350 kr.\u00a0\u00a0Arrang\u00f8rer og deltagere under 18 \u00e5r, f\u00e5r 100 kr. rabat p\u00e5 en partout-billet.\u00a0Er du arrang\u00f8r under 18 \u00e5r f\u00e5 du b\u00e5de ungdoms- og arrang\u00f8rrabat.\u00a0Medlemmer af ALEA f\u00e5r ogs\u00e5 125 kr. rabat."
                     }
                 },
                 {
@@ -358,6 +358,13 @@
                         "da": "[b]Bem\u00e6rkninger[\/b]\nHvis du har nogle bem\u00e6rkninger til hvor du skal sove, f.eks hvis du hellere vil sove et sted frem for et andet, eller har s\u00e6rlige sovebehov, s\u00e5 skriv det her."
                     },
                     "infosys_id": "note:sleeping"
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you have marked more than one dormitory, your assigned dormitory will be noted on your participant sheet, which will be send out a couple of days before Fastaval. \u00a0",
+                        "da": "Hvis du har valgt flere sovemuligheder, vil din tildelte sovemulighed blive noteret p\u00e5 din deltagerseddel, der sendes ud et par dage f\u00f8r Fastaval.\u00a0"
+                    }
                 }
             ],
             "display_logic": [

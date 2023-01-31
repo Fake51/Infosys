@@ -25,15 +25,22 @@
     "sections": [
         {
             "headline": {
-                "en": "Otto party extra",
-                "da": "Tilbeh\u00f8r til Ottofesten"
+                "en": "The Otto Party",
+                "da": "Ottofesten"
             },
             "items": [
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "This year\u2019s bottle carefully selected for the occasion. We\u2019ll make sure to select the best bottle the budget allows.",
-                        "da": "\u00c5rets fest flaske, s\u00e6rligt udvalgt til lejligheden. Vi s\u00f8rger for at f\u00e5 den bedste flaske til prisen."
+                        "en": "The Otto Party on Sunday is included in your entry ticket. This year, you can experience an exciting Sunday with fun activities and a lot of entertainment. Wind up your Fastaval with a huge party to the Ottoshow in the evening. Read more about [url=https:\/\/www.fastaval.dk\/en\/super-soendag\/]SuperSunday here[\/url].\u00a0",
+                        "da": "Ottofesten om s\u00f8ndagen er inkluderet i din entr\u00e9billet. Du kan i \u00e5r opleve en sp\u00e6ndende s\u00f8ndag med sjove aktiviteter og masser af underholdning. Slut Fastaval af med et brag af en fest til Ottoshowet om aftenen. L\u00e6s mere om [url=https:\/\/www.fastaval.dk\/super-soendag\/]SuperS\u00f8ndag her[\/url]."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Do you want this year\u2019s bottle carefully selected for the festive\u00a0occasion? We\u2019ll make sure to select the best bottle the budget allows.",
+                        "da": "Vil du have \u00e5rets fest flaske, s\u00e6rligt udvalgt til den festlige lejlighed? Vi s\u00f8rger for at f\u00e5 den bedste flaske til prisen."
                     }
                 },
                 {
@@ -118,7 +125,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Is there something you have not been able to tell us? Then write it here. Alternatively, you can write a nice message to our hard working Infonauts.",
+                        "en": "Is there something you have not been able to share with us? Then write it here. Alternatively, you can write a nice message to our hard-working Infonauts.",
                         "da": "Er der noget du ikke har haft mulighed for at fort\u00e6lle os? S\u00e5 kan du skrive det her. Eller er du altid velkommen til at skrive en s\u00f8d besked til vores h\u00e5rdtarbejdende Infonauter."
                     }
                 },
