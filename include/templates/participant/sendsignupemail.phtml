@@ -103,11 +103,11 @@ Brug venligst dette link til at <strong>uploade et billede</strong> til det:
 <?php endif;?>
 <?php if (in_array('role', $author)) : ?>
 <tr><td colspan="2">Forfatter:                              </td><td>Ja</td></tr>
-<tr><td colspan="2">Scenarie:                               </td><td><?=$this->participant->scenarie?></td></tr>
+<tr><td colspan="2">Scenarie:                               </td><td><?=$this->participant->getGame('da')?></td></tr>
 <?php endif;?>
 <?php if (in_array('board', $author)) : ?>
 <tr><td colspan="2">Designer:                               </td><td>Ja</td></tr>
-<tr><td colspan="2">Brætspil:                               </td><td><?=$this->participant->scenarie?></td></tr>
+<tr><td colspan="2">Brætspil:                               </td><td><?=$this->participant->getGame('da')?></td></tr>
 <?php endif;?>
 <?php endif; // isArrangoer()?>
 

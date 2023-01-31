@@ -151,7 +151,7 @@
                         "en": "What is the title of your scenario\/board game?",
                         "da": "Hvad er titlen p\u00e5 dit scenarie\/br\u00e6tspil"
                     },
-                    "infosys_id": "scenarie",
+                    "infosys_id": "game_id",
                     "required_if": [
                         {
                             "type": "checkbox",
@@ -177,7 +177,12 @@
                             "status": "required",
                             "input": "designer"
                         }
-                    ]
+                    ],
+                    "autocomplete": {
+                        "list": "game_titles",
+                        "mode": "exhaustive",
+                        "value": "id"
+                    }
                 }
             ],
             "section_id": "work",

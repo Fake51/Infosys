@@ -109,6 +109,11 @@ class ParticipantController extends Controller
             }            
             $this->page->work_areas = json_encode($work_areas);
 
+            $games = [];
+            foreach($this->model->getGames() as $game) {
+                $games[$game['navn']] = $game['navn'];
+            }            
+            $this->page->games = json_encode($games);
 
             $this->page->setTitle(e($deltager->getName() . ' - Deltager'));
             $this->page->deltager      = $deltager;

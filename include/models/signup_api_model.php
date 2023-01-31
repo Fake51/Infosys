@@ -17,6 +17,7 @@ class SignupApiModel extends Model {
       $config->autocomplete = [
         'organizer_categories' => $this->loadOrganizerCategories(),
         'countries' => $this->loadCountries(),
+        'game_titles' => $this->loadGameTitles(),
       ];
 
       $query = "SELECT COUNT(*) as count FROM deltagere WHERE financial_struggle = 'ja'";
@@ -869,7 +870,7 @@ class SignupApiModel extends Model {
 
     // Author of rpg or designer of board game
     $participant->forfatter = count($author) > 0 ? 'ja' : 'nej';
-    if (count($author)  == 0) $participant->scenarie = "";
+    if (count($author)  == 0) $participant->game_id = null;
     $participant->setCollection('author', $author);
 
     // Check for actual organizer selection
@@ -1186,4 +1187,18 @@ class SignupApiModel extends Model {
     return $countries;
   }
 
+  private function loadGameTitles() {
+    $query = "SELECT id, navn, title_en FROM aktiviteter WHERE type = 'braet' OR type = 'rolle'";
+    $result = $this->db->query($query);
+    $titles = [];
+    foreach($result as $row) {
+      $titles[$row['id']] = [
+        'en' => $row['title_en'],
+        'da' => $row['navn'],
+        'id' => $row['id'],
+      ];
+    }
+  
+    return $titles;
+  }
 }

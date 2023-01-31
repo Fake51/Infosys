@@ -24,7 +24,7 @@
 <tr><td>Work area:                     </td><td><?= e($this->participant->arbejdsomraade);?></td></tr>
 <?php endif;?>
 <?php if ($this->participant->scenarie) : ?>
-<tr><td>Scenario:                              </td><td><?= e($this->participant->scenarie);?></td></tr>
+<tr><td>Scenario:                              </td><td><?= e($this->participant->getGame('en'));?></td></tr>
 <?php endif;?>
 <?php if ($this->participant->ungdomsskole) : ?>
 <tr><td>School/group:                   </td><td><?= e($this->participant->ungdomsskole);?></td></tr>

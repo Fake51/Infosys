@@ -173,6 +173,14 @@ class Deltagere extends DBObject implements AgeFulfilment
             }
             return $this->country_text;
 
+        } elseif($var == 'scenarie') {
+            if (!isset($this->game_text)) {
+                if ($this->storage['game_id'] == NULL) return "";
+                $result = $this->db->query('SELECT navn FROM aktiviteter WHERE id = ?', [$this->storage['game_id']]);
+                $this->game_text = count($result) > 0 ? $result[0]['navn'] : "";
+            }
+            return $this->game_text;
+
         } elseif (array_key_exists($var, $this->storage)) {
             return parent::__get($var);
 
@@ -199,6 +207,15 @@ class Deltagere extends DBObject implements AgeFulfilment
                     $this->storage['country'] = $result[0]['code'];
                 } else {
                     throw new FrameworkException('Country name not recognized');
+                }
+                break;
+
+            case 'scenarie':
+                $result = $this->db->query('SELECT id FROM aktiviteter WHERE navn = ?', [$value]);
+                if (count($result) == 1) {
+                    $this->storage['game_id'] = $result[0]['id'];
+                } else {
+                    throw new FrameworkException('Game name not recognized');
                 }
                 break;
 
@@ -1727,5 +1744,12 @@ WHERE
     public function getCountry($lang) {
         $result = $this->db->query("SELECT * FROM countries WHERE code = ?", [$this->storage['country']]);
         return count($result) === 1 ? $result[0]["name_$lang"] : "";
+    }
+
+    public function getGame($lang) {
+        $result = $this->db->query("SELECT * FROM aktiviteter WHERE id = ?", [$this->storage['game_id']]);
+        if (count($result) === 0) return "";
+        
+        return $lang == 'da' ? $result[0]["navn"] : $result[0]["title_en"];
     }
 }

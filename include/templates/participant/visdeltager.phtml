@@ -9,6 +9,7 @@ $this->registerLateLoadJS('participant.js');
     };
     var countries = <?=$this->countries?>;
     var work_areas = <?=$this->work_areas?>;
+    var games = <?=$this->games?>;
 </script>
 <div class="prev-next-buttons">
         <a class="btn btn-danger" href="<?= $this->url('spillersedler', array('id_range' => $this->deltager->id));?>" target="_blank">Print spillerseddel</a>
@@ -76,7 +77,7 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'>Forfatter/Designer: </td><td id='forfatter' class='editable yesno'><?= $this->deltager->forfatter;?></td>
-                    <td class='label'>Scenarie: </td><td colspan='3' id='scenarie' class='editable text'><?= e($this->deltager->scenarie);?></td>
+                    <td class='label'>Scenarie: </td><td colspan='3' id='scenarie' class='editable game'><?= e($this->deltager->scenarie);?></td>
                 </tr>
                 <tr>
                     <td class='label'>Extra vouchers: </td><td colspan='2' id='extra_vouchers' class='editable text'><?= $this->deltager->extra_vouchers;?></td>
