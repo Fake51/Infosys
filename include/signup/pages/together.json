@@ -158,10 +158,20 @@
             ],
             "section_id": "hero",
             "require_one_if": {
-                "type": "field_compare",
-                "input": "participant",
-                "compare": "not_equals",
-                "value": "Arrang\u00f8r",
+                "rules":[
+                    {
+                        "type": "checkbox",
+                        "input": "entry:partout",
+                        "status": true
+                    },
+                    {
+                        "type": "field_compare",
+                        "input": "participant",
+                        "compare": "equals",
+                        "value": "Arrang\u00f8r",
+                        "status": false
+                    }                    
+                ],
                 "required": [
                     "together:hero",
                     "together:gm",
@@ -386,8 +396,12 @@
             ],
             "section_id": "prepare",
             "require_one_if": {
-                "type": "checkbox",
-                "input": "together:prepare",
+                "rules": [
+                    {
+                        "type": "checkbox",
+                        "input": "together:prepare"
+                    }
+                ],
                 "required": [
                     "ready_mandag",
                     "ready_tirsdag"
