@@ -428,7 +428,7 @@ class WearModel extends Model
                 foreach($values as $value) {
                     if (!isset($selected_images[$id]) || !in_array($value, $selected_images[$id])) {
                         $query = "DELETE FROM wear_image_connection WHERE image_id = ? AND wear_id = ? AND attribute_id = ?";
-                        $args = [$id, $wear->id, $image['attribute_id']];
+                        $args = [$id, $wear->id, $value];
                         $this->db->exec($query, $args);
                     }
                     $current_attributes[$id][] = $value;
