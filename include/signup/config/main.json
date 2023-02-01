@@ -29,6 +29,10 @@
       "en": "You must choose atleast one of the options",
       "da": "Du skal vælge mindst en af mulighederne"
     },
+    "one_day": {
+      "en": "You must choose atleast one day to attend Fastaval",
+      "da": "Du skal vælge mindst en dag du kommer på Fastaval"
+    },
     "sleeping_too_young": {
       "en": " years is too young to be allowed to sleep at Fastaval",
       "da": " år er for ung til at måtte overnatte på Fastaval"
