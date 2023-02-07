@@ -432,10 +432,10 @@ class SignupApiModel extends Model {
                 $wear = $this->createEntity('Wear')->findById($wear_order['wear_id']);
                 $wear_prices = $wear->getWearpriser($user_category);
   
-                // If there is no price for junior, check regular participant prices
-                if (count($wear_prices) == 0 && $junior_plus) {
-                  $user_category = $this->createEntity('BrugerKategorier')->getDeltager();
-                  $wear_prices = $wear->getWearpriser($user_category);
+                // Check if we have a price for regular participants
+                if (count($wear_prices) == 0) {
+                  $regular_participant = $this->createEntity('BrugerKategorier')->getDeltager();
+                  $wear_prices = $wear->getWearpriser($regular_participant);
                 }
 
                 if (count($wear_prices) == 0) {
