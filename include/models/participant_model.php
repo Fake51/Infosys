@@ -3556,4 +3556,11 @@ WHERE (
 
         return $this->db->query("SELECT id, name_en, name_da FROM organizer_categories $sort");
     }
+
+    public function getGames($sort = 'da') {
+        if ($sort == 'da') $sort = " ORDER BY navn COLLATE utf8mb4_danish_ci";
+        if ($sort == 'en') $sort = " ORDER BY title_en";
+
+        return $this->db->query("SELECT id, title_en, navn FROM aktiviteter WHERE type = 'braet' OR type = 'rolle' $sort");
+    }
 }
