@@ -56,7 +56,29 @@
             "headline": {
                 "en": "Financial support",
                 "da": "\u00d8konomisk st\u00f8tte\n"
-            },
+            }
+        },
+        {
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]All available support has been assigned[\/b]",
+                        "da": "[b]Al tilg\u00e6ngelig st\u00f8tte er blevet tildelt[\/b]"
+                    }
+                }
+            ],
+            "display_logic": [
+                {
+                    "type": "config",
+                    "config": "current_financial_support",
+                    "status": "hidden",
+                    "compare": "less",
+                    "value": "config.max_financial_support"
+                }
+            ]
+        },
+        {
             "items": [
                 {
                     "type": "paragraph",
@@ -85,16 +107,21 @@
                         "en": "I wish to receive financial support\t\t\t",
                         "da": "Jeg \u00f8nsker at f\u00e5 \u00f8konomisk st\u00f8tte\t\t\t"
                     },
-                    "infosys_id": "financial_struggle"
-                }
-            ],
-            "display_logic": [
-                {
-                    "type": "config",
-                    "config": "current_financial_support",
-                    "status": "hidden",
-                    "compare": "greater",
-                    "value": 84
+                    "infosys_id": "financial_struggle",
+                    "display_logic": [
+                        {
+                            "type": "config",
+                            "config": "current_financial_support",
+                            "status": "disabled",
+                            "compare": "greater_equal",
+                            "value": "config.max_financial_support"
+                        },
+                        {
+                            "type": "checkbox",
+                            "status": "normal",
+                            "input": "financial_struggle"
+                        }
+                    ]
                 }
             ]
         },

@@ -1,0 +1,30 @@
+{
+  "breakfast": {
+    "en": "Breakfast",
+    "da": "Morgenmad"
+  },
+  "dinner": {
+    "en": "Dinner",
+    "da": "Aftensmad"
+  },
+  "remaining": {
+    "en": "remaining",
+    "da": "til gode"
+  },
+  "errors": {
+    "no_food_credits_used": {
+      "en": "You have to order food to get financial support for it",
+      "da": "Du kan ikke få støtte til mad, hvis du ikke vælger at bestille mad"
+    }
+  },
+  "warning": {
+    "en": "Warning",
+    "da": "Advarsel"
+  },
+  "warnings": {
+    "unused_food_credits": {
+      "en": "You can still select more meals covered by financial support",
+      "da": "Du kan stadig vælge flere måltider, dækket af den økonomiske støtte"
+    }
+  }
+}

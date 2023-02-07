@@ -151,15 +151,25 @@ Brug venligst dette link til at <strong>uploade et billede</strong> til det:
 <?php endif;?>
 
 <?php if (!empty($this->food)) : ?>
+<?php $food_credits = $this->food_credits; ?>
 <tr><td colspan="3" style="text-align: center; background-color: lightgray; border-top: 1px solid black; border-bottom: 1px solid black;">
     <h3>Mad<h3>
 </td></tr>
 <?php if (!$this->participant->financial_struggle) : ?>
 <tr><td colspan="2">Økonomisk støtte:                       </td><td>Ja</td></tr>
 <?php endif;?>
-<?php foreach ($this->food as $fooditem) : ?>
-    <?php $food = $fooditem->getMad();?>
-<tr><td colspan="2"><?=$food->kategori;?> - <?=getWeekDay(date('N', strtotime($fooditem->dato)))?> </td><td><?=$food->pris?> kr.</td></tr>
+<?php foreach ($this->food as $food) : 
+    $foodcat = $food->getMad();
+    $food_price = $foodcat->pris;
+    if ($food->isBreakfast() && $food_credits['breakfast'] > 0) {
+        $food_credits['breakfast']--;
+        $food_price = 0;
+    } elseif ($food->isDinner() && $food_credits['dinner'] > 0) {
+        $food_credits['dinner']--;
+        $food_price = 0;
+    }
+?>
+<tr><td colspan="2"><?=$foodcat->kategori;?> - <?=getWeekDay(date('N', strtotime($food->dato)))?> </td><td><?=$food_price?> kr.</td></tr>
 <?php endforeach;?>
 <?php endif; // Food?>
 

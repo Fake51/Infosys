@@ -320,6 +320,10 @@ class SignupApiModel extends Model {
       'activities' => json_decode($this->getConfig('activities')),
     ];
     $choice_count = count($config['activities']->choices->prio->$lang);
+    $food_credits = [
+      'breakfast' => 0,
+      'dinner' => 0,
+    ];
 
     $participant->signed_up = date('Y-m-d H:i:s');
     // Reset orders
@@ -535,6 +539,12 @@ class SignupApiModel extends Model {
                 $age = $participant->getAge(new DateTime($config['main']->con_start));
               }
 
+              // Set food credits for financial support
+              if ($key == 'financial_struggle' && $value == 'on') {
+                $food_credits['breakfast'] = 2;
+                $food_credits['dinner'] = 2;
+              }
+
               if ($value == "" || $value == 0 || $value == 'off') {
                 // No need to show empty fields on breakdown
                 continue 2;
@@ -748,7 +758,17 @@ class SignupApiModel extends Model {
                 continue 2;
               }
               $participant->setMad($food);
-              $price = $food->getMad()->pris;
+
+              if ($food->isBreakfast() && $food_credits['breakfast'] > 0) {
+                $food_credits['breakfast']--;
+                $price = 0;
+              } elseif ($food->isDinner() && $food_credits['dinner'] > 0) {
+                $food_credits['dinner']--;
+                $price = 0;
+              } else {
+                $price = $food->getMad()->pris;
+              }
+
               break;
 
             case 'hero':
@@ -858,6 +878,29 @@ class SignupApiModel extends Model {
         ], $extra);
 
         $category_total += $price;
+      }
+
+      // Check if we used our food credits
+      if ($food_credits['breakfast'] == 2 && $food_credits['dinner'] == 2) {
+        // We didn't use any credits and get an error
+        $errors[$category][] = [
+          'type' => 'no_food_credits_used',
+          'id' => 'financial_struggle',
+          'module' => 'food',
+        ];
+      } 
+      if ($food_credits['breakfast'] > 0 || $food_credits['dinner'] > 0) {
+        // We didn't use all credits and get a warning
+        $entries[] = [
+          'special_module' => 'food',
+          'warning' => 'unused_food_credits',
+          'key' => 'financial_struggle',
+          'breakfast_remaining' => $food_credits['breakfast'],
+          'dinner_remaining' => $food_credits['dinner'],
+        ];
+        // Reset food credits
+        $food_credits['breakfast'] = 0;
+        $food_credits['dinner'] = 0;
       }
 
       if (count($entries) > 0) {

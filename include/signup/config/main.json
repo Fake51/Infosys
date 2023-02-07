@@ -1,6 +1,7 @@
 {
   "age_young": 18,
   "age_kid": 13,
+  "max_financial_support": 85,
   "birth": "birthdate",
   "participant": "participant",
   "organizer": "organizercategory",

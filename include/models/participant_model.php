@@ -2458,10 +2458,27 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             ksort($entrance['sleeping-day']);
         }
 
-        foreach ($page->food as $item) {
-            if ($item) {
-                $prices['food'] += $item->getMad()->pris;
+        $food_credits = [
+            'breakfast' => 0,
+            'dinner' => 0,
+        ];
+
+        if ($participant->financial_struggle == 'ja') {
+            $food_credits['breakfast'] = 2;
+            $food_credits['dinner'] = 2;
+        }
+
+        $page->food_credits = $food_credits;
+        foreach ($page->food as $food) {
+            if ($food->isBreakfast() && $food_credits['breakfast'] > 0) {
+                $food_credits['breakfast']--;
+                continue;
+            } elseif ($food->isDinner() && $food_credits['dinner'] > 0) {
+                $food_credits['dinner']--;
+                continue;
             }
+
+            $prices['food'] += $food->getMad()->pris;
         }
 
         foreach ($page->wear as $item) {

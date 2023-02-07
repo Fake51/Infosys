@@ -766,9 +766,27 @@ class Deltagere extends DBObject implements AgeFulfilment
         if (!$this->foodCost)
         {
             $result = 0;
-            foreach ($this->getMadtider() as $i)
-            {
-                $result += $i->getMad()->pris;
+
+            $food_credits = [
+                'breakfast' => 0,
+                'dinner' => 0,
+            ];
+
+            if ($this->financial_struggle == 'ja') {
+                $food_credits['breakfast'] = 2;
+                $food_credits['dinner'] = 2;
+            }
+
+            foreach ($this->getMadtider() as $food) {
+                if ($food->isBreakfast() && $food_credits['breakfast'] > 0) {
+                    $food_credits['breakfast']--;
+                    continue;
+                } elseif ($food->isDinner() && $food_credits['dinner'] > 0) {
+                    $food_credits['dinner']--;
+                    continue;
+                }
+    
+                $result += $food->getMad()->pris;
             }
             $this->foodCost = $result;
         }
