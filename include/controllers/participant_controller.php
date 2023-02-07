@@ -1737,58 +1737,36 @@ class ParticipantController extends Controller
      * Meant to be called by a cron job requesting 'participant/payment-reminder/cron'
      */
     public function cronPaymentReminder() {
-        if(strtotime($this->config->get('con.paymentlimit')) < strtotime('now')) {
-            //echo "late\n";
-            $this->sendLatePaymentReminder();
-            exit;
-        }
-        //echo "not late\n";
-        $this->sendRegularPaymentReminder();
+        $late = strtotime($this->config->get('con.signupend')) < strtotime('now');
+        $this->sendAllPaymentReminders($late);
         exit;
     }
 
-    public function sendRegularPaymentReminder()
+    public function sendAllPaymentReminders($late = false)
     {
-        $participants = $this->model->getParticipantsForPaymentReminder(4);
-        // echo count($participants)."\n";
-        // die("Not actually sending reminders\n");
+        $participants = $this->model->getParticipantsForPaymentReminder(3);
+        // echo ($late ? "Late" : "Not Late"). "<br>\n";
+        echo "Sender betalings reminder mail til ".count($participants)." deltagere<br>\n";
+        // die("Not actually sending reminders<br>\n");
+
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
+
         $count = 0;
         $this->page->banking_fee = $this->model->findBankingFee()->pris;
 
+        $template = $late ? "paymentreminderlate" : "paymentreminderregular";
+        $late_text = $late ? "late " : "";
         foreach ($participants as $participant) {
-            $this->sendPaymentReminder($participant, 'paymentreminderregular', $participant->speaksDanish());
-
-            $this->log('System sent payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
-
+            $this->sendPaymentReminder($participant, $template, $participant->speaksDanish());
+            $this->log("System sent ${late_text}payment reminder to participant (ID: " . $participant->id . ')', 'Payment', null);
             $count++;
         }
 
-        $this->log('4 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
-
-        exit;
+        $this->log("4 day ${late_text}payment reminder check done. Sent reminders to " . $count . ' participants', 'Payment', null);
+        die();
     }
-
-    public function sendLatePaymentReminder()
-    {
-        $participants = $this->model->getParticipantsForPaymentReminder(4);
-        //echo count($participants)."\n";
-        //die("Not actually sending reminders\n");
-        $count = 0;
-        $this->page->banking_fee = $this->model->findBankingFee()->pris;
-
-        foreach ($participants as $participant) {
-            $this->sendPaymentReminder($participant, 'paymentreminderlate', false);//$participant->speaksDanish());
-
-            $this->log('System sent late payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
-
-            $count++;
-        }
-
-        $this->log('4 day late payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
-
-        exit;
-    }
-
 
     public function sendSecondPaymentReminder()
     {
@@ -1846,7 +1824,6 @@ die('Not sending last payment reminders');
             $title = $english_title ? $english_title : 'Reminder: payment for Fastaval '.$year;
             $this->page->setTemplate('participant/' . $template . '-en');
         }
-
 
         $mail = new Mail($this->config);
 

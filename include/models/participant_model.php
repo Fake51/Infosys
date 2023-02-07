@@ -2297,7 +2297,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
      */
     public function setupPaymentReminderEmail(Deltagere $participant, Page $page)
     {
-        $pay_by_time  = strtotime($this->config->get('con.paymentlimit'));
+        $pay_by_time  = strtotime($this->config->get('con.signupend'));
         $signup_time = strtotime($participant->signed_up) + 86400;
 
         $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
