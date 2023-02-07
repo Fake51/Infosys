@@ -110,7 +110,7 @@ class Select
      */
     protected $group_by = array();
 
-    protected static $matches = array('=', '!=', '<', '>','<=','>=','LIKE', 'IN', 'NOT IN','IS NULL','IS NOT NULL');
+    protected static $matches = array('=', '!=', '<', '>','<=','>=','LIKE', 'NOT LIKE', 'IN', 'NOT IN','IS NULL','IS NOT NULL');
 
     /**
      * constructor for the class - initiates the select for the calling object

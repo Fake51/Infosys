@@ -595,10 +595,14 @@ class SignupApiModel extends Model {
                 // NB! We assume Alea signup is earlier or same page
                 if ($age >= $config['main']->age_kid && ($is_alea || $items->{'misc:alea'})) {
                   $select->setWhere('type', 'like', '%Alea%');
-                }
+                 } else {
+                  $select->setWhere('type', 'not like', '%Alea%');
+                 }
                 // NB! We assume organizer setting is before this
                 if ($age >= $config['main']->age_kid && $is_organizer) {
                   $select->setWhere('type', 'like', '%Arrangør%');
+                } else {
+                  $select->setWhere('type', 'not like', '%Arrangør%');
                 }
               } else {
                 $day = intval($key_item) -1;
