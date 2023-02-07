@@ -303,6 +303,10 @@ class DummyParticipant extends DBObject
         return $this;
     }
 
+    public function removeOrderedFood() {
+        return $this->removeFood();
+    }
+
     /**
      * returns food the participant has ordered
      *

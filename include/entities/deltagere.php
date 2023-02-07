@@ -1456,7 +1456,7 @@ WHERE
     }
 
     /**
-     * removes all ordered food for the participant
+     * removes all assigned food for the participant
      *
      * @access public
      * @return $this
@@ -1464,6 +1464,28 @@ WHERE
     public function removeFood()
     {
         foreach ($this->createEntity('DeltagereMadtider')->getForParticipant($this) as $food) {
+            $food->delete();
+        }
+
+        return $this;
+    }
+
+    /**
+     * removes all food ordered through the signup for the participant
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeOrderedFood()
+    {
+        $participant_food_entity = $this->createEntity('DeltagereMadtider');
+        $select = $participant_food_entity->getSelect();
+        $select->setLeftJoin('madtider', 'madtid_id', 'madtider.id');
+        $select->setLeftJoin('mad', 'mad_id', 'mad.id');
+        $select->setWhere('hidden', '=', 'false');
+        $select->setWhere('deltager_id', '=', $this->id);
+
+        foreach ($participant_food_entity->findBySelectMany($select) as $food) {
             $food->delete();
         }
 

@@ -4,7 +4,9 @@
     <legend>Mad: <?php echo $this->mad->kategori;?> - <a href="<?php echo $this->url('edit_food', array('id' => $this->mad->id));?>">ret/slet</a></legend>
     <span class='label'>Id:</span> <span class='detail'><?php echo $this->mad->id;?></span><br class='clearit'/>
     <span class='label'>Kategori:</span> <span class='detail'><?php echo $this->mad->kategori;?></span><br class='clearit'/>
+    <span class='label'>Engelsk:</span> <span class='detail'><?php echo $this->mad->title_en;?></span><br class='clearit'/>
     <span class='label'>Pris:</span> <span class='detail'><?php echo $this->mad->pris;?></span><br class='clearit'/>
+    <span class='label'>Skjult:</span> <span class='detail'><?= $this->mad->hidden ? "Ja" : "Nej" ?></span><br class='clearit'/>
     <hr/>
     <?php if ($this->tider) : foreach ($this->tider as $tid) : ?>
     <table>

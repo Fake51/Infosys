@@ -4,7 +4,9 @@
     <form action='' method='post'>
       <input id='mad-id' type='hidden' value='<?php echo $this->id;?>'/>
       <span class='label'>Kategori:</span> <span class='detail'><input type='text' name='kategori' value='<?php echo (isset($this->mad) ? $this->mad->kategori : '');?>'/></span><br/>
+      <span class='label'>Engelsk:</span> <span class='detail'><input type='text' name='title_en' value='<?php echo (isset($this->mad) ? $this->mad->title_en : '');?>'/></span><br/>
       <span class='label'>Pris:</span> <span class='detail'><input type='text' name='pris' value='<?php echo (isset($this->mad) ? $this->mad->pris : '');?>'/></span><br/>
+      <span class='label'>Skjult:</span> <span class='detail'><input type='checkbox' name='hidden' value='true' <?=$this->mad->hidden ? "checked" : ""?>/></span><br/>
       <hr/>
       <b>Mad tider:</b>
       <?php if (isset($this->mad)) : foreach ($this->mad->getMadTider() as $tid) : ?>

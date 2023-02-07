@@ -87,13 +87,15 @@ class FoodModel extends Model
      */
     public function createFood(RequestVars $post)
     {
-        if (empty($post->kategori) || empty($post->pris) || !is_numeric($post->pris) || !is_string($post->kategori))
+        if (empty($post->kategori) || !isset($post->pris) || !is_numeric($post->pris) || !is_string($post->kategori))
         {
             return false;
         }
         $food = $this->createEntity('Mad');
         $food->kategori = $post->kategori;
+        $food->title_en = $post->title_en;
         $food->pris = $post->pris;
+        $food->hidden = isset($post->hidden) ? 1 : 0;
         return (($food->insert() && $this->updateFoodDates($food, $post)) ? $food : false);
     }
 
@@ -108,12 +110,15 @@ class FoodModel extends Model
      */
     public function updateFood(Mad $food, RequestVars $post)
     {
-        if (empty($post->kategori) || empty($post->pris) || !is_numeric($post->pris) || !is_string($post->kategori) || !$food->isLoaded())
+        if (empty($post->kategori) || !isset($post->pris) || !is_numeric($post->pris) || !is_string($post->kategori) || !$food->isLoaded())
         {
             return false;
         }
+
         $food->kategori = $post->kategori;
+        $food->title_en = $post->title_en;
         $food->pris = $post->pris;
+        $food->hidden = isset($post->hidden) ? 1 : 0;
         if (!$food->update())
         {
             return false;

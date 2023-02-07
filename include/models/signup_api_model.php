@@ -59,26 +59,21 @@ class SignupApiModel extends Model {
   public function getFood() {
     $result = (object)[];
 
-    // TODO add translations to food entity
     $categories = [
-      5 => [
-        'en' => 'Breakfast',
-        'da' => 'Morgenmad',
-      ],
       12 => [
-        'en' => 'Dinner - Regular',
-        'da' => 'Aftensmad - Standard',
         'exclude' => 18,
       ],
       18 => [
-        'en' => 'Dinner - Vegetarian',
-        'da' => 'Aftensmad - Vegetar',
         'exclude' => 12,
       ],
     ];
-    $food_categories = $this->createEntity('Mad')->findAll();
-    foreach($food_categories as $category) {
-      $categories[$category->id]['price'] = $category->pris;
+    $food_entity = $this->createEntity('Mad');
+    $food_select = $food_entity->getSelect();
+    $food_select->setWhere('hidden', '=', 'false');
+    foreach($food_entity->findbySelectMany($food_select) as $food) {
+      $categories[$food->id]['price'] = $food->pris;
+      $categories[$food->id]['en'] = $food->title_en;
+      $categories[$food->id]['da'] = $food->kategori;
     }
 
     $result->categories = $categories;
@@ -89,6 +84,9 @@ class SignupApiModel extends Model {
     });
     
     foreach($food as $fooditem) {
+      // Skip hidden food
+      if (!isset($categories[$fooditem->mad_id])) continue;
+
       $resultitem = (object) [];
       $resultitem->id = $fooditem->id;
       $resultitem->text = [
@@ -328,7 +326,7 @@ class SignupApiModel extends Model {
     $participant->signed_up = date('Y-m-d H:i:s');
     // Reset orders
     $participant->removeEntrance();
-    $participant->removeFood();
+    $participant->removeOrderedFood();
     $participant->removeActivitySignups();
     $participant->removeAllWear();
     $participant->removeDiySignup();
