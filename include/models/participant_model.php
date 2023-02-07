@@ -201,9 +201,6 @@ class ParticipantModel extends Model
                 $select->setWhereOr('email', 'like', "%{$term}%");
                 $select->setWhereOr('efternavn', 'like', "%{$term}%");
                 $select->setWhereOr('ungdomsskole', 'like', "%{$term}%");
-                $select->setWhereOr('scenarie', 'like', "%{$term}%");
-                $select->setWhereOr('arbejdsomraade', 'like', "%{$term}%");
-                $select->setWhereOr('skills', 'like', "%{$term}%");
                 $select->setWhereOr('deltager_note', 'like', "%{$term}%");
             }
         }
