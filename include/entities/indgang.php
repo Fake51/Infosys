@@ -259,6 +259,11 @@ class Indgang extends DBObject
             return $this->type;
         }
 
+        if (preg_match("/Alea/", $this->type)) $description .= " Alea";
+        if (preg_match("/Arrangør/", $this->type)) $description .= " Arrangør";
+        if (preg_match("/Ung/", $this->type)) $description .= " Ung";
+        if (preg_match("/Barn/", $this->type)) $description .= " Barn";
+
         return danishDayNames("{$description} {$date_part}");
     }
 
