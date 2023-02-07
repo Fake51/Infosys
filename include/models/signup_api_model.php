@@ -1135,9 +1135,9 @@ class SignupApiModel extends Model {
       if ($type == 'spilleder') {
         $prio = count($config['activities']->choices->prio->en) +1;
         if($run_signup->getAktivitet()->type == 'braet') {
-          $signup['together:gm'] = 'on';
-        } else {
           $signup['together:rules'] = 'on';
+        } else {
+          $signup['together:gm'] = 'on';
         }
       }
       if (isset($signup["activity:$run_id"])) {
