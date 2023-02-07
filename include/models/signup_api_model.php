@@ -609,7 +609,11 @@ class SignupApiModel extends Model {
                 $date = new DateTime($this->config->get('con.start'));
                 $date->add(new DateInterval("P{$day}D"));
                 $select->setWhereDate('start', '=', $date->format('Y-m-d'));
-                $select->setWhere('type', '=', 'Indgang - Enkelt');
+                if ($age < $config['main']->age_kid) {
+                  $select->setWhere('type', '=', 'GRATIST Dagsbillet');
+                } else {
+                  $select->setWhere('type', '=', 'Indgang - Enkelt');
+                }
               }
               $entry = $entry->findBySelect($select);
               if (!$entry) {
