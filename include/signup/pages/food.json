@@ -32,21 +32,21 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Fastaval will have the evening meal delivered from [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url]. The food will be served in the common area, in the following time span:",
-                        "da": "Fastaval f\u00e5r aftensmaden leveret fra [url=https:\/\/mosmadhus.dk\/DK.aspx]MOS Madhus[\/url]. Maden serveres i f\u00e6llesomr\u00e5det, i f\u00f8lgende tidsrum:"
+                        "en": "Fastaval will have dinner delivered from [url=https:\/\/mosmadhus.dk\/]MOS Madhus[\/url]. The food will be served in the common area, in the following period:",
+                        "da": "Fastaval f\u00e5r aftensmaden leveret fra [url=https:\/\/mosmadhus.dk\/]MOS Madhus[\/url]. Maden serveres i f\u00e6llesomr\u00e5det, i f\u00f8lgende tidsrum:"
                     }
                 },
                 {
                     "type": "list",
                     "text": {
-                        "en": "Breakfast: 08.30-10.30\nDinner: 17.30-19.30 PM (sunday 17:00 - 19:00)",
+                        "en": "Breakfast: 08.30-10.30\nDinner: 17.30-19.30 (Sunday 17:00 - 19:00)",
                         "da": "Morgenmaden: kl. 08:30-10:30\nAftensmaden: kl. 17:30-19:30 (s\u00f8ndag kl. 17:00-19:00)"
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Dinner will be served in rounds. Your time slot will appear on your participant sheet closer to Fastaval.",
+                        "en": "Dinner will be served in shifts. Your time slot will appear on your participant sheet closer to Fastaval.",
                         "da": "Aftensmad udleveres i runder. Du f\u00e5r dit tidsrum p\u00e5 din deltagerseddel n\u00e5r vi n\u00e6rmer os Fastaval."
                     }
                 }
@@ -83,22 +83,22 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "This year, the funds provided by the rich aunts and uncles (people who choose to contribute to Fastaval with additional funds) will be used to give financial support to those who may need it. In practice, it will be possible to get 2 food-days (breakfast + dinner) paid for by Fastaval.",
+                        "en": "This year, the funds provided by the rich aunts and uncles (people who choose to contribute to Fastaval with additional funds) will be used to give financial aid to those who may need it. In practice, it will be possible to get 2 days of food (breakfast + dinner) paid for by Fastaval.",
                         "da": "I \u00e5r g\u00e5r st\u00f8tten fra rige onkler og tanter (personer der v\u00e6lger at donere ekstra penge til Fastaval) til at give et \u00f8konomisk bidrag til dem der m\u00e5tte have behov for det. Konkret vil det v\u00e6re muligt at f\u00e5 betalt 2 mad-dage (morgenmad + aftensmad) under Fastaval."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "It is up to you to decide if you are eligible for financial support. The program is designed for, but not limited to, students, unemployed, pensioners and people on government assistance. We do not require documentation of your economic situation.",
+                        "en": "It is up to you to decide if you are eligible for financial aid. The program is designed for, but not limited to, students, the unemployed, pensioners, and people on government assistance. We do not require documentation of your economic situation.",
                         "da": "Om du har behov for st\u00f8tte er op til dig selv at vurdere. Ordningen er tilt\u00e6nkt, men ikke begr\u00e6nset til, studerende, arbejdsl\u00f8se, pensionister og andre personer p\u00e5 offentlige ydelser. Vi kr\u00e6ver ikke dokumentation for din \u00f8konomiske situation."
                     }
                 },
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "To receive financial support, select the \"I wish to receive financial support\" checkbox bellow, and add at least two morning and evening meals to your sign-up.",
-                        "da": "For at f\u00e5 denne \u00f8konomiske st\u00f8tte skal du afkrydse \u201cJeg \u00f8nsker at f\u00e5 \u00f8konomisk st\u00f8tte\u201d af herunder samt tilf\u00f8je mindst to morgen- og aftenm\u00e5ltider til din tilmelding."
+                        "en": "To receive financial aid, select the \"I wish to receive financial aid\" checkbox below, and add at least two morning and evening meals to your sign-up. The cost will automatically be deducted from the total price.",
+                        "da": "For at f\u00e5 denne \u00f8konomiske st\u00f8tte skal du afkrydse \u201cJeg \u00f8nsker at f\u00e5 \u00f8konomisk st\u00f8tte\u201d af herunder samt tilf\u00f8je mindst to morgenmad og to aftenm\u00e5ltider til din tilmelding nedenfor i madtabellen. Derefter vil bel\u00f8bet automatisk blive modregnet i din tilmelding."
                     }
                 },
                 {
@@ -141,8 +141,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Friday is vegetarian day and therefore only has the vegetarian option",
-                        "da": "Fredag er vegetardag og har derfor kun mulighed for vegetarmad"
+                        "en": "Thursday is vegetarian day and therefore only has the vegetarian option.",
+                        "da": "Torsdag er vegetardag og har derfor kun mulighed for vegetarmad."
                     }
                 }
             ]
@@ -163,6 +163,13 @@
                 {
                     "type": "paragraph",
                     "text": {
+                        "en": "NB: Do you have a food allergy that is not listed and are you\u00a0afraid it is in the food, contact [email]henrik@fastaval.dk[\/email]",
+                        "da": "OBS: Har du en mad allergi som ikke er n\u00e6vnt og du er bange for at den findes i maden kontakt [email]henrik@fastaval.dk[\/email]"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
                         "en": "[b]Breakfast (all days)[\/b]",
                         "da": "[b] Morgenmad (alle dage)[\/b]"
                     }
@@ -170,7 +177,7 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Breakfast will be a breakfast buffet with hearty bread, spreads, boiled eggs, fruits and vegetable as well as cereal with yoghurt, milk or skyr.",
+                        "en": "Breakfast will be a breakfast buffet with hearty bread, spreads, boiled eggs, fruits, and vegetables as well as cereal with yogurt, milk, or skyr.",
                         "da": "Morgenmaden bliver en morgenmadsbuffet med groft br\u00f8d, p\u00e5l\u00e6g, kogte \u00e6g, frugt og gr\u00f8nt, samt morgenmadsprodukter med yoghurt, m\u00e6lk eller skyr."
                     }
                 },
@@ -184,8 +191,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Pasta Cacio e Pepe with chicken\u00a0\nVegetarian: Pasta Cacio e Pepe\nCourse with Italian inspired salat",
-                        "da": "Pasta Cacio e Pepe med kylling\u00a0\nVegetar: Pasta Cacio e Pepe\nTilh\u00f8rende salat: Italiensk inspireret salat"
+                        "en": "Pasta Cacio e Pepe with chicken\u00a0\nVegetarian: Pasta Cacio e Pepe\nSide course: Italian inspired salad\nAllergens: Gluten, egg, milk, mustard",
+                        "da": "Pasta Cacio e Pepe med kylling\u00a0\nVegetar: Pasta Cacio e Pepe\nTilh\u00f8rende salat: Italiensk inspireret salat\nAllergener:\u00a0Gluten, \u00e6g, m\u00e6lk, sennep"
                     }
                 },
                 {
@@ -198,8 +205,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Chili sin Carne with steamed rice & cr\u00e8me fra\u00eeche with Mexican salat",
-                        "da": "Chili sin Carne med dampede ris, cr\u00e8me fraiche og Mexikansk salat"
+                        "en": "Chili sin Carne with steamed rice & cr\u00e8me fra\u00eeche\nSide course: Mexican salad\nAllergens: Celery, mustard",
+                        "da": "Chili sin Carne med dampede ris og cr\u00e8me fraiche\nTilh\u00f8rende salat: Mexikansk salat\nAllergener: Selleri, sennep"
                     }
                 },
                 {
@@ -212,8 +219,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Red curry chicken with wholegrains noodles and sweet chili sauce\u00a0\nVegetarian: Tofu in red thai curry, wholegrains noodles and sweet chili sauce\nCourse with Thai salat",
-                        "da": "Kylling i r\u00f8d thai karry med fuldkornsnudler og s\u00f8d chili sauce\nVegetar: Tofu i r\u00f8d thai karry med fuldkornsnudler og s\u00f8d chili sauce\nTilh\u00f8rende salat: Thai salat"
+                        "en": "Red curry chicken with wholegrains noodles and sweet chili sauce\u00a0\nVegetarian: Tofu in red thai curry, wholegrains noodles and sweet chili sauce\nSide course: Thai salad\nAllergens: Sesame, peanut, soy, gluten, mustard, fish",
+                        "da": "Kylling i r\u00f8d thai karry med fuldkornsnudler og s\u00f8d chili sauce\nVegetar: Tofu i r\u00f8d thai karry med fuldkornsnudler og s\u00f8d chili sauce\nTilh\u00f8rende salat: Thai salat\nAllergener:\u00a0Sesam, jordn\u00f8dder, soya, gluten, sennep, fisk"
                     }
                 },
                 {
@@ -226,8 +233,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Lasagne\nVegetarian: Lasagne with\u00a0spinach\nCourse with italian inspired salat",
-                        "da": "Lasagne\nVegetar: Lasagne med spinat\nTilh\u00f8rende salat: Italiensk inspireret salat"
+                        "en": "Lasagne\nVegetarian: Lasagne with\u00a0spinach\nSide course: Italian inspired salad\nAllergens: Gluten, egg, milk, celery, mustard",
+                        "da": "Lasagne\nVegetar: Lasagne med spinat\nTilh\u00f8rende salat: Italiensk inspireret salat\nAllergener:\u00a0Gluten, \u00e6g, m\u00e6lk, selleri, sennep"
                     }
                 },
                 {
@@ -240,8 +247,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Meatballs in curry sauce with steamed rice and chutney\nVegetarian: Celeriac in curry with steamed rice & chutney\nCourse with this seasons fresh salat",
-                        "da": "Boller i karry med dampede ris og chutney\nVegetar: Selleri i karry med dampede ris og chutney\nTilh\u00f8rende salat: S\u00e6sonens friske salat"
+                        "en": "Meatballs in curry sauce with steamed rice and chutney\nVegetarian: Celeriac in curry with steamed rice & chutney\nSide course: This season's fresh salad\nAllergens: Gluten, egg, mustard, milk, celery",
+                        "da": "Boller i karry med dampede ris og chutney\nVegetar: Selleri i karry med dampede ris og chutney\nTilh\u00f8rende salat: S\u00e6sonens friske salat\nAllergener:\u00a0Gluten, \u00e6g, sennep, m\u00e6lk, selleri"
                     }
                 }
             ]

@@ -158,7 +158,7 @@
             ],
             "section_id": "hero",
             "require_one_if": {
-                "rules":[
+                "rules": [
                     {
                         "type": "checkbox",
                         "input": "entry:partout",
@@ -170,7 +170,7 @@
                         "compare": "equals",
                         "value": "Arrang\u00f8r",
                         "status": false
-                    }                    
+                    }
                 ],
                 "required": [
                     "together:hero",
@@ -252,8 +252,8 @@
                 {
                     "type": "paragraph",
                     "text": {
-                        "en": "Thank you for your help with facilitating Fastaval's scenarios. You can choose which scenarios you want to facilitate under the \"activities\" tab.",
-                        "da": "Tak for at hj\u00e6lpe til med at spillede Fastavals scenarier. Du skal v\u00e6lge hvilke scenarier du gerne vil spillede under fanen \"aktiviteter\"."
+                        "en": "Thank you for your help with facilitating Fastaval's scenarios. You can choose which scenarios you want to facilitate under the \"activities\" tab. If you have any questions, you can write to the GM coordinators at\u00a0[email]spilleder@fastaval.dk[\/email].",
+                        "da": "Tak for at hj\u00e6lpe til med at spillede Fastavals scenarier. Du skal v\u00e6lge hvilke scenarier du gerne vil spillede under fanen \"aktiviteter\". Har du sp\u00f8rgsm\u00e5l, kan du skrive til\u00a0[email]spilleder@fastaval.dk[\/email]."
                     }
                 },
                 {
