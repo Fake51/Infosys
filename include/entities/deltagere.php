@@ -778,6 +778,9 @@ class Deltagere extends DBObject implements AgeFulfilment
             }
 
             foreach ($this->getMadtider() as $food) {
+                $foodprice = $food->getMad()->pris;
+                if ($foodprice <= 0) continue;
+
                 if ($food->isBreakfast() && $food_credits['breakfast'] > 0) {
                     $food_credits['breakfast']--;
                     continue;
@@ -785,8 +788,7 @@ class Deltagere extends DBObject implements AgeFulfilment
                     $food_credits['dinner']--;
                     continue;
                 }
-    
-                $result += $food->getMad()->pris;
+                $result += $foodprice;
             }
             $this->foodCost = $result;
         }

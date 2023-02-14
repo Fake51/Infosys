@@ -757,14 +757,15 @@ class SignupApiModel extends Model {
               }
               $participant->setMad($food);
 
-              if ($food->isBreakfast() && $food_credits['breakfast'] > 0) {
+              $foodprice = $food->getMad()->pris;
+              if ($food->isBreakfast() && $food_credits['breakfast'] > 0 && $foodprice > 0) {
                 $food_credits['breakfast']--;
                 $price = 0;
-              } elseif ($food->isDinner() && $food_credits['dinner'] > 0) {
+              } elseif ($food->isDinner() && $food_credits['dinner'] > 0 && $foodprice > 0) {
                 $food_credits['dinner']--;
                 $price = 0;
               } else {
-                $price = $food->getMad()->pris;
+                $price = $foodprice;
               }
 
               break;
