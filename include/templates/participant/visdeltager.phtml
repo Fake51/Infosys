@@ -124,7 +124,7 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'><b>Tilmeldt:</b> </td><td><?php if ($this->late_signup) :?><span style='color: #ffffff;background-color: #ff0000;'><?php endif; echo date('Y-m-d', strtotime($this->deltager->signed_up));?></span></td>
-                    <td class='label'><b>Checked in:</b> </td><td class="checkin-time"><?= strtotime($this->deltager->checkin_time) ? date('Y-m-d H:i', strtotime($this->deltager->checkin_time)) : 'Ikke tjekket ind';?></td>
+                    <td class='label'><b>Checked in:</b> </td><td class="checkin-time"><?= $this->deltager->checkin_time === '0000-00-00 00:00:00' ? 'Ikke tjekket ind' : date('Y-m-d H:i', strtotime($this->deltager->checkin_time))?></td>
                 </tr>
                 <tr>
                     <td colspan='6'><hr/></td>
