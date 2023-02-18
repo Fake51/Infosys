@@ -1678,9 +1678,8 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
 
             $item = array(
                 'amount'   => $wearorder->antal,
-                'size'     => $wearorder->size,
-                'title_da' => $wear->navn,
-                'title_en' => $wear->title_en,
+                'title_da' => $wearorder->getWearName('da'),
+                'title_en' => $wearorder->getWearName('en'),
                 'wear_id'  => $wear->id,
             );
 
@@ -1754,7 +1753,6 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
 
                 $item['meet_room_id'] = $room ? 'R' . $room->id : '';
                 $item['meet_room_name'] = $room ? $room->beskrivelse : '';
-
             }
 
             $return['scheduling'][] = $item;
@@ -1776,6 +1774,12 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
                 'stop'          => strtotime($shift->slut),
             );
 
+            if ($version >= 3) {
+                $item['play_room_id'] = '';
+                $item['play_room_name'] = '';
+                $item['meet_room_id'] = '';
+                $item['meet_room_name'] = '';
+            }
         }
 
         usort($return['scheduling'], function($a, $b) {
