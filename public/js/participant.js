@@ -186,7 +186,7 @@ $(function() {
 
         $('td.editable.pronoun').editable(window.infosys_data.participant_editable_url, {
             type: 'select',
-            data: '{"they": "de/dem", "her": "hun/hende", "he": "han/ham"}',
+            data: '{"they": "De/Dem", "her": "Hun/Hende", "he": "Han/Ham"}',
             submit: "Ok",
             indicator: 'Saving ...',
             tooltip: 'Click to edit',
