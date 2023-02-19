@@ -103,13 +103,13 @@ class ParticipantController extends Controller
             }            
             $this->page->countries = json_encode($countries);
             
-            $work_areas = [];
+            $work_areas = [0 => 'Intet arrangørområde'];
             foreach($this->model->getWorkAreas() as $area) {
                 $work_areas[$area['name_da']] = $area['name_da'];
             }            
             $this->page->work_areas = json_encode($work_areas);
 
-            $games = [];
+            $games = [ 0 => 'Intet scenarie/brætspil'];
             foreach($this->model->getGames() as $game) {
                 $games[$game['navn']] = $game['navn'];
             }            

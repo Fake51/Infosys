@@ -201,6 +201,10 @@ class Deltagere extends DBObject implements AgeFulfilment
     public function __set($varname, $value) {
         switch ($varname) {
             case 'arbejdsomraade':
+                if (!$value || $value == 'null') {
+                    $this->storage['work_area'] = null;
+                    break;
+                }
                 $result = $this->db->query('SELECT id FROM organizer_categories WHERE name_da = ?', [$value]);
                 if (count($result) == 1) {
                     $this->storage['work_area'] = $result[0]['id'];
@@ -219,6 +223,10 @@ class Deltagere extends DBObject implements AgeFulfilment
                 break;
 
             case 'scenarie':
+                if (!$value || $value == 'null') {
+                    $this->storage['game_id'] = null;
+                    break;
+                }
                 $result = $this->db->query('SELECT id FROM aktiviteter WHERE navn = ?', [$value]);
                 if (count($result) == 1) {
                     $this->storage['game_id'] = $result[0]['id'];
