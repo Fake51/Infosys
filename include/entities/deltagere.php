@@ -69,8 +69,8 @@ class Deltagere extends DBObject implements AgeFulfilment
         'supergm'                       => 'SuperGM',
         'supergds'                      => 'SuperGDS',
         'rig_onkel'                     => 'Rig onkel',
-        'arbejdsomraade'                => 'Arbejdsområde',
-        'scenarie'                      => 'Scenarie',
+        'work_area'                     => 'Arbejdsområde',
+        'game_id'                       => 'Scenarie/Brætspil',
         'udeblevet'                     => 'Udeblevet',
         'sovesal'                       => 'Arrangør sovesal',
         'ungdomsskole'                  => 'Ungdomsskole/klub',
@@ -94,6 +94,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         'nickname'                      => 'Kaldenavn',
         'financial_struggle'            => 'Økonomisk støtte',
         'main_lang'                     => 'Foretrukket sprog',
+        'country'                       => 'Land',
     );
 
     /**
@@ -118,6 +119,26 @@ class Deltagere extends DBObject implements AgeFulfilment
         ]
     ];
 
+    static protected $foreign_key_fields = [
+        'arbejdsomraade' => [
+            'key_field' => 'work_area',
+            'table' => 'organizer_categories',
+            'name' => 'name_da',
+            'key' => 'id' ,
+        ],
+        'land' => [
+            'key_field' => 'country',
+            'table' => 'countries',
+            'name' => 'name_da',
+            'key' => 'code' ,
+        ],
+        'scenarie' => [
+            'key_field' => 'game_id',
+            'table' => 'aktiviteter',
+            'name' => 'navn',
+            'key' => 'id' ,
+        ],
+    ];
 
     /**
      * Name of database table
@@ -157,29 +178,16 @@ class Deltagere extends DBObject implements AgeFulfilment
             }
             return $this->note_obj;
 
-        } elseif($var == 'arbejdsomraade') {
-            if (!isset($this->work_area_text)) {
-                if ($this->storage['work_area'] == NULL) return "";
-                $result = $this->db->query('SELECT name_da FROM organizer_categories WHERE id = ?', [$this->storage['work_area']]);
-                $this->work_area_text = count($result) > 0 ? $result[0]['name_da'] : "";
-            }
-            return $this->work_area_text;
+        } elseif(in_array($var, array_keys(self::$foreign_key_fields))) {
+            $field_def = self::$foreign_key_fields[$var];
+            $storage_field = $field_def['key_field']."_text";
 
-        } elseif($var == 'land') {
-            if (!isset($this->country_text)) {
-                if ($this->storage['country'] == NULL) return "";
-                $result = $this->db->query('SELECT name_da FROM countries WHERE code = ?', [$this->storage['country']]);
-                $this->country_text = count($result) > 0 ? $result[0]['name_da'] : "";
+            if (!isset($this->$storage_field)) {
+                if ($this->storage[$field_def['key_field']] == NULL) return "";
+                $result = $this->db->query("SELECT $field_def[name] FROM $field_def[table] WHERE $field_def[key] = ?", [$this->storage[$field_def['key_field']]]);
+                $this->$storage_field = count($result) > 0 ? $result[0][$field_def['name']] : "";
             }
-            return $this->country_text;
-
-        } elseif($var == 'scenarie') {
-            if (!isset($this->game_text)) {
-                if ($this->storage['game_id'] == NULL) return "";
-                $result = $this->db->query('SELECT navn FROM aktiviteter WHERE id = ?', [$this->storage['game_id']]);
-                $this->game_text = count($result) > 0 ? $result[0]['navn'] : "";
-            }
-            return $this->game_text;
+            return $this->$storage_field;
 
         } elseif (array_key_exists($var, $this->storage)) {
             return parent::__get($var);
@@ -1808,5 +1816,9 @@ WHERE
         if (count($result) === 0) return "";
         
         return $lang == 'da' ? $result[0]["navn"] : $result[0]["title_en"];
+    }
+
+    public function getForeignKeyFields() {
+        return self::$foreign_key_fields;
     }
 }

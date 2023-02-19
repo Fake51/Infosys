@@ -38,8 +38,8 @@ echo $this->getMessagesHtml();?>
     <tbody>
         <?php foreach ($this->users as $user) : ?>
             <tr>
-                <td><a href="<?= $this->url('visdeltager', array('id' => $user['id']));?>"><?= e($user['id']);?></a></td>
-                <td><a href="<?= $this->url('visdeltager', array('id' => $user['id']));?>"><?= e($user['navn']);?></a></td>
+                <td><a href="<?= $this->url('visdeltager', array('id' => $user['deltagere_id']));?>"><?= e($user['deltagere_id']);?></a></td>
+                <td><a href="<?= $this->url('visdeltager', array('id' => $user['deltagere_id']));?>"><?= e($user['deltagere_navn']);?></a></td>
             </tr>
         <?php endforeach;?>
     </tbody>

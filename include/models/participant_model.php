@@ -1754,15 +1754,33 @@ SQL;
 
         }
 
-        $limit = "";
+        // Sort out foreign keys
+        $foreign_key_fields = [];
+        foreach ($this->createEntity('Deltagere')->getForeignKeyFields() as $field_info) {
+            $foreign_key_fields[$field_info['key_field']] = $field_info;
+        }
 
+        // Fix column names, convert foreign key columns and set joins
+        $join = "";
+        foreach ($columns as $id => $column) {
+            if ($column == 'navn') continue; // Don't mess with the name column
+
+            if (isset($foreign_key_fields[$column])) {
+                $field_info = $foreign_key_fields[$column];
+                $columns[$id] = "`$field_info[table]`.`$field_info[name]`";
+                $join .= "LEFT JOIN `$field_info[table]` ON `deltagere`.`$field_info[key_field]` = `$field_info[table]`.`$field_info[key]` ";
+            } else {
+                $columns[$id] = "`deltagere`.`$column`";
+            }
+        }
+
+        $limit = "";
         if (isset($get->iDisplayStart) && $get->iDisplayLength != '-1') {
             $limit = "LIMIT " . intval($get->iDisplayStart) . ", " .
             intval($get->iDisplayLength);
         }
 
         $order = '';
-
         if (isset($get->iSortCol_0)) {
             $order = "ORDER BY ";
 
@@ -1789,7 +1807,7 @@ SQL;
                     $where .= 'fornavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
                     $where .= 'efternavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
                 } else {
-                    $where .= '`' . $columns[$i] . "` LIKE " . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+                    $where .= $columns[$i] ." LIKE " . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
                 }
             }
 
@@ -1813,25 +1831,25 @@ SQL;
 
         foreach ($columns as $id => $column) {
             if ($column == 'navn') {
-                $columns[$id] = 'CONCAT(fornavn, " ", efternavn) AS navn';
+                $columns[$id] = 'CONCAT(fornavn, " ", efternavn) AS deltagere_navn';
             } else {
-                $columns[$id] = '`' . $column . '`';
+                $columns[$id] = $columns[$id]." AS ".str_replace(".", "_", str_replace("`", "", $columns[$id]));
             }
         }
 
         $query = "
             SELECT SQL_CALC_FOUND_ROWS " . implode(', ', $columns) . "
             FROM deltagere
+            {$join}
             {$where}
             {$order}
             {$limit}
         ";
 
         $result = $this->db->query($query);
-
         foreach ($result as $id => $row) {
-            $result[$id][0] = '<a href="' . $this->url('visdeltager', array('id' => $row['id'])) . '">' . e($row['id']) . '</a>';
-            $result[$id][1] = '<a href="' . $this->url('visdeltager', array('id' => $row['id'])) . '">' . e($row['navn']) . '</a>';
+            $result[$id][0] = '<a href="' . $this->url('visdeltager', array('id' => $row['deltagere_id'])) . '">' . e($row['deltagere_id']) . '</a>';
+            $result[$id][1] = '<a href="' . $this->url('visdeltager', array('id' => $row['deltagere_id'])) . '">' . e($row['deltagere_navn']) . '</a>';
         }
 
         $query = 'SELECT FOUND_ROWS() AS rows';
