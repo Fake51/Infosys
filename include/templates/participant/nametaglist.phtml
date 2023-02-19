@@ -42,6 +42,7 @@
     <tr>
       <th>ID:</th>
       <th>Kaldenavn:</th>
+      <th>Pronomen:</th>
       <th>Stregkode:</th>
       <th>Område:</th>
       <th>Billede:</th>
@@ -60,6 +61,7 @@ foreach ($this->participants as $participant) {
     <tr <?=$count % 2 ? $class : ""?>>
       <td><?=$participant->id?></td>
       <td><?=$nickname?></td>
+      <td><?=$participant->getPronoun()?></td>
       <td class='align-right'><img class='barcode-image' src='/participant/ean8sheet/<?= $participant->id;?>' alt='barcode'/></td>    
   <?php
 

@@ -2059,13 +2059,14 @@ exit;
         if (isset($post->download_tag_list)) {
             // Handle CVS file
             if ($post->filetype === "csv") {
-                $data = [ 0 => ["ID", "Kaldenavn", "Område"]];
+                $data = [ 0 => ["ID", "Kaldenavn", "Pronomen", "Område"]];
                 foreach ($participants as $participant) {
                     $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName();
-                    $work_area = $participant->arbejdsomraade ?? "";
+                    $work_area = $participant->work_area ? $participant->arbejdsomraade : "";
                     $data[] = [
                         $participant->id,
                         $nickname,
+                        $participant->getPronoun(),
                         $work_area,
                     ];
                 }
@@ -2087,20 +2088,22 @@ exit;
                     $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName();
                     $sheet->setCellValue('B'.$row, $nickname);
                     
+                    $sheet->setCellValue('C'.$row, $participant->getPronoun());
+
                     $barcode = $this->model->generateEan8SheetBarcode($participant->id);
 
                     $barcode_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $barcode_drawing->setName('Barcode'.$participant->id);
                     $barcode_drawing->setDescription('Barcode'.$participant->id);
                     $barcode_drawing->setPath($barcode); /* put your path and image here */
-                    $barcode_drawing->setCoordinates('C'.$row);
+                    $barcode_drawing->setCoordinates('D'.$row);
                     $barcode_drawing->setHeight(82);
                     $barcode_drawing->setWorksheet($spreadsheet->getActiveSheet());
                     $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(83,'px');
 
                     // Extra stuff for organizers
                     if($participant->isArrangoer()){
-                        $sheet->setCellValue('D'.$row, $participant->arbejdsomraade);
+                        $sheet->setCellValue('E'.$row, $participant->arbejdsomraade);
 
                         $photo = $this->model->fetchCroppedPhoto($participant);
                         if($photo != '') {
@@ -2108,7 +2111,7 @@ exit;
                             $photo_drawing->setName('Photo'.$participant->id);
                             $photo_drawing->setDescription('Photo'.$participant->id);
                             $photo_drawing->setPath(PUBLIC_PATH.$photo); /* put your path and image here */
-                            $photo_drawing->setCoordinates('E'.$row);
+                            $photo_drawing->setCoordinates('F'.$row);
                             $photo_drawing->setHeight(300,'px');
                             $photo_drawing->setWorksheet($spreadsheet->getActiveSheet());
                             $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(300,'px');
@@ -2121,9 +2124,10 @@ exit;
                 // Set autosize for collumns
                 $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(TRUE);
                 $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(TRUE);
-                $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(140,'px');
-                $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(TRUE);
-                $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(210,'px');
+                $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(140,'px');
+                $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(210,'px');
                 
                 $writer = new Xlsx($spreadsheet);
                 if (!file_exists($file_dir)) {
