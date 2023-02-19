@@ -191,6 +191,7 @@ die('Not sending photo reminders');
         fastcgi_finish_request();
 
         // loop over participants, get photo upload link, render email, send, log, done
+        $count = 0;
         foreach ($participants as $participant) {
             $this->page->participant = $participant;
             $this->page->link        = $participant_model->getPhotoUploadLink($participant);
@@ -216,9 +217,9 @@ die('Not sending photo reminders');
             $mail->send();
 
             $this->log('Sent photo upload reminder email to ' . $participant->email, 'Photo email reminder', null);
-
+            $count++;
         }
-        echo "Sent photoreminders\n";
+        $this->log("Finished sending photo upload reminders to $count participants", 'Photo email reminder', null);
         die();
     }
 
