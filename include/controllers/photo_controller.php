@@ -182,10 +182,16 @@ class PhotoController extends Controller
     {
 die('Not sending photo reminders');
         $participant_model = $this->model->factory('Participant');
+        $participants = $this->model->fetchParticipantsToRemind(0);
+
+        echo "Sender foto reminder mail til ".count($participants)." deltagere<br>\n";
+
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
 
         // loop over participants, get photo upload link, render email, send, log, done
-        // foreach ($this->model->fetchParticipantsToRemind(self::REMINDER_DAYS) as $participant) {
-        foreach ($this->model->fetchParticipantsToRemind(0) as $participant) {
+        foreach ($participants as $participant) {
             $this->page->participant = $participant;
             $this->page->link        = $participant_model->getPhotoUploadLink($participant);
 
@@ -213,7 +219,7 @@ die('Not sending photo reminders');
 
         }
         echo "Sent photoreminders\n";
-        exit;
+        die();
     }
 
     /**
