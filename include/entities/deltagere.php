@@ -140,6 +140,19 @@ class Deltagere extends DBObject implements AgeFulfilment
         ],
     ];
 
+    static protected $pronouns = [
+        'en' => [
+            'he' => 'He/Him',
+            'her' => 'She/Her',
+            'they' => 'They/Them',
+        ],
+        'da' => [
+            'he' => 'Han/Ham',
+            'her' => 'Hun/Hende',
+            'they' => 'De/Dem',
+        ],
+    ];
+
     /**
      * Name of database table
      *
@@ -1828,5 +1841,10 @@ WHERE
 
     public function getForeignKeyFields() {
         return self::$foreign_key_fields;
+    }
+
+    public function getPronoun(String $lang = null) {
+        $lang = $lang ?? $this->main_lang;
+        return self::$pronouns[$lang][$this->pronoun];
     }
 }

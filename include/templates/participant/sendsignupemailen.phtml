@@ -79,8 +79,7 @@ Please use the following link to <strong>upload a photo</strong> for it:
 <tr><td colspan="2">Email:                                  </td><td><?=$this->participant->email;?></td></tr>
 <tr><td colspan="2">Language for communication:             </td><td>English</td></tr>
 <tr><td colspan="2">Used name:                              </td><td><?=$this->participant->nickname?></td></tr>
-<?php $pronouns = ['they' => 'they/them', 'her' => 'she/her', 'he' => 'he/him']?>
-<tr><td colspan="2">Pronouns:                               </td><td><?=$pronouns[$this->participant->pronoun]?></td></tr>
+<tr><td colspan="2">Pronouns:                               </td><td><?=$this->participant->getPronoun()?></td></tr>
 <?php if ($this->participant->ungdomsskole) : ?>
 <tr><td colspan="2">School/club:                            </td><td><?=$this->participant->ungdomsskole?></td></tr>
 <?php endif;?>

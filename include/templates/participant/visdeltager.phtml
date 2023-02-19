@@ -62,7 +62,7 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'>Kaldenavn: </td><td colspan='2' id='nickname' class='editable text'><?= e($this->deltager->nickname);?></td>
-                    <td class='label'>Pronomen: </td><td colspan='2' id='pronoun' class='editable pronoun'><?= $this->deltager->pronoun;?></td>
+                    <td class='label'>Pronomen: </td><td colspan='2' id='pronoun' class='editable pronoun'><?= $this->deltager->getPronoun();?></td>
                 </tr>
                 <tr>
                     <td class='label'>Foretrukket sprog: </td><td colspan='2' id='main_lang' class='editable lang'><?= $this->deltager->main_lang;?></td>

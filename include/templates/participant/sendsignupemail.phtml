@@ -78,8 +78,7 @@ Brug venligst dette link til at <strong>uploade et billede</strong> til det:
 <tr><td colspan="2">Email:                                  </td><td><?=$this->participant->email;?></td></tr>
 <tr><td colspan="2">Sprog til kommunikation:                </td><td>Dansk</td></tr>
 <tr><td colspan="2">Kaldenavn:                              </td><td><?=$this->participant->nickname?></td></tr>
-<?php $pronouns = ['they' => 'de/dem', 'her' => 'hun/hende', 'he' => 'han/ham']?>
-<tr><td colspan="2">Pronomen:                               </td><td><?=$pronouns[$this->participant->pronoun]?></td></tr>
+<tr><td colspan="2">Pronomen:                               </td><td><?=$this->participant->getPronoun()?></td></tr>
 <?php if ($this->participant->ungdomsskole) : ?>
 <tr><td colspan="2">Ungdomsskole/gruppe:                    </td><td><?=$this->participant->ungdomsskole?></td></tr>
 <?php endif;?>
