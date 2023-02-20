@@ -2334,7 +2334,7 @@ exit;
                 echo "\"".($contact[0] ?? "")."\";";
                 echo "\"".($contact[1] ?? "")."\";";
                 echo "\"".($contact[2] ?? "")."\";";
-                echo "\"".preg_replace("/\R/", " ",($p->note->comment->content ?? ""))."\";";
+                echo "\"".preg_replace("/\R/", " ",($p->note->junior_comment->content ?? ""))."\";";
                 $wear = "";
                 foreach($p->getWear() as $w) {
                     $wear.= $w->getWearName().($w->size != 1 ? " - ".$w->getSizeName() : "").", ";
