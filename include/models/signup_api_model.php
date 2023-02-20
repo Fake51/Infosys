@@ -43,6 +43,7 @@ class SignupApiModel extends Model {
       $config = json_decode(file_get_contents($config_file));
       $skip_pages = $config->main_signup_only->pages;
       $disabled_items = $config->main_signup_only->items;
+      $disabled_options = $config->main_signup_only->options;
     }
 
     $page_files = glob(SIGNUP_FOLDER."pages/*");
@@ -56,6 +57,10 @@ class SignupApiModel extends Model {
 
       if (isset($disabled_items->$name)) {
         $page->disabled_items = $disabled_items->$name;
+      }
+
+      if (isset($disabled_options->$name)) {
+        $page->disabled_options = $disabled_options->$name;
       }
 
       $pages[$name] = $page;
@@ -76,13 +81,21 @@ class SignupApiModel extends Model {
     $config_file = SIGNUP_FOLDER."config/main.json";
     $config = json_decode(file_get_contents($config_file));
     $disabled_items = $config->main_signup_only->items;
+    $disabled_options = $config->main_signup_only->options;
 
-    // If page dosen't have any disabled items, just return file content
-    if (!isset($disabled_items->$page_id)) return $content;
+    // If page dosen't have any disabled items or options, just return file content
+    if (!isset($disabled_items->$page_id) && !isset($disabled_options->$page_id)) return $content;
 
-    // Add disabled items to output
+    // Add disabled items or options to output
     $page = json_decode($content);
-    $page->disabled_items = $disabled_items->$page_id;
+
+    if (isset($disabled_items->$page_id)) {
+      $page->disabled_items = $disabled_items->$page_id;
+    }
+
+    if (isset($disabled_options->$page_id)) {
+      $page->disabled_options = $disabled_options->$page_id;
+    }
 
     return $page;
   }

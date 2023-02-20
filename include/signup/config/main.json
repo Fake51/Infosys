@@ -9,12 +9,20 @@
     "pages": [
       "activity",
       "food",
-      "wear"
+      "wear",
+      "junior"
     ],
     "items": {
       "extra": [
         "misc:party1"
       ]
+    },
+    "options": {
+      "practical": {
+        "participant": [
+          "Juniordeltager"
+        ]
+      }
     }
   },
   "errors": {
