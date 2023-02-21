@@ -1740,19 +1740,27 @@ SQL;
             $session->search = null;
         }
 
+        $note_columns = [];
         if (isset($get->extra_columns)) {
             $extra_columns = explode(',', $get->extra_columns);
-
             $valid_columns = $this->getDisplayColumns();
 
-            foreach ($extra_columns as $column) {
+            foreach ($extra_columns as $index => $column) {
+                if (str_starts_with($column, "note_")) {
+                    $note_columns[] = [
+                        'name' => substr($column, 5),
+                        'index' => $index + 2,
+                    ];
+                    continue;
+                }
+
                 if (isset($valid_columns[$column])) {
                     array_push($columns, $column);
                 }
-
             }
-
         }
+
+        if (!empty($note_columns)) $columns[] = 'deltager_note';
 
         // Sort out foreign keys
         $foreign_key_fields = [];
@@ -1850,6 +1858,23 @@ SQL;
         foreach ($result as $id => $row) {
             $result[$id][0] = '<a href="' . $this->url('visdeltager', array('id' => $row['deltagere_id'])) . '">' . e($row['deltagere_id']) . '</a>';
             $result[$id][1] = '<a href="' . $this->url('visdeltager', array('id' => $row['deltagere_id'])) . '">' . e($row['deltagere_navn']) . '</a>';
+
+            if (isset($row['deltagere_deltager_note'])) {
+                $note_object = json_decode($row['deltagere_deltager_note']);
+
+                // Clean up array before splicing
+                foreach($result[$id] as $key => $val) {
+                    if (intval($key) != $key) unset($result[$id][$key]);
+                }
+
+                // Insert notes at their column index
+                foreach($note_columns as $note) {
+                    array_splice($result[$id], $note['index'], 0, $note_object->$note['name'] ?? "");
+                }
+
+                // Remove the note json (always added last)
+                array_pop($result[$id]);
+            }
         }
 
         $query = 'SELECT FOUND_ROWS() AS rows';
@@ -2007,11 +2032,13 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
             if (isset($readable_columns[$column])) {
                 $result[$column] = $readable_columns[$column];
             }
+        }
 
+        foreach($this->createEntity('Deltagere')->getNoteNames() as $key => $name) {
+            $result["note_$key"] = $name;
         }
 
         asort($result);
-
         return $result;
     }
 

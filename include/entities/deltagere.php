@@ -61,7 +61,6 @@ class Deltagere extends DBObject implements AgeFulfilment
         'international'                 => 'International',
         'arrangoer_naeste_aar'          => 'Arrangør igen',
         'betalt_beloeb'                 => 'Betalt beløb',
-        'deltager_note'                 => 'Kommentarer og kontakperson for Fastaval Junior',
         'admin_note'                    => 'Admin note',
         'beskeder'                      => 'Besked fra FV',
         'created'                       => 'Oprettet',
@@ -1458,6 +1457,11 @@ WHERE
     public function getHumanReadableFieldNames()
     {
         return $this->human_readable_fieldnames;
+    }
+
+    public function getNoteNames(String $lang = null) {
+        $lang = $lang ?? 'da';
+        return self::$note_names[$lang];
     }
 
     /**
