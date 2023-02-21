@@ -137,6 +137,12 @@ class Deltagere extends DBObject implements AgeFulfilment
             'name' => 'navn',
             'key' => 'id' ,
         ],
+        'brugerkategori' => [
+            'key_field' => 'brugerkategori_id',
+            'table' => 'brugerkategorier',
+            'name' => 'navn',
+            'key' => 'id'
+        ]
     ];
 
     static protected $pronouns = [
