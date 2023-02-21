@@ -55,7 +55,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         'by'                            => 'By',
         'land'                          => 'Land',
         'medbringer_mobil'              => 'Medbringer mobil',
-        'sprog'                         => 'Sprog',
+        'sprog'                         => 'Sprog til aktiviteter',
         'brugerkategori_id'             => 'Brugerkategori',
         'forfatter'                     => 'Forfatter/Designer',
 //        'international'                 => 'International',
