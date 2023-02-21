@@ -37,7 +37,7 @@
               <td><?=$p->nickname?></td>
               <td><?=preg_replace("/ \d{2}:\d{2}:\d{2}/", "", $p->birthdate)?></td>
               <td><?=str_replace("\n", "<br>", $p->note->junior_ward->content ?? "")?></td>
-              <td><?=str_replace("\n", "<br>", $p->note->comment->content ?? "")?></td>
+              <td><?=str_replace("\n", "<br>", $p->note->junior_comment->content ?? "")?></td>
               <td>
                 <?php foreach($p->getWear() as $w) {
                   echo $w->getWearName().($w->size != 1 ? " - ".$w->getSizeName() : "")."<br>";
