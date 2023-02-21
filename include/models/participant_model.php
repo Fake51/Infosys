@@ -1866,14 +1866,13 @@ SQL;
                 foreach($result[$id] as $key => $val) {
                     if (intval($key) != $key) unset($result[$id][$key]);
                 }
+                // Remove the note json (always added last)
+                array_pop($result[$id]);
 
                 // Insert notes at their column index
                 foreach($note_columns as $note) {
-                    array_splice($result[$id], $note['index'], 0, $note_object->$note['name'] ?? "");
+                    array_splice($result[$id], $note['index'], 0, $note_object->{$note['name']} ?? "");
                 }
-
-                // Remove the note json (always added last)
-                array_pop($result[$id]);
             }
         }
 
