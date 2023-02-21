@@ -281,11 +281,7 @@ class Controller extends Common
             'aaData' => $result,
         );
 
-        header('HTTP/1.1 200 done');
-        header('Content-Type: text/plain; charset=UTF-8');
-        echo json_encode($output);
-
-        exit;
+        $this->jsonOutput($output);
     }
 
     /**
@@ -317,7 +313,7 @@ class Controller extends Common
      * @access protected
      * @return void
      */
-    protected function jsonOutput($data, $http_status = '200', $content_type = 'application/json', $keep_alive = false) {
+    protected function jsonOutput($data, $http_status = '200', $content_type = 'application/json', $do_return = false) {
         if (!is_string($data)) {
             $data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT );
         }
@@ -326,6 +322,6 @@ class Controller extends Common
         header('Content-Length: ' . strlen($data));
         echo $data;
         
-        if (!$keep_alive) exit;
+        if (!$do_return) exit;
     }
 }
