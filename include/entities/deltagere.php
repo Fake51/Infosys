@@ -1067,7 +1067,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         {
             return false;
         }
-        if ($this->flere_gdsvagter =='ja' && $shifts < 2)
+        if ($this->desired_diy_shifts == 0 || $shifts < $this->desired_diy_shifts)
         {
             return false;
         }

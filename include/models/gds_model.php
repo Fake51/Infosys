@@ -199,10 +199,9 @@ SELECT
     CONCAT(d.fornavn, ' ', d.efternavn) AS name,
     d.mobiltlf,
     d.medbringer_mobil,
-    d.supergds,
-    d.flere_gdsvagter,
+    d.desired_diy_shifts,
     d.contacted_about_diy,
-    CASE WHEN d.id IN ({$noshow_ids_clause}) THEN 'no-show' WHEN d.id IN ({$multishift_ids_clause}) THEN 'multi-gds' ELSE 'supergds' END AS cause,
+    CASE WHEN d.id IN ({$noshow_ids_clause}) THEN 'no-show' WHEN d.id IN ({$multishift_ids_clause}) THEN 'multi-gds' ELSE '' END AS cause,
     COUNT(temp.deltager_id) AS shifts_assigned
 FROM
     deltagere AS d
@@ -229,7 +228,7 @@ WHERE
         JOIN gdsvagter AS g ON g.id = dg.gdsvagt_id
     WHERE ((g.start <= ? AND g.slut >= ?) OR (g.start <= ? AND g.slut >= ?) OR (g.start >= ? AND g.slut <= ?))
     )
-    AND (d.id IN ({$noshow_ids_clause}) OR d.id IN ({$multishift_ids_clause}) OR d.supergds = 'ja')
+    AND (d.id IN ({$noshow_ids_clause}) OR d.id IN ({$multishift_ids_clause}))
     AND d.checkin_time > '0000-00-00'
     AND d.medbringer_mobil = 'ja'
     AND d.udeblevet = 'nej'
@@ -238,8 +237,7 @@ GROUP BY
     name,
     d.mobiltlf,
     d.medbringer_mobil,
-    d.supergds,
-    d.flere_gdsvagter,
+    d.desired_diy_shifts,
     d.contacted_about_diy,
     cause
 ORDER BY
@@ -264,7 +262,8 @@ SQL;
         $query = <<<SQL
 SELECT
     d.id,
-    COUNT(temp.id) AS made
+    COUNT(temp.id) AS made,
+    d.desired_diy_shifts
 FROM
     deltagere AS d
 LEFT JOIN (
@@ -277,9 +276,9 @@ LEFT JOIN (
         dg.noshow = 0
 ) AS temp ON d.id = temp.id
 WHERE
-    d.flere_gdsvagter = 'ja'
+    d.desired_diy_shifts <> 1
 GROUP BY d.id
-HAVING made < 2
+HAVING made < d.desired_diy_shifts
 SQL;
 
         $ids = array(0);
@@ -512,11 +511,11 @@ SQL;
                 'mobil'          => e($d->mobiltlf),
                 'disabled'       => $disabled,
                 'maxshifts'      => $maxshifts,
+                'maxshiftcount'  => $d->desired_diy_shifts,
                 'assignedShifts' => count($d->getGDSVagter()),
                 'email'          => e($d->email),
                 'gds_note'       => e($d->note->gds->content),
                 'comment'        => e($d->note->comment->content),
-                'medical_note'   => e($d->medical_note),
                 'age'            => $age,
                 'isGamemaster'   => $d->isGamemaster(),
                ];

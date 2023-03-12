@@ -125,12 +125,12 @@ class GDSVagter extends DBObject
 
         $timestamp = strtotime($this->start);
         $hour      = date('H', $timestamp);
-        if ($hour >= 4 && $hour < 12) {
-            return date('Y-m-d 04-12', $timestamp);
+        if ($hour >= 7 && $hour < 12) {
+            return date('Y-m-d 7-12', $timestamp);
         } elseif($hour >= 12 && $hour < 17) {
             return date('Y-m-d 12-17', $timestamp);
         } else {
-            return date('Y-m-d 17-04', $timestamp);
+            return date('Y-m-d 17-24', $timestamp);
         }
     }
 
