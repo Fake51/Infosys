@@ -34,9 +34,9 @@ var gds_object = {
             table    = self.closest('div.gds-popuptable'),
             shift_id = self.closest('span.gds-shift-popupdetails').attr('id').replace(/[^0-9]/g, '');
 
-        if (self.attr('checked')) {
+        if (self.prop('checked')) {
             if (!confirm('Er du sikker på du vil override de normale GDS-indstilinger?')) {
-                self.attr('checked', false);
+                self.prop('checked', false);
                 return;
             }
 
@@ -326,8 +326,25 @@ var gds_object = {
     },
 
     createRow: function(user, override, shift_id){
-        var row = $('<tr data-name="' + user.navn + '" data-email="' + user.email + '" data-note="' + user.gds_note + '" data-comment="' + user.comment + '" data-medical-note="' + user.medical_note + '" data-id="' + user.id + '" data-phone="' + user.mobil + '" data-age="' + user.age + '" data-gamemaster="' + (user.isGamemaster ? 'yes' : 'no') + '" data-assigned-shifts="' + user.assignedShifts + '"><td class="gds-checkbox-cell"><input type="checkbox"/></td><td class="name"><a href="' + gds_object.public_uri + 'deltager/visdeltager/' + user.id + '">' + user.navn + '</a></td><td>' + user.mobil + '</td><td class="hidden noshow"><input type="checkbox" class="no-show" data-participant="' + user.id + '" data-shift="' + shift_id + '"/></td></tr>'),
-            box;
+        var row = $(
+            '<tr data-name="' + user.navn + 
+            '" data-email="' + user.email + 
+            '" data-note="' + user.gds_note + 
+            '" data-comment="' + user.comment + 
+            '" data-id="' + user.id + 
+            '" data-phone="' + user.mobil + 
+            '" data-age="' + user.age + 
+            '" data-gamemaster="' + (user.isGamemaster ? 'Ja' : 'Nej') + 
+            '" data-assigned-shifts="' + user.assignedShifts + 
+            '" data-max-shifts="' + user.maxshiftcount + 
+            '">'+
+                '<td class="gds-checkbox-cell"><input type="checkbox"/></td>'+
+                '<td class="name"><a href="' + gds_object.public_uri + 'deltager/visdeltager/' + user.id + '">' + user.navn + '</a></td>'+
+                '<td>' + user.mobil + '</td>'+
+                '<td class="hidden noshow"><input type="checkbox" class="no-show" data-participant="' + user.id + '" data-shift="' + shift_id + '"/></td>'+
+            '</tr>'
+        );
+        var box;
 
         if (user.disabled == 'true' || user.maxshifts =='true') {
             row.find('td.name').addClass('gds-isbusy');
@@ -529,7 +546,7 @@ var gds_object = {
                 $popup = null;
             },
             makeElement = function ($row) {
-                return ['id', 'name', 'note', 'comment', 'medical-note', 'phone', 'email', 'age', 'gamemaster', 'assigned-shifts'].reduce(function (agg, next) {
+                return ['id', 'name', 'note', 'comment', 'phone', 'email', 'age', 'gamemaster', 'assigned-shifts', 'max-shifts'].reduce(function (agg, next) {
                     return agg.replace('{{' + next + '}}', $row.attr('data-' + next));
                 }, template).replace(/\n/, '');
             },
