@@ -187,7 +187,7 @@ class Routes
         // payment reminders
         $this->routes['cron_payment_reminder']                      = array('url' => 'participant/payment-reminder/cron', 'controller' => 'Participant', 'method' => 'cronPaymentReminder');
         // $this->routes['13-day_payment_reminder']                    = array('url' => 'participant/payment-reminder/second', 'controller' => 'Participant', 'method' => 'sendSecondPaymentReminder');
-        // $this->routes['last_payment_reminder']                      = array('url' => 'participant/payment-reminder/last', 'controller' => 'Participant', 'method' => 'sendLastPaymentReminder');
+        $this->routes['final_payment_reminder']                     = array('url' => 'participant/payment-reminder/final', 'controller' => 'Participant', 'method' => 'sendFinalPaymentReminder');
         // $this->routes['payment_reminder_annulled']                  = array('url' => 'participant/payment-reminder/annulled', 'controller' => 'Participant', 'method' => 'cancelParticipantSignup');
 
         // bank transfer

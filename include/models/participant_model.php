@@ -2674,7 +2674,6 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $participants = $this->filterOutGroups($participants);
         $participants = $this->filterOutRecentReminders($participants, $days_ago);
         $participants = $this->filterOutAnnulled($participants);
-        $participants = $this->filterSignedUpToday($participants);
 
         //return [$this->createEntity('Deltagere')->findById(1)];
         return $participants;

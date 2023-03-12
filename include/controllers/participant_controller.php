@@ -1747,7 +1747,7 @@ class ParticipantController extends Controller
         $participants = $this->model->getParticipantsForPaymentReminder(3);
         // echo ($late ? "Late" : "Not Late"). "<br>\n";
         echo "Sender betalings reminder mail til ".count($participants)." deltagere<br>\n";
-        // die("Not actually sending reminders<br>\n");
+die("Not actually sending reminders<br>\n");
 
         // Finish response before sending mails, to avoid timeout
         session_write_close();
@@ -1764,7 +1764,7 @@ class ParticipantController extends Controller
             $count++;
         }
 
-        $this->log("4 day ${late_text}payment reminder check done. Sent reminders to " . $count . ' participants', 'Payment', null);
+        $this->log("$late_text payment reminder check done. Sent reminders to " . $count . ' participants', 'Payment', null);
         die();
     }
 
@@ -1789,25 +1789,33 @@ die('Not sending second payment reminders');
         exit;
     }
 
-    public function sendLastPaymentReminder()
-    {
-die('Not sending last payment reminders');
-        $participants = $this->model->getParticipantsForPaymentReminder();
+    public function sendFinalPaymentReminder() {
 
+        $participants = $this->model->getParticipantsForPaymentReminder(0);
+        echo "Sender betalings reminder mail til ".count($participants)." deltagere<br>\n";
+die("Not actually sending final reminders<br>\n");
+
+        $year = date('Y');
         $count = 0;
         $this->page->banking_fee = $this->model->findBankingFee()->pris;
 
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
+
         foreach ($participants as $participant) {
-            $this->sendPaymentReminder($participant, 'lastpaymentreminder', $participant->speaksDanish());
-
-            $this->log('System sent payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
-
+            $this->sendPaymentReminder(
+                $participant, 'finalpaymentreminder',
+                $participant->speaksDanish(),
+                "Sidste reminder om betaling for Fastaval $year",
+                "Final reminder of payment for Fastaval $year",
+            );
+            $this->log('System sent final payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
             $count++;
         }
 
         $this->log('Last payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
-
-        exit;
+        die();
     }
 
     protected function sendPaymentReminder($participant, $template, $danish, $danish_title = '', $english_title = '')
@@ -1817,11 +1825,11 @@ die('Not sending last payment reminders');
         $year = date('Y', strtotime($this->config->get('con.start')));
         $this->page->year = $year;
         if ($danish) {
-            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval '.$year;
+            $title = $danish_title ?? 'Reminder: betaling for tilmelding til Fastaval '.$year;
             $this->page->setTemplate('participant/' . $template . '-da');
 
         } else {
-            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval '.$year;
+            $title = $english_title ?? 'Reminder: payment for Fastaval '.$year;
             $this->page->setTemplate('participant/' . $template . '-en');
         }
 
