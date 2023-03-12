@@ -3536,6 +3536,9 @@ WHERE (
             switch(true) {
                 case in_array($name, $keep):
                     break;
+                case $name == "country":
+                    $fields[$name] = "DK";
+                    break;
                 case $deltager->isFieldNullable($name):
                     $fields[$name] = null;
                     break;
@@ -3548,7 +3551,7 @@ WHERE (
                 case $type == "enum('ja','nej')":
                     $fields[$name] = 'nej';
                     break;
-                case str_contains($type, "set(") || str_contains($type, "char(") || $type == "text":
+                case str_contains($type, "set(") || str_contains($type, "char(") || $type == "text" || $type == "mediumtext":
                     $fields[$name] = '';
                     break;
                 case $type == "datetime";
