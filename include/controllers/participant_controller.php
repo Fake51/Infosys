@@ -2423,7 +2423,7 @@ die ("This page has to be enabled by someone with access to the server code");
             'postnummer',
             'by',
             'birthdate',
-            'land',
+            'country',
         ];
 
         // Keep these for membership database
