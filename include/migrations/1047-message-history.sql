@@ -10,7 +10,8 @@ CREATE TABLE participant_messages (
   participant_id INT(11) DEFAULT NULL,
   message_id INT,
   PRIMARY KEY(participant_id, message_id),
-  CONSTRAINT `participant_messages_ibfk_1` FOREIGN KEY (`participant_id`) REFERENCES `messages` (`id`)
+  CONSTRAINT `participant_messages_ibfk_1` FOREIGN KEY (`participant_id`) REFERENCES `deltagere` (`id`),
+  CONSTRAINT `participant_messages_ibfk_2` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`)
 );
 
 DROP TABLE smslog;
