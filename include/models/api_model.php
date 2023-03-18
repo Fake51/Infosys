@@ -1881,10 +1881,11 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
         }
 
         $firebase = new Firebase($this->config);
-        $firebase->sendMessage($message, $participant->gcm_id);
-        $this->fileLog("Firebase register send response:".print_r($firebase->getResponse(), true));
-
-        $this->log('Sent android notification to participant #' . $participant->id . '. Result: ' . $result, 'App', null);
+        $success = $firebase->sendMessage($message, $participant->gcm_id);
+        if (!$success) {
+            $this->fileLog("Error sending firebase message: ".print_r($firebase->getResponse(), true));
+        }
+        $this->log('Sent Firebase notification to participant #' . $participant->id . '. Result: ' . ($success ? 'success' : 'failed'), 'App', null);
 
         return $this;
     }
