@@ -2164,7 +2164,7 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
         $args = [$post->sms_besked_da, $post->sms_besked_en];
         $message_id = $this->db->exec($query, $args);
 
-        $firebase = new Firebase();
+        $firebase = new Firebase($this->config);
 
         $status = array();
         foreach ($this->getSavedSearchResult() as $receiver) {
@@ -2177,7 +2177,10 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
 
                 if ($receiver->gcm_id) {
                     $success = $firebase->sendMessage($message, $receiver->gcm_id);
-                    $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . ($success ? 'success' : 'failed'), 'App', null);
+                    $this->log('Sent Firebase notification to participant #' . $receiver->id . '. Result: ' . ($success ? 'success' : 'failed'), 'App', null);
+                    if (!$success) {
+                        $this->fileLog("Error sending firebase message: ".print_r($firebase->getResponse(), true));
+                    }
 
                     $status[] = $success ? 1 : 0;
                 } elseif (empty($post->app_only)) {
