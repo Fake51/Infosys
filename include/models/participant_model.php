@@ -112,7 +112,7 @@ class ParticipantModel extends Model
         $search  = $session->search;
 
         if (empty($search['ids']) || !is_array($search['ids'])) {
-            return array();
+            return $this->createEntity('Deltagere')->findAll();
         }
 
         $select = $this->createEntity('Deltagere')->getSelect()
@@ -2161,8 +2161,10 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
     public function sendSMSes(RequestVars $post)
     {
         $query = "INSERT INTO messages (text_da, text_en, send_time) VALUES (?,?, NOW())";
-        $args = [$post->sms_besked_da, $post->sms_besked_da];
+        $args = [$post->sms_besked_da, $post->sms_besked_en];
         $message_id = $this->db->exec($query, $args);
+
+        $firebase = new Firebase();
 
         $status = array();
         foreach ($this->getSavedSearchResult() as $receiver) {
@@ -2173,18 +2175,11 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
                 $args = [$message_id, $receiver->id];
                 $this->db->exec($query, $args);
 
-                if ($receiver->apple_id) {
-                    $result = $receiver->sendIosMessage($this->config->get('ios.certificate_path'), $message, 'Fastaval message');
-                    $this->log('Sent iOS notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
+                if ($receiver->gcm_id) {
+                    $success = $firebase->sendMessage($message, $receiver->gcm_id);
+                    $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . ($success ? 'success' : 'failed'), 'App', null);
 
-                    $status[] = intval($result === IosPushMessage::SEND_SUCCESS);
-
-                } elseif ($receiver->gcm_id) {
-                    $result = $receiver->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $message, 'Fastaval message');
-                    $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
-
-                    $status[] = intval($result === FirebaseMessage::SEND_SUCCESS);
-
+                    $status[] = $success ? 1 : 0;
                 } elseif (empty($post->app_only)) {
                     $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $message));
                     $query = "INSERT INTO smslog (phone_number, message_id) VALUES(?,?)";
@@ -2192,7 +2187,8 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
                 }
 
             } catch (Exception $e) {
-                $this->log('Failed notification to participant #' . $receiver->id . '. Error: ' . $e->getMessage(), 'App', null);
+                $this->fileLog($e->getMessage());
+                $this->log('Failed notification to participant #' . $receiver->id . '. Error: ' . explode("\n",$e->getMessage())[0] , 'App', null);
                 $status[] = 0;
             }
 

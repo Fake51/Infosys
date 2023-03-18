@@ -1867,15 +1867,22 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
         $participant->update();
 
         if ($participant->speaksDanish()) {
-            $message = 'Du vil fremover modtage notifikationer via Fastavappen';
-            $title   = 'Fastavappen notifikation';
+            $message = [
+                'body' => 'Du vil fremover modtage notifikationer via Fastavappen',
+                'title' => 'Fastavappen notifikation',
+            ];
 
         } else {
-            $message = 'You will from now on receive notification via the Fastaval App';
-            $title   = 'Fastaval app notification';
+            $message = [
+                'body' => 'You will from now on receive notification via the Fastaval App',
+                'title' => 'Fastaval app notification',
+            ];
         }
 
-        $result = $participant->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $message, $title);
+        $firebase = new Firebase();
+        $firebase->sendMessage($message, $participant->gcm_id);
+        $this->fileLog("Firebase register send response:".print_r($firebase->getResponse(), true));
+
         $this->log('Sent android notification to participant #' . $participant->id . '. Result: ' . $result, 'App', null);
 
         return $this;
