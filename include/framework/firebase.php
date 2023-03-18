@@ -104,25 +104,28 @@ class Firebase {
       "message" => $message,
     ];
 
-    $options = [
-      'http' => [
-        'method' => 'POST',
-        'header' => [
-          "Content-Type: application/json",
-          "Authorization: ".$this->access['type']." ".$this->access['token'],
-        ],
-        'content' => json_encode($content),
-      ],
-    ];
+    $ch = curl_init("https://fcm.googleapis.com/v1/projects/fastaval-it/messages:send");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      "Content-Type: application/json",
+      "Authorization: ".$this->access['type']." ".$this->access['token'],
+    ]);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($content));
 
-    $context  = stream_context_create($options);
-    $responseText = file_get_contents("https://fcm.googleapis.com/v1/projects/fastaval-it/messages:send", false, $context);
-    $this->response = json_decode($responseText);
+    $response = curl_exec($ch);
+    if ($response === false) {
+      $this->responseText = curl_error($ch);
+      return false;
+    }
+    curl_close($ch);
+    $this->responseText = $response;
+    $response = json_decode($response);
 
-    return isset($this->response->name);
+    return isset($response->name);
   }
 
   function getResponse() {
-    return $this->response;
+    return $this->responseText;
   }
 }

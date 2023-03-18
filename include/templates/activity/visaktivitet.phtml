@@ -64,6 +64,7 @@ $this->registerLateLoadJS('activity.js');
                 </tr>
                 <tr>
                     <td colspan="2"><strong>Aldersbegrænsning:</strong> Min: <strong><?= e($this->activity->getMinAge());?></strong>,  max: <strong><?= e($this->activity->getMaxAge());?></strong></td>
+                    <td><strong>Automatisk tilmelding:</strong> <i><?=$this->activity->auto_signup_category?></i></td>
                 </tr>
                 <tr>
                     <td colspan='3'><strong>Note:</strong> <i><?= nl2br(htmlspecialchars($this->activity->note, ENT_QUOTES));?></i></td>

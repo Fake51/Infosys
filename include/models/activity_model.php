@@ -2017,4 +2017,7 @@ GROUP BY
         return array_reduce($this->db->query($query, [$activity->id]), $reducer, []);
     }
 
+    public function getAutoRegisterCategories() {
+        return $this->createEntity('Aktiviteter')->getValidColumnValues('auto_signup_category')['values'];
+    }
 }

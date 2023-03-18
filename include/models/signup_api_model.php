@@ -1017,6 +1017,8 @@ class SignupApiModel extends Model {
     // Notes
     if ($junior_contact) $participant->setNote('junior_ward', $junior_contact);
 
+    // TODO signup up for automatic activities
+
     return [
       'errors' => $errors,
       'categories' => $categories,

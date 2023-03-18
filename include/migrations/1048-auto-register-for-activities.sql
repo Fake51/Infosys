@@ -1,0 +1,1 @@
+ALTER TABLE aktiviteter ADD auto_signup_category ENUM('none', 'all', 'organizer', 'author', 'designer') DEFAULT 'none' NOT NULL;

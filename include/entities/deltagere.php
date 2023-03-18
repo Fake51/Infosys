@@ -1638,9 +1638,8 @@ WHERE
         return $this->main_lang == 'da';
     }
 
-    public function getEan8Number()
-    {
-        return numberToEAN8(date('y', strtotime($this->created)) . str_pad($this->id, 5, '0', STR_PAD_LEFT));
+    public function getEan8Number(String $year) {
+        return numberToEAN8($year . str_pad($this->id, 5, '0', STR_PAD_LEFT));
     }
 
     /**
