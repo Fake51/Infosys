@@ -239,7 +239,7 @@ HAVING
                         'afvikling_id' => intval($afvikling->id),
                         'aktivitet_id' => intval($res->id),
                         'lokale_id'    => $lokale ? $lokale->id : '',
-                        'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
+                        'lokale_navn'  => $lokale ? '​'.$lokale->beskrivelse : '',
                         'start'        => $this->makeJsonTimestamp($afvikling->start, $app_output),
                         'end'          => $this->makeJsonTimestamp($afvikling->slut, $app_output),
                         'linked'       => 0,
@@ -260,7 +260,7 @@ HAVING
                                     'afvikling_id' => intval($multi->id) . '00' . intval($afvikling->id),
                                     'aktivitet_id' => intval($res->id),
                                     'lokale_id'    => $lokale ? $lokale->id : '',
-                                    'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
+                                    'lokale_navn'  => $lokale ? '​'.$lokale->beskrivelse : '',
                                     'start'        => $this->makeJsonTimestamp($multi->start, $app_output),
                                     'end'          => $this->makeJsonTimestamp($multi->slut, $app_output),
                                     'linked'       => $afvikling->id,
@@ -323,7 +323,7 @@ HAVING
                         'afvikling_id' => intval($afvikling->id),
                         'aktivitet_id' => intval($res->id),
                         'lokale_id'    => $lokale ? $lokale->id : '',
-                        'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
+                        'lokale_navn'  => $lokale ? '​'.$lokale->beskrivelse : '',
                         'start'        => $this->makeJsonTimestamp($afvikling->start),
                         'end'          => $this->makeJsonTimestamp($afvikling->slut),
                         'linked'       => 0,
@@ -338,7 +338,7 @@ HAVING
                                     'afvikling_id' => intval($multi->id) . '00' . intval($afvikling->id),
                                     'aktivitet_id' => intval($res->id),
                                     'lokale_id'    => $lokale ? $lokale->id : '',
-                                    'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
+                                    'lokale_navn'  => $lokale ? '​'.$lokale->beskrivelse : '',
                                     'start' => $this->makeJsonTimestamp($multi->start),
                                     'end' => $this->makeJsonTimestamp($multi->slut),
                                     'linked' => $afvikling->id,
@@ -1716,13 +1716,14 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
                 'time_id'  => $foodtime->id,
                 'text_da'  => $foodtime->description_da,
                 'text_en'  => $foodtime->description_en,
+                'received' => $combined[$foodtime->id]->received,
             );
         }
 
         foreach ($participant->getPladser() as $play) {
             $schedule  = $play->getAfvikling();
             $activity  = $schedule->getAktivitet();
-            $room_name = $schedule->getRoom();
+            $room_name = '​'.$schedule->getRoom();
 
             if ($activity->hidden === 'ja' || ($version == 1 && $activity->type == 'system')) {
                 continue;
@@ -1747,12 +1748,12 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
                 $room = $play->type === 'spilleder' ? $play->getLokale() : false;
 
                 $item['play_room_id'] = $room ? 'R' . $room->id : '';
-                $item['play_room_name'] = $room ? $room->beskrivelse : '';
+                $item['play_room_name'] = $room ? '​'.$room->beskrivelse : '';
 
                 $room = $schedule->getRoomObject();
 
                 $item['meet_room_id'] = $room ? 'R' . $room->id : '';
-                $item['meet_room_name'] = $room ? $room->beskrivelse : '';
+                $item['meet_room_name'] = $room ? '​'.$room->beskrivelse : '';
             }
 
             $return['scheduling'][] = $item;
@@ -1783,7 +1784,7 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
         }
 
         usort($return['scheduling'], function($a, $b) {
-            return $a['start']['timestamp'] - $b['start']['timestamp'];
+            return $a['start'] - $b['start'];
         });
 
         return $return;
