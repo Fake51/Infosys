@@ -1880,7 +1880,7 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
             ];
         }
 
-        $firebase = new Firebase();
+        $firebase = new Firebase($this->config);
         $firebase->sendMessage($message, $participant->gcm_id);
         $this->fileLog("Firebase register send response:".print_r($firebase->getResponse(), true));
 

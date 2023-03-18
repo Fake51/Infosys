@@ -1,7 +1,6 @@
 <?php
 class Firebase {
 
-  protected $authConfigString;
   protected $authConfig;
   protected $secret;
   protected $response;
@@ -14,9 +13,15 @@ class Firebase {
     );
   }
 
-  function __construct() {
-    $this->authConfigString = file_get_contents(INCLUDE_PATH ."/fastaval-it-4c6963d360b8.json");
-    $this->authConfig = json_decode($this->authConfigString);
+  function __construct(Config $config) {
+    $credentials_file = $config->get('firebase.credentials');
+    $file_content = file_get_contents(INCLUDE_PATH."/$credentials_file");
+
+    if ($file_content === false) {
+      throw new FrameworkException('Could not find firebase credentials file');
+    }
+
+    $this->authConfig = json_decode($file_content);
     $this->secret = openssl_get_privatekey($this->authConfig->private_key);
   }
 
@@ -114,7 +119,7 @@ class Firebase {
     $responseText = file_get_contents("https://fcm.googleapis.com/v1/projects/fastaval-it/messages:send", false, $context);
     $this->response = json_decode($responseText);
 
-    return isset($this->response['name']);
+    return isset($this->response->name);
   }
 
   function getResponse() {
