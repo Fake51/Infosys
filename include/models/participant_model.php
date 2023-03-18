@@ -2168,22 +2168,43 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
 
         $status = array();
         foreach ($this->getSavedSearchResult() as $receiver) {
-            $field = "sms_besked_".$receiver->main_lang;
-            $message = $post->$field;
+            $lang = $receiver->main_lang ?? 'en';
+            $message = $post->{"sms_besked_$lang"};
             try {
                 $query = "INSERT INTO participant_messages (message_id, participant_id) VALUES (?,?)";
                 $args = [$message_id, $receiver->id];
                 $this->db->exec($query, $args);
 
-                if ($receiver->gcm_id) {
-                    $success = $firebase->sendMessage($message, $receiver->gcm_id);
-                    $this->log('Sent Firebase notification to participant #' . $receiver->id . '. Result: ' . ($success ? 'success' : 'failed'), 'App', null);
-                    if (!$success) {
-                        $this->fileLog("Error sending firebase message: ".print_r($firebase->getResponse(), true));
-                    }
+                if ($receiver->gcm_id) { // Sending via Firebase
+                    if (!$firebase->sendMessage($message, $receiver->gcm_id)) {
+                        $response = $firebase->getResponse();
+                        $error = json_decode($response);
+                        if ($error === null) {
+                            $this->fileLog("Error sending firebase message: $response");
+                            $result = "Error";
+                        } else {
+                            $this->fileLog("Error sending firebase message: ".print_r($error, true));
+                            $code = $error->error->details[0]->errorCode ?? '';
+                            switch ($code) {
+                                case "UNREGISTERED":
+                                    $result = "Token has been unregistered.";
+                                    $receiver->gcm_id = '';
+                                    $this->log("Deltager #$receiver->id Firebase token er udløbet og token er derfor blevet slettet", 'Deltager', null);
+                                    break;
 
-                    $status[] = $success ? 1 : 0;
-                } elseif (empty($post->app_only)) {
+                                default:
+                                $result = $error->error->message ?? "Error";
+                            }
+                        }
+
+                        $status[] = 0;
+                    } else {
+                        $result = "Success";
+                        $status[] = 1;
+                    }
+                    $this->log("Sent Firebase notification to participant #$receiver->id Result: $result", 'Besked', $this->getLoggedInUser());
+
+                } elseif (empty($post->app_only)) { // Sending SMS if not disabled
                     $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $message));
                     $query = "INSERT INTO smslog (phone_number, message_id) VALUES(?,?)";
                     $this->db->exec($query, [$receiver->mobiltlf, $message_id]);
@@ -2191,7 +2212,7 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
 
             } catch (Exception $e) {
                 $this->fileLog($e->getMessage());
-                $this->log('Failed notification to participant #' . $receiver->id . '. Error: ' . explode("\n",$e->getMessage())[0] , 'App', null);
+                $this->log('Failed notification to participant #' . $receiver->id . '. Error: ' . explode("\n",$e->getMessage())[0] , 'Besked', $this->getLoggedInUser());
                 $status[] = 0;
             }
 

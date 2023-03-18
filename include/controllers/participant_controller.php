@@ -1203,17 +1203,25 @@ class ParticipantController extends Controller
             $this->hardRedirect($this->url('sms_dialog'));
         }
 
+        $this->successMessage('Sender beskeder, se log for resultat.');
+
+        header("HTTP/1.0 303 GO");
+        header("Location: ".$this->url('show_search_result'));
+
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
+        
         $result = $this->model->sendSMSes($post);
 
         if (empty($result['success'])) {
             $this->errorMessage("SMSerne kunne ikke sendes.");
-
         } else {
             $this->successMessage('Sendte ' . $result['success'] . ' beskeder. ' . $result['failure'] . ' beskeder fejlede.');
         }
 
-        $this->log("{$this->model->getLoggedInUser()->user} har sendt {$result['success']} beskeder, med {$result['failure']} fejlede", "SMS", $this->model->getLoggedInUser());
-        $this->hardRedirect($this->url('deltagerehome'));
+        $this->log("{$this->model->getLoggedInUser()->user} har sendt {$result['success']} beskeder, med {$result['failure']} fejlede", "Besked", $this->model->getLoggedInUser());
+        exit;
     }
 
     /**
