@@ -1666,7 +1666,7 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
         );
 
         if ($version >= 3) {
-            $return['barcode'] = $participant->getEan8Number();
+            $return['barcode'] = $participant->getEan8Number($this->getConYear());
         }
 
         if ($version >= 2) {

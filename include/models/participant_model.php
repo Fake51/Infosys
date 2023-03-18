@@ -1449,7 +1449,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number($this->getConYear()), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = 536;
@@ -1490,7 +1490,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = @$barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = @$barcode->draw($participant->getEan8Number($this->getConYear()), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = 134;
@@ -1530,7 +1530,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number($this->getConYear()), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = round($width * 2);
@@ -1599,7 +1599,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number($this->getConYear()), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = round($width * 4.60);

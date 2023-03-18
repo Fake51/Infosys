@@ -165,4 +165,16 @@ class Common
 
         return $return;
     }
+
+    protected function getConYear() {
+        // Don't use this in an object without config
+        if (!isset($this->config)) {
+            $this->filelog("WARNING: getConYear() used in object without config");
+            return null;
+        }
+        
+        $start = $this->config->get('con.start');
+        $start_time = strtotime($start);
+        return date('y', $start_time);
+    }
 }
