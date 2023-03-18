@@ -930,6 +930,23 @@ div#aktivitetbox form#aktivitet-edit fieldset textarea {
     height: 100px;
 }
 
+div#aktivitetbox form#aktivitet-edit fieldset input[type="number"],
+div#aktivitetbox form#aktivitet-edit fieldset select {
+    width: 8em;
+    box-sizing: border-box;
+    height: auto;
+}
+
+div#aktivitetbox form#aktivitet-edit fieldset input[type="radio"] {
+    vertical-align: baseline;
+    margin-left: 1em;
+}
+
+div#aktivitetbox form#aktivitet-edit fieldset textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 div#aktivitetbox form#aktivitet-edit fieldset input.aktivitet-title {
     width: 750px;
 }
