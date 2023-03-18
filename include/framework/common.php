@@ -116,32 +116,6 @@ class Common
     }
     
     /**
-     * returns a string that works as a URI to images
-     *
-     * @param string $filename Filename of image
-     *
-     * @access protected
-     * @return string
-     */
-    protected function imgLink($filename)
-    {
-        return $this->config->get('app.public_uri') . "img/{$filename}";
-    }
-
-    /**
-     * returns a string that works as a URI to javascript files 
-     *
-     * @param string $filename Filename of image
-     *
-     * @access protected
-     * @return string
-     */
-    protected function JSLink($filename)
-    {
-        return $this->config->get('app.public_uri') . "js/{$filename}";
-    }
-
-    /**
      * extracts ids (or another given field) from an array of objects
      *
      * @param array  $array Array of objects
