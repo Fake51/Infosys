@@ -103,6 +103,10 @@ class Deltagere extends DBObject implements AgeFulfilment
         'sober_sleeping'                => 'Ædru og stille sovesal',
     );
 
+    static protected $special_columns = [
+        'assigned_sleeping'              => 'Tildelt sovelokale(r)',
+    ];
+
     /**
      * Contains display names for different notes
      *
@@ -1862,5 +1866,9 @@ WHERE
     public function getPronoun(String $lang = null) {
         $lang = $lang ?? $this->main_lang;
         return self::$pronouns[$lang][$this->pronoun];
+    }
+
+    public static function getSpecialColumns() {
+        return self::$special_columns;
     }
 }

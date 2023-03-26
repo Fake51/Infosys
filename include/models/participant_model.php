@@ -1773,10 +1773,18 @@ SQL;
         foreach ($columns as $id => $column) {
             if ($column == 'navn') continue; // Don't mess with the name column
 
+            // Special columns
+            if ($column == 'assigned_sleeping') {
+                $join .= " LEFT JOIN participants_sleepingplaces ON deltagere.id = participants_sleepingplaces.participant_id";
+                $join .= " LEFT JOIN lokaler ON participants_sleepingplaces.room_id = lokaler.id";
+                $group = " GROUP BY deltagere.id";
+                continue;
+            }
+
             if (isset($foreign_key_fields[$column])) {
                 $field_info = $foreign_key_fields[$column];
                 $columns[$id] = "`$field_info[table]`.`$field_info[name]`";
-                $join .= "LEFT JOIN `$field_info[table]` ON `deltagere`.`$field_info[key_field]` = `$field_info[table]`.`$field_info[key]` ";
+                $join .= " LEFT JOIN `$field_info[table]` ON `deltagere`.`$field_info[key_field]` = `$field_info[table]`.`$field_info[key]`";
             } else {
                 $columns[$id] = "`deltagere`.`$column`";
             }
@@ -1809,18 +1817,32 @@ SQL;
         $where = '';
 
         if ($get->sSearch != "") {
-            $where = "WHERE (";
-            for ($i = 0, $max = count($columns); $i < $max; $i++) {
-                if ($columns[$i] == 'navn') {
-                    $where .= 'fornavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
-                    $where .= 'efternavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
-                } else {
-                    $where .= $columns[$i] ." LIKE " . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+            if ($group == "") {
+                $where = "WHERE (";
+                for ($i = 0, $max = count($columns); $i < $max; $i++) {
+                    if ($columns[$i] == 'navn') {
+                        $where .= 'fornavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+                        $where .= 'efternavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+                    } else {
+                        $where .= $columns[$i] ." LIKE " . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+                    }
+                }
+
+                $where = substr_replace($where, "", -3);
+                $where .= ')';
+            } else {
+                $pre = "HAVING ";
+                $having = "";
+                foreach($columns as $i => $column) {
+                    $having .= $pre;
+                    if ($column == 'navn') {
+                        $having .= "deltagere_navn LIKE " . $this->db->sanitize("%$get->sSearch%");
+                    } else {
+                        $having .= $columns[$i] ." LIKE " . $this->db->sanitize('%' . $get->sSearch . '%');
+                    }
+                    $pre = "OR ";
                 }
             }
-
-            $where = substr_replace($where, "", -3);
-            $where .= ')';
         }
 
         $session = $this->dic->get('Session');
@@ -1840,6 +1862,8 @@ SQL;
         foreach ($columns as $id => $column) {
             if ($column == 'navn') {
                 $columns[$id] = 'CONCAT(fornavn, " ", efternavn) AS deltagere_navn';
+            } elseif ($column == "assigned_sleeping") {
+                $columns[$id] = "GROUP_CONCAT(DISTINCT lokaler.beskrivelse SEPARATOR ', ') AS assigned_sleeping";
             } else {
                 $columns[$id] = $columns[$id]." AS ".str_replace(".", "_", str_replace("`", "", $columns[$id]));
             }
@@ -1850,6 +1874,8 @@ SQL;
             FROM deltagere
             {$join}
             {$where}
+            {$group}
+            {$having}
             {$order}
             {$limit}
         ";
@@ -2033,9 +2059,12 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
             }
         }
 
-        foreach($this->createEntity('Deltagere')->getNoteNames() as $key => $name) {
+        $participant = $this->createEntity('Deltagere');
+        foreach($participant->getNoteNames() as $key => $name) {
             $result["note_$key"] = $name;
         }
+
+        $result = array_merge($result, $participant->getSpecialColumns());
 
         asort($result);
         return $result;
