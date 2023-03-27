@@ -97,7 +97,7 @@ $this->registerLateLoadJS('participant.js');
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <td class='label'>Super GDS: </td><td id='supergds' class='editable yesno'><?= $this->deltager->supergds;?></td>
+                    <td class='label'>Med i Heltestyrken: </td><td id='supergds'><?=empty($this->deltager_info['gdstilmeldinger']) ? 'Nej' : 'Ja'?></td>
                     <td class='label'>Ønsket antal GDS:</td><td id='desired_diy_shifts' class='editable text'><?= e($this->deltager->desired_diy_shifts);?></td>
                     <td class='label'>Ønsket antal aktiviteter:</td><td id='desired_activities' class='editable text'><?= e($this->deltager->desired_activities);?></td>
                 </tr>
@@ -375,7 +375,7 @@ $this->registerLateLoadJS('participant.js');
     </div>
     <div class='gdsbox'>
         <fieldset>
-            <legend>GDS Vagter<?php if (!$this->is_read_only) : ?> - <a href="<?= $this->url('update_deltager_gds', array('id' => $this->deltager->id));?>">Ret/slet</a><?php endif;?></legend>
+            <legend>Helte Opgaver<?php if (!$this->is_read_only) : ?> - <a href="<?= $this->url('update_deltager_gds', array('id' => $this->deltager->id));?>">Ret/slet</a><?php endif;?></legend>
             <table class='gds_table'>
                 <?php if (!empty($this->deltager_info['gds'])) :
                     foreach ($this->deltager_info['gds'] as $gds) :?>
@@ -425,7 +425,7 @@ $this->registerLateLoadJS('participant.js');
     </div>
     <div class='gdsbox'>
         <fieldset>
-            <legend>GDS Tilmeldinger<?php if (!$this->is_read_only) : ?> - <a href="<?= $this->url('update_deltager_gdstilmeldinger', array('id' => $this->deltager->id));?>">Ret/slet</a><?php endif;?></legend>
+            <legend>Heltestyrken, Tilmeldinger<?php if (!$this->is_read_only) : ?> - <a href="<?= $this->url('update_deltager_gdstilmeldinger', array('id' => $this->deltager->id));?>">Ret/slet</a><?php endif;?></legend>
             <table class='gds_table'>
                 <?php if (!empty($this->deltager_info['gdstilmeldinger'])) :
                     foreach ($this->deltager_info['gdstilmeldinger'] as $gds) : ?>
