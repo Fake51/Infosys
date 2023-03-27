@@ -1788,6 +1788,10 @@ SQL;
                 continue;
             }
 
+            if ($column == 'hero_task_count') {
+                continue;
+            }
+
             if (isset($foreign_key_fields[$column])) {
                 $field_info = $foreign_key_fields[$column];
                 $columns[$id] = "`$field_info[table]`.`$field_info[name]`";
@@ -1878,6 +1882,10 @@ SQL;
 
                 case 'has_hero_signup':
                     $columns[$id] = "CASE WHEN COUNT(deltagere_gdstilmeldinger.deltager_id) > 0 THEN 'Ja' ELSE 'Nej' END AS has_hero_signup";
+                    break;
+
+                case 'hero_task_count':
+                    $columns[$id] = "(SELECT COUNT(*) FROM deltagere_gdsvagter WHERE deltagere_gdsvagter.deltager_id = deltagere.id) as hero_task_count";
                     break;
 
                 default:

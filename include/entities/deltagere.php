@@ -88,7 +88,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         'updated'                       => 'Opdateret',
         'signed_up'                     => 'Tilmeldt',
         'annulled'                      => 'Annulleret',
-        'desired_diy_shifts'            => 'Ønskede GDS',
+        'desired_diy_shifts'            => 'Ønskede Helteopgaver',
         'nickname'                      => 'Kaldenavn',
         'financial_struggle'            => 'Økonomisk støtte',
         'main_lang'                     => 'Foretrukket sprog',
@@ -106,6 +106,7 @@ class Deltagere extends DBObject implements AgeFulfilment
     static protected $special_columns = [
         'assigned_sleeping'             => 'Tildelt sovelokale(r)',
         'has_hero_signup'               => 'Med i Heltestyrken',
+        'hero_task_count'               => 'Antal Helteopgaver',
     ];
 
     /**
