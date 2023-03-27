@@ -1781,6 +1781,13 @@ SQL;
                 continue;
             }
 
+            // Special columns
+            if ($column == 'has_hero_signup') {
+                $join .= " LEFT JOIN deltagere_gdstilmeldinger ON deltagere.id = deltagere_gdstilmeldinger.deltager_id";
+                $group = " GROUP BY deltagere.id";
+                continue;
+            }
+
             if (isset($foreign_key_fields[$column])) {
                 $field_info = $foreign_key_fields[$column];
                 $columns[$id] = "`$field_info[table]`.`$field_info[name]`";
@@ -1860,12 +1867,21 @@ SQL;
         }
 
         foreach ($columns as $id => $column) {
-            if ($column == 'navn') {
-                $columns[$id] = 'CONCAT(fornavn, " ", efternavn) AS deltagere_navn';
-            } elseif ($column == "assigned_sleeping") {
-                $columns[$id] = "GROUP_CONCAT(DISTINCT lokaler.beskrivelse SEPARATOR ', ') AS assigned_sleeping";
-            } else {
-                $columns[$id] = $columns[$id]." AS ".str_replace(".", "_", str_replace("`", "", $columns[$id]));
+            switch ($column) {
+                case 'navn':
+                    $columns[$id] = 'CONCAT(fornavn, " ", efternavn) AS deltagere_navn';
+                    break;
+
+                case 'assigned_sleeping':
+                    $columns[$id] = "GROUP_CONCAT(DISTINCT lokaler.beskrivelse SEPARATOR ', ') AS assigned_sleeping";
+                    break;
+
+                case 'has_hero_signup':
+                    $columns[$id] = "CASE WHEN COUNT(deltagere_gdstilmeldinger.deltager_id) > 0 THEN 'Ja' ELSE 'Nej' END AS has_hero_signup";
+                    break;
+
+                default:
+                    $columns[$id] = $columns[$id]." AS ".str_replace(".", "_", str_replace("`", "", $columns[$id]));
             }
         }
 

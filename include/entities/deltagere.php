@@ -104,7 +104,8 @@ class Deltagere extends DBObject implements AgeFulfilment
     );
 
     static protected $special_columns = [
-        'assigned_sleeping'              => 'Tildelt sovelokale(r)',
+        'assigned_sleeping'             => 'Tildelt sovelokale(r)',
+        'has_hero_signup'               => 'Med i Heltestyrken',
     ];
 
     /**
