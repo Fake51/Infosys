@@ -88,7 +88,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         'updated'                       => 'Opdateret',
         'signed_up'                     => 'Tilmeldt',
         'annulled'                      => 'Annulleret',
-        'desired_diy_shifts'            => 'Ønskede Helteopgaver',
+        'desired_diy_shifts'            => 'Helteopgaver, ønskede',
         'nickname'                      => 'Kaldenavn',
         'financial_struggle'            => 'Økonomisk støtte',
         'main_lang'                     => 'Foretrukket sprog',
@@ -105,8 +105,8 @@ class Deltagere extends DBObject implements AgeFulfilment
 
     static protected $special_columns = [
         'assigned_sleeping'             => 'Tildelt sovelokale(r)',
-        'has_hero_signup'               => 'Med i Heltestyrken',
-        'hero_task_count'               => 'Antal Helteopgaver',
+        'has_hero_signup'               => 'Heltestyrken, tilmeldt',
+        'hero_task_count'               => 'Helteopgaver, tildelte',
     ];
 
     /**
@@ -117,14 +117,14 @@ class Deltagere extends DBObject implements AgeFulfilment
     static protected $note_names = [
         'da' => [
             'comment' => 'Andre kommentarer',
-            'gds' => 'Kommentarer til GDS',
+            'gds' => 'Kommentarer til Heltestyrken',
             'junior_ward' => 'Kontakperson',
             'junior_comment' => 'Kommentar til Fastaval Junior',
             'sleeping' => 'Bemærkninger til soveplads',
         ],
         'en' => [
             'comment' => 'Other comments',
-            'gds' => 'Comments regarding GDS',
+            'gds' => 'Comments regarding Hero tasks',
             'junior_ward' => 'Contact',
             'junior_comment' => 'Fastaval Junior Comment',
             'sleeping' => 'Comments about sleeping area',
