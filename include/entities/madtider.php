@@ -140,7 +140,7 @@ class Madtider extends DBObject
         return $result[0]['count'];
     }
 
-    public function getHandoutTime(Deltagere $d)
+    public function getHandoutTime(Deltagere $d, $format = 'H:i')
     {
         if (!$this->isLoaded()) {
             return '';
@@ -154,8 +154,8 @@ class Madtider extends DBObject
             if ($entity->time_type) {
                 $start_mod = ($entity->time_type - 1) * 30 * 60;
                 $end_mod   = ($entity->time_type) * 30 * 60;
-                $start     = date('H:i', strtotime($this->dato) + $start_mod);
-                $end       = date('H:i', strtotime($this->dato) + $end_mod);
+                $start     = date($format, strtotime($this->dato) + $start_mod);
+                $end       = date($format, strtotime($this->dato) + $end_mod);
                 return $start . ' - ' . $end;
             }
         }
