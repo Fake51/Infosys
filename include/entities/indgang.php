@@ -274,7 +274,7 @@ class Indgang extends DBObject
         }
 
         $desc = $this->spansAllConvention() ? 'Partout' : date('D', strtotime($this->start));
-        $desc = $english ? $temp : danishDayNames($desc);
+        $desc = $english ? $desc : danishDayNames($desc);
         if ($this->isDigital()) $desc .= ' (Digital)';
         return $desc;
     }
