@@ -538,19 +538,21 @@ ORDER BY
     private function isEarlyTime($category, $time) {
         // TODO - change this from hardcoded to a setting on food page
         // Like adding time ranges to food types
+        $area_lead_dinner = stripos($category, 'fælles') !== false;
         $vegie = stripos($category, 'vegetar') !== false;
-        $friday = date('N', strtotime($time)) == '5';
+        $all_veggie_day = date('N', strtotime($time)) == '4';
 
-        return $vegie && !$friday;
+        return $area_lead_dinner || ($vegie && !$all_veggie_day);
     }
 
     private function getTimeType(array $usage, MadTider $madtid) {
         $type = 0;
         $min  = 1000;
 
-        foreach ($usage[$madtid->dato] as $id => $people) {
+        // Find time slot with fewest people
+        foreach ($usage[$madtid->dato] as $slot => $people) {
             if ($people < $min) {
-                $type = $id;
+                $type = $slot;
                 $min  = $people;
             }
         }
