@@ -11,6 +11,12 @@ td.label {
     font-weight: bold;
 }
 
+#food-table td.label {
+    width: 1em;
+    white-space: nowrap;
+    padding-right: 1em;
+}
+
 legend {
     font-weight: bold;
     font-size: 20px;
@@ -92,7 +98,6 @@ div#food-handout-container div.success, div#wear-handout-container div.success, 
 div#food-handout-container fieldset#stats-fieldset {
     background-color: #eeeeee;
     padding: 10px;
-    border
 }
 
 div#food-handout-container div#stats-boxes div.stats-box {

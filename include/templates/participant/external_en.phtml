@@ -7,7 +7,7 @@
             <tr>
                 <td class='label'>Id:</td>
                 <td><?= $this->deltager->id;?></td>
-                <td rowspan='4'><p style='margin: 5px; padding: 5px; background-color: #bb3333; color: #ffffff;'>Keep in mind that nothing is fully settled until we reach the opening of Fastaval. The information presented here <strong>is liable to change until then</strong> - among other things, DIY details are almost certain to change.</p><p style='margin: 5px; padding: 5px; background-color: #bb3333; color: #ffffff;'>
+                <td rowspan='4'><p style='margin: 5px; padding: 5px; background-color: #bb3333; color: #ffffff;'>Keep in mind that nothing is fully settled until we reach the opening of Fastaval. The information presented here <strong>is liable to change until then</strong> - among other things, hero task details are almost certain to change.</p><p style='margin: 5px; padding: 5px; background-color: #bb3333; color: #ffffff;'>
 If you have any questions regarding the details here, you can e-mail us at <a style='color: #000000;' href='mailto:info@fastaval.dk'>info@fastaval.dk</a>.</p>
 </td>
             </tr>
@@ -38,19 +38,15 @@ If you have any questions regarding the details here, you can e-mail us at <a st
                 <td colspan='6'><hr/></td>
             </tr>
             <tr>
-                <td class='label'>SuperGM:</td>
+                <td class='label'>Super Gamemaster:</td>
                 <td><?= $this->deltager->supergm == 'ja' ? 'Yes' : 'No';?></td>
-                <td class='label'>SuperDIY:</td>
-                <td><?= $this->deltager->supergds == 'ja' ? 'Yes' : 'No';?></td>
-                <td class='label'>Several DIY-shifts:</td>
-                <td><?= $this->deltager->flere_gdsvagter == 'ja' ? 'Yes' : 'No';?></td>
+                <td class='label'>Super Rules Guide:</td>
+                <td><?=$this->deltager->super_rules_guide == 'ja' ? 'Yes' : 'No'?></td>
             </tr>
             <tr>
-                <td class='label'>Volunteering next year:</td>
-                <td><?= $this->deltager->arrangoer_naeste_aar == 'ja' ? 'Yes' : 'No';?></td>
                 <td class='label'>Desired number of activities:</td>
                 <td><?= ($this->deltager->desired_activities ? e($this->deltager->desired_activities) : 'Not specified');?></td>
-                <td class='label'>Desired number of DIY shifts:</td>
+                <td class='label'>Desired number of hero tasks:</td>
                 <td><?= ($this->deltager->desired_diy_shifts ? e($this->deltager->desired_diy_shifts) : 'Not specified');?></td>
             </tr>
             <tr>
@@ -62,15 +58,15 @@ If you have any questions regarding the details here, you can e-mail us at <a st
                 <td colspan="5"><?= e($this->deltager->ungdomsskole);?></td>
             </tr>
             <?php endif;?>
-            <?php if (!empty($this->deltager->arbejdsomraade)) : ?>
+            <?php if (!empty($this->deltager->work_area)) : ?>
             <tr>
                 <td class='label'>Volunteer-area:</td>
                 <td colspan="5"><?= e($this->deltager->arbejdsomraade);?></td>
             </tr>
             <?php endif;?>
-            <?php if (!empty($this->deltager->scenarie)) : ?>
+            <?php if (!empty($this->deltager->game_id)) : ?>
             <tr>
-                <td class='label'>Scenario:</td>
+                <td class='label'>Scenario/Board game:</td>
                 <td colspan="5"><?= e($this->deltager->scenarie);?></td>
             </tr>
             <?php endif;?>
@@ -101,20 +97,19 @@ If you have any questions regarding the details here, you can e-mail us at <a st
             if ((strtotime($schedule->slut) - strtotime($schedule->start)) > 86400) {
                 $helcon[] = '
             <tr>
-                <td><strong>' . ($activity->wp_link ? '<a href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '') . e($activity->title_en) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Gamer') . '</em></td>
+                <td><strong>' . ($activity->wp_link ? '<a target="_blank" href="http://www.fastaval.dk/en/?p=' . $activity->wp_link . '">' : '') . e($activity->title_en) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Player') . '</em></td>
             </tr>
 ';
                 continue;
             }
 
-
-            if ($activity->hidden === 'ja') {
-                continue;
-            }
+            // if ($activity->hidden === 'ja') {
+            //     continue;
+            // }
 
             $dates[$date][] = '
             <tr>
-                <td><strong>' . ($activity->wp_link ? '<a href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '') . e($activity->title_en) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Gamer') . '</em>. ' . date('D H:i', strtotime($schedule->start)) . ' - ' . date('D H:i', strtotime($schedule->slut)) . '</td></tr>
+                <td><strong>' . ($activity->wp_link ? '<a target="_blank" href="http://www.fastaval.dk/en/?p=' . $activity->wp_link . '">' : '') . e($activity->title_en) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Player') . '</em>. ' . date('D H:i', strtotime($schedule->start)) . ' - ' . date('D H:i', strtotime($schedule->slut)) . '</td></tr>
 ';
 
             foreach ($schedule->getMultiBlok() as $block) {
@@ -122,7 +117,7 @@ If you have any questions regarding the details here, you can e-mail us at <a st
 
                 $dates[$date][] = '
                 <tr>
-                    <td><strong>' . e($activity->title_en) . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Gamer') . '</em>. ' . date('D H:i', strtotime($block->start)) . ' - ' . date('D H:i', strtotime($block->slut)) . '</td></tr>
+                    <td><strong>' . e($activity->title_en) . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Player') . '</em>. ' . date('D H:i', strtotime($block->start)) . ' - ' . date('D H:i', strtotime($block->slut)) . '</td></tr>
     ';
             }
 
@@ -150,7 +145,7 @@ If you have any questions regarding the details here, you can e-mail us at <a st
         </table>
     </fieldset>
     <fieldset>
-        <legend>DIY shifts</legend>
+        <legend>Assigned hero tasks</legend>
         <table>
             <?php
             $date = false;
@@ -215,12 +210,23 @@ If you have any questions regarding the details here, you can e-mail us at <a st
     </fieldset>
     <fieldset class="float-left w33">
         <legend>Food</legend>
-        <table>
+        <table id="food-table">
             <tbody>
                 <?php if (!empty($this->deltager_info['mad'])) :
                     foreach ($this->deltager_info['mad'] as $madtid) : ?>
                         <tr>
-                            <td class="label"><?= date('D', strtotime($madtid->dato));?></td>
+                            <?php
+                                $format = 'h:i a';
+                                if ($madtid->isBreakfast()) {
+                                    $time_text = date($format, strtotime($madtid->dato));
+                                    $time_text .= " - ";
+                                    $time_text .= date($format, strtotime($madtid->dato) + 2*60*60);
+                                } else {
+                                    $time_text = $madtid->getHandoutTime($this->deltager, $format);
+                                }                                
+                            ?>
+                            <td class="label"><?=danishDayNames(date("D", strtotime($madtid->dato)))?></td>
+                            <td class="label"><?=$time_text?></td>
                             <td><?= e($madtid->getMad()->title_en);?></td>
                         </tr>
                     <?php endforeach;
@@ -235,7 +241,7 @@ If you have any questions regarding the details here, you can e-mail us at <a st
                 <?php if (!empty($this->deltager_info['wear'])) :
                     foreach ($this->deltager_info['wear'] as $wear) :?>
                         <tr>
-                            <td class="label"><?= e($wear->antal);?> <?= e($wear->getWear()->getName(true));?>, size <?= e($wear->getSizeName(true));?></td>
+                            <td class="label"><?= e($wear->antal);?> <?= e($wear->getWearName('en', true));?></td>
                         </tr>
                     <?php endforeach;
                 endif;?>

@@ -1855,6 +1855,11 @@ die("Not actually sending final reminders<br>\n");
         $participants = $this->model->getParticipantsForwelcomeMail();
         echo "Sending to ".count($participants)." participants<br>\n";
 die("Not actually sending welcome mail\n");
+        
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
+
         $count = 0;
         foreach ($participants as $participant) {
             $this->page->id = $participant->id;
@@ -1863,15 +1868,11 @@ die("Not actually sending welcome mail\n");
 
             $year = date('Y', strtotime($this->config->get('con.start')));
             if ($participant->speaksDanish()) {
-                //$title = $danish_title ? $danish_title : "Så er det snart tid til Fastaval $year";
-                //$this->page->setTemplate('participant/welcomemailda');
-                $title = $danish_title ? $danish_title : "Fastaval $year - Endelig deltagerseddel";
-                $this->page->setTemplate('participant/welcomemail2da');
+                $title = $danish_title ? $danish_title : "Fastaval $year - Deltagerseddel";
+                $this->page->setTemplate('participant/welcomemailda');
             } else {
-                // $title = $english_title ? $english_title : "Fastaval $year is almost here";
-                // $this->page->setTemplate('participant/welcomemailen');
-                $title = $english_title ? $english_title : "Fastaval $year - Final participation note";
-                $this->page->setTemplate('participant/welcomemail2en');
+                $title = $english_title ? $english_title : "Fastaval $year - Participant sheet";
+                $this->page->setTemplate('participant/welcomemailen');
             }
     
             $mail = new Mail($this->config);
