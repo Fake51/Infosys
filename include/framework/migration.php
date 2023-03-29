@@ -111,7 +111,7 @@ class Migration
 
         }
 
-        if (!file_put_contents(MIGRATION_FOLDER . self::INDEX_FILE, json_encode($migrations))) {
+        if (!file_put_contents(MIGRATION_FOLDER . self::INDEX_FILE, json_encode($migrations, JSON_PRETTY_PRINT))) {
             throw new MigrationException('Cannot write to migration index file!');
         }
 
