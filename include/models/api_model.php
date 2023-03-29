@@ -1884,8 +1884,9 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
         $success = $firebase->sendMessage($message, $participant->gcm_id);
         if (!$success) {
             $this->fileLog("Error sending firebase message: ".print_r($firebase->getResponse(), true));
+            $error = $firebase->getError()['message'];
         }
-        $this->log('Sent Firebase notification to participant #' . $participant->id . '. Result: ' . ($success ? 'success' : 'failed'), 'App', null);
+        $this->log('Sent Firebase notification to participant #' . $participant->id . '. Result: ' . ($success ? 'success' : $error), 'App', null);
 
         return $this;
     }

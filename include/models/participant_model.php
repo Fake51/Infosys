@@ -2230,26 +2230,21 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
 
                 if ($receiver->gcm_id) { // Sending via Firebase
                     if (!$firebase->sendMessage($message, $receiver->gcm_id)) {
-                        $response = $firebase->getResponse();
-                        $error = json_decode($response);
-                        if ($error === null) {
-                            $this->fileLog("Error sending firebase message: $response");
-                            $result = "Error";
-                        } else {
-                            $this->fileLog("Error sending firebase message: ".print_r($error, true));
-                            $code = $error->error->details[0]->errorCode ?? '';
-                            switch ($code) {
-                                case "UNREGISTERED":
-                                    $result = "Token has been unregistered.";
-                                    $receiver->gcm_id = '';
-                                    $this->log("Deltager #$receiver->id Firebase token er udløbet og token er derfor blevet slettet", 'Deltager', null);
-                                    break;
+                        $error = $firebase->getError();
 
-                                default:
-                                $result = $error->error->message ?? "Error";
-                            }
+                        switch($error['code']) {
+                            case 'UNKNOWN':
+                                $this->fileLog("Unknown error sending firebase message: ".$firebase->getResponse());
+                                break;
+
+                            case "UNREGISTERED":
+                                $receiver->gcm_id = '';
+                                $receiver->update();
+                                $this->log("Deltager #$receiver->id Firebase token er udløbet og token er derfor blevet slettet", 'Deltager', null);
+                                break;
                         }
 
+                        $result = $error['message'];
                         $status[] = 0;
                     } else {
                         $result = "Success";

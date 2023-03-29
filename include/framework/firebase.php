@@ -128,4 +128,17 @@ class Firebase {
   function getResponse() {
     return $this->responseText;
   }
+
+  function getError() {
+    $error = json_decode($this->responseText);
+    if ($error === null) return [
+      'message' => 'Unknown error',
+      'code' => 'UNKNOWN',
+    ];
+
+    return [
+      'message' => $error->error->message ?? "No error message",
+      'code' => $error->error->details[0]->errorCode ?? 'NO_CODE', 
+    ];
+  }
 }
