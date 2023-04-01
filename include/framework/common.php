@@ -151,4 +151,10 @@ class Common
         $start_time = strtotime($start);
         return date('y', $start_time);
     }
+
+    protected function debugOutput($var) {
+        echo "<pre>";
+        print_r($var);
+        echo "</pre>";
+    }
 }
