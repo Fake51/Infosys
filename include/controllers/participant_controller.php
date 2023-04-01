@@ -1177,11 +1177,16 @@ class ParticipantController extends Controller
     public function displaySMSDialog()
     {
         if (!($this->model->getLoggedInUser()->hasRole('Admin') || $this->model->getLoggedInUser()->hasRole('SMS'))) {
-            $this->errorMessage('Du har ikke adgang til at sende SMSer');
+            $this->errorMessage('Du har ikke adgang til at sende beskeder');
             $this->hardRedirect('deltagerehome');
         }
 
-        $this->page->receivers = $this->model->getSavedSearchResult();
+        $receivers = $this->model->getSavedSearchResult();
+        foreach($receivers as $index => $reciever) {
+            if (empty($reciever->gcm_id)) unset($receivers[$index]);
+        }
+
+        $this->page->receivers = $receivers;
     }
 
     /**
@@ -1214,7 +1219,7 @@ class ParticipantController extends Controller
         header("HTTP/1.0 303 GO");
         header("Location: ".$this->url('show_search_result'));
 
-        // Finish response before sending mails, to avoid timeout
+        // Finish response before sending messages, to avoid timeout
         session_write_close();
         fastcgi_finish_request();
         

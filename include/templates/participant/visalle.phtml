@@ -5,7 +5,7 @@ $this->includeCSS('../js/DataTables-1.9.0/media/css/jquery.dataTables_themerolle
 echo $this->getMessagesHtml();?>
 <p>
     <a href="javascript:void();" class="search btn btn-primary">Søg</a>
-    <a href="<?= $this->url('sms_dialog');?>" class="message btn">Send SMS</a>
+    <a href="<?= $this->url('sms_dialog');?>" class="message btn">Send notifikationer</a>
     <a href="<?= $this->url('email_list');?>" class="message btn">Emails</a>
     <a class="float-right character-sheet btn" href="<?= $this->url('spillersedler', array('id_range' => 'id_range'));?>">Print deltagersedler</a>
     <a class="float-right id-cards btn" href="<?= $this->url('id_card_render');?>?ids=id_range">Print ID kort</a>
