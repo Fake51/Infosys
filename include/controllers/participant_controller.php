@@ -1061,14 +1061,20 @@ class ParticipantController extends Controller
             return;
         }
 
+        // Set page layout without header and nice rounded boxes
         $this->page->layout_template = "external.phtml";
-        $this->page->setTemplate(!$deltager->speaksDanish() ? 'external_pass_en' : 'external_pass');
-        if ($this->externalLogin($deltager)) {
-            $this->page->deltager      = $deltager;
-            $this->page->deltager_info = $this->model->findDeltagerInfo($deltager);
-            $this->page->setTemplate(!$deltager->speaksDanish() ? 'external_en' : 'external');
-            $this->log("Deltager #{$deltager->id} har tjekket sine detaljer på den eksternt tilgængelige side", "Deltager", null);
+
+        // Login first
+        if (!$this->externalLogin($deltager)) {
+            $this->page->setTemplate(!$deltager->speaksDanish() ? 'external_pass_en' : 'external_pass');
+            return;
         }
+        
+        $this->page->deltager       = $deltager;
+        $this->page->deltager_info  = $this->model->findDeltagerInfo($deltager);
+        $this->page->sleep_data     = $this->model->getSleepDataForParticipant($this->page->deltager);
+        $this->page->setTemplate(!$deltager->speaksDanish() ? 'external_en' : 'external');
+        $this->log("Deltager #{$deltager->id} har tjekket sine detaljer på den eksternt tilgængelige side", "Deltager", null);
     }
 
     /**

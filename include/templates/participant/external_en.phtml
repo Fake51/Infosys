@@ -73,6 +73,19 @@ If you have any questions regarding the details here, you can e-mail us at <a st
             </tbody>
         </table>
     </fieldset>
+    <?php if (!empty($this->sleep_data)) : ?>
+    <fieldset>
+        <legend>Sovelokale</legend>
+        <table id="sleep-table">
+            <?php foreach ($this->sleep_data as $row) : ?>
+                <tr>
+                    <td class="label"><?=e($row['starts'])?> &rarr; <?=e($row['ends'])?></td>
+                    <td><?= e($row['room']->beskrivelse);?></td>
+                </tr>
+            <?php endforeach;?>
+        </table>
+    </fieldset>
+    <?php endif;?>
     <fieldset>
         <legend>Messages from Fastaval</legend>
         <?php 
@@ -103,13 +116,9 @@ If you have any questions regarding the details here, you can e-mail us at <a st
                 continue;
             }
 
-            // if ($activity->hidden === 'ja') {
-            //     continue;
-            // }
-
             $dates[$date][] = '
             <tr>
-                <td><strong>' . ($activity->wp_link ? '<a target="_blank" href="http://www.fastaval.dk/en/?p=' . $activity->wp_link . '">' : '') . e($activity->title_en) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Player') . '</em>. ' . date('D H:i', strtotime($schedule->start)) . ' - ' . date('D H:i', strtotime($schedule->slut)) . '</td></tr>
+                <td><strong>' . ($activity->wp_link ? '<a target="_blank" href="http://www.fastaval.dk/en/?p=' . $activity->wp_link . '">' : '') . e($activity->title_en) . ($activity->wp_link ? '</a>' : '') . ($activity->type != 'ottoviteter' ? '</strong> &mdash; <em>' . ($plads->type == 'spilleder' ? 'Gamemaster' : 'Player') . '</em>. ': ' ') . date('D H:i', strtotime($schedule->start)) . ' - ' . date('D H:i', strtotime($schedule->slut)) . '</td></tr>
 ';
 
             foreach ($schedule->getMultiBlok() as $block) {

@@ -11,7 +11,8 @@ td.label {
     font-weight: bold;
 }
 
-#food-table td.label {
+#food-table td.label,
+#sleep-table td.label {
     width: 1em;
     white-space: nowrap;
     padding-right: 1em;
