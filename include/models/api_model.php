@@ -1616,29 +1616,28 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
             $access = 0;
 
             switch ($sleep) {
-            case 1:
-                $name    = 'Store sovesal';
-                $area_id = 68;
-                $access  = 1;
-                break;
+                case 1:
+                    $name    = 'Store sovesal';
+                    $area_id = 68;
+                    $access  = 1;
+                    break;
 
-            case 2:
-                $name    = 'Arrangørsovesal';
-                $area_id = 66;
-                $access  = 1;
-                break;
+                case 2:
+                    $name    = 'Arrangørsovesal';
+                    $area_id = 66;
+                    $access  = 1;
+                    break;
 
-            default:
-                $name    = '';
-                $area_id = 0;
+                default:
+                    $name    = '';
+                    $area_id = 0;
             }
 
             if ($sleep_data) {
                 $room_data = reset($sleep_data);
                 $access    = 1;
-                $name      = $room_data['room']->beskrivelse;
+                $name      = '​'.$room_data['room']->beskrivelse;
                 $area_id   = $room_data['room']->id;
-
             }
 
             $sleep = array(
@@ -1725,7 +1724,7 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
             $activity  = $schedule->getAktivitet();
             $room_name = '​'.$schedule->getRoom();
 
-            if ($activity->hidden === 'ja' || ($version == 1 && $activity->type == 'system')) {
+            if (($version == 1 && $activity->type == 'system')) {
                 continue;
             }
 
