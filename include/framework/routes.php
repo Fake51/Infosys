@@ -156,6 +156,9 @@ class Routes
 
         $this->routes['anonymize_participants']                     = array('url' => 'participant/anonymize', 'controller' => 'Participant', 'method' => 'anonymizeParticipants');
 
+        // New mail sender
+        $this->routes['send_setup_mail']                            = array('url' => 'mail/sendsetupmail', 'controller' => 'Mail', 'method' => 'sendSetupMail');
+        
         // Misc mail
         $this->routes['send_welcome_mail']                          = array('url' => 'participant/sendwelcomemail', 'controller' => 'Participant', 'method' => 'sendWelcomeMail');
         $this->routes['send_review_mail']                           = array('url' => 'participant/sendreviewmail', 'controller' => 'Participant', 'method' => 'sendReviewMail');
@@ -397,7 +400,7 @@ class Routes
         $this->routes['api_user_schedules_v2']   = array('url' => 'api/v2/user/:id:', 'controller' => 'Api', 'method' => 'getUserScheduleV2');
         $this->routes['api_user_data_v']         = array('url' => 'api/v:version:/user-data/:email:', 'controller' => 'Api', 'method' => 'getUserDataVersioned');
         $this->routes['api_user_data']           = array('url' => 'api/v2/user-data/:email:', 'controller' => 'Api', 'method' => 'getUserData');
-        $this->routes['api_get_messages']        = array('url' => 'api/messages/:email:', 'controller' => 'Api', 'method' => 'getUserMessages');
+        $this->routes['api_get_messages']        = array('url' => 'api/messages/:id:', 'controller' => 'Api', 'method' => 'getUserMessages');
         $this->routes['api_user_register']       = array('url' => 'api/user/:id:/register', 'controller' => 'Api', 'method' => 'registerApp');
         $this->routes['api_user_unregister']     = array('url' => 'api/user/:id:/unregister', 'controller' => 'Api', 'method' => 'unregisterApp');
         $this->routes['api_user_data_v']         = array('url' => 'api/v:version:/confirmation-data', 'controller' => 'Api', 'method' => 'getConfirmationData');
