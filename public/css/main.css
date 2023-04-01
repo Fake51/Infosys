@@ -806,8 +806,16 @@ p.aktivitet-graph-figur {
     background-color: #44dddd;
     color: #ffffff;
 }
-p.aktivitet-graph-dag5, p.aktivitet-graph-workshop {
+p.aktivitet-graph-dag5,
+p.aktivitet-graph-workshop,
+p.aktivitet-graph-ottoviteter
+{
     background-color: #dddd44;
+    color: #ffffff;
+}
+
+p.aktivitet-graph-junior {
+    background-color: lightgreen;
     color: #ffffff;
 }
 
