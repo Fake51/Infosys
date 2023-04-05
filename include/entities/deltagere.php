@@ -1190,14 +1190,7 @@ class Deltagere extends DBObject implements AgeFulfilment
      */
     public function createPass()
     {
-        $base = implode('', array_merge(range('a', 'z'), range('A', 'Z')));
-        $pass = '';
-        for ($i = 0; $i < 8; $i++)
-        {
-            $pass .= $base[mt_rand(0, strlen($base) - 1)];
-        }
-        $this->password = $pass;
-        $this->passwordCleartext = $pass;
+        $this->password = sprintf('%06d', mt_rand(0, 999999));
     }
 
     /**

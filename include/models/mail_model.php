@@ -21,6 +21,14 @@ class MailModel extends Model {
           }
         }
         break;
+
+      case 'fixpass':
+        foreach ($participants as $id => $participant) {
+          if (preg_match("/\d{6}/", $participant->password)) {
+            unset($participants[$id]);
+          }
+        }
+        break;
     }
 
     return $participants;

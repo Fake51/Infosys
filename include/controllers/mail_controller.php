@@ -4,6 +4,7 @@ class MailController extends Controller {
 
   static protected $enabled_types = [
     'setup' => true,
+    'fixpass' => true,
   ];
 
   public function sendSetupMail() {
@@ -17,6 +18,27 @@ class MailController extends Controller {
     ];
 
     $this->sendBatchMail('setup', $title, $recipients);
+  }
+
+  public function fixPasswords() {
+    $recipients = $this->model->getRecipients('fixpass', 0);
+
+    echo "Updating participant passwords for ".count($recipients)." participants<br>";
+    die('Password safety');
+
+    foreach ($recipients as $participant) {
+      $participant->createPass();
+      $participant->update();
+      echo $participant->id ."<br>";
+    }
+
+    $year = $this->getConYear();
+    $title = [
+      'da' => "Ny kode til Fastaval $year",
+      'en' => "New passcode for Fastaval $year"
+    ];
+
+    $this->sendBatchMail('fixpass', $title, $recipients, ['password']);
   }
 
   private function sendBatchMail($type, $title, $recipients, $info = []) {
@@ -45,26 +67,23 @@ class MailController extends Controller {
       $this->page->name = $recipient->getName();
       foreach ($info as $field) {
         if (is_string($field)) {
-          $this->page->info[$field] = $recipient->$field;
+          $page_info[$field] = $recipient->$field;
         }
       }
+      $this->page->info = $page_info;
       
       $mail = new Mail($this->config);
-
       $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
           ->setRecipient($recipient->email)
           ->setSubject($title[$lang])
           ->setBodyFromPage($this->page);
-
       $mail->send();
 
       $this->log("System sent $type mail to participant (ID: $recipient->id )", 'Mail', null);
-
       $count++;
     }
 
     $this->log("Finished sending $type mail to $count participants", 'Mail', null);
-
     exit;
   }
 }
