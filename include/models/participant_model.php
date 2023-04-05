@@ -1769,7 +1769,7 @@ SQL;
         }
 
         // Fix column names, convert foreign key columns and set joins
-        $join = "";
+        $join = $group = "";
         foreach ($columns as $id => $column) {
             if ($column == 'navn') continue; // Don't mess with the name column
 
@@ -1825,8 +1825,7 @@ SQL;
             }
         }
 
-        $where = '';
-
+        $where = $having = '';
         if ($get->sSearch != "") {
             if ($group == "") {
                 $where = "WHERE (";
