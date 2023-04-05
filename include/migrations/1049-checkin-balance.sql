@@ -1,0 +1,1 @@
+ALTER TABLE deltagere ADD checkin_balance INT DEFAULT NULL;

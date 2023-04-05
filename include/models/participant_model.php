@@ -1652,8 +1652,8 @@ SQL;
                 $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skal have <strong>' . ($deltager->betalt_beloeb - $bill) . ' kr. tilbage.</strong><input type="hidden" class="previously-paid" value="' . intval($deltager->betalt_beloeb) . '"/></span>';
             }
 
+            $deltager->checkin_balance = $bill - $deltager->betalt_beloeb;
             $deltager->betalt_beloeb = $bill;
-
         }
 
         if ($vouchers) {
@@ -1715,6 +1715,7 @@ SQL;
 
         if (strlen($post->previously_paid)) {
             $deltager->betalt_beloeb = intval($post->previously_paid);
+            $deltager->checkin_balance = null;
         }
 
         $deltager->checkin_time = '0000-00-00 00:00:00';
