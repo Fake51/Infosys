@@ -1073,12 +1073,22 @@ var BSCafe = (function ($, window) {
                     module.elements.$notes.val(module.noteText);
                 },
                 fillStats = function (stats, $container) {
-                    var $items = [],
-                        heading;
+                    var $items = [];
 
-                    for (heading in stats) {
-                        if (stats.hasOwnProperty(heading)) {
-                            $items.push($('<dt data-sort="' + heading + '">' + heading + '</dt><dd>' + stats[heading] + '</dd>'));
+                    for (const key in stats) {
+                        if (stats.hasOwnProperty(key)) {
+                            let category = stats[key];
+                            let sort = category.sort ?? key;
+                            let heading = category.heading ?? key;
+                            if (!category.list) {
+                                $items.push($('<dt data-sort="' + sort + '">' + heading + '</dt><dd>' + category + '</dd>'));
+                            } else {
+                                let item_html = `<dt data-sort="${sort}">${heading}</dt>`;
+                                for (const item of category.list) {
+                                    item_html += `<dd>${item.name}</dd>`;
+                                }
+                                $items.push($(item_html));
+                            }
                         }
                     }
 
