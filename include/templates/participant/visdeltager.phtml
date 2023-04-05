@@ -125,6 +125,7 @@ $this->registerLateLoadJS('participant.js');
                 <tr>
                     <td class='label'><b>Tilmeldt:</b> </td><td><?php if ($this->late_signup) :?><span style='color: #ffffff;background-color: #ff0000;'><?php endif; echo date('Y-m-d', strtotime($this->deltager->signed_up));?></span></td>
                     <td class='label'><b>Checked in:</b> </td><td class="checkin-time"><?= $this->deltager->checkin_time === '0000-00-00 00:00:00' ? 'Ikke tjekket ind' : date('Y-m-d H:i', strtotime($this->deltager->checkin_time))?></td>
+                    <td class='label'><b>Afregnet ved check-in:</b> </td><td id="checkin-balance"><?= $this->deltager->checkin_balance === null ? 'Ikke tjekket ind' : $this->deltager->checkin_balance?></td>
                 </tr>
                 <tr>
                     <td colspan='6'><hr/></td>
@@ -463,8 +464,7 @@ $this->registerLateLoadJS('participant.js');
 <script type="text/template" id="checkin-template">
 <div class="inner">
     <p>Deltageren har et udestående med Fastaval.</p>
-    <h2>:money:,-</h2>
-    <h2>:vouchers: voucher(s)</h2>
+    <h2>:money:</h2>
     <hr/>
     <a class="btn btn-success continue" href="javascript:void(0);">Marker betalt og fortsæt</a>
     <a class="btn btn-danger cancel" href="javascript:void(0);">Fortryd</a>
