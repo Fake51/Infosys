@@ -1715,6 +1715,7 @@ SQL;
 
         if (strlen($post->previously_paid)) {
             $deltager->betalt_beloeb = intval($post->previously_paid);
+            $deltager->checkin_balance = null;
         }
 
         $deltager->checkin_time = '0000-00-00 00:00:00';
