@@ -1,0 +1,1 @@
+ALTER TABLE wear ADD is_required boolean; 

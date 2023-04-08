@@ -1,0 +1,227 @@
+body {
+  min-width: unset;
+}
+/*---------------------------------------------------------
+Settings
+---------------------------------------------------------*/
+div#page-admin-container {
+  --selection-color: rgba(0,0,255,.5);
+  --hover-color: rgba(0,0,255,.1);
+  --tab-border: 2px;
+}
+/*---------------------------------------------------------
+Toolbar
+---------------------------------------------------------*/
+div#page-admin-toolbar {
+  position: sticky;
+  top: 0px;
+  border: 1px black solid;
+  border-radius: 3px;
+  z-index: 1;
+  padding: 5px;
+  background-color: white;
+  display: flex;
+  gap: 5px;
+}
+
+div#page-admin-toolbar > * {
+  margin: 0px;
+}
+
+div#page-admin-toolbar button{
+  background-color: #fff;
+  border: 1px solid #ccc;
+  height: 30px;
+  border-radius: 4px;
+  font-size: 1.2em;
+  padding: 0px .5em;
+}
+
+div#page-admin-toolbar button#bold{
+  font-weight: bold;
+}
+/*---------------------------------------------------------
+Main container
+---------------------------------------------------------*/
+div#page-admin-container {
+  margin: 2rem;
+}
+
+div#page-admin-container .title-wrapper h1 {
+  font-size: 3rem;
+  margin-bottom: 3rem;
+}
+
+div#page-admin-container i {
+  margin-right: .5em;
+  width: 29px;
+}
+
+div#page-admin-container i:before {
+  text-align: right;
+  width: 29px;
+  margin: 0;
+}
+
+/*---------------------------------------------------------
+Navigation
+---------------------------------------------------------*/
+div#page-admin-container nav {
+  display: flex;
+  justify-content: center;
+  border-bottom: var(--tab-border) solid black;
+  flex-wrap: wrap;
+}
+
+div#page-admin-container nav .nav-button {
+  border: var(--tab-border) solid black;
+  padding: .2em 1em;
+  background-color: lightgray;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: calc(-1 * var(--tab-border));
+  cursor: pointer;
+}
+
+div#page-admin-container nav .nav-button.selected {
+  border-bottom: none;
+  background-color: white;
+}
+
+/*---------------------------------------------------------
+Content section
+---------------------------------------------------------*/
+div#page-admin-container legend {
+  border: 0px;
+  margin: 0px;
+  padding: 5px;
+  position: relative;
+  box-sizing: border-box;
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+}
+
+div#page-admin-container .title-wrapper,
+div#page-admin-container .headline-wrapper,
+div#page-admin-container .item-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+div#page-admin-container .title-wrapper h1 {
+  font-size: 2rem;
+  line-height: 2rem;
+  margin-bottom: 0;
+}
+
+div#page-admin-container .headline-wrapper h2 {
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+}
+
+div#page-admin-container .item-wrapper p {
+  margin: 2px 0px;
+}
+
+.changed {
+  border: 1px red solid;
+}
+
+.checkbox-label {
+  float: right;
+  margin-left: 1em;
+  position: relative;
+  z-index: 2;
+}
+
+div#page-admin-container .item-checkbox {
+  vertical-align: baseline;
+  margin-left: .3em;
+}
+/*---------------------------------------------------------
+Selection
+---------------------------------------------------------*/
+.hovering,
+.hovering > legend::before {
+  background-color: var(--hover-color);
+}
+
+legend.selected::before,
+.selected,
+.selected > legend::before {
+  border: 2px var(--selection-color) solid;
+}
+.selected > legend::before {
+  border-bottom: 0px;
+}
+
+legend.selected::before,
+.selected > legend:first-of-type::before,
+.hovering > legend:first-of-type::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  margin: -5px;
+  box-sizing: border-box;
+  z-index: -1;
+}
+
+legend.selected::before {
+  height: 100%;
+}
+
+div#page-admin-container .editable {
+  cursor: text;
+  min-width: 1em;
+  display: inline-block;
+}
+div#page-admin-container .editable:hover {
+  background-color: unset;
+}
+/*---------------------------------------------------------
+Folding sections
+---------------------------------------------------------*/
+div.page-wrapper.closed  .signup-page-section{
+  display: none;
+}
+
+.fold-button {
+  float: right;
+  transform: scale(2);
+}
+
+i.fold-button::before{
+  margin: 0px;
+  content: '\e802';
+}
+
+.closed i.fold-button::before{
+  margin: 0px;
+  content: '\e801';
+}
+/*---------------------------------------------------------
+Context Menu
+---------------------------------------------------------*/
+div#contextmenu {
+  background-color: ghostwhite;
+  border: 1px black solid;
+  cursor: default;
+}
+
+div#contextmenu.closed {
+  display: none;
+}
+
+div#contextmenu.open {
+  display: block;
+  position: fixed;
+}
+
+div#contextmenu div{
+  padding: 2px 5px;
+}
+
+div#contextmenu div:hover{
+  background-color: lightgray;
+}

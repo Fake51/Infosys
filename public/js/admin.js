@@ -160,26 +160,42 @@ var users_object = {
             } else {
                 alert('Kan ikke sætte passwords på mindre end 6 chars.');
             }
+        }).on('click', '.action_changelabel', function() {
+            var self = $(this),
+                user_id = getUserId(self),
+                row     = self.closest('tr'),
+                input   = row.find('.new_label');
+
+            $.ajax({
+                url: that.public_uri + 'admin/ajax/changelabel/' + user_id,
+                type: 'post',
+                data: {'label': input.val()},
+                success: function(data){
+                    if (data != 'worked') {
+                        alert('Kunne ikke opdatere beskrivelse for brugeren.');
+                    }
+                }
+            });
         });
 
         $('#action_adduser').click(function() {
-            var self     = $(this),
-                row      = self.closest('tr'),
-                username = $('#user_name').val(),
+            var username = $('#user_name').val(),
+                label    = $('#user_label').val(),
                 password = $('#user_pass').val(),
                 role_id  = $('#role_select').val(),
-                template = $('.user-template').html(),
-                user,
-                element;
+                template = $('.user-template').html();
 
-            if (username && password.length > 5) {
+            if (username && label && password.length > 5) {
                 $.ajax({
                     url: that.public_uri + 'admin/ajax/createuser/',
                     type: 'post',
-                    data: {user: username, pass: password, role: role_id ? role_id : 0},
+                    data: {user: username, label: label, pass: password, role: role_id ? role_id : 0},
                     success: function(data) {
-                        user    = $.parseJSON(data);
-                        element = $('<tr>' + template.replace(/user-id-placeholder/, user.id).replace(/user-name-placeholder/, username) + '</tr>');
+                        var user    = $.parseJSON(data);
+                        var row     = template.replace(/user-id-placeholder/, user.id)
+                            .replace(/user-name-placeholder/, username)
+                            .replace(/user-label-placeholder/, label)
+                        var element = $('<tr>' + row + '</tr>');
                         $('#users-table tbody').append(element);
 
                         if (role_id) {
@@ -193,7 +209,13 @@ var users_object = {
                 });
 
             } else {
-                alert('Brugernavn eller kode er for kort eller mangler.');
+                var output = "";
+                output += username ? "" : "Brugernavn mangler\n";
+                output += password.length > 5 ? "" : "Kodeord er for kort\n";
+                output += label ? "" : "Label mangler\n";
+                output += output ? "" : "Der skete en fejl i forbindelse med validering af input.\n"
+                    +"Du må meget gerne fortælle at du har fået denne fejl til dem der står for infosys";
+                alert(output);
             }
         });
 

@@ -194,6 +194,11 @@ GROUP BY
 
         $return['Udlån lige nu'] = count($this->db->query($query));
 
+        $return['not_borrowed']['heading'] = "Har ikke været udlånt";
+        $return['not_borrowed']['sort'] = "z";
+        $query = "SELECT * FROM boardgames bg LEFT JOIN (SELECT boardgame_id, COUNT(*) FROM boardgameevents WHERE type = 'borrowed' GROUP BY boardgame_id) borrow_count ON bg.id = borrow_count.boardgame_id WHERE boardgame_id IS NULL";
+        $return['not_borrowed']['list'] = $this->db->query($query);
+
         return $return;
     }
 
@@ -296,6 +301,11 @@ GROUP BY
 
         $return['Udlån lige nu'] = count($this->db->query($query));
 
+        $return['not_borrowed']['heading'] = "Har ikke været udlånt";
+        $return['not_borrowed']['sort'] = "z";
+        $query = "SELECT * FROM boardgames bg LEFT JOIN (SELECT boardgame_id, COUNT(*) FROM boardgameevents WHERE type = 'borrowed' GROUP BY boardgame_id) borrow_count ON bg.id = borrow_count.boardgame_id WHERE boardgame_id IS NULL AND designergame = 1";
+        $return['not_borrowed']['list'] = $this->db->query($query);
+
         return $return;
     }
 
@@ -386,7 +396,7 @@ GROUP BY
             $participants[] = array(
                 'id'      => intval($participant->id),
                 'name'    => $participant->getName(),
-                'barcode' => $participant->getEan8Number(),
+                'barcode' => $participant->getEan8Number($this->getConYear()),
             );
         }
 

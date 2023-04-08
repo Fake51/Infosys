@@ -239,7 +239,7 @@ HAVING
                         'afvikling_id' => intval($afvikling->id),
                         'aktivitet_id' => intval($res->id),
                         'lokale_id'    => $lokale ? $lokale->id : '',
-                        'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
+                        'lokale_navn'  => $lokale ? '​'.$lokale->beskrivelse : '',
                         'start'        => $this->makeJsonTimestamp($afvikling->start, $app_output),
                         'end'          => $this->makeJsonTimestamp($afvikling->slut, $app_output),
                         'linked'       => 0,
@@ -260,7 +260,7 @@ HAVING
                                     'afvikling_id' => intval($multi->id) . '00' . intval($afvikling->id),
                                     'aktivitet_id' => intval($res->id),
                                     'lokale_id'    => $lokale ? $lokale->id : '',
-                                    'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
+                                    'lokale_navn'  => $lokale ? '​'.$lokale->beskrivelse : '',
                                     'start'        => $this->makeJsonTimestamp($multi->start, $app_output),
                                     'end'          => $this->makeJsonTimestamp($multi->slut, $app_output),
                                     'linked'       => $afvikling->id,
@@ -323,7 +323,7 @@ HAVING
                         'afvikling_id' => intval($afvikling->id),
                         'aktivitet_id' => intval($res->id),
                         'lokale_id'    => $lokale ? $lokale->id : '',
-                        'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
+                        'lokale_navn'  => $lokale ? '​'.$lokale->beskrivelse : '',
                         'start'        => $this->makeJsonTimestamp($afvikling->start),
                         'end'          => $this->makeJsonTimestamp($afvikling->slut),
                         'linked'       => 0,
@@ -338,7 +338,7 @@ HAVING
                                     'afvikling_id' => intval($multi->id) . '00' . intval($afvikling->id),
                                     'aktivitet_id' => intval($res->id),
                                     'lokale_id'    => $lokale ? $lokale->id : '',
-                                    'lokale_navn'  => $lokale ? $lokale->beskrivelse : '',
+                                    'lokale_navn'  => $lokale ? '​'.$lokale->beskrivelse : '',
                                     'start' => $this->makeJsonTimestamp($multi->start),
                                     'end' => $this->makeJsonTimestamp($multi->slut),
                                     'linked' => $afvikling->id,
@@ -352,7 +352,9 @@ HAVING
             }
         }
 
-        usort($return, create_function('$a, $b', 'return $a["afvikling_id"] - $b["afvikling_id"];'));
+        usort($return, function($a, $b) {
+            return $a["afvikling_id"] - $b["afvikling_id"];
+        });
 
         return $return;
     }
@@ -516,15 +518,18 @@ HAVING
             if ($time > 04 && $time < 12) {
                 $period = date('Y-m-d ', $parsed) . '04-12';
 
-            } elseif ($time >= 12 && $time <= 17) {
+            } elseif ($time >= 12 && $time < 16) {
                 $period = date('Y-m-d ', $parsed) . '12-17';
 
+            } elseif ($time >= 16 && $time < 22) {
+                $period = date('Y-m-d ', $parsed) . '17-22';
+    
             } else {
-		if ($time <= 4) {
+		        if ($time <= 4) {
                     $parsed = strtotime($shift->start . ' - 4 hours');
                 }
 
-                $period = date('Y-m-d ', $parsed) . '17-04';
+                $period = date('Y-m-d ', $parsed) . '22-04';
 
             }
 
@@ -676,6 +681,7 @@ HAVING
 
         $result = $this->createEntity('Wear')->findBySelectMany($select);
         $return = array();
+        $return[0] = ['sizes' => $this->createEntity('Wear')->getWearSizes()];
 
         if ($result) {
 
@@ -692,7 +698,8 @@ HAVING
             foreach ($result as $res) {
                 $act = array(
                     'wear_id'    => intval($res->id),
-                    'size_range' => $res->size_range,
+                    'min_size'   => $res->min_size,
+                    'max_size'   => $res->max_size,
                     'title_da'   => $res->navn,
                     'title_en'   => $res->title_en,
                     'prices'     => array(),
@@ -771,11 +778,10 @@ HAVING
 
         $deltager                    = $this->createEntity('Deltagere');
         $deltager->email             = $data['email'];
-        $deltager->fornavn           = $deltager->efternavn = $deltager->adresse1 = $deltager->postnummer = $deltager->by = $deltager->land = '';
+        $deltager->fornavn           = $deltager->efternavn = $deltager->adresse1 = $deltager->postnummer = $deltager->by = '';
         $deltager->medical_note      = $deltager->gcm_id = '';
         $deltager->password          = sprintf('%06d', mt_rand(100, 1000000));
         $deltager->brugerkategori_id = $bk->id;
-        $deltager->gender            = 'm';
         $deltager->alder             = 0;
         $deltager->birthdate         = '0000-00-00';
         $deltager->annulled          = 'nej';
@@ -819,7 +825,6 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             }
 
             $deltager->removeAllWear();
-            //$this->db->exec("DELETE FROM deltagere_wear WHERE deltager_id = ?", $deltager->id);
 
             foreach ($json['wear'] as $wear) {
                 $wearprice = $this->createEntity('WearPriser');
@@ -837,9 +842,8 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
 
                 }
 
+                // Must be updated if needed
                 $deltager->setWearOrder($wearprice, $wear['size'], $wear['amount']);
-
-//                $this->db->exec("INSERT INTO deltagere_wear (deltager_id, wearpris_id, size, antal) VALUES (?, ?, ?, ?)", $deltager->id, $wearprice->id, $wear['size'], $wear['amount']);
             }
 
         } catch (Exception $e) {
@@ -1062,7 +1066,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         }
 
         if (isset($data['session'])) {
-            file_put_contents(__DIR__ . '/../signup-data/session-' . $participant->id, $data['session']);
+            file_put_contents(SIGNUP_FOLDER.'data/session-' . $participant->id, $data['session']);
         }
 
         if (empty($data['participant'])) {
@@ -1093,8 +1097,10 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         } else {
             return array(
                 array(
-                    'status'     => 'ok',
-                    'failReason' => null,
+                    'status'            => 'ok',
+                    'failReason'        => null,
+                    'total'             => $participant->calcSignupTotal(),
+                    'participantid'    => $participant->id,
                 ),
                 $participant,
             );
@@ -1115,7 +1121,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         $this->db->exec('DELETE FROM deltagere_madtider WHERE deltager_id = ?', $participant->id);
         $this->db->exec('DELETE FROM deltagere_gdstilmeldinger WHERE deltager_id = ?', $participant->id);
         $this->db->exec('DELETE FROM deltagere_indgang WHERE deltager_id = ?', $participant->id);
-        $this->db->exec('DELETE FROM deltagere_wear WHERE deltager_id = ?', $participant->id);
+        $this->db->exec('DELETE FROM deltagere_wear_order WHERE deltager_id = ?', $participant->id);
     }
 
     /**
@@ -1132,7 +1138,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         $fields = array(
             'fornavn',
             'efternavn',
-            'gender',
+            'nickname',
             'birthdate',
             'alder',
             'email',
@@ -1155,6 +1161,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'rig_onkel',
             'arbejdsomraade',
             'hemmelig_onkel',
+            'financial_struggle',
             'ready_mandag',
             'ready_tirsdag',
             'oprydning_tirsdag',
@@ -1489,7 +1496,6 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
         $return = array(
             'fornavn' => $participant->fornavn,
             'efternavn' => $participant->efternavn,
-            'gender' => $participant->gender,
             'package_gds' => $participant->package_gds,
             'birthdate' => $participant->birthdate,
             'alder' => $participant->alder,
@@ -1521,7 +1527,7 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'desired_activities' => $participant->desired_activities,
             'desired_diy_shifts' => $participant->desired_diy_shifts,
             'sovesal' => $participant->sovesal,
-            'sober_sleeping' => $participant->sovesal,
+            'sober_sleeping' => $participant->sober_sleeping,
             'ungdomsskole' => $participant->ungdomsskole,
             'original_price' => $participant->original_price,
             'scenarie' => $participant->scenarie,
@@ -1529,13 +1535,13 @@ INSERT INTO participantpaymenthashes SET participant_id = ?, hash = ? ON DUPLICA
             'interpreter' => $participant->interpreter,
             'skills' => $participant->skills,
             'brugerkategori' => $participant->getBrugerKategori()->navn,
-            'payment_url' => $this->url('participant_payment', array('hash' => $this->getParticipantPaymentHash($participant))),
+            //'payment_url' => $this->url('participant_payment', array('hash' => $this->getParticipantPaymentHash($participant))),
             'id' => $participant->id,
             'session' => '',
         );
 
-        if (is_file(__DIR__ . '/../signup-data/session-' . $participant->id)) {
-            $return['session'] = file_get_contents(__DIR__ . '/../signup-data/session-' . $participant->id);
+        if (is_file(SIGNUP_FOLDER.'data/session-' . $participant->id)) {
+            $return['session'] = file_get_contents(SIGNUP_FOLDER.'data/session-' . $participant->id);
         }
 
         return $return;
@@ -1610,29 +1616,28 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
             $access = 0;
 
             switch ($sleep) {
-            case 1:
-                $name    = 'Store sovesal';
-                $area_id = 68;
-                $access  = 1;
-                break;
+                case 1:
+                    $name    = 'Store sovesal';
+                    $area_id = 68;
+                    $access  = 1;
+                    break;
 
-            case 2:
-                $name    = 'Arrangørsovesal';
-                $area_id = 66;
-                $access  = 1;
-                break;
+                case 2:
+                    $name    = 'Arrangørsovesal';
+                    $area_id = 66;
+                    $access  = 1;
+                    break;
 
-            default:
-                $name    = '';
-                $area_id = 0;
+                default:
+                    $name    = '';
+                    $area_id = 0;
             }
 
             if ($sleep_data) {
                 $room_data = reset($sleep_data);
                 $access    = 1;
-                $name      = $room_data['room']->beskrivelse;
+                $name      = '​'.$room_data['room']->beskrivelse;
                 $area_id   = $room_data['room']->id;
-
             }
 
             $sleep = array(
@@ -1660,7 +1665,7 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
         );
 
         if ($version >= 3) {
-            $return['barcode'] = $participant->getEan8Number();
+            $return['barcode'] = $participant->getEan8Number($this->getConYear());
         }
 
         if ($version >= 2) {
@@ -1672,9 +1677,8 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
 
             $item = array(
                 'amount'   => $wearorder->antal,
-                'size'     => $wearorder->size,
-                'title_da' => $wear->navn,
-                'title_en' => $wear->title_en,
+                'title_da' => $wearorder->getWearName('da'),
+                'title_en' => $wearorder->getWearName('en'),
                 'wear_id'  => $wear->id,
             );
 
@@ -1711,15 +1715,16 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
                 'time_id'  => $foodtime->id,
                 'text_da'  => $foodtime->description_da,
                 'text_en'  => $foodtime->description_en,
+                'received' => $combined[$foodtime->id]->received,
             );
         }
 
         foreach ($participant->getPladser() as $play) {
             $schedule  = $play->getAfvikling();
             $activity  = $schedule->getAktivitet();
-            $room_name = $schedule->getRoom();
+            $room_name = '​'.$schedule->getRoom();
 
-            if ($activity->hidden === 'ja' || ($version == 1 && $activity->type == 'system')) {
+            if (($version == 1 && $activity->type == 'system')) {
                 continue;
             }
 
@@ -1742,13 +1747,12 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
                 $room = $play->type === 'spilleder' ? $play->getLokale() : false;
 
                 $item['play_room_id'] = $room ? 'R' . $room->id : '';
-                $item['play_room_name'] = $room ? $room->beskrivelse : '';
+                $item['play_room_name'] = $room ? '​'.$room->beskrivelse : '';
 
                 $room = $schedule->getRoomObject();
 
                 $item['meet_room_id'] = $room ? 'R' . $room->id : '';
-                $item['meet_room_name'] = $room ? $room->beskrivelse : '';
-
+                $item['meet_room_name'] = $room ? '​'.$room->beskrivelse : '';
             }
 
             $return['scheduling'][] = $item;
@@ -1770,10 +1774,16 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
                 'stop'          => strtotime($shift->slut),
             );
 
+            if ($version >= 3) {
+                $item['play_room_id'] = '';
+                $item['play_room_name'] = '';
+                $item['meet_room_id'] = '';
+                $item['meet_room_name'] = '';
+            }
         }
 
         usort($return['scheduling'], function($a, $b) {
-            return $a['start']['timestamp'] - $b['start']['timestamp'];
+            return $a['start'] - $b['start'];
         });
 
         return $return;
@@ -1857,16 +1867,25 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
         $participant->update();
 
         if ($participant->speaksDanish()) {
-            $message = 'Du vil fremover modtage notifikationer via Fastavappen';
-            $title   = 'Fastavappen notifikation';
+            $message = [
+                'body' => 'Du vil fremover modtage notifikationer via Fastavappen',
+                'title' => 'Fastavappen notifikation',
+            ];
 
         } else {
-            $message = 'You will from now on receive notification via the Fastaval App';
-            $title   = 'Fastaval app notification';
+            $message = [
+                'body' => 'You will from now on receive notification via the Fastaval App',
+                'title' => 'Fastaval app notification',
+            ];
         }
 
-        $result = $participant->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $message, $title);
-        $this->log('Sent android notification to participant #' . $participant->id . '. Result: ' . $result, 'App', null);
+        $firebase = new Firebase($this->config);
+        $success = $firebase->sendMessage($message, $participant->gcm_id);
+        if (!$success) {
+            $this->fileLog("Error sending firebase message: ".print_r($firebase->getResponse(), true));
+            $error = $firebase->getError()['message'];
+        }
+        $this->log('Sent Firebase notification to participant #' . $participant->id . '. Result: ' . ($success ? 'success' : $error), 'App', null);
 
         return $this;
     }
@@ -1910,5 +1929,19 @@ SELECT hash FROM participantpaymenthashes WHERE participant_id = ?
         }
 
         return $output;
+    }
+
+
+    public function getUserMessages(Deltagere $participant) {
+        $query = "SELECT text_da, text_en, send_time FROM messages AS m JOIN participant_messages AS pm ON m.id = pm.message_id WHERE pm.participant_id = ?";
+        $result = [];
+        foreach ($this->db->query($query, [$participant->id]) as $m) {
+            $result[] = [
+                'send_time' => strtotime($m['send_time']),
+                'en' => $m['text_en'],
+                'da' => $m['text_da']
+            ];
+        }
+        return $result;
     }
 }

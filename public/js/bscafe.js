@@ -339,12 +339,12 @@ var BSCafe = (function ($, window) {
         listBorrowedGame: function (game, participant, comment, time, toReplace) {
             var template         = module.templates.gameInPlayTemplate,
                 html             = '',
-                participantName  = participant.name || participant.toString();
+                participantText  = participant.name ? `ID: ${participant.id}, ${participant.name}` : participant.toString();
 
             html = template.replace(/:game-title:/g, game.name)
                 .replace(/:data-id:/g, game.id)
                 .replace(/:game-owner:/g, game.owner)
-                .replace(/:borrower:/g, participantName)
+                .replace(/:borrower:/g, participantText)
                 .replace(/:time:/g, time);
 
             if (game.comment) {
@@ -473,15 +473,19 @@ var BSCafe = (function ($, window) {
 
             return date.getFullYear() + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day + ' ' + (hour < 10 ? '0' : '') + hour + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
         },
-        getTime: function (timestamp) {
-            var date    = timestamp ? new Date(timestamp) : new Date(),
-                hours   = date.getHours(),
-                minutes = date.getMinutes();
-
-            hours   = hours < 10 ? '0' + hours : hours;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-
-            return hours + '.' + minutes;
+        getTime: function (date_time) {
+            //TODO This need to change if the database server doesn't run GMT
+            if (date_time) {
+                date_time = date_time.replace(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})/, "$1T$2Z");
+            }
+            date_time = date_time ? new Date(date_time) : new Date()
+            
+            var time_string   = date_time.getFullYear() + "-";
+            time_string      += ("" + (date_time.getMonth()+1)).padStart(2, '0') + "-";
+            time_string      += ("" + date_time.getDate()).padStart(2, '0') + " ";
+            time_string      += date_time.toLocaleTimeString("da-DK").replaceAll(".",":");
+            
+            return time_string;
         },
         getGame: function (gameId) {
             var i      = 0,
@@ -898,6 +902,10 @@ var BSCafe = (function ($, window) {
                         }
 
                         temp = $.extend({barcode: '', designergame: false}, temp);
+                        if (temp.borrowed) {
+                            // console.log(temp.borrowed.timestamp);
+                            temp.borrowed.timestamp = module.getTime(temp.borrowed.timestamp);
+                        }
 
                         parsed.push(temp);
                         names[temp.owner] = true;
@@ -1065,12 +1073,22 @@ var BSCafe = (function ($, window) {
                     module.elements.$notes.val(module.noteText);
                 },
                 fillStats = function (stats, $container) {
-                    var $items = [],
-                        heading;
+                    var $items = [];
 
-                    for (heading in stats) {
-                        if (stats.hasOwnProperty(heading)) {
-                            $items.push($('<dt data-sort="' + heading + '">' + heading + '</dt><dd>' + stats[heading] + '</dd>'));
+                    for (const key in stats) {
+                        if (stats.hasOwnProperty(key)) {
+                            let category = stats[key];
+                            let sort = category.sort ?? key;
+                            let heading = category.heading ?? key;
+                            if (!category.list) {
+                                $items.push($('<dt data-sort="' + sort + '">' + heading + '</dt><dd>' + category + '</dd>'));
+                            } else {
+                                let item_html = `<dt data-sort="${sort}">${heading}</dt>`;
+                                for (const item of category.list) {
+                                    item_html += `<dd>${item.name}</dd>`;
+                                }
+                                $items.push($(item_html));
+                            }
                         }
                     }
 

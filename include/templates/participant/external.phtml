@@ -7,7 +7,7 @@
             <tr>
                 <td class='label'>Id:</td>
                 <td class="w33"><?= $this->deltager->id;?></td>
-                <td rowspan='4'><p style='margin: 5px; padding: 5px; background-color: #bb3333; color: #ffffff;'>Vær opmærksom på at ingenting ligger helt fast før Fastaval officielt starter. Oplysningerne på denne side <b>kan derfor godt ændre sig</b> indtil da - bl.a. vil GDS-detaljer blive opdateret inden Fastaval.</p><p style='margin: 5px; padding: 5px; background-color: #bb3333; color: #ffffff;'>
+                <td rowspan='4'><p style='margin: 5px; padding: 5px; background-color: #bb3333; color: #ffffff;'>Vær opmærksom på at ingenting ligger helt fast før Fastaval officielt starter. Oplysningerne på denne side <b>kan derfor godt ændre sig</b> indtil da - bl.a. vil helteopgaver blive opdateret inden Fastaval.</p><p style='margin: 5px; padding: 5px; background-color: #bb3333; color: #ffffff;'>
 Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a style='color: #000000;' href='mailto:info@fastaval.dk'>info@fastaval.dk</a>.</p>
 </td>
             </tr>
@@ -38,19 +38,15 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
                 <td colspan='6'><hr/></td>
             </tr>
             <tr>
-                <td class='label'>SuperGM:</td>
-                <td><?= e($this->deltager->supergm);?></td>
-                <td class='label'>SuperGDS:</td>
-                <td><?= e($this->deltager->supergds);?></td>
-                <td class='label'>Flere GDS-vagter:</td>
-                <td><?= e($this->deltager->flere_gdsvagter);?></td>
+                <td class='label'>Super Spilleder:</td>
+                <td><?=$this->deltager->supergm ?? 'nej'?></td>
+                <td class='label'>Super Regelformidler:</td>
+                <td><?=$this->deltager->super_rules_guide ?? 'nej'?></td>
             </tr>
             <tr>
-                <td class='label'>Arrangør næste år:</td>
-                <td><?= e($this->deltager->arrangoer_naeste_aar);?></td>
                 <td class='label'>Ønsket antal aktiviteter:</td>
                 <td><?= ($this->deltager->desired_activities ? e($this->deltager->desired_activities) : 'Ikke specificeret');?></td>
-                <td class='label'>Ønsket antal GDS:</td>
+                <td class='label'>Ønsket antal helteopgaver:</td>
                 <td><?= ($this->deltager->desired_diy_shifts ? e($this->deltager->desired_diy_shifts) : 'Ikke specificeret');?></td>
             </tr>
             <tr>
@@ -62,20 +58,43 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
                 <td colspan="5"><?= e($this->deltager->ungdomsskole);?></td>
             </tr>
             <?php endif;?>
-            <?php if (!empty($this->deltager->arbejdsomraade)) : ?>
+            <?php if (!empty($this->deltager->work_area)) : ?>
             <tr>
                 <td class='label'>Arrangør-område:</td>
                 <td colspan="5"><?= e($this->deltager->arbejdsomraade);?></td>
             </tr>
             <?php endif;?>
-            <?php if (!empty($this->deltager->scenarie)) : ?>
+            <?php if (!empty($this->deltager->game_id)) : ?>
             <tr>
-                <td class='label'>Scenarie:</td>
+                <td class='label'>Scenarie/Brætspil:</td>
                 <td colspan="5"><?= e($this->deltager->scenarie);?></td>
             </tr>
             <?php endif;?>
         </tbody>
     </table>
+</fieldset>
+<?php if (!empty($this->sleep_data)) : ?>
+<fieldset>
+    <legend>Sovelokale</legend>
+    <table id="sleep-table">
+        <?php foreach ($this->sleep_data as $row) : ?>
+            <tr>
+                <td class="label"><?=danishDayNames(e($row['starts']))?> &rarr; <?=danishDayNames(e($row['ends']))?></td>
+                <td><?= e($row['room']->beskrivelse);?></td>
+            </tr>
+        <?php endforeach;?>
+    </table>
+</fieldset>
+<?php endif;?>
+<fieldset>
+    <legend>Beskeder fra Fastaval</legend>
+    <?php 
+        if(empty($this->deltager->beskeder)) {
+            echo "Du har ingen beskeder fra Fastaval";
+        } else {
+            echo nl2br(htmlentities($this->deltager->beskeder, ENT_QUOTES, "UTF-8"));
+        }
+    ?>
 </fieldset>
 <fieldset>
     <legend>Tildelte aktiviteter</legend>
@@ -91,19 +110,23 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
             if ((strtotime($schedule->slut) - strtotime($schedule->start)) > 86400) {
                 $helcon[] = '
             <tr>
-                <td><strong>' . ($activity->wp_link ? '<a href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '') . e($activity->navn) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . e($plads->type) . '</em></td>
+                <td><strong>' . ($activity->wp_link ? '<a target="_blank" href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '') . e($activity->navn) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . e($plads->type) . '</em></td>
             </tr>
 ';
                 continue;
             }
 
-            if ($activity->hidden === 'ja') {
-                continue;
-            }
-            
             $dates[$date][] = '
             <tr>
-                <td><strong>' . ($activity->wp_link ? '<a href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '') . e($activity->navn) . ($activity->wp_link ? '</a>' : '') . '</strong> &mdash; <em>' . e($plads->type) . '</em>. ' . $this->replaceDayNames(date('D H:i', strtotime($schedule->start))) . ' - ' . $this->replaceDayNames(date('D H:i', strtotime($schedule->slut))) . '</td></tr>
+                <td>
+                    <strong>' . ($activity->wp_link ? '<a target="_blank" href="http://www.fastaval.dk/?p=' . $activity->wp_link . '">' : '')
+                    .e($activity->navn) 
+                    .($activity->wp_link ? '</a>' : '') .($activity->type != 'ottoviteter' ? '</strong> &mdash; <em>' . e($plads->type).'</em>. ' : ' ')
+                    .$this->replaceDayNames(date('D H:i', strtotime($schedule->start))) . ' - ' 
+                    .$this->replaceDayNames(date('D H:i', strtotime($schedule->slut))).' &mdash; '
+                    .$schedule->getLokale().'
+                </td>
+            </tr>
 ';
 
             foreach ($schedule->getMultiBlok() as $block) {
@@ -139,7 +162,7 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
     </table>
 </fieldset>
 <fieldset>
-    <legend>Tildelte GDS-vagter</legend>
+    <legend>Tildelte helteopgaver</legend>
     <table>
         <tbody>
         <?php
@@ -206,12 +229,23 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
     </fieldset>
     <fieldset class="float-left w33">
         <legend>Mad</legend>
-        <table>
+        <table id="food-table">
             <tbody>
                 <?php if (!empty($this->deltager_info['mad'])) :
                     foreach ($this->deltager_info['mad'] as $madtid) : ?>
                         <tr>
-                            <td class="label"><?= danishDayNames(date('D', strtotime($madtid->dato)));?></td>
+                            <?php
+                                $format = 'H:i';
+                                if ($madtid->isBreakfast()) {
+                                    $time_text = date($format, strtotime($madtid->dato));
+                                    $time_text .= " - ";
+                                    $time_text .= date($format, strtotime($madtid->dato) + 2*60*60);
+                                } else {
+                                    $time_text = $madtid->getHandoutTime($this->deltager, $format);
+                                }                                
+                            ?>
+                            <td class="label"><?=danishDayNames(date("D", strtotime($madtid->dato)))?></td>
+                            <td class="label"><?=$time_text?></td>
                             <td><?= e($madtid->getMad()->getCategory());?></td>
                         </tr>
                     <?php endforeach;
@@ -226,7 +260,7 @@ Hvis du har spørgsmål til dine detaljer her, så kan du maile til os på <a st
                 <?php if (!empty($this->deltager_info['wear'])) :
                     foreach ($this->deltager_info['wear'] as $wear) :?>
                         <tr>
-                            <td class="label"><?= e($wear->antal);?> <?= e($wear->getWearName());?>, size <?= e($wear->size);?></td>
+                            <td class="label"><?= e($wear->antal);?> <?= e($wear->getWearName('da', true));?></td>
                         </tr>
                     <?php endforeach;
                 endif;?>

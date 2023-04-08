@@ -326,13 +326,12 @@ class Infosys
     {
         header('HTTP/1.1 500 Fail');
 
-        $embedded = '';
-
         if ($error instanceof FrameworkException) {
             $error->logException();
-        } else {
-            $embedded = $error->getMessage();
         }
+
+        $embedded = "<!--".$error->getMessage()."-->";
+        $embedded .= "\n<!-- File:".$error->getFile()." Line:".$error->getLine()."-->";
 
         echo <<<HTML
 <!DOCTYPE html 
@@ -346,7 +345,7 @@ class Infosys
 <body><p>While loading the webpage, an error occurred and we're unfortunately unable to show
 you the site. Our apologies.<br /><br />The error has been logged, and will hopefully be fixed
 soon.</p>
-<!-- {$embedded} -->
+{$embedded}
 </body></html>
 HTML;
         exit();

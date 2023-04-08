@@ -30,7 +30,7 @@ class ApiModelTest extends \PHPUnit_Framework_TestCase
                  'participant' => [
                                     'fornavn'                       => 'test1',
                                     'efternavn'                     => 'test2',
-                                    'gender'                        => 'test3',
+                                    'nickname'                      => 'test3',
                                     'birthdate'                     => '1940-01-02',
                                     'alder'                         => 'test5',
                                     'email'                         => 'test6',

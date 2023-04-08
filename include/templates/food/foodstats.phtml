@@ -6,7 +6,15 @@
     <ul>
     <?php foreach ($stats as $day => $counts) :
         if (!($time = strtotime($day))) continue; ?>
-        <li><?php echo DanishDayNames(date('D, j', $time));?> &mdash; <strong><?php echo $counts['total'];?><?php if (isset($counts['udleveret'])) :?> - heraf <?php echo $counts['udleveret'];?> udleveret (<?= round($counts['udleveret'] / $counts['total'] * 100, 1);?>%)<?php endif;?></strong></li>
+        <li>
+            <?php echo DanishDayNames(date('D, j', $time));?> &mdash; 
+            <strong>
+                <?php echo $counts['total'];?>
+                <?php if (isset($counts['udleveret']) && isset($counts['total']) && $counts['total'] > 0) :?>
+                     - heraf <?php echo $counts['udleveret'];?> udleveret (<?= round($counts['udleveret'] / $counts['total'] * 100, 1);?>%)
+                <?php endif;?>
+            </strong>
+        </li>
     <?php endforeach;?>
     </ul>
 <?php endforeach;?>

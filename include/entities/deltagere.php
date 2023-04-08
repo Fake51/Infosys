@@ -45,53 +45,69 @@ class Deltagere extends DBObject implements AgeFulfilment
      */
     protected $human_readable_fieldnames = array(
         'id'                            => 'Id',
-        'gcm_id'                        => 'GCM ID',
-        'admin_note'                    => 'Admin note',
-        'arbejdsomraade'                => 'Arbejdsområde',
-        'arrangoer_naeste_aar'          => 'Arrangør igen',
-        'beskeder'                      => 'Besked fra FV',
-        'betalt_beloeb'                 => 'Betalt beløb',
-        'birthdate'                     => 'Fødselsdato',
-        'brugerkategori_id'             => 'Brugerkategori',
+        'fornavn'                       => 'Fornavn',
+        'efternavn'                     => 'Efternavn',
+        'alder'                         => 'Alder',
+        'email'                         => 'E-mail',
+//        'tlf'                           => 'Alt. telefon',
+        'mobiltlf'                      => 'Mobilnr.',
+        'postnummer'                    => 'Postnummer',
         'by'                            => 'By',
-        'checkin_time'                  => 'Checkin',
+        'land'                          => 'Land',
+        'medbringer_mobil'              => 'Medbringer mobil',
+        'sprog'                         => 'Sprog til aktiviteter',
+        'brugerkategori_id'             => 'Brugerkategori',
+        'forfatter'                     => 'Forfatter/Designer',
+//        'international'                 => 'International',
+//        'arrangoer_naeste_aar'          => 'Arrangør igen',
+        'betalt_beloeb'                 => 'Betalt beløb',
+        'admin_note'                    => 'Admin note',
+        'beskeder'                      => 'Besked fra FV',
         'created'                       => 'Oprettet',
+//        'flere_gdsvagter'               => 'Flere GDS-vagter',
+//        'supergds'                      => 'SuperGDS',
+//        'rig_onkel'                     => 'Rig onkel',
+        'work_area'                     => 'Arbejdsområde',
+        'game_id'                       => 'Scenarie/Brætspil',
+        'udeblevet'                     => 'Udeblevet',
+        'sovesal'                       => 'Arrangør sovesal',
+        'ungdomsskole'                  => 'Ungdomsskole/klub',
+//        'hemmelig_onkel'                => 'Hemmelig onkel',
+        'ready_mandag'                  => 'Mandags-hjælp - opsætning',
+        'ready_tirsdag'                 => 'Tirsdags-hjælp - opsætning',
+//        'may_contact'                   => 'Må kontaktes',
+//        'original_price'                => 'Oprindelig pris',
+        'paid_note'                     => 'Betalingsnote',
+        'checkin_time'                  => 'Checkin',
+        'desired_activities'            => 'Ønskede aktiviteter',
+        'birthdate'                     => 'Fødselsdato',
+//        'medical_note'                  => 'Helbreds note',
+//        'interpreter'                   => 'Simultantolk',
+//        'gcm_id'                        => 'GCM ID',
+//        'skills'                        => 'Skills',
         'updated'                       => 'Opdateret',
         'signed_up'                     => 'Tilmeldt',
         'annulled'                      => 'Annulleret',
-        'deltager_note'                 => 'Deltager beskeder',
-        'desired_activities'            => 'Ønskede aktiviteter',
-        'desired_diy_shifts'            => 'Ønskede GDS',
-        'efternavn'                     => 'Efternavn',
-        'email'                         => 'E-mail',
-        'flere_gdsvagter'               => 'Flere GDS-vagter',
-        'forfatter'                     => 'Forfatter',
-        'fornavn'                       => 'Fornavn',
-        'gender'                        => 'Køn',
-        'hemmelig_onkel'                => 'Hemmelig onkel',
-        'international'                 => 'International',
-        'interpreter'                   => 'Simultantolk',
-        'land'                          => 'Land',
-        'may_contact'                   => 'Må kontaktes',
-        'medbringer_mobil'              => 'Medbringer mobil',
-        'medical_note'                  => 'Helbreds note',
-        'mobiltlf'                      => 'Mobilnr.',
-        'original_price'                => 'Oprindelig pris',
-        'paid_note'                     => 'Betalingsnote',
-        'postnummer'                    => 'Postnummer',
-        'ready_mandag'                  => 'Mandags-hjælp - opsætning',
-        'ready_tirsdag'                 => 'Tirsdags-hjælp - opsætning',
-        'rig_onkel'                     => 'Rig onkel',
-        'scenarie'                      => 'Scenarie',
-        'sovesal'                       => 'Arrangør sovesal',
-        'sprog'                         => 'Sprog',
-        'supergds'                      => 'SuperGDS',
-        'supergm'                       => 'SuperGM',
-        'tlf'                           => 'Alt. telefon',
-        'udeblevet'                     => 'Udeblevet',
-        'skills'                        => 'Skills',
-        'ungdomsskole'                  => 'Ungdomsskole/klub',
+        'desired_diy_shifts'            => 'Helteopgaver, ønskede',
+        'nickname'                      => 'Kaldenavn',
+        'financial_struggle'            => 'Økonomisk støtte',
+        'main_lang'                     => 'Foretrukket sprog',
+        'country'                       => 'Land',
+        'supergm'                       => 'Super Spilleder',
+        'gm_max'                        => 'Max Spilleder',
+        'super_rules_guide'             => 'Super Regelformidler',
+        'rules_guide_max'               => 'Max Regelformidler',
+        'pronoun'                       => 'Pronomen',
+        'author'                        => 'Forfatter/Designer type',
+        'sleeping_area'                 => 'Ønskede soveområder',
+        'sober_sleeping'                => 'Ædru og stille sovesal',
     );
+
+    static protected $special_columns = [
+        'assigned_sleeping'             => 'Tildelt sovelokale(r)',
+        'has_hero_signup'               => 'Heltestyrken, tilmeldt',
+        'hero_task_count'               => 'Helteopgaver, tildelte',
+    ];
 
     /**
      * Contains display names for different notes
@@ -101,16 +117,59 @@ class Deltagere extends DBObject implements AgeFulfilment
     static protected $note_names = [
         'da' => [
             'comment' => 'Andre kommentarer',
-            'gds' => 'Kommentarer til GDS',
-            'junior_ward' => 'Værge kontakt'
+            'gds' => 'Kommentarer til Heltestyrken',
+            'junior_ward' => 'Kontakperson',
+            'junior_comment' => 'Kommentar til Fastaval Junior',
+            'sleeping' => 'Bemærkninger til soveplads',
         ],
         'en' => [
             'comment' => 'Other comments',
-            'gds' => 'Comments regarding GDS',
-            'junior_ward' => 'Ward contact'
+            'gds' => 'Comments regarding Hero tasks',
+            'junior_ward' => 'Contact',
+            'junior_comment' => 'Fastaval Junior Comment',
+            'sleeping' => 'Comments about sleeping area',
         ]
     ];
 
+    static protected $foreign_key_fields = [
+        'arbejdsomraade' => [
+            'key_field' => 'work_area',
+            'table' => 'organizer_categories',
+            'name' => 'name_da',
+            'key' => 'id' ,
+        ],
+        'land' => [
+            'key_field' => 'country',
+            'table' => 'countries',
+            'name' => 'name_da',
+            'key' => 'code' ,
+        ],
+        'scenarie' => [
+            'key_field' => 'game_id',
+            'table' => 'aktiviteter',
+            'name' => 'navn',
+            'key' => 'id' ,
+        ],
+        'brugerkategori' => [
+            'key_field' => 'brugerkategori_id',
+            'table' => 'brugerkategorier',
+            'name' => 'navn',
+            'key' => 'id'
+        ]
+    ];
+
+    static protected $pronouns = [
+        'en' => [
+            'he' => 'He/Him',
+            'her' => 'She/Her',
+            'they' => 'They/Them',
+        ],
+        'da' => [
+            'he' => 'Han/Ham',
+            'her' => 'Hun/Hende',
+            'they' => 'De/Dem',
+        ],
+    ];
 
     /**
      * Name of database table
@@ -150,12 +209,80 @@ class Deltagere extends DBObject implements AgeFulfilment
             }
             return $this->note_obj;
 
+        } elseif(in_array($var, array_keys(self::$foreign_key_fields))) {
+            $field_def = self::$foreign_key_fields[$var];
+            $storage_field = $field_def['key_field']."_text";
+
+            if (!isset($this->$storage_field)) {
+                if ($this->storage[$field_def['key_field']] == NULL) return "";
+                $result = $this->db->query("SELECT $field_def[name] FROM $field_def[table] WHERE $field_def[key] = ?", [$this->storage[$field_def['key_field']]]);
+                $this->$storage_field = count($result) > 0 ? $result[0][$field_def['name']] : "";
+            }
+            return $this->$storage_field;
+
         } elseif (array_key_exists($var, $this->storage)) {
             return parent::__get($var);
 
         } else {
              return null;
 
+        }
+    }
+
+    public function __set($varname, $value) {
+        switch ($varname) {
+            case 'arbejdsomraade':
+                if (!$value || $value == 'null') {
+                    $this->storage['work_area'] = null;
+                    break;
+                }
+                $result = $this->db->query('SELECT id FROM organizer_categories WHERE name_da = ?', [$value]);
+                if (count($result) == 1) {
+                    $this->storage['work_area'] = $result[0]['id'];
+                } else {
+                    throw new FrameworkException('Work area name not recognized');
+                }
+                break;
+
+            case 'land':
+                $result = $this->db->query('SELECT code FROM countries WHERE name_da = ?', [$value]);
+                if (count($result) == 1) {
+                    $this->storage['country'] = $result[0]['code'];
+                } else {
+                    throw new FrameworkException('Country name not recognized');
+                }
+                break;
+
+            case 'scenarie':
+                if (!$value || $value == 'null') {
+                    $this->storage['game_id'] = null;
+                    break;
+                }
+                $result = $this->db->query('SELECT id FROM aktiviteter WHERE navn = ?', [$value]);
+                if (count($result) == 1) {
+                    $this->storage['game_id'] = $result[0]['id'];
+                } else {
+                    throw new FrameworkException('Game name not recognized');
+                }
+                break;
+
+            default:
+                parent::__set($varname, $value);
+
+        }
+    }
+
+    public function __isset($var) {
+        if ($var == 'alder') {
+            return true;
+        } elseif($var == 'note') {
+            if (!isset($this->note_obj)) {
+                $this->note_obj = self::parseNote($this->deltager_note);
+            }
+            return isset($this->note_obj);
+
+        } else {
+            return array_key_exists($var, $this->storage);
         }
     }
 
@@ -218,6 +345,7 @@ class Deltagere extends DBObject implements AgeFulfilment
                         break;
                     case 'fornavn':
                     case 'efternavn':
+                    case 'nickname':
                     case 'adresse1':
                     case 'adresse2':
                     case 'by':
@@ -247,19 +375,16 @@ class Deltagere extends DBObject implements AgeFulfilment
 //{{{ get info functions
 
     /**
-     * returns an array detailing which languages the user signed up for
+     * returns an array detailing which values are in the set
      *
      * @access public
      * @return array
      */
-    public function getSprog()
-    {
-        if (!$this->isLoaded() || !is_string($this->sprog))
-        {
-            return array();
-        }
-        $string = str_replace("'","", $this->sprog);
-        return explode(',', $string);
+    public function getCollection(string $column){
+        if (!$this->isLoaded() || !is_string($this->$column)) return [];
+
+        $string = str_replace("'","", $this->$column);
+        return $string == '' ? [] : explode(',', $string);
     }
 
     /**
@@ -421,28 +546,19 @@ class Deltagere extends DBObject implements AgeFulfilment
 // {{{ set info methods
 
     /**
-     * sets the sprog field, but doesn't update the deltager object
+     * sets the value of a field with type set
      *
-     * @param array $sprog_array - array of strings, each one a valid language
+     * @param array $values - array of values to be set, each must be a valid option
      * @access public
      * @return bool
      */
-    public function setSprog($sprog_array)
-    {
-        if (!is_array($sprog_array))
-        {
-            return false;
+    public function setCollection(string $column, array $values) {
+        $accepted = $this->getAvailableValues($column);
+        foreach ($values as &$value) {
+            $value = strtolower($value);
+            if (!in_array($value, $accepted)) return false;
         }
-        $accepted_langs = $this->getAvailableSprog();
-        foreach ($sprog_array as &$sprog)
-        {
-            $sprog = strtolower($sprog);
-            if (!in_array($sprog, $accepted_langs))
-            {
-                return false;
-            }
-        }
-        $this->sprog = implode(',', $sprog_array);
+        $this->$column = implode(',', $values);
         return true;
     }
 
@@ -454,14 +570,14 @@ class Deltagere extends DBObject implements AgeFulfilment
      * @access public
      * @return bool
      */
-    public function setGDSTilmelding(GDSCategory $gdscategory, $period) {
-        if (!$gdscategory->isLoaded() || !$this->isLoaded()) {
+    public function setGDSTilmelding(?GDSCategory $gdscategory, $period) {
+        if (($gdscategory != null && !$gdscategory->isLoaded()) || !$this->isLoaded()) {
             return false;
         }
 
         $gdstilmelding = $this->createEntity('DeltagereGDSTilmeldinger');
         $gdstilmelding->deltager_id = $this->id;
-        $gdstilmelding->category_id = $gdscategory->id;
+        $gdstilmelding->category_id = $gdscategory == null ? 0 : $gdscategory->id;
         $gdstilmelding->period      = $period;
         return $gdstilmelding->insert();
     }
@@ -495,9 +611,9 @@ class Deltagere extends DBObject implements AgeFulfilment
      * @access public
      * @return $this
      */
-    public function setWearOrder(DBObject $wearprice, $size, $amount)
+    public function setWearOrder(DBObject $wearprice, $amount, ?array $attributes)
     {
-        $this->createEntity('DeltagereWear')->setOrderDirect($this, $wearprice, $size, $amount);
+        $this->createEntity('DeltagereWear')->setOrderDirect($this, $wearprice, $amount, $attributes);
 
         return $this;
     }
@@ -697,9 +813,29 @@ class Deltagere extends DBObject implements AgeFulfilment
         if (!$this->foodCost)
         {
             $result = 0;
-            foreach ($this->getMadtider() as $i)
-            {
-                $result += $i->getMad()->pris;
+
+            $food_credits = [
+                'breakfast' => 0,
+                'dinner' => 0,
+            ];
+
+            if ($this->financial_struggle == 'ja') {
+                $food_credits['breakfast'] = 2;
+                $food_credits['dinner'] = 2;
+            }
+
+            foreach ($this->getMadtider() as $food) {
+                $foodprice = $food->getMad()->pris;
+                if ($foodprice <= 0) continue;
+
+                if ($food->isBreakfast() && $food_credits['breakfast'] > 0) {
+                    $food_credits['breakfast']--;
+                    continue;
+                } elseif ($food->isDinner() && $food_credits['dinner'] > 0) {
+                    $food_credits['dinner']--;
+                    continue;
+                }
+                $result += $foodprice;
             }
             $this->foodCost = $result;
         }
@@ -881,23 +1017,22 @@ class Deltagere extends DBObject implements AgeFulfilment
     }
 
     /**
-     * returns an array of languages that people can select from
-     * these are also the strings that will be accepted in the array for setSprog
+     * returns an array of values that people can select from
+     * these are also the strings that will be accepted in the array for setCollection
      *
      * @access public
      * @return array
      */
-    public function getAvailableSprog()
+    public function getAvailableValues($column)
     {
         $cinfo = $this->getColumnInfo();
-        $lang = $cinfo['sprog'];
-        $accepted_langs = array();
-        if (preg_match('/^set\((.*)\)$/i', $lang, $matches))
-        {
+        $values = $cinfo[$column];
+        $accepted = [];
+        if (preg_match('/^set\((.*)\)$/i', $values, $matches)) {
             $matches[1] = str_replace("'", "", $matches[1]);
-            $accepted_langs = explode(',',$matches[1]);
+            $accepted = explode(',',$matches[1]);
         }
-        return $accepted_langs;
+        return $accepted;
     }
 
     /**
@@ -938,7 +1073,7 @@ class Deltagere extends DBObject implements AgeFulfilment
         {
             return false;
         }
-        if ($this->flere_gdsvagter =='ja' && $shifts < 2)
+        if ($this->desired_diy_shifts == 0 || $shifts < $this->desired_diy_shifts)
         {
             return false;
         }
@@ -1055,14 +1190,7 @@ class Deltagere extends DBObject implements AgeFulfilment
      */
     public function createPass()
     {
-        $base = implode('', array_merge(range('a', 'z'), range('A', 'Z')));
-        $pass = '';
-        for ($i = 0; $i < 8; $i++)
-        {
-            $pass .= $base[mt_rand(0, strlen($base) - 1)];
-        }
-        $this->password = $pass;
-        $this->passwordCleartext = $pass;
+        $this->password = sprintf('%06d', mt_rand(0, 999999));
     }
 
     /**
@@ -1343,6 +1471,11 @@ WHERE
         return $this->human_readable_fieldnames;
     }
 
+    public function getNoteNames(String $lang = null) {
+        $lang = $lang ?? 'da';
+        return self::$note_names[$lang];
+    }
+
     /**
      * overrides parent method to delete all
      * related information first
@@ -1370,7 +1503,7 @@ WHERE
     }
 
     /**
-     * removes all ordered food for the participant
+     * removes all assigned food for the participant
      *
      * @access public
      * @return $this
@@ -1378,6 +1511,28 @@ WHERE
     public function removeFood()
     {
         foreach ($this->createEntity('DeltagereMadtider')->getForParticipant($this) as $food) {
+            $food->delete();
+        }
+
+        return $this;
+    }
+
+    /**
+     * removes all food ordered through the signup for the participant
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeOrderedFood()
+    {
+        $participant_food_entity = $this->createEntity('DeltagereMadtider');
+        $select = $participant_food_entity->getSelect();
+        $select->setLeftJoin('madtider', 'madtid_id', 'madtider.id');
+        $select->setLeftJoin('mad', 'mad_id', 'mad.id');
+        $select->setWhere('hidden', '=', 'false');
+        $select->setWhere('deltager_id', '=', $this->id);
+
+        foreach ($participant_food_entity->findBySelectMany($select) as $food) {
             $food->delete();
         }
 
@@ -1408,6 +1563,21 @@ WHERE
     public function removeEntrance()
     {
         foreach ($this->createEntity('DeltagereIndgang')->getForParticipant($this) as $entrance) {
+            $entrance->delete();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes all entrance relationships except the given ids
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeEntranceExcept(Array $ids) {
+        foreach ($this->createEntity('DeltagereIndgang')->getForParticipant($this) as $entrance) {
+            if (in_array($entrance->indgang_id, $ids)) continue;
             $entrance->delete();
         }
 
@@ -1464,12 +1634,11 @@ WHERE
 
     public function speaksDanish()
     {
-        return stripos($this->sprog, 'dansk') !== false || !$this->sprog;
+        return $this->main_lang == 'da';
     }
 
-    public function getEan8Number()
-    {
-        return numberToEAN8(date('y', strtotime($this->created)) . str_pad($this->id, 5, '0', STR_PAD_LEFT));
+    public function getEan8Number(String $year) {
+        return numberToEAN8($year . str_pad($this->id, 5, '0', STR_PAD_LEFT));
     }
 
     /**
@@ -1644,9 +1813,18 @@ WHERE
     }
 
     public function setNote($name, $content) {
-        $note = json_decode($this->deltager_note);
+        if (!empty($this->deltager_note)) {
+            $note = json_decode($this->deltager_note);
+        } else {
+            $note = new stdClass();
+        }
+        
         $note->$name = $content;
+        // Decode HTML special chars and save to storage
         parent::__set('deltager_note', json_encode($note));
+
+        // Update note object
+        $this->note_obj = self::parseNote($this->deltager_note);
     }
 
     public static function parseNote($note){
@@ -1662,5 +1840,30 @@ WHERE
         }
 
         return null;
+    }
+
+    public function getCountry($lang) {
+        $result = $this->db->query("SELECT * FROM countries WHERE code = ?", [$this->storage['country']]);
+        return count($result) === 1 ? $result[0]["name_$lang"] : "";
+    }
+
+    public function getGame($lang) {
+        $result = $this->db->query("SELECT * FROM aktiviteter WHERE id = ?", [$this->storage['game_id']]);
+        if (count($result) === 0) return "";
+        
+        return $lang == 'da' ? $result[0]["navn"] : $result[0]["title_en"];
+    }
+
+    public function getForeignKeyFields() {
+        return self::$foreign_key_fields;
+    }
+
+    public function getPronoun(String $lang = null) {
+        $lang = $lang ?? $this->main_lang;
+        return self::$pronouns[$lang][$this->pronoun];
+    }
+
+    public static function getSpecialColumns() {
+        return self::$special_columns;
     }
 }

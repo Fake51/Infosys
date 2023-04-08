@@ -1,0 +1,446 @@
+{
+    "order": 2,
+    "slug": {
+        "en": "Practical",
+        "da": "Praktisk"
+    },
+    "title": {
+        "en": "Practical information",
+        "da": "Praktisk information"
+    },
+    "sections": [
+        {
+            "headline": {
+                "en": "Contact information",
+                "da": "Kontaktoplysninger"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Please sign-up using your legal name.",
+                        "da": "Brug venligst dit juridiske navn i tilmeldingen."
+                    }
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "First name",
+                        "da": "Fornavn"
+                    },
+                    "infosys_id": "fornavn",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Last name",
+                        "da": "Efternavn"
+                    },
+                    "infosys_id": "efternavn",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Address",
+                        "da": "Adresse"
+                    },
+                    "infosys_id": "adresse1",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "",
+                        "da": ""
+                    },
+                    "infosys_id": "adresse2"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Post code",
+                        "da": "Postnr."
+                    },
+                    "infosys_id": "postnummer",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "City",
+                        "da": "By"
+                    },
+                    "infosys_id": "by",
+                    "required": "true"
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Country",
+                        "da": "Land"
+                    },
+                    "infosys_id": "country",
+                    "required": "true",
+                    "autocomplete": {
+                        "list": "countries",
+                        "mode": "exhaustive",
+                        "value": "code"
+                    }
+                },
+                {
+                    "type": "telephone",
+                    "text": {
+                        "en": "Mobile",
+                        "da": "Mobil"
+                    },
+                    "infosys_id": "mobiltlf"
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "I would like to receive text alerts about activities i have signed up for, as well as general updates\/info about Fastaval. (Note that Fastaval SMS-alerts do not work with non-Danish phones)",
+                        "da": "Jeg vil gerne modtaget SMS beskeder om aktiviteter jeg er tilmeldt, samt generelle opdateringer\/info om Fastaval. (Bem\u00e6rk at sms-funktionen kun fungerer med danske telefonnumre)."
+                    },
+                    "infosys_id": "medbringer_mobil"
+                },
+                {
+                    "type": "date",
+                    "text": {
+                        "en": "Birthdate",
+                        "da": "F\u00f8dselsdato"
+                    },
+                    "infosys_id": "birthdate",
+                    "required": "true"
+                },
+                {
+                    "type": "email",
+                    "text": {
+                        "en": "Email",
+                        "da": "Email"
+                    },
+                    "infosys_id": "email",
+                    "required": "true"
+                },
+                {
+                    "type": "email",
+                    "text": {
+                        "en": "Email (repeat)",
+                        "da": "Email (gentag)"
+                    },
+                    "infosys_id": "email-confirm",
+                    "required": "true",
+                    "equals": "email",
+                    "no_submit": "true",
+                    "errors": {
+                        "match": {
+                            "en": "The email adresses are not the same",
+                            "da": "Emailadresserne er ikke ens"
+                        }
+                    }
+                },
+                {
+                    "type": "radio",
+                    "text": {
+                        "en": "In which language would you prefer to communicate with Fastaval?",
+                        "da": "P\u00e5 hvilket sprog foretr\u00e6kker du at kommunikere med Fastaval?"
+                    },
+                    "infosys_id": "main_lang",
+                    "options": [
+                        {
+                            "value": "da",
+                            "text": {
+                                "en": "Danish",
+                                "da": "Dansk"
+                            },
+                            "default": true
+                        },
+                        {
+                            "value": "en",
+                            "text": {
+                                "en": "English",
+                                "da": "Engelsk"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "What should your name tag say?",
+                "da": "Hvad skal der st\u00e5 p\u00e5 dit navneskilt?"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you sign up for before the 20th of february, you will receive a nametag upon check-in at Fastaval.",
+                        "da": "Hvis du tilmelder dig inden d. 20. februar, vil du f\u00e5 et navneskilt n\u00e5r du checker ind p\u00e5 Fastaval.\u00a0\u00a0"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "The nametag will display your name and preferred pronouns. If your full name is too long to fit on the tag, only your first and last name will be used. If a problem still occurs, we will reach out to you by email.",
+                        "da": "P\u00e5 navneskiltet vil der fremg\u00e5 dit navn og fortrukne pronomen (stedord). Er dit fulde navn for langt til at passe p\u00e5 skiltet, vil dit fornavn og efternavn blive brugt. Hvis der er problemer, vil vi kontakte dig p\u00e5 mail."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "The name on the nametag does not have to be your legal name. If you want to use a name other than your legal name, fx. a middle name, or to avoid deadnaming,\u00a0please provide the full name that you want to use in this field.",
+                        "da": "Navnet p\u00e5 navneskiltet beh\u00f8ver ikke at v\u00e6re dit juridiske navn. Hvis du \u00f8nsker at bruge et andet navn end dit juridiske navn, fx. et mellemnavn, eller for at undg\u00e5 deadnaming, s\u00e5 oplys det fulde navn du gerne vil bruge i dette felt."
+                    }
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Used name (max 17 characters)",
+                        "da": "Kaldenavn (maks 17 tegn)"
+                    },
+                    "infosys_id": "nickname",
+                    "maxlength": 17
+                },
+                {
+                    "type": "radio",
+                    "text": {
+                        "en": "Which pronoun do you want on your name tag?",
+                        "da": "Hvilket pronomen skal der st\u00e5 p\u00e5 dit navneskilt?"
+                    },
+                    "infosys_id": "pronoun",
+                    "options": [
+                        {
+                            "value": "they",
+                            "text": {
+                                "en": "de\/dem (they\/them)",
+                                "da": "de\/dem"
+                            },
+                            "default": true
+                        },
+                        {
+                            "value": "her",
+                            "text": {
+                                "en": "hun\/hende (she\/her)",
+                                "da": "hun\/hende"
+                            }
+                        },
+                        {
+                            "value": "he",
+                            "text": {
+                                "en": "han\/ham (he\/him)",
+                                "da": "han\/ham"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "Choose participant type",
+                "da": "V\u00e6lg deltagertype"
+            },
+            "items": [
+                {
+                    "type": "radio",
+                    "text": {
+                        "en": "Which type of participant are you?",
+                        "da": "Hvilken deltagertype er du? "
+                    },
+                    "infosys_id": "participant",
+                    "options": [
+                        {
+                            "value": "Deltager",
+                            "text": {
+                                "en": "I am a participant",
+                                "da": "Jeg er deltager"
+                            },
+                            "default": true
+                        },
+                        {
+                            "value": "Juniordeltager",
+                            "text": {
+                                "en": "I want to participate in Fastaval Junior (180 kr.)\u00a0 [b]not available in english[\/b]",
+                                "da": "Jeg vil gerne deltage i Fastaval Junior (180 kr.) - For b\u00f8rn fra 6 til 14 \u00e5r."
+                            },
+                            "display_logic": [
+                                {
+                                    "type": "age",
+                                    "status": "disabled",
+                                    "compare": "greater",
+                                    "value": 14
+                                },
+                                {
+                                    "type": "age",
+                                    "status": "disabled",
+                                    "compare": "less",
+                                    "value": 6
+                                }
+                            ]
+                        },
+                        {
+                            "value": "Arrang\u00f8r",
+                            "text": {
+                                "en": "I am an organizer, scenario writer or board game designer.",
+                                "da": "Jeg er arrang\u00f8r, scenarieforfatter eller br\u00e6tspilsdesigner."
+                            }
+                        }
+                    ],
+                    "errors": {
+                        "no_organizer_selection": {
+                            "en": "You haven't chosen your work category",
+                            "da": "Du har ikke valgt nogen arbejdskategori"
+                        }
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you are\u00a0 attending Fastaval with your club\/school, fill out the name below",
+                        "da": "Hvis du er p\u00e5 Fastaval med din klub\/ungdomsskole, s\u00e5 udfyld navnet nedenfor\n"
+                    }
+                },
+                {
+                    "type": "text_input",
+                    "text": {
+                        "en": "Name of club\/school",
+                        "da": "Navn p\u00e5 klub\/ungdomsskole"
+                    },
+                    "infosys_id": "ungdomsskole"
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "Where have you heard about Fastaval?",
+                "da": "Hvor har du h\u00f8rt om Fastaval?"
+            },
+            "items": [
+                {
+                    "type": "select",
+                    "text": {
+                        "en": "",
+                        "da": ""
+                    },
+                    "infosys_id": "knows_fastaval_from",
+                    "options": [
+                        {
+                            "value": "0",
+                            "text": {
+                                "en": "",
+                                "da": "Ingen valgt"
+                            }
+                        },
+                        {
+                            "value": "1",
+                            "text": {
+                                "en": "I have attended Fastaval before",
+                                "da": "Jeg har v\u00e6ret p\u00e5 Fastaval f\u00f8r"
+                            }
+                        },
+                        {
+                            "value": "2",
+                            "text": {
+                                "en": "From my place of education",
+                                "da": "P\u00e5 mit uddannelsessted"
+                            }
+                        },
+                        {
+                            "value": "3",
+                            "text": {
+                                "en": "Through my RPG club",
+                                "da": "I min rollespilsforening"
+                            }
+                        },
+                        {
+                            "value": "4",
+                            "text": {
+                                "en": "At a scenario, convention etc.",
+                                "da": "Til scenarier, kongresser m.m."
+                            }
+                        },
+                        {
+                            "value": "5",
+                            "text": {
+                                "en": "From acquaintances",
+                                "da": "Folk jeg kender"
+                            }
+                        },
+                        {
+                            "value": "6",
+                            "text": {
+                                "en": "Add in store",
+                                "da": "Reklamer i butikker"
+                            }
+                        },
+                        {
+                            "value": "7",
+                            "text": {
+                                "en": "Social Media",
+                                "da": "Sociale Medier"
+                            }
+                        },
+                        {
+                            "value": "8",
+                            "text": {
+                                "en": "The Internet",
+                                "da": "Internettet"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "Become a part of Alea",
+                "da": "Bliv en del af Alea"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Alea is the organization behind Fastaval, with has the responsibility of the overall coordination and in the handing over of important information, experiences and resources to future Fastavals. Read more about Alea [url=https:\/\/http:\/\/alea.fastaval.dk.]here[\/url].\u00a0Alea is a member of [url=https:\/\/landsforeningenbifrost.dk\/]Landsforeningen Bifrost[\/url]. Membership of Alea automatically makes you a member of Landsforeningen Bifrost.",
+                        "da": "Alea er foreningen bag Fastava, som har ansvaret for den overordnede koordinering, vidensopsamling og overlevering af vigtig erfaring og ressourcer til fremtidige Fastavaller. L\u00e6s mere om Alea p\u00e5 [url=https:\/\/http:\/\/alea.fastaval.dk.] Aleas hjemmeside[\/url]. Alea er medlem af [url=https:\/\/landsforeningenbifrost.dk\/]Landsforeningen Bifrost[\/url]. Medlemskab af Alea g\u00f8r dig automatisk til medlem af Landsforeningen Bifrost."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "A membership costs 75 kr. and lasts until next years Fastaval. You get a 125 kr. discount on partout entry as a member of Alea.",
+                        "da": "Et medlemskab koster 75 kr. og varer indtil Fastaval n\u00e6ste \u00e5r. Du f\u00e5r 125 kr. rabat p\u00e5 partout adgang som medlem af Alea."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "For insurance reasons, organizers must be members of Alea.",
+                        "da": "Af forsikringsm\u00e6ssige \u00e5rsager er det obligatorisk for arrang\u00f8rer, at v\u00e6re medlemmer af Alea."
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "Yes, I would like to join Alea and get a discount on the entry fee\u00a0",
+                        "da": "Ja tak, jeg vil gerne melde mig ind i Alea og f\u00e5 rabat p\u00e5 partout billet"
+                    },
+                    "infosys_id": "misc:alea",
+                    "errors": {
+                        "required": {
+                            "en": "As organizer you have to be a memeber of Alea",
+                            "da": "Som arrang\u00f8r skal du v\u00e6re medlem af Alea"
+                        }
+                    },
+                    "required_if": {
+                        "type": "field_compare",
+                        "compare": "equals",
+                        "input": "participant",
+                        "value": "Arrang\u00f8r"
+                    }
+                }
+            ]
+        }
+    ]
+}

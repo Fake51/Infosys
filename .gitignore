@@ -6,7 +6,8 @@ public/audio/*
 public/uploads/*
 public/error_log.txt
 public/vote-barcodes/*
-include/signup-data/*
+public/sheets/*
+include/signup/data/*
 include/scripts/*
 include/cache/*
 logs/*
@@ -15,3 +16,4 @@ index.json
 vendor
 composer.phar
 bin
+include/fastaval-it-*.json

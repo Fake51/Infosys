@@ -281,10 +281,73 @@ class Controller extends Common
             'aaData' => $result,
         );
 
-        header('HTTP/1.1 200 done');
-        header('Content-Type: text/plain; charset=UTF-8');
-        echo json_encode($output);
+        $this->jsonOutput($output);
+    }
 
-        exit;
+    /**
+     * Returns data as a csv file
+     * 
+     * @access public
+     * @return void
+     */
+    public function returnCSV($data, $filename = "infosys") {
+        header('Content-Type: text/csv;charset=utf-8');
+        header('Content-Disposition: attachment;filename="'.$filename.'.csv"');
+        header('Cache-Control: max-age=0');
+        
+        echo chr(0xEF).chr(0xBB).chr(0xBF); // UTF8 BOM
+        foreach($data as $row) {
+            foreach($row as $cell) {
+                echo "\"$cell\";";
+            }
+            echo "\n";
+        }
+    }
+
+    /**
+     * outputs json data and sets headers accordingly
+     *
+     * @param string $data        Data to output
+     * @param string $http_status HTTP status code
+     *
+     * @access protected
+     * @return void
+     */
+    protected function jsonOutput($data, $http_status = '200', $content_type = 'application/json', $do_return = false) {
+        if (!is_string($data)) {
+            $data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT );
+        }
+        header('Status: ' . $http_status);
+        header('Content-Type: ' . $content_type . '; charset=UTF-8');
+        header('Content-Length: ' . strlen($data));
+        echo $data;
+        
+        if (!$do_return) exit;
+    }
+
+    /**
+     * returns a string that works as a URI to images
+     *
+     * @param string $filename Filename of image
+     *
+     * @access protected
+     * @return string
+     */
+    protected function imgLink($filename)
+    {
+        return $this->config->get('app.public_uri') . "img/{$filename}";
+    }
+
+    /**
+     * returns a string that works as a URI to javascript files 
+     *
+     * @param string $filename Filename of image
+     *
+     * @access protected
+     * @return string
+     */
+    protected function JSLink($filename)
+    {
+        return $this->config->get('app.public_uri') . "js/{$filename}";
     }
 }

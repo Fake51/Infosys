@@ -431,7 +431,7 @@ XML;
             <li><a href='{$this->url('vis_spilledere')}'>Spilledere</a></li>
             <li><a href='{$this->url('opret_deltager')}'>Opret deltager</a></li>
             <li><a href='{$this->url('checkin_interface')}'>Checkin registrering</a></li>
-            <li><a href='{$this->url('edit_participant_types')}'>Rediger deltagertyper</a></li>
+            <!--<li><a href='{$this->url('edit_participant_types')}'>Rediger deltagertyper</a></li> This one isn't implemented yet-->
             <li><a href='{$this->url('show_double_bookings')}'>Tjek for dobbelt-bookinger</a></li>
             <li><a href='{$this->url('show_refund')}'>Deltagere der skal have penge tilbage</a></li>
 HTML;
@@ -445,7 +445,14 @@ HTML;
             }
 
             $return .= <<<HTML
-
+            <li><a href='{$this->url('name_tag_list')}'>Liste til navneskilte</a></li>
+HTML;
+            if ($this->user->hasRole('Admin')) {
+                $return .= <<<HTML
+            <li><a href='{$this->url('register_mobilepay_payments')}'>Registrer betalinger</a></li>
+HTML;
+            }
+            $return .= <<<HTML
         </ul>
     </li>
     <li class='topmenu-item'>
@@ -486,6 +493,8 @@ HTML;
             <li><a href='{$this->url('detailed_unfilled_order_list')}'>Alle ikke-udleverede</a></li>
             <li><a href='{$this->url('show_wear')}'>Wear-typer</a></li>
             <li><a href='{$this->url('create_wear')}'>Opret wear-type</a></li>
+            <li><a href='{$this->url('wear_attributes')}'>Rediger wear egenskaber</a></li>
+            <li><a href='{$this->url('wear_upload_image')}'>Upload billede til wear</a></li>
             <li><a href='{$this->url('wear_handout')}'>Wear-udlevering</a></li>
         </ul>
     </li>
@@ -572,7 +581,6 @@ HTML;
         SMS
         <ul class="submenu">
             <li><a href='{$this->url('sms_auto_dryrun')}'>Auto send dryrun</a></li>
-            <li><a href='{$this->url('admin_handle_users')}'>Manual send dryrun</a></li>
             <li><a href='{$this->url('sms_stats')}'>Statistics</a></li>
         </ul>
     </li>
@@ -583,6 +591,12 @@ HTML;
             <li><a href='{$this->url('admin_handle_roles')}'>Roles</a></li>
             <li><a href='{$this->url('admin_handle_privileges')}'>Privileges</a></li>
             <li><a href='{$this->url('admin_reset_signup_confirm')}'>Reset signup</a></li>
+        </ul>
+    </li>
+    <li class='topmenu-item'>
+        Tilmelding
+        <ul class='submenu'>
+            <li><a href='{$this->url('signup_pages')}'>Tilpas sider</a></li>
         </ul>
     </li>
 HTML;

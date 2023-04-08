@@ -178,11 +178,7 @@ class DBObject
      */
     public function __isset($property)
     {
-        if (isset($this->storage[$property])) {
-            return true;
-        }
-
-        return false;
+        return isset($this->storage[$property]);
     }
 
     /**
@@ -246,8 +242,8 @@ class DBObject
             return array('type' => 'text');
         }
 
-        if (substr(strtolower($info[$column]), 0, 3) === 'int') {
-            return array('type' => 'int', 'size' => substr($info[$column], 4, -1));
+        if (preg_match("/int\((\d+)\)/", $info[$column], $matches)) {
+            return array('type' => 'int', 'size' => $matches[1]);
         }
 
         if (substr(strtolower($info[$column]), 0, 7) === 'varchar') {
@@ -255,7 +251,10 @@ class DBObject
         }
 
         if (substr(strtolower($info[$column]), 0, 4) === 'enum') {
-            $types = array_map(create_function('$a', 'return str_replace("\'", "", $a);'), explode(',', substr($info[$column], 5, -1)));
+            $types = array_map(
+                function($a) {return str_replace("'", "", $a);},
+                explode(',', substr($info[$column], 5, -1))
+            );
             return array('type' => 'enum', 'values' => $types);
         }
 
@@ -335,12 +334,16 @@ class DBObject
     public function findAll()
     {
         $DB = $this->getDB();
-        $pk = $this->getPrimaryKey();
         $select = $this->getSelect();
-        foreach ($pk as $key)
-        {
-            $select->setOrder($key, 'asc');
+        if (isset($this->default_order)){
+            $select->setOrder($this->default_order, 'asc');
+        } else {
+            $pk = $this->getPrimaryKey();
+            foreach ($pk as $key) {
+                $select->setOrder($key, 'asc');
+            }
         }
+
         $results = $DB->query($select);
         if (empty($results))
         {
@@ -418,6 +421,20 @@ class DBObject
     }
 
     /**
+     * Find element where value == field_name
+     * 
+     * @param string $field_name - name of field to compare with
+     * @param string $value - value of the field on the element we're looking for
+     *
+     * @access public
+     * @return object|bool - false on fail
+     */
+    public function findByField($field_name, $value) {
+        $select = $this->getSelect()->setWhere($field_name, "=", $value);
+        return $this->findBySelect($select);
+    }
+
+    /**
      * uses a select object to try to load the current object
      *
      * @param object $select - select object with various criteria set
@@ -427,6 +444,7 @@ class DBObject
      */
     public function findBySelect(Select $select)
     {
+        $this->setMyFields($select);
         $results = $this->getDB()->query($select);
         return (($results && count($results)) ? $this->loadObject($results[0], $this) : false);
     }
@@ -441,8 +459,15 @@ class DBObject
      */
     public function findBySelectMany(Select $select)
     {
+        $this->setMyFields($select);
         $results = $this->getDB()->query($select);
         return (($results) ? $this->loadObjects($results) : array());
+    }
+
+    public function setMyFields(Select $select) {
+        foreach ($this->getColumns() as $column) {
+            $select->setField("{$this->tablename}.$column");
+        }
     }
 
     /**
@@ -505,6 +530,20 @@ class DBObject
         }
 
         return $DB->exec($query, $blob);
+    }
+
+    public function updateAll($fields) {
+        foreach ($fields as $field => $value) {
+            if ($this->checkIfPrimaryField($field) || ($value === null && !$this->isFieldNullable($field))) {
+                continue;
+            }
+
+            $data[] = " {$this->quoteTable($field)} = ?";
+            $args[] = $value;
+        }
+
+        $query = "UPDATE {$this->quoteTable($this->tablename)} SET " . implode(',',$data);
+        return $this->getDB()->exec($query, $args);
     }
 
     /**

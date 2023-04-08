@@ -1,12 +1,25 @@
 <p>Hi <?= e($this->participant->fornavn);?>,</p>
 
-<p>This is a reminder to upload a photo for your Fastaval ID-card (issued to writers, designers, volunteers, etc.</p>
+<p>
+  This is a reminder to upload a photo for your Fastaval name tag. Writers, designers, volunteers, etc. get certain
+  discounts at Fastaval.
+</p>
 
-<p>It seems you have not yet uploaded a photo for your ID-card. And without a photo, no ID-card. So please use the following link to upload your photo:</p>
+<p>
+  It seems you have not yet uploaded a photo for your name tag. Without a photo on your name tag, you can't use it for
+  discounts, so we kindly remind you that you need to have uploaded a photo by <strong><?=$this->signup_end_time?></strong>.
+  You can upload a photo using the following link:
+</p>
 
 <p><a href="<?= $this->link;?>"><?= $this->link;?></a></p>
 
-<p>If you have already attempted to upload a photo with no success, our apologies. Please contact <a href="mailto:info@fastaval.dk">info@fastaval.dk</a> and let us know of the problem - and remember to include your photo, so we can get things fixed.</p>
+<p>
+  If you have already attempted to upload a photo with no success, our apologies. Please contact 
+  <a href="mailto:info@fastaval.dk">info@fastaval.dk</a> and let us know of the problem - and remember to include your
+  photo, so we can get things fixed.
+</p>
 
-<p>Many greetings<br/>
-Fastaval</p>
+<p>
+  Many greetings<br/>
+  Fastaval
+</p>

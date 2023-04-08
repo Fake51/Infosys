@@ -146,6 +146,31 @@ class AdminController extends Controller
     }
 
     /**
+     * ajax function, updates label for a user
+     *
+     * @access public
+     * @return void
+     */
+    public function ajaxChangeLabel()
+    {
+        $this->ajaxHeader();
+        if (empty($this->vars['id']) || !($user = $this->model->findEntity('User', $this->vars['id'])) || !$this->page->request->isPost() || empty($this->page->request->post->label)) {
+            echo "validation failed";
+            exit;
+        }
+
+        $user->label = trim($this->page->request->post->label);
+        if ($user->update()) {
+            $this->log("User #{$user->id} ({$user->user}) fik skiftet label af {$this->model->getLoggedInUser()->user}", 'Users', $this->model->getLoggedInUser());
+            echo "worked";
+        } else {
+            echo "update failed";
+        }
+
+        exit;
+    }
+
+    /**
      * ajax function, removes a role from a user
      *
      * @access public

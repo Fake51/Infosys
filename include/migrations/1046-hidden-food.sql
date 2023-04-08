@@ -1,0 +1,1 @@
+ALTER TABLE mad ADD hidden BOOLEAN NOT NULL DEFAULT false;

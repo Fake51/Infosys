@@ -87,13 +87,15 @@ class FoodModel extends Model
      */
     public function createFood(RequestVars $post)
     {
-        if (empty($post->kategori) || empty($post->pris) || !is_numeric($post->pris) || !is_string($post->kategori))
+        if (empty($post->kategori) || !isset($post->pris) || !is_numeric($post->pris) || !is_string($post->kategori))
         {
             return false;
         }
         $food = $this->createEntity('Mad');
         $food->kategori = $post->kategori;
+        $food->title_en = $post->title_en;
         $food->pris = $post->pris;
+        $food->hidden = isset($post->hidden) ? 1 : 0;
         return (($food->insert() && $this->updateFoodDates($food, $post)) ? $food : false);
     }
 
@@ -108,12 +110,15 @@ class FoodModel extends Model
      */
     public function updateFood(Mad $food, RequestVars $post)
     {
-        if (empty($post->kategori) || empty($post->pris) || !is_numeric($post->pris) || !is_string($post->kategori) || !$food->isLoaded())
+        if (empty($post->kategori) || !isset($post->pris) || !is_numeric($post->pris) || !is_string($post->kategori) || !$food->isLoaded())
         {
             return false;
         }
+
         $food->kategori = $post->kategori;
+        $food->title_en = $post->title_en;
         $food->pris = $post->pris;
+        $food->hidden = isset($post->hidden) ? 1 : 0;
         if (!$food->update())
         {
             return false;
@@ -154,6 +159,8 @@ class FoodModel extends Model
                     }
                     $foodtime = $this->findEntity('Madtider', $id);
                     $foodtime->dato = $post->foodtime_date[$i];
+                    $foodtime->description_da = $post->foodtime_desc_da[$i];
+                    $foodtime->description_en = $post->foodtime_desc_en[$i];
                     $foodtime->update();
                     $i++;
                     continue;
@@ -166,6 +173,8 @@ class FoodModel extends Model
                 $new_foodtime = $this->createEntity('Madtider');
                 $new_foodtime->mad_id = $food->id;
                 $new_foodtime->dato = $post->foodtime_date[$i];
+                $new_foodtime->description_da = $post->foodtime_desc_da[$i];
+                $new_foodtime->description_en = $post->foodtime_desc_en[$i];
                 if (!$new_foodtime->insert())
                 {
                     $success = false;
@@ -498,8 +507,6 @@ ORDER BY
 
         ksort($usage);
 
-        $early_categories = array('Vegetar');
-
         foreach ($participants as $participant) {
             foreach ($participant->getMadtider() as $madtid) {
                 $link = $participant->getFoodItemLink($madtid);
@@ -509,7 +516,7 @@ ORDER BY
                     continue;
                 }
 
-                if (in_array($food->kategori, $early_categories) || $participant->isBusyBetween($madtid->dato, date('Y-m-d H:i:s', strtotime($madtid->dato . ' + 2 hour')), 'spilleder')) {
+                if ($this->isEarlyTime($food->kategori, $madtid->dato) || $participant->isBusyBetween($madtid->dato, date('Y-m-d H:i:s', strtotime($madtid->dato . ' + 2 hour')), 'spilleder')) {
                     $link->time_type = 1;
                     $link->update();
                     $usage[$madtid->dato][1]++;
@@ -528,13 +535,24 @@ ORDER BY
 
     }
 
-    public function getTimeType(array $usage, MadTider $madtid) {
+    private function isEarlyTime($category, $time) {
+        // TODO - change this from hardcoded to a setting on food page
+        // Like adding time ranges to food types
+        $area_lead_dinner = stripos($category, 'fælles') !== false;
+        $vegie = stripos($category, 'vegetar') !== false;
+        $all_veggie_day = date('N', strtotime($time)) == '4';
+
+        return $area_lead_dinner || ($vegie && !$all_veggie_day);
+    }
+
+    private function getTimeType(array $usage, MadTider $madtid) {
         $type = 0;
         $min  = 1000;
 
-        foreach ($usage[$madtid->dato] as $id => $people) {
+        // Find time slot with fewest people
+        foreach ($usage[$madtid->dato] as $slot => $people) {
             if ($people < $min) {
-                $type = $id;
+                $type = $slot;
                 $min  = $people;
             }
         }

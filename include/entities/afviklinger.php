@@ -645,6 +645,11 @@ WHERE
         }
 
         if ($values) {
+            $output_dir = PUBLIC_PATH . 'vote-barcodes/';
+            if (!file_exists($output_dir)) {
+                mkdir($output_dir, 0777, true);
+            }
+
             $this->db->exec($query . implode(', ', $values), $arguments);
 
             $query = 'SELECT id, code FROM schedules_votes WHERE schedule_id = ?';
@@ -655,7 +660,7 @@ WHERE
                             'code' => $row['code'],
                            ];
 
-                QRcode::png($page->url('activity_specific_vote', ['code' => $row['code']]), PUBLIC_PATH . 'vote-barcodes/' . $row['id'] . '.png', 'M', 3);
+                QRcode::png($page->url('activity_specific_vote', ['code' => $row['code']]), $output_dir . $row['id'] . '.png', 'M', 3);
 
             }
 

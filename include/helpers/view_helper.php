@@ -81,11 +81,16 @@ class ViewHelper extends Common
 
                     <tr>
                         <td><b>ID:</b> <input type='text' name='deltager_search[id]' value=""/></td>
-                        <td><b>Køn:</b> {$this->view->genSelect('deltager_search[gender]', array('', 'Mand' => 'm', 'Kvinde' => 'k', 'Andet' => 'a'))}</td>
-                        <td><b>Fødselsdato:</b> <input type='text' value='' name='deltager_search[birthdate]' /></td>
-                    </tr>
-                    <tr>
-                        <td colspan='2'><b>Kategori:</b>
+                        <td>
+                            <b>Fødselsdato:</b>
+                            <select name='deltager_search[birthdate_range]' style='width: 4rem;'>
+                                <option value="before">Før</option>
+                                <option value="after">Efter</option>
+                                <option value="same">Samme</option>
+                            </select>
+                            <input type='text' value='' name='deltager_search[birthdate]' placeholder="åååå-mm-dd"/>
+                        </td>
+                        <td><b>Kategori:</b>
                             <select name="deltager_search[brugerkategori_id]" class="doubleinput">
                                 <option value=""></option>
 HTML;
@@ -99,16 +104,16 @@ HTML;
         $output .= <<<HTML
                             </select>
                         </td>
-                        <td><b>Forudbetalt:</b> <input type='text' value='' name='deltager_search[betalt_beloeb]' /></td>
                     </tr>
                     <tr>
                         <td><b>Fornavn:</b> <input type='text' value='' name='deltager_search[fornavn]' /></td>
                         <td><b>Efternavn:</b> <input type='text' value='' name='deltager_search[efternavn]' /></td>
-                        <td>&nbsp;</td>
+                        <td><b>Kaldenavn:</b> <input type='text' value='' name='deltager_search[nickname]' /></td>
                     </tr>
                     <tr>
-                        <td colspan='2'><b>Email:</b> <input class='doubleinput' type='text' value='' name='deltager_search[email]' /></td>
+                        <td><b>Email:</b> <input class='doubleinput' type='text' value='' name='deltager_search[email]' /></td>
                         <td><b>International:</b> {$this->view->genSelect('deltager_search[international]', array('', 'nej','ja'))}</td>
+                        <td><b>Forudbetalt:</b> <input type='text' value='' name='deltager_search[betalt_beloeb]' /></td>
                     </tr>
                     <tr>
                         <td><b>Adresse:</b> <input type='text' value='' name='deltager_search[adresse]' /></td>
@@ -123,14 +128,14 @@ HTML;
                     <tr>
                         <td><b>Alt.Tlf:</b> <input type='text' value='' name='deltager_search[tlf]' /></td>
                         <td><b>Mobil:</b> <input type='text' value='' name='deltager_search[mobiltlf]' /></td>
-                        <td><b>Mobil med:</b> {$this->view->genSelect('deltager_search[medbringer_mobil]', array('', 'nej','ja'))}</td>
+                        <td><b>Tilmeldt SMS:</b> {$this->view->genSelect('deltager_search[medbringer_mobil]', array('', 'nej','ja'))}</td>
                     </tr>
 
                     <tr>
                         <td>
-                            <b>Sprog:</b>
+                            <b>Sprog (aktiviteter):</b>
 HTML;
-            foreach ($model->getAvailableSprog() as $sprog) {
+            foreach ($model->getAvailableValues('sprog') as $sprog) {
                 $output .= "
                                 <label>
                                     <input class='langbox' type='checkbox' name='deltager_search[lang][".e($sprog)."]' value='".e($sprog)."'/>
@@ -145,32 +150,33 @@ HTML;
                     <tr>
                         <td><b>SuperGDS:</b> {$this->view->genSelect('deltager_search[supergds]', array('', 'nej','ja'))}</td>
                         <td><b>Flere GDSVagter:</b> {$this->view->genSelect('deltager_search[flere_gdsvagter]', array('', 'nej','ja'))}</td>
-                        <td><b>SuperGM:</b> {$this->view->genSelect('deltager_search[supergm]', array('', 'nej','ja'))}</td>
-                    </tr>
-
-                    <tr>
-                        <td><b>Arr. sovesal:</b> {$this->view->genSelect('deltager_search[sovesal]', array('', 'nej','ja'))}</td>
-                        <td><b>Arrangør igen:</b> {$this->view->genSelect('deltager_search[arrangoer_naeste_aar]', array('', 'nej','ja'))}</td>
-                        <td><b>Må kontaktes:</b> {$this->view->genSelect('deltager_search[may_contact]', array('', 'nej', 'ja'))}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Forfatter:</b> {$this->view->genSelect('deltager_search[forfatter]', array('', 'nej','ja'))}</td>
-                        <td><b>Rig onkel:</b> {$this->view->genSelect('deltager_search[rig_onkel]', array('', 'nej', 'ja'))}</td>
-                        <td><b>Hemmelig onkel:</b> {$this->view->genSelect('deltager_search[hemmelig_onkel]', array('', 'nej', 'ja'))}</td>
+                        <td><b>Ønsket antal GDS:</b> <input type='number' min='0' max='10' step='1' value='' name='deltager_search[desired_diy_shifts]'/></td>
+                        
                     </tr>
                     <tr>
                         <td><b>Opstart mandag:</b> {$this->view->genSelect('deltager_search[ready_mandag]', array('', 'nej', 'ja'))}</td>
                         <td><b>Opstart tirsdag:</b> {$this->view->genSelect('deltager_search[ready_tirsdag]', array('', 'nej', 'ja'))}</td>
-                        <td><b>Checkin-time:</b>  <input type='text' value='' name='deltager_search[checkin_time]' /></td>
+                        <td><b>Arrangør igen:</b> {$this->view->genSelect('deltager_search[arrangoer_naeste_aar]', array('', 'nej','ja'))}</td>
                     </tr>
                     <tr>
+                        <td><b>Arr. sovesal:</b> {$this->view->genSelect('deltager_search[sovesal]', array('', 'nej','ja'))}</td>
+                        <td><b>Ædru sovesal:</b> {$this->view->genSelect('deltager_search[sober_sleeping]', array('', 'nej','ja'))}</td>
+                        <td><b>Må kontaktes:</b> {$this->view->genSelect('deltager_search[may_contact]', array('', 'nej', 'ja'))}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Forfatter:</b> {$this->view->genSelect('deltager_search[forfatter]', array('', 'nej','ja'))}</td>
                         <td><b>Ønsket antal aktiviteter:</b> <input type='number' min='0' max='10' step='1' value='' name='deltager_search[desired_activities]'/></td>
-                        <td><b>Udeblevet:</b> {$this->view->genSelect('deltager_search[udeblevet]', array('', 'nej','ja'))}</td>
-                        <td><strong>Simultantolk:</strong> {$this->view->genSelect('deltager_search[interpreter]', array('', 'nej','ja'))}</td>
+                        <td><b>SuperGM:</b> {$this->view->genSelect('deltager_search[supergm]', array('', 'nej','ja'))}</td>
                     </tr>
                     <tr>
+                        <td><b>Rig onkel:</b> {$this->view->genSelect('deltager_search[rig_onkel]', array('', 'nej', 'ja'))}</td>
+                        <td><b>Hemmelig onkel:</b> {$this->view->genSelect('deltager_search[hemmelig_onkel]', array('', 'nej', 'ja'))}</td>
+                        <td><b>Økonomisk støtte:</b> {$this->view->genSelect('deltager_search[financial_struggle]', array('', 'nej', 'ja'))}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Simultantolk:</strong> {$this->view->genSelect('deltager_search[interpreter]', array('', 'nej','ja'))}</td>
+                        <td><b>Udeblevet:</b> {$this->view->genSelect('deltager_search[udeblevet]', array('', 'nej','ja'))}</td>
                         <td><b>Annulleret:</b> {$this->view->genSelect('deltager_search[annulled]', array('', 'nej','ja'))}</td>
-                        <td><b>Ønsket antal GDS:</b> <input type='number' min='0' max='10' step='1' value='' name='deltager_search[desired_diy_shifts]'/></td>
                     </tr>
                     <tr>
                         <td><b>Ungdomsskole:</b> <input class='tripleinput' type='text' value='' name='deltager_search[ungdomsskole]' /></td>
@@ -178,6 +184,7 @@ HTML;
                         <td><b>Scenarie:</b> <input class='tripleinput' type='text' value='' name='deltager_search[scenarie]' /></td>
                     </tr>
                     <tr>
+                        <td><b>Checkin-time:</b>  <input type='text' value='' name='deltager_search[checkin_time]' /></td>
                         <td><b>Skills:</b> <input class='tripleinput' type='text' value='' name='deltager_search[skills]' /></td>
                         <td><b>Noter:</b> <input class='tripleinput' type='text' value='' name='deltager_search[deltager_note]' /></td>
                     </tr>

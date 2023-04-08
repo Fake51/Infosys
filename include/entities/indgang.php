@@ -120,6 +120,14 @@ class Indgang extends DBObject
         return mb_stripos($this->type, 'madras') !== false;
     }
 
+    public function isDigital() {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return mb_stripos($this->type, 'digital') !== false;
+    }
+
     /**
      * returns a shorthand string for the object
      *
@@ -204,6 +212,24 @@ class Indgang extends DBObject
         return stripos($this->type, "medlemskab") !== false;
     }
 
+    public function isRich()
+    {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return stripos($this->type, "onkel") !== false;
+    }
+
+    public function isSecret()
+    {
+        if (!$this->isLoaded()) {
+            return false;
+        }
+
+        return stripos($this->type, "Hemmelig") !== false;
+    }
+
     public function getDescription($english = false)
     {
         if (!$this->isLoaded()) {
@@ -213,6 +239,7 @@ class Indgang extends DBObject
         $date_part = $this->spansAllConvention() ? 'Partout' : date('D', strtotime($this->start));
         if ($this->isEntrance()) {
             $description = $english ? 'Entrance' : "Indgang";
+            if ($this->isDigital()) $description .= ' (Digital)';
         } elseif ($this->isSleepticket()) {
             $description = $english ? 'Accommodation' : "Overnatning";
 
@@ -232,6 +259,11 @@ class Indgang extends DBObject
             return $this->type;
         }
 
+        if (preg_match("/Alea/", $this->type)) $description .= " Alea";
+        if (preg_match("/Arrangør/", $this->type)) $description .= " Arrangør";
+        if (preg_match("/Ung/", $this->type)) $description .= " Ung";
+        if (preg_match("/Barn/", $this->type)) $description .= " Barn";
+
         return danishDayNames("{$description} {$date_part}");
     }
 
@@ -241,8 +273,10 @@ class Indgang extends DBObject
             return '';
         }
 
-        $temp = $this->spansAllConvention() ? 'Partout' : date('D', strtotime($this->start));
-        return $english ? $temp : danishDayNames($temp);
+        $desc = $this->spansAllConvention() ? 'Partout' : date('D', strtotime($this->start));
+        $desc = $english ? $desc : danishDayNames($desc);
+        if ($this->isDigital()) $desc .= ' (Digital)';
+        return $desc;
     }
 
     public function getProperType() {

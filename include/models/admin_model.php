@@ -84,6 +84,7 @@ class AdminModel extends Model
         }
         $user = $this->createEntity('User');
         $user->user = trim($post->user);
+        $user->label = trim($post->label);
         $user->pass = md5(trim($post->pass));
         return (($user->insert()) ? $user : false);
     }
@@ -197,7 +198,7 @@ class AdminModel extends Model
         $this->db->exec('DELETE FROM deltagere_gdsvagter');
         $this->db->exec('DELETE FROM deltagere_madtider');
         $this->db->exec('DELETE FROM deltagere_tilmeldinger');
-        $this->db->exec('DELETE FROM deltagere_wear');
+        $this->db->exec('DELETE FROM deltagere_wear_order');
         $this->db->exec('DELETE FROM deltagere_indgang');
         $this->db->exec('DELETE FROM pladser');
         $this->db->exec('DELETE FROM participants_sleepingplaces');

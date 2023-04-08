@@ -110,7 +110,7 @@ class Select
      */
     protected $group_by = array();
 
-    protected static $matches = array('=', '!=', '<', '>','<=','>=','LIKE', 'IN', 'NOT IN','IS NULL','IS NOT NULL');
+    protected static $matches = array('=', '!=', '<', '>','<=','>=','LIKE', 'NOT LIKE', 'IN', 'NOT IN','IS NULL','IS NOT NULL');
 
     /**
      * constructor for the class - initiates the select for the calling object
@@ -229,6 +229,40 @@ class Select
         }
         $this->where_and_fields[] = "{$vars['field']} {$vars['match']}{$vars['value']}";
         $this->where_and_values[] = $value;
+        return $this;
+    }
+
+    /**
+     * sets a date comparison entry in the where clause for the select
+     *
+     * @param string $field - date filed to match against
+     * @param string $match - what kind of match to use
+     * @param string $value - date to match against
+     * @param string $logic - what type of logic to use (AND/OR)
+     * @param bool $quote - if the $field var should be quoted
+     *
+     * @throws DBException
+     * @access public
+     * @return Select
+     */
+    public function setWhereDate($field, $match, $value = null, $logic = 'and', $quote = true) {
+        $vars = $this->handleWhereInput($field, $match, $value, $quote);
+        if (empty($vars))
+        {
+            throw new DBException("Bad values for Select::setWhereDate(): {$field} - {$match} - {$value} - {$quote}");
+        }
+
+        $clause = "DATE({$vars['field']}) {$vars['match']} DATE({$vars['value']})";
+        if (strtolower($logic) === 'and') {
+            $this->where_and_fields[] = $clause;
+            $this->where_and_values[] = $value;
+        } elseif (strtolower($logic) === 'or'){
+            $this->where_or_fields[] = $clause;
+            $this->where_or_values[] = $value;
+        } else {
+            throw new DBException("Unknown logic for Select::setWhereDate(): $logic");
+        }
+
         return $this;
     }
 

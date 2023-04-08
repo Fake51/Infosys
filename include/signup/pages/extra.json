@@ -1,0 +1,150 @@
+{
+    "order": 10,
+    "slug": {
+        "en": "Extra",
+        "da": "Ekstra"
+    },
+    "title": {
+        "en": "Additional Information",
+        "da": "Ekstra informationer"
+    },
+    "display_logic": [
+        {
+            "type": "field_compare",
+            "status": "disabled",
+            "input": "participant",
+            "compare": "equals",
+            "value": "Juniordeltager"
+        },
+        {
+            "type": "checkbox",
+            "status": "normal",
+            "input": "junior:plus"
+        }
+    ],
+    "sections": [
+        {
+            "headline": {
+                "en": "The Otto Party",
+                "da": "Ottofesten"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "The Otto Party on Sunday is included in your entry ticket. This year, you can experience an exciting Sunday with fun activities and a lot of entertainment. Wind up your Fastaval with a huge party to the Ottoshow in the evening. Read more about [url=https:\/\/www.fastaval.dk\/en\/supersoendag\/\/]SuperSunday here[\/url].\u00a0",
+                        "da": "Ottofesten om s\u00f8ndagen er inkluderet i din entr\u00e9billet. Du kan i \u00e5r opleve en sp\u00e6ndende s\u00f8ndag med sjove aktiviteter og masser af underholdning. Slut Fastaval af med et brag af en fest til Ottoshowet om aftenen. L\u00e6s mere om [url=https:\/\/www.fastaval.dk\/supersoendag\/]SuperS\u00f8ndag her[\/url]."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Do you want this year\u2019s bottle carefully selected for the festive\u00a0occasion? We\u2019ll make sure to select the best bottle the budget allows.",
+                        "da": "Vil du have \u00e5rets fest flaske, s\u00e6rligt udvalgt til den festlige lejlighed? Vi s\u00f8rger for at f\u00e5 den bedste flaske til prisen."
+                    }
+                },
+                {
+                    "type": "checkbox",
+                    "text": {
+                        "en": "Sparkling wine ( DKK 99,- )",
+                        "da": "Mousserende vin ( DKK 99,- )"
+                    },
+                    "infosys_id": "misc:party1",
+                    "display_logic": [
+                        {
+                            "type": "age",
+                            "status": "disabled",
+                            "compare": "less",
+                            "value": 18
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "Support Fastaval as a rich aunt\/uncle",
+                "da": "St\u00f8t Fastaval som rig tante\/onkel"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "If you want to contribute to Fastaval with some additional coin, you can become a part of the rich aunts and uncles, and donate an amount of your choosing, in addition to your ticket etc. You can also choose if you want to appear on the list of charitable individuals, or if you wish to remain as a shadow benefactor.\u00a0\n\nThis year, the donations will be used to give financially challenged participants 2x free breakfast and dinner, if they feel a need for a financial contribution.",
+                        "da": "Hvis du har lyst til at bidrage med en ekstra skilling til Fastaval, kan du blive en del af de rige tanter og onkler, og donere et valgfrit bel\u00f8b til Fastaval, oveni din betaling for billet etc. Du kan selv v\u00e6lge om dit navn skal optr\u00e6de p\u00e5 listen over velg\u00f8rende personer, eller om du \u00f8nsker at forblive i skyggerne.\n\nI \u00e5r bruger vi st\u00f8tten til at give \u00f8konomisk tr\u00e6ngte deltagere 2x gratis morgen- og aftensmad, hvis de f\u00f8ler, de har behov for et \u00f8konomisk bidrag"
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b] Public support [\/b]",
+                        "da": "[b] Offentlig st\u00f8tte [\/b]"
+                    }
+                },
+                {
+                    "type": "select",
+                    "text": {
+                        "en": "I wish to be one of Fastaval's known patrons and hereby donate an amount of money in addition to my ticket. I [b]would[\/b] like to be mentioned on Fastaval's website. I want to donate (in dkk)\u00a0",
+                        "da": "Jeg vil gerne v\u00e6re en af Fastavals offentlige st\u00f8tter og donerer hermed et ekstra bel\u00f8b oveni billetprisen. Som tak vil jeg [b]gerne[\/b] n\u00e6vnes p\u00e5 Fastavals hjemmeside. Jeg vil gerne donere (i kr)"
+                    },
+                    "infosys_id": "misc:extra_support",
+                    "range": {
+                        "step": 100,
+                        "start": 0,
+                        "end": 1500
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b] Secret support [\/b]",
+                        "da": "[b] Hemmelig st\u00f8tte [\/b]"
+                    }
+                },
+                {
+                    "type": "select",
+                    "text": {
+                        "en": "I wish to be one of Fastaval's secret patrons and hereby donate an amount of money in addition to my ticket. I will [b]not[\/b] be mentioned on Fastaval's website. I want to donate (in dkk)\u00a0\u00a0",
+                        "da": "Jeg vil gerne v\u00e6re en af Fastavals hemmelige st\u00f8tter og donerer hermed et ekstra bel\u00f8b oveni billetprisen. Jeg vil [b]ikke[\/b] n\u00e6vnes p\u00e5 Fastavals hjemmeside. Jeg vil gerne donere (i kr)"
+                    },
+                    "infosys_id": "misc:secret_support",
+                    "range": {
+                        "step": 100,
+                        "start": 0,
+                        "end": 1500
+                    }
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "Comments",
+                "da": "Bem\u00e6rkninger"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Is there something you have not been able to share with us? Then write it here. Alternatively, you can write a nice message to our hard-working Infonauts.",
+                        "da": "Er der noget du ikke har haft mulighed for at fort\u00e6lle os? S\u00e5 kan du skrive det her. Eller er du altid velkommen til at skrive en s\u00f8d besked til vores h\u00e5rdtarbejdende Infonauter."
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "[b]Note:[\/b] We do not look at the comments until after sign-up has closed. If you have questions or need to get in contact with us, we can be reached by mail [email]info@fastaval.dk[\/email]\u00a0",
+                        "da": "[b]Bem\u00e6rk:[\/b] Vi kigger f\u00f8rst bem\u00e6rkningerne igennem efter at tilmeldingen er lukket. Hvis du har sp\u00f8rgsm\u00e5l eller skal i kontakt med os, kan du fange os p\u00e5 mail [email]info@fastaval.dk[\/email]\u00a0"
+                    }
+                },
+                {
+                    "type": "text_area",
+                    "text": {
+                        "en": "Comment",
+                        "da": "Kommentar"
+                    },
+                    "infosys_id": "note:comment"
+                }
+            ]
+        }
+    ]
+}

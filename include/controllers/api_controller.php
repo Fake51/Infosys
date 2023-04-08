@@ -37,8 +37,21 @@
 class ApiController extends Controller
 {
     protected $prerun_hooks = array(
-        array('method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup', 'requestPasswordReminder', 'getConfirmationData')),
+        ['method' => 'checkData', 'exclusive' => false, 'methodlist' => array('addWear', 'addGDS', 'addActivity', 'addEntrance', 'parseSignup', 'requestPasswordReminder', 'getConfirmationData')],
+        ['method' => 'allowCrossSiteAccess', 'exclusive' => true, 'methodlist' => []], 
     );
+
+    /**
+     * sets the proper header to allow cross site
+     * access to the api
+     *
+     * @access public
+     * @return void
+     */
+    public function allowCrossSiteAccess()
+    {
+        header('Access-Control-Allow-Origin: *');
+    }
 
     /**
      * checks that the user connecting is authenticated
@@ -164,7 +177,7 @@ class ApiController extends Controller
     public function parseSignup()
     {
         // save signup data
-        file_put_contents(__DIR__ . '/../signup-data/parse-' . date('Y-m-d_H:i:s'), print_r($this->json, true));
+        file_put_contents(SIGNUP_FOLDER.'data/parse-' . date('Y-m-d_H:i:s'), print_r($this->json, true));
 
         list($json_output, $participant) = $this->model->parseSignup($this->json);
 
@@ -473,25 +486,6 @@ class ApiController extends Controller
     }
 
     /**
-     * outputs json data and sets headers accordingly
-     *
-     * @param string $data        Data to output
-     * @param string $http_status HTTP status code
-     *
-     * @access protected
-     * @return void
-     */
-    protected function jsonOutput($data, $http_status = '200 Awesome', $content_type = 'text/plain')
-    {
-        $string = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        header('HTTP/1.1 ' . $http_status);
-        header('Content-Type: ' . $content_type . '; charset=UTF-8');
-        header('Content-Length: ' . strlen($string));
-        echo $string;
-        exit;
-    }
-
-    /**
      * method docblock
      *
      * @param
@@ -524,18 +518,6 @@ class ApiController extends Controller
     public function activityStructure()
     {
         $this->jsonOutput($this->model->getActivityStructure(), '200 Awesome', 'application/json');
-    }
-
-    /**
-     * sets the proper header to allow cross site
-     * access to the api
-     *
-     * @access public
-     * @return void
-     */
-    public function allowCrossSiteAccess()
-    {
-        header('Access-Control-Allow-Origin: *');
     }
 
     /**
@@ -729,9 +711,10 @@ class ApiController extends Controller
 
         if ($lang === 'en' || !$this->page->participant->speaksDanish()) {
             $this->page->setTemplate('confirmationdataen');
-
+            $this->page->days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         } else {
             $this->page->setTemplate('confirmationdata');
+            $this->page->days = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag', 'søndag'];
         }
 
         $participant_model = new ParticipantModel($this->dic->get('DB'), $this->config, $this->dic);
@@ -749,5 +732,21 @@ class ApiController extends Controller
         $model = $this->model->factory('Boardgames');
 
         $this->jsonOutput($model->getGameStatus(), '200 Here you are', 'application/json');
+    }
+
+    public function getUserMessages() {
+        if (empty($this->vars['id']) || !($participant = $this->model->findParticipant($this->vars['id'])) || $participant->annulled === 'ja') {
+            header('HTTP/1.1 400 No such user');
+            exit;
+        }
+
+        $pass = isset($this->page->request->post->pass) ? $this->page->request->post->pass : $this->page->request->get->pass;
+
+        if (!$pass || $participant->password != $pass) {
+            header('HTTP/1.1 403 No access');
+            exit;
+        }
+
+        $this->jsonOutput($this->model->getUserMessages($participant));
     }
 }

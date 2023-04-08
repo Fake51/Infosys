@@ -111,7 +111,7 @@ class Migration
 
         }
 
-        if (!file_put_contents(MIGRATION_FOLDER . self::INDEX_FILE, json_encode($migrations))) {
+        if (!file_put_contents(MIGRATION_FOLDER . self::INDEX_FILE, json_encode($migrations, JSON_PRETTY_PRINT))) {
             throw new MigrationException('Cannot write to migration index file!');
         }
 
@@ -197,14 +197,20 @@ WHERE
             $contents = file_get_contents($migration_file);
 
             if ($contents) {
-                preg_match_all('/^.+?;\\s*$/ms', $contents . ';', $matches);
+                // Match single line comments or multiline queries
+                preg_match_all('/^[ \n]*--.+?$|^.+?;\s*$/ms', $contents . ';', $matches);
 
                 $this->log->logToFile('Running migration ' . $migration_file . ' with id ' . $id);
 
                 foreach ($matches[0] as $query) {
                     $query = trim($query, "\n ;");
+                    if (strpos($query, "--") === 0) {
+                        $this->log->logToFile('Skipping comment '.$query);
+                        continue; //Skip comment
+                    }
 
                     if ($query) {
+                        $this->log->logToFile('Executing query: '.$query);
                         $this->db->exec($query);
                     }
 

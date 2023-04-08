@@ -54,6 +54,24 @@ class PhotoController extends Controller
             return $this->send404();
         }
 
+        $user = $this->model->getLoggedInUser();
+        if(strtotime($this->config->get('con.signupend')) < strtotime('now')) {
+            $message_da = "Det er for sent at uploade photo. Tilmeldingen er slut og navneskiltene er ved at blive lavet.<br>";
+            $message_en = "It is too late to uploade a photo. Sign-up has ended and the name tags are already in the making<br>";
+
+            if ($user === false) {
+                echo $message_da;
+                echo $message_en;
+                exit;
+            }
+
+            if (!$user->hasRole('Infonaut')) {
+                $this->errorMessage("Tilmeldingen er lukket og kun infonauter kan uploade photo");
+                $this->hardRedirect($this->url('deltagerehome'));
+            }
+        }
+
+
         $this->page->clearEarlyLoadJs();
 
         $this->page->registerLateLoadJS('jquery.2.2.4.min.js');
@@ -89,7 +107,13 @@ class PhotoController extends Controller
             $this->page->setStatus('500', 'Upload failed');
 
         } else {
-            $this->log('Deltager #' . $this->model->getParticipantIdFromIdentifier($this->vars['identifier']) . ' har uploadet originalt billede', 'Photo', null);
+            $user = $this->model->getLoggedInUser();
+            $id = $this->model->getParticipantIdFromIdentifier($this->vars['identifier']);
+            if($user === false) {
+                $this->log("Deltager #$id har uploadet originalt billede", 'Photo', null);
+            } else {
+                $this->log("$user->user uploadede originalt billede for deltager #$id", 'Photo', $user);
+            }
         }
     }
 
@@ -111,7 +135,13 @@ class PhotoController extends Controller
             $this->page->setStatus('500', 'Upload failed');
 
         } else {
-            $this->log('Deltager #' . $this->model->getParticipantIdFromIdentifier($this->vars['identifier']) . ' har uploadet tilpasset billede', 'Photo', null);
+            $user = $this->model->getLoggedInUser();
+            $id = $this->model->getParticipantIdFromIdentifier($this->vars['identifier']);
+            if($user === false) {
+                $this->log("Deltager #$id har uploadet tilpasset billede", 'Photo', null);
+            } else {
+                $this->log("$user->user uploadede tilpasset billede for deltager #$id", 'Photo', $user);
+            }
         }
     }
 
@@ -150,21 +180,31 @@ class PhotoController extends Controller
      */
     public function sendUploadReminders()
     {
+die('Not sending photo reminders');
         $participant_model = $this->model->factory('Participant');
+        $participants = $this->model->fetchParticipantsToRemind(0);
+
+        echo "Sender foto reminder mail til ".count($participants)." deltagere<br>\n";
+
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
 
         // loop over participants, get photo upload link, render email, send, log, done
-        foreach ($this->model->fetchParticipantsToRemind(self::REMINDER_DAYS) as $participant) {
+        $count = 0;
+        foreach ($participants as $participant) {
             $this->page->participant = $participant;
             $this->page->link        = $participant_model->getPhotoUploadLink($participant);
 
+            $signup_end_time = strtotime($this->config->get('con.signupend'));
             if (!$participant->speaksDanish()) {
                 $title = 'Fastaval: photo upload reminder';
+                $this->page->signup_end_time = date('M d, Y', $signup_end_time);
                 $this->page->setTemplate('photo/sendphotouploadreminderen');
-
             } else {
                 $title = 'Fastaval: foto upload reminder';
+                $this->page->signup_end_time = date('d/m-Y', $signup_end_time);
                 $this->page->setTemplate('photo/sendphotouploadreminderda');
-
             }
 
             $mail = new Mail($this->config);
@@ -177,10 +217,10 @@ class PhotoController extends Controller
             $mail->send();
 
             $this->log('Sent photo upload reminder email to ' . $participant->email, 'Photo email reminder', null);
-
+            $count++;
         }
-
-        exit;
+        $this->log("Finished sending photo upload reminders to $count participants", 'Photo email reminder', null);
+        die();
     }
 
     /**

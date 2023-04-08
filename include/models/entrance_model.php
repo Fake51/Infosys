@@ -47,7 +47,7 @@ class EntranceModel extends Model
 
 
     /**
-     * tries to create a wear type
+     * tries to create an entry type
      *
      * @param RequestVars $post - POST vars
      *
@@ -68,9 +68,9 @@ class EntranceModel extends Model
     }
 
     /**
-     * tries to update a wear type
+     * tries to update an entry type
      *
-     * @param object $wear - Wear entity
+     * @param object $indgang - entrance entity
      * @param RequestVars $post - POST vars
      *
      * @access public
@@ -78,16 +78,12 @@ class EntranceModel extends Model
      */
     public function updateEntry($indgang, RequestVars $post)
     {
-        if (!is_object($indgang) || !$indgang->isLoaded())
-        {
-            return false;
-        }
-        if (empty($post->type) || empty($post->pris))
-        {
-            return false;
-        }
+        if (!is_object($indgang) || !$indgang->isLoaded()) return false;
+        if (empty($post->type)) return false;
+
         $indgang->type =  $post->type;
-        $indgang->pris = $post->pris;
+        $indgang->pris = $post->pris ?? 0;
+        $indgang->start = date('Y-m-d H:i:s', strtotime($post->start));
         return $indgang->update();
     }
 

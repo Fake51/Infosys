@@ -1,0 +1,64 @@
+{
+    "order_header": {
+        "en": "Wear orders",
+        "da": "Wear bestillinger"
+    },
+    "no_orders": {
+        "en": "You haven't ordered any wear",
+        "da": "Du har ikke bestil noget wear"
+    },
+    "amount": {
+        "en": "Amount",
+        "da": "Antal"
+    },
+    "add": {
+        "en": "Add",
+        "da": "Tilføj"
+    },
+    "delete": {
+        "en": "Delete",
+        "da": "Slet"
+    },
+    "no_wear_price": {
+        "en": "The wear type isn't availble to this type of participant",
+        "da": "Wear typen tilbydes ikke til denne type deltager"
+    },
+    "max_error": {
+        "en": "You're not allowed to order more than",
+        "da": "Du må ikke bestille mere end"
+    },
+    "missing_error": {
+        "en": "You have to select a",
+        "da": "Du skal huske at vælge en"
+    },
+    "required": {
+        "en": "Required",
+        "da": "Påkrævet"
+    },
+    "range_error": {
+        "en": "Amount must be a number between 1 and ",
+        "da": "Antal skal være et tal mellem 1 og "
+    },
+    "attribute_type": {
+        "model": {
+            "en": "Model",
+            "da": "Model",
+            "position": 1
+        },
+        "color": {
+            "en": "Color",
+            "da": "Farve",
+            "position": 2
+        },
+        "size": {
+            "en": "Size",
+            "da": "Størrelse",
+            "position": 3
+        },
+        "design": {
+            "en": "Design",
+            "da": "Design",
+            "position": 4
+        }
+    }
+}

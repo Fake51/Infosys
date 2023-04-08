@@ -1,0 +1,44 @@
+<h2>Sidste påmindelse om betaling til Fastaval <?=$this->year?></h2>
+
+<p>
+    Hej <?= e($this->participant->fornavn);?> <?= e($this->participant->efternavn);?>,
+</p>
+
+<p>Vi skriver til dig, fordi vi ikke kan se din betaling for Fastaval <?=$this->year?>.</p>
+
+<p>Har du allerede betalt må du meget gerne kontakte os på <a href="mailto:info@fastaval.dk">info@fastaval.dk</a>, så vi kan få styr på betalingen.</p>
+
+<p>Har du ikke betalt endnu, så er dette sidste chance inden <strong>din tilmelding bliver annulleret</strong>.</p>
+
+<p>Det udestående beløb er på <strong><?=$this->payment_remainder?></strong>kr.</p>
+<p>Ved betaling skal du HUSKE at anføre dit navn og deltagernummer som er:<strong><?=$this->participant->id?></strong></p>
+
+<p>
+    Betal nemt og hurtigt ved at benytte mobilepay - send ovenstående beløb til 438490 (Alea).<br>
+    Det er vigtigt, at du betaler fra samme telefonnummer, som du har angivet i din tilmelding. Hvis det ikke er muligt,
+    skriv til <a href=mailto:andreas@fastaval.dk>andreas@fastaval.dk</a>, så finder vi en løsning. 
+</p>
+
+<h4>Betaling via bankoverførsel</h4>
+<p>
+    Har du ikke mulighed for at betale via MobilePay, så kan du også gøre det via bankoverførsel. Det er dog noget
+    dyrere, fordi det involverer mere arbejde. Derfor tager vi et gebyr på <?= e($this->banking_fee);?>,- for
+    betaling via bankoverførsel.
+</p>
+
+<p>For at betale via bankoverførsel skal du benytte dig af informationerne herunder:</p>
+<ul>
+    <li>
+        Du skal overføre <?= e($this->payment_remainder + floatval($this->banking_fee));?>kr. 
+        (<?= e($this->payment_remainder);?>kr + <?= e($this->banking_fee);?>kr i gebyr) enten via indbetalingskort
+        eller direkte overførsel
+    </li>
+    <li>Ved indbetaling på indbetalingskort: Kortart: +73 / Kreditornr.: 84520098</li>
+    <li>Ved bankoverførsel til vores bankkonto: Reg.: 9314 / Kontonr.: 4573884464</li>
+    <li>Ved indbetaling fra en bank UDENFOR Danmark, så kontakt venligst <a href=mailto:fastaval@fastaval.dk>fastaval@fastaval.dk</a></li>
+    <li>deadline for indbetaling er her ligeledes <?=$this->payment_day?></li>
+    <li>Anfør ALTID navn og deltager ID så vi ved hvem betalingen var fra</li>
+</ul>
+<p> </p>
+<p><strong>Vi glæder os til at se dig på Fastaval <?=$this->year?>!</strong></p>
+<p>Mvh Fastaval</p>

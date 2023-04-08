@@ -34,6 +34,10 @@
  * @license  http://www.gnu.org/licenses/gpl.html GPL 3
  * @link     http://www.github.com/Fake51/Infosys
  */
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class ParticipantController extends Controller
 {
     /**
@@ -46,7 +50,21 @@ class ParticipantController extends Controller
      * @var array
      */
     protected $prerun_hooks = array(
-        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array('displayParticipantInfo', 'showSignupDetails', 'showSignupDetailsJson', 'listAssignedGMs', 'ean8SmallBarcode', 'ean8Barcode', 'ean8Badge', 'processPayment', 'registerPayment', 'showPaymentDone', 'resetParticipantPassword', 'sendFirstPaymentReminder', 'sendSecondPaymentReminder', 'sendLastPaymentReminder', 'cancelParticipantSignup')),
+        array('method' => 'checkUser','exclusive' => true, 'methodlist' => array(
+            'displayParticipantInfo',
+            'showSignupDetails',
+            'showSignupDetailsJson',
+            'listAssignedGMs',
+            'ean8SmallBarcode',
+            'ean8Barcode',
+            'ean8Badge',
+            'processPayment',
+            'registerPayment',
+            'showPaymentDone',
+            'resetParticipantPassword',
+            'cronPaymentReminder',
+            'cancelParticipantSignup',
+        )),
     );
 
     /**
@@ -79,6 +97,24 @@ class ParticipantController extends Controller
     public function visDeltager()
     {
         if (!empty($this->vars['id']) && ($deltager = $this->model->findDeltager($this->vars['id']))) {
+            $countries = [];
+            foreach($this->model->getCountries() as $country) {
+                $countries[$country['name_da']] = $country['name_da'];
+            }            
+            $this->page->countries = json_encode($countries);
+            
+            $work_areas = [0 => 'Intet arrangørområde'];
+            foreach($this->model->getWorkAreas() as $area) {
+                $work_areas[$area['name_da']] = $area['name_da'];
+            }            
+            $this->page->work_areas = json_encode($work_areas);
+
+            $games = [ 0 => 'Intet scenarie/brætspil'];
+            foreach($this->model->getGames() as $game) {
+                $games[$game['navn']] = $game['navn'];
+            }            
+            $this->page->games = json_encode($games);
+
             $this->page->setTitle(e($deltager->getName() . ' - Deltager'));
             $this->page->deltager      = $deltager;
             $this->page->deltager_info = $this->model->findDeltagerInfo($deltager);
@@ -186,8 +222,15 @@ class ParticipantController extends Controller
             return;
         }
 
-        $participants = $this->model->getSignupsForSchedule($afvikling);
-        $this->model->setSearchBaseIds($participants);
+        //Do we only want to see people assigend to a group?
+        if ($this->vars['assigned'] === 'assigned') {
+            $ids = $afvikling->getParticipantsOnTeams();
+            $session         = $this->dic->get('Session');
+            $session->search = ['ids' => $ids];
+        } else {
+            $participants = $this->model->getSignupsForSchedule($afvikling);
+            $this->model->setSearchBaseIds($participants);
+        }
 
         $get = $this->page->request->get;
 
@@ -360,12 +403,12 @@ class ParticipantController extends Controller
     {
         return array('deltager_search' => array(
                                                 'id' => '',
-                                                'gender' => '', 
                                                 'alder' => '',
                                                 'brugerkategori_id' => '',
                                                 'betalt_beloeb' => '',
                                                 'fornavn' => '',
                                                 'efternavn' => '',
+                                                'nickname' => '',
                                                 'email' => '',
                                                 'international' => '',
                                                 'adresse' => '',
@@ -391,6 +434,7 @@ class ParticipantController extends Controller
                                                 'forfatter' => '',
                                                 'rig_onkel' => '',
                                                 'hemmelig_onkel' => '',
+                                                'financial_struggle' => '',
                                                 'tilmeld_scenarieskrivning' => '',
                                                 'krigslive_bus' => '',
                                                 'ungdomsskole' => '',
@@ -725,7 +769,9 @@ class ParticipantController extends Controller
         if (!$this->page->request->isPost()) {
             $this->page->deltager = $deltager;
             $activities = $this->model->getAllAktiviteter();
-            usort($activities, create_function('$a, $b', 'return strcmp($a->navn, $b->navn);'));
+            usort($activities, function($a, $b) { 
+                return strcmp($a->navn, $b->navn);
+            });
             $this->page->aktiviteter = $activities;
 
             $this->page->setTemplate('editAktiviteter');
@@ -1015,14 +1061,20 @@ class ParticipantController extends Controller
             return;
         }
 
+        // Set page layout without header and nice rounded boxes
         $this->page->layout_template = "external.phtml";
-        $this->page->setTemplate($deltager->international == 'ja' ? 'external_pass_en' : 'external_pass');
-        if ($this->externalLogin($deltager)) {
-            $this->page->deltager      = $deltager;
-            $this->page->deltager_info = $this->model->findDeltagerInfo($deltager);
-            $this->page->setTemplate($deltager->international == 'ja' ? 'external_en' : 'external');
-            $this->log("Deltager #{$deltager->id} har tjekket sine detaljer på den eksternt tilgængelige side", "Deltager", null);
+
+        // Login first
+        if (!$this->externalLogin($deltager)) {
+            $this->page->setTemplate(!$deltager->speaksDanish() ? 'external_pass_en' : 'external_pass');
+            return;
         }
+        
+        $this->page->deltager       = $deltager;
+        $this->page->deltager_info  = $this->model->findDeltagerInfo($deltager);
+        $this->page->sleep_data     = $this->model->getSleepDataForParticipant($this->page->deltager);
+        $this->page->setTemplate(!$deltager->speaksDanish() ? 'external_en' : 'external');
+        $this->log("Deltager #{$deltager->id} har tjekket sine detaljer på den eksternt tilgængelige side", "Deltager", null);
     }
 
     /**
@@ -1087,7 +1139,7 @@ class ParticipantController extends Controller
 
             $wear = array();
             foreach ($deltager->getWear() as $w) {
-                $wear[$w->getWear()->navn] = array('size' => $w->size, 'count' => $w->antal);
+                $wear[$w->getWear()->navn] = array('size' => $w->getSizeName(), 'count' => $w->antal);
             }
 
             $aktiviteter = array();
@@ -1125,11 +1177,16 @@ class ParticipantController extends Controller
     public function displaySMSDialog()
     {
         if (!($this->model->getLoggedInUser()->hasRole('Admin') || $this->model->getLoggedInUser()->hasRole('SMS'))) {
-            $this->errorMessage('Du har ikke adgang til at sende SMSer');
+            $this->errorMessage('Du har ikke adgang til at sende beskeder');
             $this->hardRedirect('deltagerehome');
         }
 
-        $this->page->receivers = $this->model->getSavedSearchResult();
+        $receivers = $this->model->getSavedSearchResult();
+        foreach($receivers as $index => $reciever) {
+            if (empty($reciever->gcm_id)) unset($receivers[$index]);
+        }
+
+        $this->page->receivers = $receivers;
     }
 
     /**
@@ -1152,22 +1209,30 @@ class ParticipantController extends Controller
     public function sendSMSes()
     {
         $post = $this->page->request->post;
-        if (empty($post->sms_afsender) || empty($post->sms_besked) || !($this->model->getLoggedInUser()->hasRole('Admin') || $this->model->getLoggedInUser()->hasRole('SMS'))) {
+        if (empty($post->sms_afsender) || empty($post->sms_besked_da) || empty($post->sms_besked_en) || !($this->model->getLoggedInUser()->hasRole('Admin') || $this->model->getLoggedInUser()->hasRole('SMS'))) {
             $this->errorMessage("SMSerne blev ikke sendt - besked eller afsender manglede.");
             $this->hardRedirect($this->url('sms_dialog'));
         }
 
+        $this->successMessage('Sender beskeder, se log for resultat.');
+
+        header("HTTP/1.0 303 GO");
+        header("Location: ".$this->url('show_search_result'));
+
+        // Finish response before sending messages, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
+        
         $result = $this->model->sendSMSes($post);
 
         if (empty($result['success'])) {
             $this->errorMessage("SMSerne kunne ikke sendes.");
-
         } else {
             $this->successMessage('Sendte ' . $result['success'] . ' beskeder. ' . $result['failure'] . ' beskeder fejlede.');
         }
 
-        $this->log("{$this->model->getLoggedInUser()->user} har sendt {$result['success']} beskeder, med {$result['failure']} fejlede", "SMS", $this->model->getLoggedInUser());
-        $this->hardRedirect($this->url('deltagerehome'));
+        $this->log("{$this->model->getLoggedInUser()->user} har sendt {$result['success']} beskeder, med {$result['failure']} fejlede", "Besked", $this->model->getLoggedInUser());
+        exit;
     }
 
     /**
@@ -1686,28 +1751,40 @@ class ParticipantController extends Controller
         $this->page->updated = $updated;
     }
 
-    // todo add method for updating bank payment details, here, in routes, and in model
+    /**
+     * Function for sending out payment reminders.
+     * Meant to be called by a cron job requesting 'participant/payment-reminder/cron'
+     */
+    public function cronPaymentReminder() {
+        $late = strtotime($this->config->get('con.signupend')) < strtotime('now');
+        $this->sendAllPaymentReminders($late);
+        exit;
+    }
 
-    public function sendFirstPaymentReminder()
+    public function sendAllPaymentReminders($late = false)
     {
-die('Not sending first payment reminders');
+        $participants = $this->model->getParticipantsForPaymentReminder(3);
+        // echo ($late ? "Late" : "Not Late"). "<br>\n";
+        echo "Sender betalings reminder mail til ".count($participants)." deltagere<br>\n";
+die("Not actually sending reminders<br>\n");
 
-        $participants = $this->model->getParticipantsForPaymentReminder();
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
 
         $count = 0;
         $this->page->banking_fee = $this->model->findBankingFee()->pris;
 
+        $template = $late ? "paymentreminderlate" : "paymentreminderregular";
+        $late_text = $late ? "late " : "";
         foreach ($participants as $participant) {
-            $this->sendPaymentReminder($participant, 'firstpaymentreminder', $participant->speaksDanish());
-
-            $this->log('System sent payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
-
+            $this->sendPaymentReminder($participant, $template, $participant->speaksDanish());
+            $this->log("System sent ${late_text}payment reminder to participant (ID: " . $participant->id . ')', 'Payment', null);
             $count++;
         }
 
-        $this->log('7 day payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
-
-        exit;
+        $this->log("$late_text payment reminder check done. Sent reminders to " . $count . ' participants', 'Payment', null);
+        die();
     }
 
     public function sendSecondPaymentReminder()
@@ -1731,40 +1808,49 @@ die('Not sending second payment reminders');
         exit;
     }
 
-    public function sendLastPaymentReminder()
-    {
-die('Not sending last payment reminders');
-        $participants = $this->model->getParticipantsForPaymentReminder();
+    public function sendFinalPaymentReminder() {
 
+        $participants = $this->model->getParticipantsForPaymentReminder(0);
+        echo "Sender betalings reminder mail til ".count($participants)." deltagere<br>\n";
+die("Not actually sending final reminders<br>\n");
+
+        $year = date('Y');
         $count = 0;
         $this->page->banking_fee = $this->model->findBankingFee()->pris;
 
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
+
         foreach ($participants as $participant) {
-            $this->sendPaymentReminder($participant, 'lastpaymentreminder', $participant->speaksDanish());
-
-            $this->log('System sent payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
-
+            $this->sendPaymentReminder(
+                $participant, 'finalpaymentreminder',
+                $participant->speaksDanish(),
+                "Sidste reminder om betaling for Fastaval $year",
+                "Final reminder of payment for Fastaval $year",
+            );
+            $this->log('System sent final payment reminder to participant (ID: ' . $participant->id . ')', 'Payment', null);
             $count++;
         }
 
         $this->log('Last payment reminder check done. Sent reminders to ' . $count . ' participants', 'Payment', null);
-
-        exit;
+        die();
     }
 
     protected function sendPaymentReminder($participant, $template, $danish, $danish_title = '', $english_title = '')
     {
         $this->model->setupPaymentReminderEmail($participant, $this->page);
 
+        $year = date('Y', strtotime($this->config->get('con.start')));
+        $this->page->year = $year;
         if ($danish) {
-            $title = $danish_title ? $danish_title : 'Reminder: betaling for tilmelding til Fastaval 2018';
+            $title = $danish_title ?? 'Reminder: betaling for tilmelding til Fastaval '.$year;
             $this->page->setTemplate('participant/' . $template . '-da');
 
         } else {
-            $title = $english_title ? $english_title : 'Reminder: payment for Fastaval 2018';
+            $title = $english_title ?? 'Reminder: payment for Fastaval '.$year;
             $this->page->setTemplate('participant/' . $template . '-en');
         }
-
 
         $mail = new Mail($this->config);
 
@@ -1774,6 +1860,92 @@ die('Not sending last payment reminders');
             ->setBodyFromPage($this->page);
 
         return $mail->send();
+    }
+
+    public function sendWelcomeMail() {
+        $participants = $this->model->getParticipantsForwelcomeMail();
+        echo "Sending to ".count($participants)." participants<br>\n";
+die("Not actually sending welcome mail\n");
+        
+        // Finish response before sending mails, to avoid timeout
+        session_write_close();
+        fastcgi_finish_request();
+
+        $count = 0;
+        foreach ($participants as $participant) {
+            $this->page->id = $participant->id;
+            $this->page->code = $participant->password;
+            $this->page->name = $participant->getName();
+
+            $year = date('Y', strtotime($this->config->get('con.start')));
+            if ($participant->speaksDanish()) {
+                $title = $danish_title ? $danish_title : "Fastaval $year - Deltagerseddel";
+                $this->page->setTemplate('participant/welcomemailda');
+            } else {
+                $title = $english_title ? $english_title : "Fastaval $year - Participant sheet";
+                $this->page->setTemplate('participant/welcomemailen');
+            }
+    
+            $mail = new Mail($this->config);
+    
+            $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+                ->setRecipient($participant->email)
+                ->setSubject($title)
+                ->setBodyFromPage($this->page);
+    
+            $mail->send();
+    
+            $this->log('System sent welcome mail to participant (ID: ' . $participant->id . ')', 'Mail', null);
+
+            $count++;
+        }
+
+        $this->log("Welcome mail sent to $count participants", 'Mail', null);
+
+        exit;
+    }
+
+    public function sendReviewMail() {
+        $participants = $this->model->getParticipantsForwelcomeMail();
+        echo "Sending to ".count($participants)." participants<br>\n";
+die("Not actually sending review mail\n");
+        ignore_user_abort(true);
+        flush();
+        session_write_close();
+
+        $count = 0;
+        foreach ($participants as $participant) {
+            if(!$participant->email) continue;
+
+            $this->page->name = $participant->getName();
+
+            $year = date('Y', strtotime($this->config->get('con.start')));
+            $this->page->year = $year;
+            if ($participant->speaksDanish()) {
+                $title = $danish_title ? $danish_title : "Evaluering af Fastaval $year";
+                $this->page->setTemplate('participant/reviewda');
+            } else {
+                $title = $english_title ? $english_title : "Evaluation of Fastaval $year";
+                $this->page->setTemplate('participant/reviewen');
+            }
+    
+            $mail = new Mail($this->config);
+    
+            $mail->setFrom($this->config->get('app.email_address'), $this->config->get('app.email_alias'))
+                ->setRecipient($participant->email)
+                ->setSubject($title)
+                ->setBodyFromPage($this->page);
+    
+            $mail->send();
+    
+            $this->log('System sent evaluation mail to participant (ID: ' . $participant->id . ')', 'Mail', null);
+
+            $count++;
+        }
+
+        $this->log("Evaluation mail sent to $count participants", 'Mail', null);
+
+        exit;
     }
 
     public function registerBankTransfer()
@@ -1886,7 +2058,415 @@ exit;
         $this->page->double_booked_participants = $this->model->findDoubleBookedParticipants();
     }
 
+    /**
+     * List participants that need a refund
+     *
+     * @access public
+     * @return void
+     */
     public function showRefund(){
         $this->page->rfundees = $this->model->findPeopleNeedingRefund();
     }
+
+
+    /**
+     * List participants with the information needed for name tags
+     *
+     * @access public
+     * @return void
+     */
+    public function nameTagList(){
+        $participants = $this->model->findAll();
+        $this->model->generateParticipantBarcodes($participants);
+
+        if ($this->page->request->isPost()){
+            $post = $this->page->request->post;
+        }
+
+        // Handle POST request to download spreadsheet
+        if (isset($post->download_tag_list)) {
+            // Handle CVS file
+            if ($post->filetype === "csv") {
+                $data = [ 0 => ["ID", "Kaldenavn", "Pronomen", "Område"]];
+                foreach ($participants as $participant) {
+                    $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName();
+                    $work_area = $participant->work_area ? $participant->arbejdsomraade : "";
+                    $data[] = [
+                        $participant->id,
+                        $nickname,
+                        $participant->getPronoun(),
+                        $work_area,
+                    ];
+                }
+                $this->returnCSV($data, "nametag-list");
+                exit;
+            }
+
+            // Handle Excel spreadsheet
+            if ($post->filetype === "xlsx") {
+                $file_dir = PUBLIC_PATH .'sheets';
+                $file_path = $file_dir .'/nametag_sheet.xlsx';
+
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                $row = 1;
+                foreach ($participants as $participant) {
+                    $sheet->setCellValue('A'.$row, $participant->id);
+                    
+                    $nickname = !empty($participant->nickname) ? $participant->nickname: $participant->getName();
+                    $sheet->setCellValue('B'.$row, $nickname);
+                    
+                    $sheet->setCellValue('C'.$row, $participant->getPronoun());
+
+                    $barcode = $this->model->generateEan8SheetBarcode($participant->id);
+
+                    $barcode_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                    $barcode_drawing->setName('Barcode'.$participant->id);
+                    $barcode_drawing->setDescription('Barcode'.$participant->id);
+                    $barcode_drawing->setPath($barcode); /* put your path and image here */
+                    $barcode_drawing->setCoordinates('D'.$row);
+                    $barcode_drawing->setHeight(82);
+                    $barcode_drawing->setWorksheet($spreadsheet->getActiveSheet());
+                    $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(83,'px');
+
+                    // Extra stuff for organizers
+                    if($participant->isArrangoer()){
+                        $sheet->setCellValue('E'.$row, $participant->arbejdsomraade);
+
+                        $photo = $this->model->fetchCroppedPhoto($participant);
+                        if($photo != '') {
+                            $photo_drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                            $photo_drawing->setName('Photo'.$participant->id);
+                            $photo_drawing->setDescription('Photo'.$participant->id);
+                            $photo_drawing->setPath(PUBLIC_PATH.$photo); /* put your path and image here */
+                            $photo_drawing->setCoordinates('F'.$row);
+                            $photo_drawing->setHeight(300,'px');
+                            $photo_drawing->setWorksheet($spreadsheet->getActiveSheet());
+                            $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(300,'px');
+                        }
+                        
+                    }
+                    $row++;
+                }
+
+                // Set autosize for collumns
+                $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(140,'px');
+                $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(TRUE);
+                $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(210,'px');
+                
+                $writer = new Xlsx($spreadsheet);
+                if (!file_exists($file_dir)) {
+                    mkdir($file_dir, 0777, true);
+                }
+                $writer->save($file_path);
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="name-tag-list.xlsx"');
+                header('Cache-Control: max-age=0');
+                readfile($file_path);
+                exit;
+            }
+
+            $this->errorMessage('Ukendt filtype '. $post->filetype);
+        }
+
+        // Handle POST request to download images
+        if (isset($post->download_tag_images)) {
+            // Path and file names
+            $path = PUBLIC_PATH . 'uploads/';
+            $archive = $path.'nametag-images.zip';
+
+            // create new zip archive
+            $zip = new ZipArchive();
+            $zip->open($archive, ZIPARCHIVE::CREATE );
+            
+            if ($post->images === "both" || $post->images === "photos") {
+                $dir = "";
+                if ($post->images === "both") {
+                    $zip->addEmptyDir('fotos');
+                    $dir = "fotos/";
+                }
+
+                // Get all croped photos
+                $photos = glob($path.'photo-cropped-*');
+                foreach ($photos as $photo){
+                    // Get identifier and file type from photo
+                    preg_match("/photo-cropped-(.+)\.(.+)/", $photo, $matches);
+                    $identifier = $matches[1];
+                    $filetype = $matches[2];
+
+                    // Find the participant(organizer) the photo belongs to 
+                    if ($participant = $this->model->getParticipantFromPhotoidentifier($identifier)){
+                        // Add photo to zip file, with a more useful name
+                        $name = preg_replace("/\s+/","_", $participant->getName() );
+                        $filename = "{$participant->id}_$name.$filetype";
+                        $zip->addFile($photo,$dir.$filename);
+                    }
+                }
+            }
+
+            if ($post->images === "both" || $post->images === "barcodes") {
+                $dir = "";
+                if ($post->images === "both") {
+                    $zip->addEmptyDir('stregkoder');
+                    $dir = "stregkoder/";
+                }
+
+                foreach ($participants as $participant) {
+                    // Get barcode filename
+                    $barcode = $this->model->generateEan8SheetBarcode($participant->id);
+                    // Get filetype
+                    preg_match("/\.(.+)$/", $barcode, $matches);
+                    $filetype = $matches[1];
+                    // Create useful filename for barcode
+                    $name = preg_replace("/\s+/","_", $participant->getName() );
+                    $filename = "{$participant->id}_$name.$filetype";
+                    // Add barcode to zip file
+                    $zip->addFile($barcode,$dir.$filename);
+                } 
+            }
+
+            // Close the archive
+            $zip->close();
+            $attachement = "nametag_images_{$post->images}_".date("Ymd").".zip";
+            // Set headers for downloading the zip file
+            header("Content-type: application/zip"); 
+            header("Content-Disposition: attachment; filename=$attachement"); 
+            header("Pragma: no-cache"); 
+            header("Expires: 0");
+            // Add zip file to the response
+            readfile($archive);
+            // Delete the zip file afterwards
+            unlink($archive);
+            exit;
+        }
+        
+        $photos = [];
+        foreach ($participants as $participant) {
+            $photos[$participant->id] = $this->model->fetchCroppedPhoto($participant);
+        }
+
+        $this->page->participants = $participants;
+        $this->page->photos = $photos;
+    }
+
+    /**
+     * Page for automatically registering payments from mobilepay
+     *
+     * @access public
+     * @return void
+     */
+    function registerMobilepay() {
+        if (!$this->model->getLoggedInUser()->hasRole('Admin')) {
+            $this->errorMessage('Kun admin kan lave batch registrering af betalinger');
+            $this->hardRedirect($this->url('deltagerehome'));
+        }
+
+        // if it's not a post request, don't do anything
+        if (!$this->page->request->isPost()){
+            return;
+        }
+        $session = $this->dic->get('Session');
+        $post = $this->page->request->post;
+
+        if (isset($post->importpayments)) {
+            // Did the user submit a file
+            $file = isset($_FILES['payments']) ? $_FILES['payments'] : null;
+            if($file == null || $file['error'] == UPLOAD_ERR_NO_FILE) {
+                $this->errorMessage('Ingen fil valgt.');
+                return;
+            }
+
+            $sheet_data = $this->model->parsePaymentSheet($file);
+            $session->payment_data = $this->model->matchPayments($sheet_data);
+        }
+
+        $this->page->registerEarlyLoadJS('register_mobilepay.js');
+        $this->page->payment_data = $session->payment_data;
+    }
+
+    public function ajaxConfirmPayment(){
+        // if it's not a post request, don't do anything
+        if (!$this->page->request->isPost()){
+            header("HTTP/1.0 400 Only accepts POST requests");
+            exit;
+        }
+
+        $list = $this->page->request->post->list;
+        if (!is_array($list) && empty($list)){
+            header("HTTP/1.0 400 list is empty or wrong format");
+            header('Content-Type: application/json; charset=UTF-8');
+            echo json_encode($list);
+            exit;
+        }
+
+        $result = [];
+        foreach($list as $entry) {
+            $pid = $entry['participant'];
+            $tid = $entry['transaction'];
+            $status = $this->model->confirmPayement($pid,$tid);
+            $result[] = [
+                'participant' => $pid,
+                'transaction' => $tid,
+                'status' => $status
+            ];
+        }
+        
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($result);
+        exit;
+    }
+
+    public function downloadSpreadSheet() {
+        
+        if($this->page->request->isGet()) {
+            if(!isset($this->page->request->get->ids)) return;
+            $id_ranges = $this->page->request->get->ids;
+        }
+
+        if($this->page->request->isPost()) {
+            if(!isset($this->page->request->post->ids)) return;
+            $id_ranges = $this->page->request->post->ids;
+        }
+        
+        $participants = $this->model->findParticipantsByIds(explode("-",$id_ranges));
+
+        if (isset($this->page->request->post->exportparticipantlist)) {
+            header('Content-Type: text/csv;charset=utf-8');
+            header('Content-Disposition: attachment;filename="deltagere.csv"');
+            header('Cache-Control: max-age=0');
+            
+            echo chr(0xEF).chr(0xBB).chr(0xBF); // UTF8 BOM
+            echo "\"ID\";";
+            echo "\"Navn\";";
+            echo "\"Kaldenavn\";";
+            echo "\"Fødselsdato\";";
+            echo "\"Kontakt navn\";";
+            echo "\"Kontakt telefon\";";
+            echo "\"Kontakt mail\";";
+            echo "\"Kommentar\";";
+            echo "\"Wear\";";
+            echo "\"Aktiviteter (tilmeldt)\";";
+            echo "\n";
+
+            foreach($participants as $p) {
+                echo "\"{$p->id}\";";
+                echo "\"{$p->getName()}\";";
+                echo "\"{$p->nickname}\";";
+                $birth = preg_replace("/ \d{2}:\d{2}:\d{2}/", "", $p->birthdate);
+                echo "\"{$birth}\";";
+                $contact = explode("\n", ($p->note->junior_ward->content ?? ""));
+                echo "\"".($contact[0] ?? "")."\";";
+                echo "\"".($contact[1] ?? "")."\";";
+                echo "\"".($contact[2] ?? "")."\";";
+                echo "\"".preg_replace("/\R/", " ",($p->note->junior_comment->content ?? ""))."\";";
+                $wear = "";
+                foreach($p->getWear() as $w) {
+                    $wear.= $w->getWearName().($w->size != 1 ? " - ".$w->getSizeName() : "").", ";
+                }
+                echo "\"{$wear}\";";
+
+                $tilmeldinger = $p->getTilmeldinger();
+                uasort($tilmeldinger, function($a, $b) {
+                  return $a->prioritet - $b->prioritet;
+                });
+
+                $signup = "";
+                foreach($tilmeldinger as $t) {
+                    $activity = $t->getAktivitet();
+                    $afvikling = $t->getAfvikling();
+                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->start,$start);
+                    preg_match("/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}):\d{2}/", $afvikling->slut,$end);
+                    $signup = "$t->prioritet. prio $activity->navn ($start[1] - $end[1])";
+                    echo "\"{$signup}\";";
+                }
+                
+                echo "\n";
+            }
+            exit;
+        }
+
+        $this->page->id_ranges = $id_ranges;
+        $this->page->participants = $participants;
+    }
+
+    public function anonymizeParticipants() {
+die ("This page has to be enabled by someone with access to the server code");
+
+        if($this->page->request->isPost()) {
+            $this->page->post = true;
+            $keep = array_keys($this->page->request->post->getRequestVarArray());
+            $this->page->result = $this->model->anonymizeParticipants($keep);
+
+            // Deleting files related to participants
+            $cache = CACHE_FOLDER;
+            // $badges = glob($cache."/<something>");
+            
+            $signup = SIGNUP_FOLDER."data/";
+            $sessions = glob($signup."session*");
+            $parsed = glob($signup."parse*");
+
+            $uploads = PUBLIC_PATH."uploads/";
+            $photos = glob($uploads."photo*");
+
+            $deleted = [];
+            $skipped = [];
+            $files = array_merge($sessions, $parsed, $photos);
+            foreach($files as $file){ // iterate files
+                if(is_file($file) && unlink($file)) { // delete file
+                    $deleted[] = $file;
+                } else {
+                    $skipped[] = $file;
+                }
+            }
+            $this->page->result->files = $deleted;
+            if (!empty($skipped)) {
+                $this->page->result->success = false;
+                $this->page->result->errors[] = [
+                    'id' => 'files',
+                    'desc' => 'There was an error deleting files',
+                    $data => $skipped,
+                ];
+            }
+
+            return;
+        }
+
+        $con_end = new DateTime($this->config->get("con.end"));
+        $difference = $con_end->diff(new DateTime('now'));
+
+        // Always keep these as default
+        $keep = [
+            'postnummer',
+            'by',
+            'birthdate',
+            'country',
+        ];
+
+        // Keep these for membership database
+        if ($difference->y < 6 ) {
+            $keep = array_merge($keep, [
+                'fornavn',
+                'efternavn',
+                'email',
+                'adresse1',
+                'adresse2',
+            ]);
+        }
+
+        // Keep these for the last con
+        if ($difference->y < 1 ) {
+            $keep = array_merge($keep, [
+                'skills',
+                'arrangoer_naeste_aar',
+            ]);
+        }
+        
+        $this->page->default_keep = $keep;
+        $this->page->fields = $this->model->getDeltagerFieldsWithNames();
+    }
+
 }

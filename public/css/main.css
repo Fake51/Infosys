@@ -14,7 +14,7 @@
 /* default layout styles {{{  */
 
 .clear-all {
-clear: both;
+    clear: both;
 }
 
 span.span-block {
@@ -515,11 +515,12 @@ div.edit_details table input.langbox {
 
 div.edit_details table label {
     padding-left: 10px;
+    display: inline-block;
 }
 
 /* indgang mad wear edit */
 div.edit_details #edit_pages table table {
-    width: 600px;
+    width: 700px;
 }
 
 div.edit_details #edit_pages table input, div.edit_details #edit_pages table select {
@@ -534,6 +535,63 @@ div.edit_details #edit_pages table td {
 
 div.edit_details #edit_pages table td.choice {
     width: 500px;
+}
+
+/* Payment registration*/
+div#register-mobile-pay div {
+    float: none;
+    width: fit-content;
+}
+
+div#register-mobile-pay div.category-list {
+    padding-top: 1px;
+}
+
+div#register-mobile-pay h3,
+div#register-mobile-pay div.confirm-group-top {
+    margin-top: 3rem;
+}
+
+div#register-mobile-pay div.confirm-group-bottom {
+    margin-top: 1rem;
+}
+
+div#register-mobile-pay div.confirm-group{
+    float: right;
+}
+
+div#register-mobile-pay td{
+    padding-right: 1rem;
+}
+
+div#register-mobile-pay tr.top-row td{
+    padding-top: 1rem;
+}
+
+div#register-mobile-pay td:nth-child(1){
+    font-weight: bold;
+}
+
+div#register-mobile-pay td span.match{
+    background-color: #67d18a;
+    padding: 2px 4px;
+}
+
+div#register-mobile-pay div.spacer{
+    clear: both;
+}
+
+div#register-mobile-pay table td label{
+    display: inline;
+}
+
+div#register-mobile-pay table td input{
+    width: 5em;
+}
+/* Name tag download*/
+div#nametag-forms fieldset {
+    display: inline-block;
+    width: 30rem;
 }
 
 /* login page */
@@ -748,8 +806,16 @@ p.aktivitet-graph-figur {
     background-color: #44dddd;
     color: #ffffff;
 }
-p.aktivitet-graph-dag5, p.aktivitet-graph-workshop {
+p.aktivitet-graph-dag5,
+p.aktivitet-graph-workshop,
+p.aktivitet-graph-ottoviteter
+{
     background-color: #dddd44;
+    color: #ffffff;
+}
+
+p.aktivitet-graph-junior {
+    background-color: lightgreen;
     color: #ffffff;
 }
 
@@ -872,6 +938,23 @@ div#aktivitetbox form#aktivitet-edit fieldset textarea {
     height: 100px;
 }
 
+div#aktivitetbox form#aktivitet-edit fieldset input[type="number"],
+div#aktivitetbox form#aktivitet-edit fieldset select {
+    width: 8em;
+    box-sizing: border-box;
+    height: auto;
+}
+
+div#aktivitetbox form#aktivitet-edit fieldset input[type="radio"] {
+    vertical-align: baseline;
+    margin-left: 1em;
+}
+
+div#aktivitetbox form#aktivitet-edit fieldset textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 div#aktivitetbox form#aktivitet-edit fieldset input.aktivitet-title {
     width: 750px;
 }
@@ -904,21 +987,49 @@ span.group-status span.full {
 /* }}} */
 
 /* wear styles */
+table.wear-breakdown {
+    margin-bottom: 2rem;
+}
+
+table.wear-breakdown thead tr {
+    position: sticky;
+    top: 0;
+}
+
 table.wear-breakdown tr th.wear-header {
     background-color: #aaaaaa;
     color: #ffffff;
 }
 
 table.wear-breakdown tr th.wear-subheader {
+    position: relative;
     background-color: #cccccc;
     color: #ffffff;
-    width: 50px;
+    width: 4.5rem;
+    height: 5rem;
+}
+
+table.wear-breakdown tr th.wear-subheader span {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform-origin: bottom left;
+    transform: rotateZ(-22deg);
+    display: inline-block;
+    width: fit-content;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+table.wear-breakdown tr.first {
+    border-top: .5rem solid #dddddd;
 }
 
 table.wear-breakdown tr td.wear-type {
     background-color: #aaaacc;
     color: #ffffff;
     height: 30px;
+    padding: 0 1rem;
     text-align: left;
 }
 
@@ -949,8 +1060,228 @@ div#wear-details fieldset span.label {
     clear: none;
 }
 
+div#wear-details .folding-section {
+    position: relative;
+}
+
+div#wear-details .folding-section .folding-button {
+    position: absolute;
+    right: 0;
+    top: .5rem;
+    border: 1px lightgray solid;
+    border-radius: 3px;
+    padding: 3px 10px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+div#wear-details .folding-section .folding-button::after {
+    content: "";
+    width: 21px;
+    height: 21px;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: 3px;
+}
+
+div#wear-details .folding-section .folding-button.closed::after {
+    background-image: url("/img/down.png");
+}
+
+div#wear-details .folding-section .folding-button.open::after {
+    background-image: url("/img/up.png");
+}
+
+div#wear-details #image-attribute-list,
+div#wear-details .attribute-variant {
+    display: flex;
+    gap: 1em;
+}
+
+div#wear-details #attributes .attribute {
+    display: block;
+}
+
+div#wear-details #image-attribute-list input,
+div#wear-details #attributes input {
+    vertical-align: baseline;
+}
+
+
+div#wear-details #image-attribute-list label,
+div#wear-details #attributes label {
+    display: inline-block;
+}
+
+div#wear-details #add-image-dialog-modal.closed {
+    display: none;
+}
+
+div#wear-details #add-image-dialog-modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,.5);
+}
+
+div#wear-details #add-image-dialog-modal #add-image-dialog {
+    width: 50%;
+    margin: auto;
+    background: white;
+    height: 80%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 1rem;
+    border: 3px solid gray;
+    padding: 2rem;
+}
+
+
+div#wear-details #image-list-wrapper,
+div#wear-details #add-image-dialog-modal #add-image-dialog {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+div#wear-details #add-image-dialog-modal #add-image-dialog ul {
+    overflow: auto;
+}
+
+div#wear-details #image-list-wrapper ul,
+div#wear-details #add-image-dialog-modal #add-image-dialog ul {
+    border: 1px solid black;
+    list-style-type: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    margin: 0;
+    flex: 0 1 30%;
+    max-height: 100%;
+}
+
+div#wear-details #image-list-wrapper ul li,
+div#wear-details #add-image-dialog-modal #add-image-dialog ul li {
+    padding: 0 1rem;
+}
+
+div#wear-details .image-selection-wrapper li.selected {
+    background-color: blue;
+    color: white;
+}
+
+div#wear-details #image-list-wrapper .image-preview,
+div#wear-details #add-image-dialog .image-preview {
+    border: 1px solid black;
+    flex: 1 1 50%;
+}
+
+div#wear-details #add-image-dialog #dialog-image-preview #image-dialog-button-wrapper {
+    position: absolute;
+    bottom: 2rem;
+    right: calc(2rem + 2px);
+}
+
 div#wear-details .centersubmits {
     margin: 10px;
+}
+
+div#wear-table table{
+    margin: 0 auto;
+}
+
+div#wear-table tr.selected{
+    background-color: lightgray;
+}
+/* Food styles */
+div#food-details {
+    text-align: center;
+    width: 700px;
+    margin: 0 auto;
+}
+
+div#food-details fieldset {
+    text-align: left;
+    margin: 0 auto;
+}
+
+div#food-details fieldset span.label {
+    font-weight: bold;
+    width: 150px;
+    display: block;
+    float: left;
+    clear: none;
+    margin-right: 1em;
+}
+
+div#food-details .centersubmits {
+    margin: 10px;
+}
+
+div#food-details table{
+    margin-bottom: 1em;
+}
+
+div#food-details table input[type="text"]{
+    width: 30em;
+}
+
+div#wear-attributes {
+    width: fit-content;
+    margin: auto;
+}
+
+div#wear-attributes div#wear-attribute-categories {
+    width: fit-content;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+div#wear-attributes div#wear-attribute-categories h2 {
+    border-bottom: 1px black solid;
+}
+
+div#wear-attributes td {
+    padding: 2px 5px;
+}
+/* Food styles */
+div#food-details {
+    text-align: center;
+    width: 700px;
+    margin: 0 auto;
+}
+
+div#food-details fieldset {
+    text-align: left;
+    margin: 0 auto;
+}
+
+div#food-details fieldset span.label {
+    font-weight: bold;
+    width: 150px;
+    display: block;
+    float: left;
+    clear: none;
+    margin-right: 1em;
+}
+
+div#food-details .centersubmits {
+    margin: 10px;
+}
+
+div#food-details table{
+    margin-bottom: 1em;
+}
+
+div#food-details table input[type="text"]{
+    width: 30em;
 }
 
 /* log styles */
@@ -1294,6 +1625,23 @@ div#admin-container table#roles-table td.role-description {
 
 div#admin-container table#roles-table td.privileges {
     width: 30%;
+}
+
+div#admin-container table#users-table td{
+    padding: 5px;
+}
+
+div#admin-container table#users-table input,
+div#admin-container table#users-table select{
+    margin-bottom: 0px;
+}
+
+div#admin-container table#users-table td.status {
+    text-align: center;
+}
+
+div#admin-container table#users-table tr.disabled {
+    background-color: #FFE9E9;
 }
 /* }}} */
 
@@ -2346,4 +2694,13 @@ form#frmExcelExport select {
 .deltager-search-box-inner input[type=radio],
 .deltager-search-box-inner input[type=checkbox] {
     margin: 0px;
+}
+
+#sms-dialog .message-wrapper {
+    display: inline-block;
+}
+
+#sms-dialog .message-wrapper textarea{
+    width: 20rem;
+    height: 5rem;
 }

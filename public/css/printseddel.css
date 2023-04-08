@@ -22,6 +22,11 @@ img {
     margin-bottom: -5px;
 }
 
+img.logo {
+    width: 200px;
+    height: 200px;
+}
+
 div.deltager-container {
     width: auto;
     position: relative;

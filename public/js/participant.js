@@ -11,7 +11,7 @@ $(function() {
             $(self).css('background-color', '#D00007').animate({'background-color': '#fff'}, 2000);
         }
 
-        function checkInRequest(callback) {
+        function checkInRequest(callback, difference) {
             var date = new Date(),
                 text = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
 
@@ -35,6 +35,7 @@ $(function() {
                     }, 3000);
 
                     $('td.checkin-time').text(text);
+                    $('td#checkin-balance').text(difference);
 
                     $('#checkin, #checkin-print').remove();
                 },
@@ -71,7 +72,7 @@ $(function() {
 
         }
 
-        function createPaymentDialog(difference, vouchers, callback) {
+        function createPaymentDialog(difference, callback) {
             var dialog   = $('<div class="payment-dialog"></div>'),
                 template = $('#checkin-template').text(),
                 cover    = $('<div class="payment-cover"></div>'),
@@ -86,7 +87,11 @@ $(function() {
                     cover.remove();
                 };
 
-            dialog.html(template.replace(/:money:/, difference).replace(/:vouchers:/, vouchers));
+            let balance_text = difference > 0 ?
+                `Deltageren skal betale ${difference} kr. ekstra` :
+                `Deltageren skal have ${-difference} kr. tilbage`;
+
+            dialog.html(template.replace(/:money:/, balance_text));
 
             cover.css('opacity', 0.3);
 
@@ -99,15 +104,15 @@ $(function() {
             var difference = parseInt($('td.difference').text(), 10);
 
             function makeCheckIn() {
-                checkInRequest(callback);
+                checkInRequest(callback, difference);
             }
 
             $.ajax({
                 url: window.infosys_data.ajax_check_for_vouchers_url,
                 type: 'GET',
                 success: function (data) {
-                    if (difference || data.vouchers) {
-                        createPaymentDialog(difference, data.vouchers, makeCheckIn);
+                    if (difference) {
+                        createPaymentDialog(difference, makeCheckIn);
                     } else {
                         makeCheckIn();
                     }
@@ -148,9 +153,45 @@ $(function() {
             onerror: updateError
         });
 
-        $('td.editable.gender').editable(window.infosys_data.participant_editable_url, {
+        $('td.editable.work').editable(window.infosys_data.participant_editable_url, {
             type: 'select',
-            data: '{"m": "m", "k": "k", "a": "a"}',
+            data: work_areas,
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError
+        });
+
+        $('td.editable.lang').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: '{"da": "dansk", "en": "engelsk"}',
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError
+        });
+
+        $('td.editable.country').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: countries,
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError
+        });
+
+        $('td.editable.game').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: games,
+            submit: "Ok",
+            indicator: 'Saving ...',
+            tooltip: 'Click to edit',
+            onerror: updateError
+        });
+
+        $('td.editable.pronoun').editable(window.infosys_data.participant_editable_url, {
+            type: 'select',
+            data: '{"they": "De/Dem", "her": "Hun/Hende", "he": "Han/Ham"}',
             submit: "Ok",
             indicator: 'Saving ...',
             tooltip: 'Click to edit',

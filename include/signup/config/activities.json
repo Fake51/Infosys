@@ -1,0 +1,108 @@
+{
+  "choices": {
+    "prio": {
+      "en" : [
+        "1st prio",
+        "2nd prio",
+        "3rd prio",
+        "4th prio"
+      ],
+      "da" : [
+        "1. prio",
+        "2. prio",
+        "3. prio",
+        "4. prio"
+      ]
+    },
+    "gm" : {
+      "default" : {
+        "en" : "GM",
+        "da" : "SL"
+      },
+      "braet" : {
+        "en" : "GG",
+        "da" : "RF"
+      }
+    }
+  },
+  "categories": {
+    "all": {
+      "da": "Alle Aktiviteter",
+      "en": "All Activities"
+    },
+    "rolle": {
+      "da": "Rollespil",
+      "en": "Roleplaying",
+      "color": "#b6d7a8"
+    },
+    "braet": {
+      "da": "Brætspil",
+      "en": "Board games",
+      "color": "#9fc5e8"
+    },
+    "junior": {
+      "da": "Junior",
+      "en": "Junior",
+      "color": "#ea9999"
+    },
+    "default": {
+      "da": "Øvrige aktiviteter",
+      "en": "Other activities",
+      "color": "#ffd966"
+    }
+  },
+  "table_headline": {
+    "da": "Aktiviteter",
+    "en": "Activities"
+  },
+  "junior_min": 4,
+  "day_cutoff": 4,
+  "link_text": {
+    "en": "Read more on the website",
+    "da": "Læs mere på hjemmesiden"
+  },
+  "max_signup": {
+    "en": "Maximum # signups",
+    "da": "Max # tilmeldinger"
+  },
+  "full": {
+    "en": "Full",
+    "da": "Fyldt"
+  },
+  "errors": {
+    "no_days": {
+      "en": "There are no activities on the days you're attending Fastaval that matches the current category.",
+      "da": "Der er ingen aktiviteter de dage du er på Fastaval der matcher den valgte kategori."
+    },
+    "missing_task": {
+      "gm": {
+        "da": "Du har valgt at du gerne vil være spilleder, men du har ikke valgt nogen scenarier at være spilleder på.",
+        "en": "You have chosen to be a gamemaster, but you haven't chosen any scenarios to be gamemaster for."
+      },
+      "rules": {
+        "da": "Du har valgt at du gerne vil være regelformidler, men du har ikke valgt nogen brætspil at være regelformidler for.",
+        "en": "You have chosen to be a rules explainer, but you haven't chosen any board games to explain rules for."
+      }
+    },
+    "missing_junior": {
+      "en": "You have to select at least # junior activities",
+      "da": "Du skal vælge mindst # junior aktiviteter",
+      "label": {
+        "en": "Fastaval Junior Activities",
+        "da": "Fastaval Junior Aktiviteter"
+      }
+    },
+    "full_run": {
+      "en": "This activity already have the maximum sign-ups",
+      "da": "Denne aktivitet har allerede maximum antal tilmeldinger"
+    },
+    "age_max": {
+      "en": "You are too old to participate in this activity",
+      "da": "Du er for gammel til at deltage i denne aktivitet"
+    },
+    "age_min": {
+      "en": "You are too young to participate in this activity",
+      "da": "Du er for ung til at deltage i denne aktivitet"
+    }
+  }
+}

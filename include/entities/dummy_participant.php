@@ -33,6 +33,8 @@
      */
 class DummyParticipant extends DBObject
 {
+    public $is_dummy = true;
+    
     /**
      * Diy signups
      *
@@ -67,6 +69,11 @@ class DummyParticipant extends DBObject
      * @var array
      */
     private $entrance = [];
+
+    /**
+     * Notes
+     */
+    private $notes = [];
 
     /**
      * dummy update method
@@ -112,13 +119,13 @@ class DummyParticipant extends DBObject
      * @access public
      * @return $this
      */
-    public function setWearOrder(DBObject $wearprice, $size, $amount)
+    public function setWearOrder(DBObject $wearprice, $amount, ?array $attributes)
     {
         $this->wear[] = [
-                         'wearprice' => $wearprice,
-                         'size'      => $size,
-                         'amount'    => $amount,
-                        ];
+            'wearprice' => $wearprice,
+            'amount'      => $amount,
+            'attributes'=> $attributes,
+        ];
 
         return $this;
     }
@@ -217,6 +224,24 @@ class DummyParticipant extends DBObject
     }
 
     /**
+     * removes all entrance relationships except ones with the given id
+     *
+     * @access public
+     * @return $this
+     */
+    public function removeEntranceExcept(Array $ids) {
+        $saved = [];
+        foreach ($this->entrance as $key => $item) {
+            if (!in_array($item->id, $ids)) continue;
+            $saved[] = $item;
+        }
+        $this->entrance = $saved;
+
+        return $this;
+    }
+    
+
+    /**
      * signs the user up for a given entry type
      *
      * @param object $indgang - Indgang entity
@@ -262,9 +287,9 @@ class DummyParticipant extends DBObject
      * @access public
      * @return $this
      */
-    public function setGDSTilmelding(GDSCategory $gdscategory, $period) {
+    public function setGDSTilmelding(?GDSCategory $gdscategory, $period) {
         $gdstilmelding = $this->createEntity('DeltagereGDSTilmeldinger');
-        $gdstilmelding->category_id = $gdscategory->id;
+        $gdstilmelding->category_id = $gdscategory == null ? 0 : $gdscategory->id;;
         $gdstilmelding->period      = $period;
 
         $this->diy_signups[] = $gdstilmelding;
@@ -294,6 +319,10 @@ class DummyParticipant extends DBObject
         $this->food = [];
 
         return $this;
+    }
+
+    public function removeOrderedFood() {
+        return $this->removeFood();
     }
 
     /**
@@ -334,6 +363,38 @@ class DummyParticipant extends DBObject
 
     public function speaksDanish()
     {
-        return stripos($this->sprog, 'dansk') !== false || !$this->sprog;
+        return $this->main_lang == 'da';
+    }
+
+    /**
+     * returns age as a float
+     *
+     * @access public
+     * @return float
+     */
+    public function getAge(DateTime $at_time = null)
+    {
+        if (!$this->birthdate) {
+            return -1;
+        }
+
+        $now = $at_time ? $at_time : new DateTime();
+
+        $diff = $now->diff(new DateTime($this->birthdate));
+
+        return floor($diff->y);
+    }
+
+    public function setNote($name, $content) {
+        $this->notes[$name] = $content;
+    }
+
+    public function setCollection(string $column, array $values)
+    {
+        foreach ($values as &$value) {
+            $value = strtolower($value);
+        }
+        $this->$column = implode(',', $values);
+        return true;
     }
 }

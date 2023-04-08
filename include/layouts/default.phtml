@@ -30,7 +30,7 @@
 <html<?= (($this->getNameSpace()) ? " " .$this->getNameSpace() : '') ?>>
 <head>
 <?= $this->encoding; ?>
-<title><?= isset($this->title) ? $this->title . " - " : "";?>Fastaval InfoSys</title>
+<title><?= isset($this->title) ? $this->title . " - " : "";?><?=$this->config->get('app.sitename')?></title>
 <meta name="keywords" content="<?= ((isset($this->keywords)) ? $this->keywords : "") ?>" />
 <meta name="description" content="<?= ((isset($this->description)) ? $this->description : "") ?>" />
 <?= $this->getEncoding(); ?>

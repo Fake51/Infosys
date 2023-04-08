@@ -5,45 +5,61 @@
             <legend>Opdater Aktivitet</legend>
             <table>
                 <tr>
-                    <td><b>Id:</b> <?= $this->aktivitet->id;?></td>
+                    <td><strong>Id:</strong> <?= $this->aktivitet->id;?></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Titel:</b> <input name='aktivitet[navn]' class='aktivitet-title' value='<?= e($this->aktivitet->navn);?>' type='text' /></td>
+                    <td><strong>Titel:</strong></td>
+                    <td colspan="5"><input name='aktivitet[navn]' class='aktivitet-title' value='<?= e($this->aktivitet->navn);?>' type='text' /></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Engelsk titel:</b> <input name='aktivitet[title_en]' class='aktivitet-title' value='<?= e($this->aktivitet->title_en);?>' type='text' /></td>
+                    <td><strong>Engelsk titel:</strong></td>
+                    <td colspan="5"><input name='aktivitet[title_en]' class='aktivitet-title' value='<?= e($this->aktivitet->title_en);?>' type='text' /></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Forfatter(e):</b> <input class="aktivitet-title" name="aktivitet[author]" type="text" value="<?= e($this->aktivitet->author);?>"/></td>
+                    <td><strong>Forfatter(e):</strong></td>
+                    <td colspan="5"><input class="aktivitet-title" name="aktivitet[author]" type="text" value="<?= e($this->aktivitet->author);?>"/></td>
                 </tr>
                 <tr>
-                    <td><strong>WP id:</strong> <input name='aktivitet[wp_link]' type='number' value='<?= $this->aktivitet->wp_link;?>'/></td>
-                    <td><b>Spiltype:</b> <?= $this->genSelect('aktivitet[type]', $this->model->getActivityTypes(), $this->aktivitet->type);?></td>
-                    <td><b>Varighed:</b> <input name='aktivitet[varighed_per_afvikling]' type='text' value='<?= e($this->aktivitet->varighed_per_afvikling);?>' /></td>
+                    <td><strong>WP id:</strong></td>
+                    <td><input name='aktivitet[wp_link]' type='number' value='<?= $this->aktivitet->wp_link;?>'/></td>
+                    <td><strong>Spiltype:</strong></td>
+                    <td><?= $this->genSelect('aktivitet[type]', $this->model->getActivityTypes(), $this->aktivitet->type);?></td>
+                    <td><strong>Varighed:</strong></td>
+                    <td><input name='aktivitet[varighed_per_afvikling]' type='number' value='<?= e($this->aktivitet->varighed_per_afvikling);?>' /></td>
                 </tr>
                 <tr>
-                    <td><b>Min Spillere:</b> <input name='aktivitet[min_deltagere_per_hold]' type='text' value='<?= e($this->aktivitet->min_deltagere_per_hold);?>' /></td>
-                    <td><b>Max Spillere:</b> <input name='aktivitet[max_deltagere_per_hold]' type='text' value='<?= e($this->aktivitet->max_deltagere_per_hold);?>' /></td>
-                    <td><b>Spilledere:</b> <input name='aktivitet[spilledere_per_hold]' type='text' value='<?= e($this->aktivitet->spilledere_per_hold);?>' /></td>
+                    <td><strong>Min Spillere:</strong></td>
+                    <td><input name='aktivitet[min_deltagere_per_hold]' type='number' value='<?= e($this->aktivitet->min_deltagere_per_hold);?>' /></td>
+                    <td><strong>Max Spillere:</strong></td>
+                    <td><input name='aktivitet[max_deltagere_per_hold]' type='number' value='<?= e($this->aktivitet->max_deltagere_per_hold);?>' /></td>
+                    <td><strong>Spilledere:</strong></td>
+                    <td><input name='aktivitet[spilledere_per_hold]' type='number' value='<?= e($this->aktivitet->spilledere_per_hold);?>' /></td>
                 </tr>
                 <tr>
-                    <td><b>Pris:</b> <input name='aktivitet[pris]' type='text' value='<?= e($this->aktivitet->pris);?>' /></td>
-                    <td><b>Kan tilmeldes:</b> <?= $this->genSelect('aktivitet[kan_tilmeldes]', array('ja', 'nej'), $this->aktivitet->kan_tilmeldes);?></td>
-                    <td><b>Fylder lokale:</b> <?= $this->genSelect('aktivitet[lokale_eksklusiv]', array('ja', 'nej'), $this->aktivitet->lokale_eksklusiv);?></td>
+                    <td><strong>Pris:</strong></td>
+                    <td><input name='aktivitet[pris]' type='number' value='<?= e($this->aktivitet->pris);?>' /></td>
+                    <td><strong>Kan tilmeldes:</strong></td>
+                    <td><?= $this->genSelect('aktivitet[kan_tilmeldes]', array('ja', 'nej'), $this->aktivitet->kan_tilmeldes);?></td>
+                    <td><strong>Fylder lokale:</strong></td>
+                    <td><?= $this->genSelect('aktivitet[lokale_eksklusiv]', array('ja', 'nej'), $this->aktivitet->lokale_eksklusiv);?></td>
                 </tr>
                 <tr>
-                    <td colspan='2'><strong>Sprog:</strong>
+                    <td colspan='4'>
+                        <strong>Sprog:</strong>
                         <label><input type='radio' name='aktivitet[sprog]' value='dansk' <?= ($this->aktivitet->sprog == 'dansk' ? "checked='checked'" : '');?>> dansk</label>
                         <label><input type='radio' name='aktivitet[sprog]' value='engelsk' <?= ($this->aktivitet->sprog == 'engelsk' ? "checked='checked'" : '');?>> engelsk</label>
                         <label><input type='radio' name='aktivitet[sprog]' value='dansk+engelsk' <?= ($this->aktivitet->sprog == 'dansk+engelsk' ? "checked='checked'" : '');?>> dansk, med mulighed for engelsk</label>
                     </td>
-                    <td><strong>Udelukker samtidige aktiviteter:</strong> <?= $this->genSelect('aktivitet[tids_eksklusiv]', array('ja', 'nej'), $this->aktivitet->tids_eksklusiv);?></td>
+                    <td><strong>Udelukker samtidige aktiviteter:</strong></td>
+                    <td><?= $this->genSelect('aktivitet[tids_eksklusiv]', array('ja', 'nej'), $this->aktivitet->tids_eksklusiv);?></td>
                 </tr>
                 <tr>
-                    <td><b>Kan spilles flere gange:</b> <?= $this->genSelect('aktivitet[replayable]', array('ja', 'nej'), $this->aktivitet->replayable);?></td>
-                    <td><b>Skjult:</b> <?= $this->genSelect('aktivitet[hidden]', array('ja', 'nej'), $this->aktivitet->hidden);?></td>
+                    <td><strong>Kan spilles flere gange:</strong></td>
+                    <td><?= $this->genSelect('aktivitet[replayable]', array('ja', 'nej'), $this->aktivitet->replayable);?></td>
+                    <td><strong>Skjult:</strong></td>
+                    <td><?= $this->genSelect('aktivitet[hidden]', array('ja', 'nej'), $this->aktivitet->hidden);?></td>
+                    <td><strong>Karmatype:</strong></td>
                     <td>
-                        <b>Karmatype:</b>
                         <select name="aktivitet[karmatype]">
                             <option value="0">Ingen</option>
                             <option value="<?= KARMATYPE_SMALL;?>" <?= intval($this->aktivitet->karmatype) === KARMATYPE_SMALL ? 'selected="selected"' : '';?>>Lille</option>
@@ -53,17 +69,34 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2"><strong>Aldersbegrænsning:</strong> <label>Min: <input type="number" min="0" max="200" name="min_age" size="4" step="1" value="<?= e($this->aktivitet->getMinAge());?>"/></label> <label>Max: <input type="number" min="0" max="200" size="4" name="max_age" step="1" value="<?= e($this->aktivitet->getMaxAge());?>"/></label></td>
-                    <td><b>Max tilmeldinger</b><input type="number" min="0" max="1000" step="1" value="<?= e($this->aktivitet->max_signups);?>" name="aktivitet[max_signups]"/></td>
+                    <td><strong>Minimum Alder:</strong></td>
+                    <td><input type="number" min="0" max="200" name="min_age" size="4" step="1" value="<?= e($this->aktivitet->getMinAge());?>"/></td>
+                    <td><strong>Maksimum Alder:</strong></td>
+                    <td><input type="number" min="0" max="200" size="4" name="max_age" step="1" value="<?= e($this->aktivitet->getMaxAge());?>"/></td>
+                    <td><strong>Max tilmeldinger</strong></td>
+                    <td><input type="number" min="0" max="1000" step="1" value="<?= e($this->aktivitet->max_signups);?>" name="aktivitet[max_signups]"/></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Note:</b> <textarea name='aktivitet[note]'><?= (isset($this->aktivitet->note) ? e($this->aktivitet->note) : "");?></textarea></td>
+                    <td><strong>Automatisk tilmelding:</strong></td>
+                    <td><?=$this->genSelect('aktivitet[auto_signup_category]', $this->model->getAutoRegisterCategories(), $this->aktivitet->auto_signup_category)?></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Foromtale:</b> <textarea name='aktivitet[foromtale]'><?= (isset($this->aktivitet->foromtale) ? e($this->aktivitet->foromtale) : "") ;?></textarea></td>
+                    <td><strong>Note:</strong></td>
                 </tr>
                 <tr>
-                    <td colspan='3'><b>Engelsk foromtale:</b> <textarea name='aktivitet[description_en]'><?= (isset($this->aktivitet->description_en) ? e($this->aktivitet->description_en) : "") ;?></textarea></td>
+                    <td colspan='6'><textarea name='aktivitet[note]'><?= (isset($this->aktivitet->note) ? e($this->aktivitet->note) : "");?></textarea></td>
+                </tr>
+                <tr>
+                    <td><strong>Foromtale:</strong></td>
+                </tr>
+                <tr>
+                    <td colspan='6'><textarea name='aktivitet[foromtale]'><?= (isset($this->aktivitet->foromtale) ? e($this->aktivitet->foromtale) : "") ;?></textarea></td>
+                </tr>
+                <tr>
+                    <td><strong>Engelsk foromtale:</strong></td>
+                </tr>
+                <tr>
+                    <td colspan='6'><textarea name='aktivitet[description_en]'><?= (isset($this->aktivitet->description_en) ? e($this->aktivitet->description_en) : "") ;?></textarea></td>
                 </tr>
             </table>
             <input type='submit' value='Opdater' class='centersubmits' name='update_activity' />

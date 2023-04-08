@@ -90,7 +90,6 @@ class Routes
         // SMS stuffs - hackish
         $this->routes['kickoff_sms_script'] = array('url' => 'index/kickoffsmsscript', 'controller' => 'index', 'method' => 'kickOffSMSScript');
         $this->routes['sms_auto_dryrun']    = array('url' => 'sms/auto-dryrun', 'controller' => 'sms', 'method' => 'autoDryRun');
-        $this->routes['sms_stats']          = array('url' => 'sms/stats', 'controller' => 'sms', 'method' => 'showStats');
 
         // deltager routes
         $this->routes['all_users_ajax']                             = array('url' => 'deltager/ajax/userlist', 'controller' => 'Participant', 'method' => 'ajaxlist');
@@ -103,7 +102,7 @@ class Routes
         $this->routes['edit_deltager']                              = array('url' => 'deltager/retdeltager/:id:', 'controller' => 'Participant', 'method' => 'visEdit');
         $this->routes['edit_deltager_note']                         = array('url' => 'deltager/retdeltagernote/:textfield:/:id:', 'controller' => 'Participant', 'method' => 'visTextedit');
         $this->routes['karma_stats']                                = array('url' => 'deltager/karmastats/', 'controller' => 'Participant', 'method' => 'karmaStatus');
-        $this->routes['list_schedule_signups']                      = array('url' => 'deltager/visforafvikling/:afvikling_id:', 'controller' => 'Participant', 'method' => 'listForSchedule');
+        $this->routes['list_schedule_signups']                      = array('url' => 'deltager/visforafvikling/:afvikling_id:/:assigned:', 'controller' => 'Participant', 'method' => 'listForSchedule');
         $this->routes['list_group_participants']                    = array('url' => 'deltager/visforhold/:hold_id:', 'controller' => 'Participant', 'method' => 'listForGroup');
         $this->routes['opret_deltager']                             = array('url' => 'deltager/opret/', 'controller' => 'Participant', 'method' => 'createDeltager');
         $this->routes['participant_info']                           = array('url' => 'deltager/tilmeldingsinfo/:hash:', 'controller' => 'Participant', 'method' => 'displayParticipantInfo');
@@ -124,6 +123,7 @@ class Routes
         $this->routes['update_participant_sleeping_post']           = array('url' => 'deltager/persistsleepingdata/:id:', 'controller' => 'Participant', 'method' => 'updateParticipantSleepingData');
         $this->routes['vis_alle_deltagere']                         = array('url' => 'deltager/visalle', 'controller' => 'Participant', 'method' => 'visAlle');
         $this->routes['show_search_result']                         = array('url' => 'deltager/search_result', 'controller' => 'Participant', 'method' => 'showSearchResult');
+        $this->routes['download_participant_sheet']                 = array('url' => 'deltager/spradsheet', 'controller' => 'Participant', 'method' => 'downloadSpreadSheet');
         $this->routes['vis_spilledere']                             = array('url' => 'deltager/visgms/', 'controller' => 'Participant', 'method' => 'listGMs');
         $this->routes['vis_fordelte_spilledere']                    = array('url' => 'deltager/visfordeltegms/:id:', 'controller' => 'Participant', 'method' => 'listAssignedGMs');
         $this->routes['visdeltager']                                = array('url' => 'deltager/visdeltager/:id:', 'controller' => 'Participant', 'method' => 'visDeltager');
@@ -148,8 +148,21 @@ class Routes
         $this->routes['participant_check_for_voucher']              = array('url' => 'participant/has-vouchers/:participant_id:', 'controller' => 'Participant', 'method' => 'checkForVouchers');
         $this->routes['show_double_bookings']                       = array('url' => 'participant/check-double-bookings', 'controller' => 'Participant', 'method' => 'checkForDoubleBookings');
         $this->routes['show_refund']                                = array('url' => 'participant/show-refund', 'controller' => 'Participant', 'method' => 'showRefund');
+        $this->routes['name_tag_list']                              = array('url' => 'participant/name-tag-list', 'controller' => 'Participant', 'method' => 'nameTagList');
+        $this->routes['register_mobilepay_payments']                = array('url' => 'participant/register-mobilepay', 'controller' => 'Participant', 'method' => 'registerMobilepay');
+        $this->routes['confirm_mobilepay_payments']                 = array('url' => 'participant/ajax/confirm-mobilepay', 'controller' => 'Participant', 'method' => 'ajaxConfirmPayment');
 
         $this->routes['participant_reset_password']                 = array('url' => 'participant/reset-password/:hash:', 'controller' => 'Participant', 'method' => 'resetParticipantPassword');
+
+        $this->routes['anonymize_participants']                     = array('url' => 'participant/anonymize', 'controller' => 'Participant', 'method' => 'anonymizeParticipants');
+
+        // New mail sender
+        $this->routes['send_setup_mail']                            = array('url' => 'mail/sendsetupmail', 'controller' => 'Mail', 'method' => 'sendSetupMail');
+        $this->routes['send_password_mail']                         = array('url' => 'mail/fixpassword', 'controller' => 'Mail', 'method' => 'fixPasswords');
+        
+        // Misc mail
+        $this->routes['send_welcome_mail']                          = array('url' => 'participant/sendwelcomemail', 'controller' => 'Participant', 'method' => 'sendWelcomeMail');
+        $this->routes['send_review_mail']                           = array('url' => 'participant/sendreviewmail', 'controller' => 'Participant', 'method' => 'sendReviewMail');
 
         // photo stuff
         $this->routes['photo_upload_form']                          = ['url' => 'photo/form/:identifier:', 'controller' => 'Photo', 'method' => 'showUploadForm'];
@@ -176,10 +189,10 @@ class Routes
         $this->routes['participant_register_payment']               = array('url' => 'participant/payment/register/:hash:', 'controller' => 'Participant', 'method' => 'registerPayment');
 
         // payment reminders
-        $this->routes['7-day_payment_reminder']                     = array('url' => 'participant/payment-reminder/first', 'controller' => 'Participant', 'method' => 'sendFirstPaymentReminder');
-        $this->routes['13-day_payment_reminder']                    = array('url' => 'participant/payment-reminder/second', 'controller' => 'Participant', 'method' => 'sendSecondPaymentReminder');
-        $this->routes['last_payment_reminder']                      = array('url' => 'participant/payment-reminder/last', 'controller' => 'Participant', 'method' => 'sendLastPaymentReminder');
-        $this->routes['payment_reminder_annulled']                  = array('url' => 'participant/payment-reminder/annulled', 'controller' => 'Participant', 'method' => 'cancelParticipantSignup');
+        $this->routes['cron_payment_reminder']                      = array('url' => 'participant/payment-reminder/cron', 'controller' => 'Participant', 'method' => 'cronPaymentReminder');
+        // $this->routes['13-day_payment_reminder']                    = array('url' => 'participant/payment-reminder/second', 'controller' => 'Participant', 'method' => 'sendSecondPaymentReminder');
+        $this->routes['final_payment_reminder']                     = array('url' => 'participant/payment-reminder/final', 'controller' => 'Participant', 'method' => 'sendFinalPaymentReminder');
+        // $this->routes['payment_reminder_annulled']                  = array('url' => 'participant/payment-reminder/annulled', 'controller' => 'Participant', 'method' => 'cancelParticipantSignup');
 
         // bank transfer
         $this->routes['participant_register_bank_payment']          = array('url' => 'participant/register-bank-transfer/:id:', 'controller' => 'Participant', 'method' => 'registerBankTransfer');
@@ -254,20 +267,24 @@ class Routes
         // wear routes
         $this->routes['wearhome']                     = array('url' => 'wear/', 'controller' => 'Wear', 'method' => 'main');
         $this->routes['show_wear']                    = array('url' => 'wear/showwear', 'controller' => 'Wear', 'method' => 'showTypes');
+        $this->routes['show_wear_ajax']               = array('url' => 'wear/showwear/ajax', 'controller' => 'Wear', 'method' => 'showTypesAjax');
         $this->routes['vis_wear']                     = array('url' => 'wear/viswear/:id:', 'controller' => 'Wear', 'method' => 'showWear');
         $this->routes['edit_wear']                    = array('url' => 'wear/editwear/:id:', 'controller' => 'Wear', 'method' => 'editWear');
         $this->routes['delete_wear']                  = array('url' => 'wear/deletewear/:id:', 'controller' => 'Wear', 'method' => 'deleteWear');
         $this->routes['create_wear']                  = array('url' => 'wear/createwear', 'controller' => 'Wear', 'method' => 'createWear');
+        $this->routes['wear_attributes']              = array('url' => 'wear/attributes', 'controller' => 'Wear', 'method' => 'attributes');
         $this->routes['wear_breakdown']               = array('url' => 'wear/breakdown', 'controller' => 'Wear', 'method' => 'wearBreakdown');
         $this->routes['detailed_order_list']          = array('url' => 'wear/detailed', 'controller' => 'Wear', 'method' => 'detailedOrderList');
         $this->routes['detailed_unfilled_order_list'] = array('url' => 'wear/unfilled', 'controller' => 'Wear', 'method' => 'detailedUnfilledOrderList');
         $this->routes['detailed_ajax']                = array('url' => 'wear/detailed/ajax/', 'controller' => 'Wear', 'method' => 'detailedOrderAjax');
         $this->routes['detailed_order_list_print']    = array('url' => 'wear/detailed/print/', 'controller' => 'Wear', 'method' => 'detailedOrderListPrint');
-        $this->routes['detailed_mini_list']           = array('url' => 'wear/detailed/:type:/:size:', 'controller' => 'Wear', 'method' => 'detailedMiniList');
+        $this->routes['detailed_mini_list']           = array('url' => 'wear/detailed/:id:', 'controller' => 'Wear', 'method' => 'detailedMiniList');
         $this->routes['ajax_get_wear']                = array('url' => 'wear/ajaxgetwear/:id:', 'controller' => 'Wear', 'method' => 'ajaxGetWear');
         $this->routes['wear_handout']                 = array('url' => 'wear/handout', 'controller' => 'Wear', 'method' => 'displayHandout');
         $this->routes['wear_handout_ajax']            = array('url' => 'wear/handout/ajax', 'controller' => 'Wear', 'method' => 'ajaxHandout');
         $this->routes['wear_labels']                  = array('url' => 'wear/print-labels', 'controller' => 'Wear', 'method' => 'showPrintLabels');
+        $this->routes['wear_upload_image']            = array('url' => 'wear/upload-image', 'controller' => 'Wear', 'method' => 'uploadImage');
+        
 
         // mad routes
         $this->routes['madhome']              = array('url' => 'mad/', 'controller' => 'Food', 'method' => 'main');
@@ -341,6 +358,7 @@ class Routes
 
         // admin ajax routes
         $this->routes['admin_ajax_changepass']      = array('url' => 'admin/ajax/changepass/:id:', 'controller' => 'Admin', 'method' => 'ajaxChangePass');
+        $this->routes['admin_ajax_changelabel']     = array('url' => 'admin/ajax/changelabel/:id:', 'controller' => 'Admin', 'method' => 'ajaxChangeLabel');
         $this->routes['admin_ajax_removerole']      = array('url' => 'admin/ajax/removerole/:id:/:role_id:', 'controller' => 'Admin', 'method' => 'ajaxRemoveRole');
         $this->routes['admin_ajax_addrole']         = array('url' => 'admin/ajax/addrole/:id:/:role_id:', 'controller' => 'Admin', 'method' => 'ajaxAddRole');
         $this->routes['admin_ajax_disableuser']     = array('url' => 'admin/ajax/disableuser/:id:', 'controller' => 'Admin', 'method' => 'ajaxDisableUser');
@@ -383,6 +401,7 @@ class Routes
         $this->routes['api_user_schedules_v2']   = array('url' => 'api/v2/user/:id:', 'controller' => 'Api', 'method' => 'getUserScheduleV2');
         $this->routes['api_user_data_v']         = array('url' => 'api/v:version:/user-data/:email:', 'controller' => 'Api', 'method' => 'getUserDataVersioned');
         $this->routes['api_user_data']           = array('url' => 'api/v2/user-data/:email:', 'controller' => 'Api', 'method' => 'getUserData');
+        $this->routes['api_get_messages']        = array('url' => 'api/messages/:id:', 'controller' => 'Api', 'method' => 'getUserMessages');
         $this->routes['api_user_register']       = array('url' => 'api/user/:id:/register', 'controller' => 'Api', 'method' => 'registerApp');
         $this->routes['api_user_unregister']     = array('url' => 'api/user/:id:/unregister', 'controller' => 'Api', 'method' => 'unregisterApp');
         $this->routes['api_user_data_v']         = array('url' => 'api/v:version:/confirmation-data', 'controller' => 'Api', 'method' => 'getConfirmationData');
@@ -411,14 +430,31 @@ class Routes
         $this->routes['boardgames_reporting']        = array('url' => 'boardgames/reporting', 'controller' => 'Boardgames', 'method' => 'showReporting');
 
         // loans
-        $this->routes['loans_overview']         = array('url' => 'loans', 'controller' => 'Loans', 'method' => 'overview');
-        $this->routes['loans_data']             = array('url' => 'loans/data', 'controller' => 'Loans', 'method' => 'fetchData');
-        $this->routes['loans_create']           = array('url' => 'loans/create', 'controller' => 'Loans', 'method' => 'createItem');
-        $this->routes['loans_update']           = array('url' => 'loans/update', 'controller' => 'Loans', 'method' => 'updateItem');
-        $this->routes['loans_edit']             = array('url' => 'loans/edit', 'controller' => 'Loans', 'method' => 'editItem');
-        $this->routes['loans_parse']            = array('url' => 'loans/parse', 'controller' => 'Loans', 'method' => 'parseSpreadsheet');
-        $this->routes['loans_update_note']      = array('url' => 'loans/update-note', 'controller' => 'Loans', 'method' => 'updateNote');
+        $this->routes['loans_overview']             = array('url' => 'loans', 'controller' => 'Loans', 'method' => 'overview');
+        $this->routes['loans_data']                 = array('url' => 'loans/data', 'controller' => 'Loans', 'method' => 'fetchData');
+        $this->routes['loans_create']               = array('url' => 'loans/create', 'controller' => 'Loans', 'method' => 'createItem');
+        $this->routes['loans_update']               = array('url' => 'loans/update', 'controller' => 'Loans', 'method' => 'updateItem');
+        $this->routes['loans_edit']                 = array('url' => 'loans/edit', 'controller' => 'Loans', 'method' => 'editItem');
+        $this->routes['loans_parse']                = array('url' => 'loans/parse', 'controller' => 'Loans', 'method' => 'parseSpreadsheet');
+        $this->routes['loans_update_note']          = array('url' => 'loans/update-note', 'controller' => 'Loans', 'method' => 'updateNote');
 
+        // Signup Admin
+        $this->routes['signup_pages']               = array('url' => 'signup/pages', 'controller' => 'SignupAdmin', 'method' => 'signupPages');
+        $this->routes['signup_pages_specific']      = array('url' => 'signup/pages/:page:', 'controller' => 'SignupAdmin', 'method' => 'signupPages');
+        $this->routes['signup_pages_add_element']   = array('url' => 'signup/pages/add-element', 'controller' => 'SignupAdmin', 'method' => 'addPageElement');
+        $this->routes['signup_pages_edit_text']     = array('url' => 'signup/pages/edit-text', 'controller' => 'SignupAdmin', 'method' => 'editText');
+        $this->routes['signup_config']              = array('url' => 'signup/config/:module:', 'controller' => 'SignupAdmin', 'method' => 'signupConfig');
+
+        // Signup API
+        $this->routes['api_signup_config']          = array('url' => 'api/signup/config/:module:', 'controller' => 'SignupApi', 'method' => 'getConfig');
+        $this->routes['api_signup_page_list']       = array('url' => 'api/signup/pagelist', 'controller' => 'SignupApi', 'method' => 'getPageList');
+        $this->routes['api_signup_page']            = array('url' => 'api/signup/page/:page_id:', 'controller' => 'SignupApi', 'method' => 'getPage');
+        $this->routes['api_signup_food']            = array('url' => 'api/signup/food', 'controller' => 'SignupApi', 'method' => 'getFood');
+        $this->routes['api_signup_activities']      = array('url' => 'api/signup/activities', 'controller' => 'SignupApi', 'method' => 'getActivities');
+        $this->routes['api_signup_wear']            = array('url' => 'api/signup/wear', 'controller' => 'SignupApi', 'method' => 'getWear');
+        $this->routes['api_signup_submit']          = array('url' => 'api/signup/submit', 'controller' => 'SignupApi', 'method' => 'submitSignup');
+        $this->routes['api_signup_confirm']         = array('url' => 'api/signup/confirm', 'controller' => 'SignupApi', 'method' => 'confirmSignup');
+        $this->routes['api_signup_load']            = array('url' => 'api/signup/load', 'controller' => 'SignupApi', 'method' => 'loadSignup');
     }
 
     /**

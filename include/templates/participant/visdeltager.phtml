@@ -7,6 +7,9 @@ $this->registerLateLoadJS('participant.js');
     var participant = {
         id: <?= $this->deltager->id;?>
     };
+    var countries = <?=$this->countries?>;
+    var work_areas = <?=$this->work_areas?>;
+    var games = <?=$this->games?>;
 </script>
 <div class="prev-next-buttons">
         <a class="btn btn-danger" href="<?= $this->url('spillersedler', array('id_range' => $this->deltager->id));?>" target="_blank">Print spillerseddel</a>
@@ -34,76 +37,83 @@ $this->registerLateLoadJS('participant.js');
             <table>
                 <tr>
                     <td class='label'>ID: </td><td><?= $this->deltager->id;?></td>
-                    <td colspan='4'>&nbsp;</td>
-                </tr>
-                <tr>
+                    <td colspan='1'>&nbsp;</td>
                     <td class='label'>Fødselsdato: </td><td id='birthdate' class='editable text'><?= e(date('d-m-Y', strtotime($this->deltager->birthdate)));?></td>
-                    <td class='label'>Navn: </td><td colspan='3' id='name' class='editable text'><?= e($this->deltager->fornavn);?> <?= e($this->deltager->efternavn);?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Køn: </td><td id='gender' class='editable gender'><?= e($this->deltager->gender);?></td>
-                    <td class='label'>Kategori: </td><td class='editable usertype' id='brugerkategori_id'><?= $this->deltager_info['brugerkategori']->navn;?></td>
+                    <td class='label'>Kategori: </td><td colspan='2' class='editable usertype' id='brugerkategori_id'><?= $this->deltager_info['brugerkategori']->navn;?></td>
                     <td class='label'>Forudbetalt: </td><td id='betalt_beloeb' class='editable text'><?= e($this->deltager->betalt_beloeb);?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Adresse: </td><td colspan='3' id='address' class='editable text'><?= e($this->deltager->adresse1);?> <?= e($this->deltager->adresse2);?></td>
+                    <td class='label'>Navn: </td><td colspan='2' id='name' class='editable text'><?= e($this->deltager->fornavn);?> <?= e($this->deltager->efternavn);?></td>
+                    <td class='label'>Adresse: </td><td colspan='2' id='address' class='editable text'><?= e($this->deltager->adresse1);?> <?= e($this->deltager->adresse2);?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Postnr: </td><td id='postnummer' class='editable text'><?= e($this->deltager->postnummer);?></td>
-                    <td class='label'>By: </td><td id='by' class='editable text'><?= e($this->deltager->by);?></td>
-                    <td class='label'>Land: </td><td id='land' class='editable text'><?= e($this->deltager->land);?></td>
+                    <td class='label'>Postnr: </td><td colspan='2' id='postnummer' class='editable text'><?= e($this->deltager->postnummer);?></td>
+                    <td class='label'>By: </td><td colspan='2' id='by' class='editable text'><?= e($this->deltager->by);?></td>
                 </tr>
                 <tr>
-                    <td class='label'>Mobil: </td><td id='mobiltlf' class='editable text'><?= e($this->deltager->mobiltlf);?></td>
-                    <td class='label'>E-mail: </td><td colspan='3' id='email' class='editable text'><?= e($this->deltager->email);?></td>
+                    <td class='label'>Mobil: </td><td colspan='2' id='mobiltlf' class='editable text'><?= e($this->deltager->mobiltlf);?></td>
+                    <td class='label'>Tilmeldt SMS: </td><td colspan='2' id='medbringer_mobil' class='editable yesno'><?= $this->deltager->medbringer_mobil;?></td>
                 </tr>
                 <tr>
-                    <td class='label'>International: </td><td id='international' class='editable yesno'><?= $this->deltager->international;?></td>
-                    <td class='label'>Mobil med: </td><td id='medbringer_mobil' class='editable yesno'><?= $this->deltager->medbringer_mobil;?></td>
-                    <td class='label'>NødTlf: </td><td id='tlf' class='editable text'><?= e($this->deltager->tlf);?></td>
+                    <td class='label'>Land: </td><td colspan='2' id='land' class='editable country'><?= e($this->deltager->land);?></td>
+                    <td class='label'>E-mail: </td><td colspan='2' id='email' class='editable text'><?= e($this->deltager->email);?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Kaldenavn: </td><td colspan='2' id='nickname' class='editable text'><?= e($this->deltager->nickname);?></td>
+                    <td class='label'>Pronomen: </td><td colspan='2' id='pronoun' class='editable pronoun'><?= $this->deltager->getPronoun();?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Foretrukket sprog: </td><td colspan='2' id='main_lang' class='editable lang'><?= $this->deltager->main_lang;?></td>
+                    <td class='label'>International: </td><td colspan='2' id='international' class='editable yesno'><?= $this->deltager->international;?></td>
                 </tr>
                 <?php if (!($this->payment_edit || $this->is_read_only)) :?>
                 <tr>
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <td class='label'>Extra vouchers: </td><td id='extra_vouchers' class='editable text'><?= $this->deltager->extra_vouchers;?></td>
+                    <td class='label'>Arrangørområde: </td><td colspan='2' id='arbejdsomraade' class='editable work'><?= e($this->deltager->arbejdsomraade);?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Forfatter/Designer: </td><td id='forfatter' class='editable yesno'><?= $this->deltager->forfatter;?></td>
+                    <td class='label'>Scenarie: </td><td colspan='3' id='scenarie' class='editable game'><?= e($this->deltager->scenarie);?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Extra vouchers: </td><td colspan='2' id='extra_vouchers' class='editable text'><?= $this->deltager->extra_vouchers;?></td>
                 </tr>
                 <tr>
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <!--<td class='label'>Scen. konk.: </td><td id='tilmeld_scenarieskrivning' class='editable yesno'><?= $this->deltager->tilmeld_scenarieskrivning;?></td>-->
-                    <td class='label'>Sprog: </td><td colspan='2' id='sprog'><?= implode(', ', $this->deltager->getSprog());?></td>
+                    <td class='label'>Sprog (aktiviteter): </td><td colspan='5' id='sprog'><?= implode(', ', $this->deltager->getCollection('sprog'));?></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class='label'>Soveområde: </td><td colspan='5' id='sleeping_area'><?= implode(', ', $this->deltager->getCollection('sleeping_area'));?></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
-                    <td class='label'>SuperGDS: </td><td id='supergds' class='editable yesno'><?= $this->deltager->supergds;?></td>
-                    <td class='label'>Flere GDS vagter: </td><td id='flere_gdsvagter' class='editable yesno'><?= $this->deltager->flere_gdsvagter;?></td>
-                    <td class='label'>SuperGM: </td><td id='supergm' class='editable yesno'><?= $this->deltager->supergm;?></td>
+                    <td class='label'>Med i Heltestyrken: </td><td id='supergds'><?=empty($this->deltager_info['gdstilmeldinger']) ? 'Nej' : 'Ja'?></td>
+                    <td class='label'>Ønsket antal GDS:</td><td id='desired_diy_shifts' class='editable text'><?= e($this->deltager->desired_diy_shifts);?></td>
+                    <td class='label'>Ønsket antal aktiviteter:</td><td id='desired_activities' class='editable text'><?= e($this->deltager->desired_activities);?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Super GM: </td><td id='supergm' class='editable yesno'><?=$this->deltager->supergm?></td>
+                    <td class='label'>Maks GM Scenarier: </td><td id='gm_max' class='editable text'><?=$this->deltager->gm_max?></td>
+                </tr>
+                <tr>
+                    <td class='label'>Super RF:</td><td id='super_rules_guide' class='editable yesno'><?=$this->deltager->super_rules_guide?></td>
+                    <td class='label'>Maks RF Spil:</td><td id='rules_guide_max' class='editable text'><?=$this->deltager->rules_guide_max?></td>
                 </tr>
                 <tr>
                     <td class='label'>Hjælper mandag: </td><td id='ready_mandag' class='editable yesno'><?= $this->deltager->ready_mandag;?></td>
                     <td class='label'>Hjælper tirsdag: </td><td id='ready_tirsdag' class='editable yesno'><?= $this->deltager->ready_tirsdag;?></td>
-                    <td class='label'>Pakkeløsning: </td><td id='package_gds' class='editable package_gds'><?= $this->deltager->package_gds ? 'Ja' : 'Nej';?></td>
+                    <td class='label'>Økonomisk støtte:</td><td id='financial_struggle' class='editable yesno'><?= e($this->deltager->financial_struggle);?></td>
                 </tr>
-                <tr>
-                    <td class='label'>Arr. næste år: </td><td id='arrangoer_naeste_aar' class='editable yesno'><?= $this->deltager->arrangoer_naeste_aar;?></td>
-                    <td class='label'>Arr. sovesal: </td><td id='sovesal' class='editable yesno'><?= $this->deltager->sovesal;?></td>
-                    <td class='label'>Ædru sovesal: </td><td id='sober_sleeping' class='editable yesno'><?= $this->deltager->sober_sleeping;?></td>
-                </tr>
-                <tr>
-                    <td class='label'>Forfatter: </td><td id='forfatter' class='editable yesno'><?= $this->deltager->forfatter;?></td>
-                    <td class='label'><strong>Ønsket antal aktiviteter:</strong> </td><td id='desired_activities' class='editable text'><?= e($this->deltager->desired_activities);?></td>
-                    <td class='label'><strong>Ønsket antal GDS:</strong> </td><td id='desired_diy_shifts' class='editable text'><?= e($this->deltager->desired_diy_shifts);?></td>
-                </tr>
-                <tr>
-                    <td class='label'><strong>Simultantolk:</strong> </td><td id='interpreter' class='editable yesno'><?= e($this->deltager->interpreter);?></td>
-                </tr>
-
                 <tr>
                     <td colspan='6'><hr/></td>
                 </tr>
@@ -114,22 +124,14 @@ $this->registerLateLoadJS('participant.js');
                 </tr>
                 <tr>
                     <td class='label'><b>Tilmeldt:</b> </td><td><?php if ($this->late_signup) :?><span style='color: #ffffff;background-color: #ff0000;'><?php endif; echo date('Y-m-d', strtotime($this->deltager->signed_up));?></span></td>
-                    <td class='label'><b>Checked in:</b> </td><td class="checkin-time"><?= strtotime($this->deltager->checkin_time) ? date('Y-m-d H:i', strtotime($this->deltager->checkin_time)) : 'Ikke tjekket ind';?></td>
+                    <td class='label'><b>Checked in:</b> </td><td class="checkin-time"><?= $this->deltager->checkin_time === '0000-00-00 00:00:00' ? 'Ikke tjekket ind' : date('Y-m-d H:i', strtotime($this->deltager->checkin_time))?></td>
+                    <td class='label'><b>Afregnet ved check-in:</b> </td><td id="checkin-balance"><?= $this->deltager->checkin_balance === null ? 'Ikke tjekket ind' : $this->deltager->checkin_balance?></td>
                 </tr>
                 <tr>
                     <td colspan='6'><hr/></td>
                 </tr>
                 <tr>
                     <td class='label'>Ungdomsskole: </td><td colspan='5' id='ungdomsskole' class='editable text'><?= e($this->deltager->ungdomsskole);?></td>
-                </tr>
-                <tr>
-                    <td class='label'>Arrangørområde: </td><td colspan='5' id='arbejdsomraade' class='editable text'><?= e($this->deltager->arbejdsomraade);?></td>
-                </tr>
-                <tr>
-                    <td class='label'>Scenarie: </td><td colspan='5' id='scenarie' class='editable text'><?= e($this->deltager->scenarie);?></td>
-                </tr>
-                <tr>
-                    <td class='label'>Skills: </td><td colspan='5' id='skills' class='editable text'><?= e($this->deltager->skills);?></td>
                 </tr>
                 <?php endif;?>
             </table>
@@ -238,7 +240,14 @@ $this->registerLateLoadJS('participant.js');
                     <td colspan='2'><em>
                         <?php if (!empty($this->deltager_info['wear'])) :
                             foreach ($this->deltager_info['wear'] as $wear) :?>
-                            <?= $wear->antal;?> stk. <?= $wear->getWearName();?>, str. <?= $wear->size;?> &mdash; <?= $wear->getWearpris()->pris * $wear->antal;?>,- (<?= $wear->getWearpris()->pris;?>,-) &mdash; (<em><?= $wear->received == 't' ? 'Udleveret' : 'Ikke udleveret';?></em>)<br/>
+                            <?= $wear->antal;?> stk.
+                            <?= $wear->getWearName('da', false)?>
+                            <?= $wear->size ? ", str. ".$wear->getSizeName() : ""?>
+                            &mdash;
+                            <?= $wear->getWearpris()->pris * $wear->antal;?>,-
+                            (<?= $wear->getWearpris()->pris;?>,-)
+                            &mdash;
+                            (<em><?= $wear->received == 't' ? 'Udleveret' : 'Ikke udleveret';?></em>)<br/>
                             <?php endforeach;
                         endif;?>
                     </em></td>
@@ -325,18 +334,6 @@ $this->registerLateLoadJS('participant.js');
             <p class="editable textarea" id="paid_note"><?= nl2br(htmlspecialchars($this->deltager->paid_note, ENT_QUOTES));?></p>
         </fieldset>
     </div>
-    <div id='note5' class='note'>
-        <fieldset>
-            <legend>Helbreds-note - <a href="<?= $this->url('edit_deltager_note', array('textfield' => 'medical_note', 'id' => $this->deltager->id));?>">Ret/slet</a></legend>
-            <p class="editable textarea" id="medical_note"><?= nl2br(htmlspecialchars($this->deltager->medical_note, ENT_QUOTES));?></p>
-        </fieldset>
-    </div>
-    <div id='note6' class='note'>
-        <fieldset>
-            <legend>Skills-note - <a href="<?= $this->url('edit_deltager_note', array('textfield' => 'skills', 'id' => $this->deltager->id));?>">Ret/slet</a></legend>
-            <p class="editable textarea" id="skills"><?= nl2br(htmlspecialchars($this->deltager->skills, ENT_QUOTES));?></p>
-        </fieldset>
-    </div>
     <div class='clearit'></div>
     <?php if($this->deltager->note) : ?>
         <?php foreach($this->deltager->note as $key => $note) : ?>
@@ -379,7 +376,7 @@ $this->registerLateLoadJS('participant.js');
     </div>
     <div class='gdsbox'>
         <fieldset>
-            <legend>GDS Vagter<?php if (!$this->is_read_only) : ?> - <a href="<?= $this->url('update_deltager_gds', array('id' => $this->deltager->id));?>">Ret/slet</a><?php endif;?></legend>
+            <legend>Helte Opgaver<?php if (!$this->is_read_only) : ?> - <a href="<?= $this->url('update_deltager_gds', array('id' => $this->deltager->id));?>">Ret/slet</a><?php endif;?></legend>
             <table class='gds_table'>
                 <?php if (!empty($this->deltager_info['gds'])) :
                     foreach ($this->deltager_info['gds'] as $gds) :?>
@@ -429,7 +426,7 @@ $this->registerLateLoadJS('participant.js');
     </div>
     <div class='gdsbox'>
         <fieldset>
-            <legend>GDS Tilmeldinger<?php if (!$this->is_read_only) : ?> - <a href="<?= $this->url('update_deltager_gdstilmeldinger', array('id' => $this->deltager->id));?>">Ret/slet</a><?php endif;?></legend>
+            <legend>Heltestyrken, Tilmeldinger<?php if (!$this->is_read_only) : ?> - <a href="<?= $this->url('update_deltager_gdstilmeldinger', array('id' => $this->deltager->id));?>">Ret/slet</a><?php endif;?></legend>
             <table class='gds_table'>
                 <?php if (!empty($this->deltager_info['gdstilmeldinger'])) :
                     foreach ($this->deltager_info['gdstilmeldinger'] as $gds) : ?>
@@ -467,8 +464,7 @@ $this->registerLateLoadJS('participant.js');
 <script type="text/template" id="checkin-template">
 <div class="inner">
     <p>Deltageren har et udestående med Fastaval.</p>
-    <h2>:money:,-</h2>
-    <h2>:vouchers: voucher(s)</h2>
+    <h2>:money:</h2>
     <hr/>
     <a class="btn btn-success continue" href="javascript:void(0);">Marker betalt og fortsæt</a>
     <a class="btn btn-danger cancel" href="javascript:void(0);">Fortryd</a>

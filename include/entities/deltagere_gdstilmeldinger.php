@@ -90,7 +90,14 @@ class DeltagereGDSTilmeldinger extends DBObject
             return array();
         }
 
-        $ids = $this->db->query($this->getSelect()->setWhere('period', '=', $period)->setWhere('category_id', '=', $category->id)->setField('deltager_id')->assemble(), array($period, $category->id));
+        $ids = $this->db->query(
+            $this->getSelect()
+                ->setWhere('period', '=', '')
+                ->setWhere('category_id', 'IN', [0, 0])
+                ->setField('deltager_id')
+                ->assemble(),
+            [$period, $category->id, 0]
+        );
 
         $array = array();
         foreach ($ids as $row) {
@@ -116,9 +123,9 @@ class DeltagereGDSTilmeldinger extends DBObject
     protected function makePeriod($timestamp)
     {
         $periods = array(
-            '04' => '12',
+            '7' => '12',
             '12' => '17',
-            '17' => '04',
+            '17' => '24',
         );
 
         $hour = date('H', $timestamp);
@@ -151,7 +158,7 @@ class DeltagereGDSTilmeldinger extends DBObject
             return false;
         }
 
-        $query = 'SELECT COUNT(*) AS count FROM deltagere_gdstilmeldinger WHERE period = ? AND category_id = ? AND deltager_id = ?';
+        $query = 'SELECT COUNT(*) AS count FROM deltagere_gdstilmeldinger WHERE period = ? AND category_id IN (?,0) AND deltager_id = ?';
 
         $result = $this->db->query($query, array($vagt->getPeriod(), $vagt->getGDSCategory()->id, $deltager->id));
         return $result[0]['count'];
@@ -209,13 +216,13 @@ class DeltagereGDSTilmeldinger extends DBObject
         $parts = explode(' ', $this->period);
 
         switch ($parts[1]) {
-        case '04-12':
+        case '7-12':
             return $lang === 'en' ? 'Morning' : 'Morgen';
 
         case '12-17':
-            return $lang === 'en' ? 'Midday' : 'Middag';
+            return $lang === 'en' ? 'Afternoon' : 'Eftermiddag';
 
-        case '17-04':
+        case '17-24':
             return $lang === 'en' ? 'Evening' : 'Aften';
 
         }

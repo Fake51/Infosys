@@ -68,7 +68,9 @@ class ParticipantModel extends Model
         $search['ids'] = array();
 
         if ($result = $this->miniWildCardSearch(explode(' ', $query))) {
-            $search['ids'] = array_map(create_function('$a', 'return $a->id;'), $result);
+            $search['ids'] = array_map(function($a) {
+                return $a->id;
+            }, $result);
         }
 
         $session->search = $search;
@@ -110,7 +112,7 @@ class ParticipantModel extends Model
         $search  = $session->search;
 
         if (empty($search['ids']) || !is_array($search['ids'])) {
-            return array();
+            return $this->createEntity('Deltagere')->findAll();
         }
 
         $select = $this->createEntity('Deltagere')->getSelect()
@@ -199,9 +201,6 @@ class ParticipantModel extends Model
                 $select->setWhereOr('email', 'like', "%{$term}%");
                 $select->setWhereOr('efternavn', 'like', "%{$term}%");
                 $select->setWhereOr('ungdomsskole', 'like', "%{$term}%");
-                $select->setWhereOr('scenarie', 'like', "%{$term}%");
-                $select->setWhereOr('arbejdsomraade', 'like', "%{$term}%");
-                $select->setWhereOr('skills', 'like', "%{$term}%");
                 $select->setWhereOr('deltager_note', 'like', "%{$term}%");
             }
         }
@@ -272,6 +271,17 @@ class ParticipantModel extends Model
             $done = false;
 
             switch ($dvar) {
+            case 'birthdate_range': 
+                $done = true;
+                break;
+            case 'birthdate':
+                $range = $search_vars->deltager_search['birthdate_range'];
+                $compare = '=';
+                if ($range === 'before') $compare = '<=';
+                if ($range === 'after') $compare = '>=';
+                $select->setWhereDate('birthdate', $compare, "$dval");
+                $done = true;
+                break;
             case 'brugerkategori_id':
                 $select->setTableWhere('brugerkategorier.id', 'deltagere.brugerkategori_id');
                 $select->setFrom('brugerkategorier');
@@ -581,7 +591,7 @@ class ParticipantModel extends Model
         }
 
         if (isset($post['lang']) && is_array($post['lang'])) {
-            $deltager->setSprog($post['lang']);
+            $deltager->setCollection('sprog', $post['lang']);
         }
 
         if (isset($post['adresse'])) {
@@ -614,14 +624,14 @@ class ParticipantModel extends Model
     }
 
     /**
-     * wrapper function for Deltagere::getAvailableSprog()
+     * wrapper function for Deltagere::getAvailableValues()
      *
      * @access public
      * @return array
      */
-    public function getAvailableSprog()
+    public function getAvailableValues($column)
     {
-        return $this->createEntity('Deltagere')->getAvailableSprog();
+        return $this->createEntity('Deltagere')->getAvailableValues($column);
     }
 
     /**
@@ -696,7 +706,7 @@ class ParticipantModel extends Model
         }
 
         if (isset($post->lang) && is_array($post->lang)) {
-            $deltager->setSprog($post->lang);
+            $deltager->setCollection('sprog', $post->lang);
         }
 
         if (isset($post->sovesal)) {
@@ -777,21 +787,14 @@ class ParticipantModel extends Model
     }
 
     protected function handleWearUpdate(Deltagere $deltager, RequestVars $post) {
-        $query = "DELETE FROM deltagere_wear WHERE deltager_id = '{$deltager->id}'";
+        $query = "DELETE FROM deltagere_wear_order WHERE deltager_id = '{$deltager->id}'";
         $this->db->exec($query);
 
-        if (!empty($post->wearpriser) && $post->wearantal && $post->wearsize) {
-            $wearantal = $post->wearantal;
-            $wearsize = $post->wearsize;
-            foreach ($post->wearpriser as $wearpris) {
-                $ent = $this->createEntity('DeltagereWear');
-                $ent->deltager_id = $deltager->id;
-                $ent->wearpris_id = $wearpris;
-                $ent->antal = current($wearantal);
-                $ent->size = current($wearsize);
-                $ent->insert();
-                next($wearantal);
-                next($wearsize);
+        if (!empty($post->wear)) {
+            foreach ($post->wear as $wear) {
+                $order = $this->createEntity('DeltagereWear');
+                $price = $this->findEntity('WearPriser', $wear['price']);
+                $order->setOrderDirect($deltager, $price, $wear['amount'], $wear['attribute']);
             }
         }
     }
@@ -1111,6 +1114,27 @@ class ParticipantModel extends Model
     }
 
     /**
+     * returns an array of the fields in the deltagere table
+     *
+     * @access public
+     * @return array
+     */
+    public function getDeltagerFieldsWithNames()
+    {
+        $deltager = $this->createEntity('Deltagere');
+        $field_keys = $deltager->getColumns();
+        $field_names = $deltager->getHumanReadableFieldNames();
+
+        $fields = [];
+        foreach($field_keys as $key) {
+            $name = $field_names[$key] ?? $key;
+            $fields[$key] = $name;
+        }
+        return $fields;
+    }
+
+    
+    /**
      * returns an array with all the GMs (signed up + assigned) for all the activities
      *
      * @access public
@@ -1282,11 +1306,6 @@ class ParticipantModel extends Model
                ];
     }
 
-    public function getSMSLog()
-    {
-        return $this->createEntity('SMSLog');
-    }
-
     /**
      * returns all rooms marked as sleeping room
      *
@@ -1356,7 +1375,7 @@ FROM
         SELECT di.deltager_id, sum(i.pris) AS pris FROM deltagere_indgang AS di JOIN indgang AS i ON i.id = di.indgang_id WHERE i.type LIKE 'Dagsbillet%' GROUP BY di.deltager_id
     ) AS i_d ON i_d.deltager_id = d.id
     LEFT JOIN (
-        SELECT deltager_id, SUM(dw.antal * wp.pris) AS pris FROM deltagere_wear AS dw JOIN wearpriser AS wp ON wp.id = dw.wearpris_id GROUP BY deltager_id
+        SELECT deltager_id, SUM(dw.antal * wp.pris) AS pris FROM deltagere_wear_order AS dw JOIN wearpriser AS wp ON wp.id = dw.wearpris_id GROUP BY deltager_id
     ) AS w ON w.deltager_id = d.id
     LEFT JOIN (
         SELECT p.deltager_id, SUM(case when p.type = 'spilleder' then -30 else ak.pris end) AS pris FROM pladser AS p JOIN hold AS h ON h.id = p.hold_id JOIN afviklinger AS af ON af.id = h.afvikling_id JOIN aktiviteter AS ak ON ak.id = af.aktivitet_id GROUP BY deltager_id
@@ -1430,7 +1449,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number($this->getConYear()), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = 536;
@@ -1471,7 +1490,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = @$barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = @$barcode->draw($participant->getEan8Number($this->getConYear()), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = 134;
@@ -1511,7 +1530,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number($this->getConYear()), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = round($width * 2);
@@ -1544,10 +1563,14 @@ SQL;
         }
 
         $parts = explode(' ', $participant->fornavn);
-        $participant->fornavn = implode(' ', array_map(create_function('$a', 'return ucfirst($a);'), $parts));
+        $participant->fornavn = implode(' ', array_map(function($a) {
+            return ucfirst($a);
+        }, $parts));
 
         $parts = explode(' ', $participant->efternavn);
-        $participant->efternavn = implode(' ', array_map(create_function('$a', 'return ucfirst($a);'), $parts));
+        $participant->efternavn = implode(' ', array_map(function($a) {
+            return ucfirst($a);
+        }, $parts));
 
         $name = $participant->fornavn . ' ' . $participant->efternavn;
         $name = mb_strlen($name) > 25 ? $participant->fornavn . "\n" . $participant->efternavn : $name;
@@ -1576,7 +1599,7 @@ SQL;
         require_once 'Image/Barcode.php';
 
         $barcode    = new Image_Barcode;
-        $img        = $barcode->draw($participant->getEan8Number(), 'ean8', 'png', false);
+        $img        = $barcode->draw($participant->getEan8Number($this->getConYear()), 'ean8', 'png', false);
         $width      = imagesx($img);
         $height     = imagesy($img);
         $new_width  = round($width * 4.60);
@@ -1629,8 +1652,8 @@ SQL;
                 $text .= '<br/><span style="background-color: #00f; color: #fff;">Deltageren skal have <strong>' . ($deltager->betalt_beloeb - $bill) . ' kr. tilbage.</strong><input type="hidden" class="previously-paid" value="' . intval($deltager->betalt_beloeb) . '"/></span>';
             }
 
+            $deltager->checkin_balance = $bill - $deltager->betalt_beloeb;
             $deltager->betalt_beloeb = $bill;
-
         }
 
         if ($vouchers) {
@@ -1692,6 +1715,7 @@ SQL;
 
         if (strlen($post->previously_paid)) {
             $deltager->betalt_beloeb = intval($post->previously_paid);
+            $deltager->checkin_balance = null;
         }
 
         $deltager->checkin_time = '0000-00-00 00:00:00';
@@ -1717,29 +1741,74 @@ SQL;
             $session->search = null;
         }
 
+        $note_columns = [];
         if (isset($get->extra_columns)) {
             $extra_columns = explode(',', $get->extra_columns);
-
             $valid_columns = $this->getDisplayColumns();
 
-            foreach ($extra_columns as $column) {
+            foreach ($extra_columns as $index => $column) {
+                if (str_starts_with($column, "note_")) {
+                    $note_columns[] = [
+                        'name' => substr($column, 5),
+                        'index' => $index + 2,
+                    ];
+                    continue;
+                }
+
                 if (isset($valid_columns[$column])) {
                     array_push($columns, $column);
                 }
+            }
+        }
 
+        if (!empty($note_columns)) $columns[] = 'deltager_note';
+
+        // Sort out foreign keys
+        $foreign_key_fields = [];
+        foreach ($this->createEntity('Deltagere')->getForeignKeyFields() as $field_info) {
+            $foreign_key_fields[$field_info['key_field']] = $field_info;
+        }
+
+        // Fix column names, convert foreign key columns and set joins
+        $join = $group = "";
+        foreach ($columns as $id => $column) {
+            if ($column == 'navn') continue; // Don't mess with the name column
+
+            // Special columns
+            if ($column == 'assigned_sleeping') {
+                $join .= " LEFT JOIN participants_sleepingplaces ON deltagere.id = participants_sleepingplaces.participant_id";
+                $join .= " LEFT JOIN lokaler ON participants_sleepingplaces.room_id = lokaler.id";
+                $group = " GROUP BY deltagere.id";
+                continue;
             }
 
+            // Special columns
+            if ($column == 'has_hero_signup') {
+                $join .= " LEFT JOIN deltagere_gdstilmeldinger ON deltagere.id = deltagere_gdstilmeldinger.deltager_id";
+                $group = " GROUP BY deltagere.id";
+                continue;
+            }
+
+            if ($column == 'hero_task_count') {
+                continue;
+            }
+
+            if (isset($foreign_key_fields[$column])) {
+                $field_info = $foreign_key_fields[$column];
+                $columns[$id] = "`$field_info[table]`.`$field_info[name]`";
+                $join .= " LEFT JOIN `$field_info[table]` ON `deltagere`.`$field_info[key_field]` = `$field_info[table]`.`$field_info[key]`";
+            } else {
+                $columns[$id] = "`deltagere`.`$column`";
+            }
         }
 
         $limit = "";
-
         if (isset($get->iDisplayStart) && $get->iDisplayLength != '-1') {
             $limit = "LIMIT " . intval($get->iDisplayStart) . ", " .
             intval($get->iDisplayLength);
         }
 
         $order = '';
-
         if (isset($get->iSortCol_0)) {
             $order = "ORDER BY ";
 
@@ -1757,28 +1826,43 @@ SQL;
             }
         }
 
-        $where = '';
-
+        $where = $having = '';
         if ($get->sSearch != "") {
-            $where = "WHERE (";
-            for ($i = 0, $max = count($columns); $i < $max; $i++) {
-                if ($columns[$i] == 'navn') {
-                    $where .= 'fornavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
-                    $where .= 'efternavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
-                } else {
-                    $where .= '`' . $columns[$i] . "` LIKE " . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+            if ($group == "") {
+                $where = "WHERE (";
+                for ($i = 0, $max = count($columns); $i < $max; $i++) {
+                    if ($columns[$i] == 'navn') {
+                        $where .= 'fornavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+                        $where .= 'efternavn LIKE ' . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+                    } else {
+                        $where .= $columns[$i] ." LIKE " . $this->db->sanitize('%' . $get->sSearch . '%') . " OR ";
+                    }
+                }
+
+                $where = substr_replace($where, "", -3);
+                $where .= ')';
+            } else {
+                $pre = "HAVING ";
+                $having = "";
+                foreach($columns as $i => $column) {
+                    $having .= $pre;
+                    if ($column == 'navn') {
+                        $having .= "deltagere_navn LIKE " . $this->db->sanitize("%$get->sSearch%");
+                    } else {
+                        $having .= $columns[$i] ." LIKE " . $this->db->sanitize('%' . $get->sSearch . '%');
+                    }
+                    $pre = "OR ";
                 }
             }
-
-            $where = substr_replace($where, "", -3);
-            $where .= ')';
         }
 
         $session = $this->dic->get('Session');
 
         if ($session->search) {
             if (!empty($session->search['ids']) && is_array($session->search['ids'])) {
-                $id_clause = 'deltagere.id IN (' . implode(', ', array_map(create_function('$a', 'return intval($a);'), $session->search['ids'])) . ')';
+                $id_clause = 'deltagere.id IN (' . implode(', ', array_map(function($a) {
+                    return intval($a);
+                }, $session->search['ids'])) . ')';
 
                 $where .= ($where ? ' AND ' : ' WHERE ') . $id_clause;
             } else {
@@ -1787,26 +1871,59 @@ SQL;
         }
 
         foreach ($columns as $id => $column) {
-            if ($column == 'navn') {
-                $columns[$id] = 'CONCAT(fornavn, " ", efternavn) AS navn';
-            } else {
-                $columns[$id] = '`' . $column . '`';
+            switch ($column) {
+                case 'navn':
+                    $columns[$id] = 'CONCAT(fornavn, " ", efternavn) AS deltagere_navn';
+                    break;
+
+                case 'assigned_sleeping':
+                    $columns[$id] = "GROUP_CONCAT(DISTINCT lokaler.beskrivelse SEPARATOR ', ') AS assigned_sleeping";
+                    break;
+
+                case 'has_hero_signup':
+                    $columns[$id] = "CASE WHEN COUNT(deltagere_gdstilmeldinger.deltager_id) > 0 THEN 'Ja' ELSE 'Nej' END AS has_hero_signup";
+                    break;
+
+                case 'hero_task_count':
+                    $columns[$id] = "(SELECT COUNT(*) FROM deltagere_gdsvagter WHERE deltagere_gdsvagter.deltager_id = deltagere.id) as hero_task_count";
+                    break;
+
+                default:
+                    $columns[$id] = $columns[$id]." AS ".str_replace(".", "_", str_replace("`", "", $columns[$id]));
             }
         }
 
         $query = "
             SELECT SQL_CALC_FOUND_ROWS " . implode(', ', $columns) . "
             FROM deltagere
+            {$join}
             {$where}
+            {$group}
+            {$having}
             {$order}
             {$limit}
         ";
 
         $result = $this->db->query($query);
-
         foreach ($result as $id => $row) {
-            $result[$id][0] = '<a href="' . $this->url('visdeltager', array('id' => $row['id'])) . '">' . e($row['id']) . '</a>';
-            $result[$id][1] = '<a href="' . $this->url('visdeltager', array('id' => $row['id'])) . '">' . e($row['navn']) . '</a>';
+            $result[$id][0] = '<a href="' . $this->url('visdeltager', array('id' => $row['deltagere_id'])) . '">' . e($row['deltagere_id']) . '</a>';
+            $result[$id][1] = '<a href="' . $this->url('visdeltager', array('id' => $row['deltagere_id'])) . '">' . e($row['deltagere_navn']) . '</a>';
+
+            if (isset($row['deltagere_deltager_note'])) {
+                $note_object = json_decode($row['deltagere_deltager_note']);
+
+                // Clean up array before splicing
+                foreach($result[$id] as $key => $val) {
+                    if (intval($key) != $key) unset($result[$id][$key]);
+                }
+                // Remove the note json (always added last)
+                array_pop($result[$id]);
+
+                // Insert notes at their column index
+                foreach($note_columns as $note) {
+                    array_splice($result[$id], $note['index'], 0, $note_object->{$note['name']} ?? "");
+                }
+            }
         }
 
         $query = 'SELECT FOUND_ROWS() AS rows';
@@ -1964,11 +2081,16 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
             if (isset($readable_columns[$column])) {
                 $result[$column] = $readable_columns[$column];
             }
-
         }
 
-        asort($result);
+        $participant = $this->createEntity('Deltagere');
+        foreach($participant->getNoteNames() as $key => $name) {
+            $result["note_$key"] = $name;
+        }
 
+        $result = array_merge($result, $participant->getSpecialColumns());
+
+        asort($result);
         return $result;
     }
 
@@ -2091,28 +2213,54 @@ INSERT INTO participantidtemplates SET template_id = ?, participant_id = ? ON DU
      */
     public function sendSMSes(RequestVars $post)
     {
+        $query = "INSERT INTO messages (text_da, text_en, send_time) VALUES (?,?, NOW())";
+        $args = [$post->sms_besked_da, $post->sms_besked_en];
+        $message_id = $this->db->exec($query, $args);
+
+        $firebase = new Firebase($this->config);
+
         $status = array();
-
         foreach ($this->getSavedSearchResult() as $receiver) {
+            $lang = $receiver->main_lang ?? 'en';
+            $message = $post->{"sms_besked_$lang"};
             try {
-                if ($receiver->apple_id) {
-                    $result = $receiver->sendIosMessage($this->config->get('ios.certificate_path'), $post->sms_besked, 'Fastaval message');
-                    $this->log('Sent iOS notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
+                $query = "INSERT INTO participant_messages (message_id, participant_id) VALUES (?,?)";
+                $args = [$message_id, $receiver->id];
+                $this->db->exec($query, $args);
 
-                    $status[] = intval($result === IosPushMessage::SEND_SUCCESS);
+                if ($receiver->gcm_id) { // Sending via Firebase
+                    if (!$firebase->sendMessage($message, $receiver->gcm_id)) {
+                        $error = $firebase->getError();
 
-                } elseif ($receiver->gcm_id) {
-                    $result = $receiver->sendFirebaseMessage($this->config->get('firebase.server_api_key'), $post->sms_besked, 'Fastaval message');
-                    $this->log('Sent android notification to participant #' . $receiver->id . '. Result: ' . $result, 'App', null);
+                        switch($error['code']) {
+                            case 'UNKNOWN':
+                                $this->fileLog("Unknown error sending firebase message: ".$firebase->getResponse());
+                                break;
 
-                    $status[] = intval($result === FirebaseMessage::SEND_SUCCESS);
+                            case "UNREGISTERED":
+                                $receiver->gcm_id = '';
+                                $receiver->update();
+                                $this->log("Deltager #$receiver->id Firebase token er udløbet og token er derfor blevet slettet", 'Deltager', null);
+                                break;
+                        }
 
-                } elseif (empty($post->app_only)) {
-                    $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $post->sms_besked));
+                        $result = $error['message'];
+                        $status[] = 0;
+                    } else {
+                        $result = "Success";
+                        $status[] = 1;
+                    }
+                    $this->log("Sent Firebase notification to participant #$receiver->id Result: $result", 'Besked', $this->getLoggedInUser());
+
+                } elseif (empty($post->app_only)) { // Sending SMS if not disabled
+                    $status[] = intval(!!$receiver->sendSMS($this->dic->get('SMSSender'), $message));
+                    $query = "INSERT INTO smslog (phone_number, message_id) VALUES(?,?)";
+                    $this->db->exec($query, [$receiver->mobiltlf, $message_id]);
                 }
 
             } catch (Exception $e) {
-                $this->log('Failed notification to participant #' . $receiver->id . '. Error: ' . $e->getMessage(), 'App', null);
+                $this->fileLog($e->getMessage());
+                $this->log('Failed notification to participant #' . $receiver->id . '. Error: ' . explode("\n",$e->getMessage())[0] , 'Besked', $this->getLoggedInUser());
                 $status[] = 0;
             }
 
@@ -2267,7 +2415,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
      */
     public function setupPaymentReminderEmail(Deltagere $participant, Page $page)
     {
-        $pay_by_time  = strtotime($this->config->get('con.paymentlimit'));
+        $pay_by_time  = strtotime($this->config->get('con.signupend'));
         $signup_time = strtotime($participant->signed_up) + 86400;
 
         $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
@@ -2289,6 +2437,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         $page->payment_remainder = $participant->calcSignupTotal() - $participant->betalt_beloeb;
         $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
         $page->payment_day = date('d/m-Y', $paytime);
+        $page->payment_day_en = date('M d, Y', $paytime);
 
         return $participant;
     }
@@ -2304,62 +2453,70 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
      */
     public function setupSignupEmail(DBObject $participant, Page $page)
     {
-        $pay_by_time  = strtotime($this->config->get('con.paymentlimit'));
         $signup_time = strtotime($participant->signed_up) + 86400;
+        $signup_end_time = strtotime($this->config->get('con.signupend'));        
+        $constart = strtotime($this->config->get('con.start'));
 
-        $paytime = $pay_by_time > $signup_time ? $pay_by_time : $signup_time;
-
+        $paytime = $signup_end_time > $signup_time ? $signup_end_time : $signup_time;
         if ($paytime < time()) {
             $paytime = time() + 86400;
         }
-
-        $api = $this->factory('Api');
+        
+        $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
+        if ($participant->speaksDanish() && $lang !== 'en') {
+            $page->payment_day = date('d/m-Y', $paytime);
+            $page->end_signup_changes_date = date('d/m-Y', $signup_end_time);
+        } else {
+            $page->payment_day = date('M d, Y', $paytime);
+            $page->end_signup_changes_date = date('M d, Y', $signup_end_time);
+        }
+        $page->next_year = date('Y', strtotime('+1 year',$constart));
 
         $page->participant = $participant;
         $page->wear        = $participant->getWear();
         $page->activities  = $participant->getTilmeldinger();
         $page->gds         = $participant->getGDSTilmeldinger();
+        $page->food        = $participant->getMadtider();
 
+        $api = $this->factory('Api');
         if ($participant->id) {
             try {
                 $hash = $api->getParticipantPaymentHash($participant);
-
             } catch (FrameworkException $e) {
                 $hash = $api->setParticipantPaymentHash($participant);
             }
 
             $page->payment_url = $this->url('participant_payment', array('hash' => $hash));
-
         }
-
-        $lang = !empty($_GET['lang']) ? $_GET['lang'] : '';
-
-        if ($participant->speaksDanish() && $lang !== 'en') {
-            $page->payment_day = date('d/m-Y', $paytime);
-        } else {
-            $page->payment_day = date('M d, Y', $paytime);
-        }
-
-        $page->food        = $participant->getMadtider();
 
         $entrance = array();
         $prices   = array(
-            'alea'        => 0,
-            'sleeping'    => 0,
-            'entrance'    => 0,
-            'food'        => 0,
-            'activities'  => 0,
-            'wear'        => 0,
-            'other-stuff' => 0,
-            'fees'        => 0,
-            'total'       => 0,
+            'alea'              => 0,
+            'sleeping'          => 0,
+            'entrance'          => 0,
+            'food'              => 0,
+            'activities'        => 0,
+            'wear'              => 0,
+            'other-stuff'       => 0,
+            'fees'              => 0,
+            'total'             => 0,
         );
+
+        // Individual prices for displaying after items
+        $item_prices = [
+            'sleeping-partout'  => 0,
+            'entrance-partout'  => 0,
+            'sleeping-single'   => 0,
+            'entrance-single'   => 0,
+            'party'             => 0,
+            'party-bubbles'     => 0,
+            'mattres'           => 0,
+        ];
 
         foreach ($participant->getIndgang() as $indgang) {
             if (!$indgang) {
                 continue;
             }
-
             if ($indgang->isAleaMembership()) {
                 $entrance['alea-membership'] = true;
                 $prices['alea']              = $indgang->pris;
@@ -2367,59 +2524,59 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
             } elseif ($indgang->isPartout()) {
                 if ($indgang->isSleepTicket()) {
                     $entrance['sleeping-partout']  = true;
+                    $item_prices['sleeping-partout'] = $indgang->pris;
                     $prices['sleeping']           += $indgang->pris;
-
                 } else {
                     $entrance['entrance-partout']  = true;
+                    $item_prices['entrance-partout'] = $indgang->pris;
                     $prices['entrance']           += $indgang->pris;
                 }
 
             } elseif ($indgang->isDayTicket()) {
-                $entrance['entrance-' . date('d', strtotime($indgang->start))] = true;
-
+                $entrance['entrance-day'][strtotime($indgang->start)] = true;
                 $prices['entrance'] += $indgang->pris;
+                $item_prices['entrance-single'] = $indgang->pris;
 
             } elseif ($indgang->isSleepTicket()) {
-                $entrance['sleeping-' . date('d', strtotime($indgang->start))] = true;
-
+                $entrance['sleeping-day'][strtotime($indgang->start)] = true;
                 $prices['sleeping'] += $indgang->pris;
+                $item_prices['sleeping-single'] = $indgang->pris;
 
-            } elseif ($indgang->isParty()) {
-                $entrance['ottofest'] = true;
-                $entrance['otto']     = true;
-
+            } elseif (in_array($indgang->id, [81,82,83])) { // Party extra
+                $entrance['party'.($indgang->id - 80)] = true;
+                $item_prices['party'.($indgang->id - 80)] = $indgang->pris;
                 $prices['food'] += $indgang->pris;
 
             } elseif ($indgang->isFee()) {
                 $prices['fees'] += $indgang->pris;
 
+            } elseif ($indgang->isRich()) {
+                if ($indgang->isSecret()){
+                    $page->hemmelig_onkel = $indgang->pris;
+                } else {
+                    $page->rig_onkel = $indgang->pris;
+                }
+                $prices['other-stuff'] += $indgang->pris;
+
+            } elseif ($indgang->type === 'Indgang - Junior') {
+                $entrance['entrance-junior']  = true;
+                $item_prices['entrance-junior'] = $indgang->pris;
+                $prices['entrance']           += $indgang->pris;
+
             } else {
                 $entrance[$indgang->type] = true;
-
-                if (strtolower(substr($indgang->type, 0, 4)) === 'otto') {
-                    $entrance['otto'] = true;
-
-                    $prices['food'] += $indgang->pris;
-
-                } else {
-                    $prices['other-stuff'] += $indgang->pris;
-                }
+                $prices['other-stuff'] += $indgang->pris;
+                if ($indgang->type === 'Leje af madras') $item_prices['mattres'] = $indgang->pris;
             }
         }
-
-        foreach ($page->food as $item) {
-            if ($item) {
-                $prices['food'] += $item->getMad()->pris;
-            }
+        if (isset($entrance['entrance-day']) && is_array($entrance['entrance-day'])) {
+            ksort($entrance['entrance-day']);
+        }
+        if (isset($entrance['sleeping-day']) && is_array($entrance['sleeping-day'])) {
+            ksort($entrance['sleeping-day']);
         }
 
-        if ($participant->rig_onkel === 'ja') {
-            $prices['other-stuff'] += 300;
-        }
-
-        if ($participant->hemmelig_onkel === 'ja') {
-            $prices['other-stuff'] += 300;
-        }
+        $prices['food'] += $participant->calcFood();
 
         foreach ($page->wear as $item) {
             $prices['wear'] += $item->antal * $item->getWearpris()->pris;
@@ -2433,17 +2590,12 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
 
         $page->entrance = $entrance;
         $page->prices   = $prices;
+        $page->item_prices = $item_prices;
 
         if ($participant->id && $participant->isArrangoer()) {
             $page->participant_photo_upload_link = $this->getPhotoUploadLink($participant);
         }
 
-        $page->end_signup_changes_date = $page->payment_day;
-        // if ($participant->speaksDanish() && $lang !== 'en') {
-        //     $page->end_signup_changes_date = date('d/m-Y', $paytime + 7 * 86400);
-        // } else {
-        //     $page->end_signup_changes_date = date('M d, Y', $paytime + 7 * 86400);
-        // }
 
         return $participant;
     }
@@ -2466,7 +2618,7 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
     {
         $select = $this->createEntity('Deltagere')->getSelect();
 
-        $select->setRawWhere('DATE(signed_up) = DATE(NOW() - INTERVAL ' . intval($days_ago) . ' DAY)', 'AND')
+        $select->setRawWhere('DATE(signed_up) <= DATE(NOW() - INTERVAL ' . intval($days_ago) . ' DAY)', 'AND')
             ->setOrder('id', 'ASC');
 
         return $this->createEntity('Deltagere')->findBySelectMany($select);
@@ -2528,6 +2680,42 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         return $participants;
     }
 
+    public function filterOutRecentReminders(array $participants, $days_ago = 0)
+    {
+        $select = $this->createEntity('LogItem')->getSelect();
+
+        $select->setWhere('message', 'LIKE', '%sent payment reminder%')
+            ->setRawWhere('DATE(created) > ADDDATE(NOW(), INTERVAL -'.intval($days_ago).' day)', 'AND');
+
+        foreach ($this->createEntity('LogItem')->findBySelectMany($select) as $log_item) {
+            foreach ($participants as $id => $participant) {
+                if (stripos($log_item->message, '(ID: ' . $participant->id . ')') !== false) {
+                    unset($participants[$id]);
+                }
+            }
+        }
+
+        return $participants;
+    }
+
+    public function filterOutRecentMails(array $participants, $days_ago = 0)
+    {
+        $select = $this->createEntity('LogItem')->getSelect();
+
+        $select->setWhere('message', 'LIKE', '%sent% to participant%')
+            ->setRawWhere('DATE(created) > ADDDATE(NOW(), INTERVAL -'.intval($days_ago).' day)', 'AND');
+
+        foreach ($this->createEntity('LogItem')->findBySelectMany($select) as $log_item) {
+            foreach ($participants as $id => $participant) {
+                if (stripos($log_item->message, '(ID: ' . $participant->id . ')') !== false) {
+                    unset($participants[$id]);
+                }
+            }
+        }
+
+        return $participants;
+    }
+
     /**
      * returns participants for cancellation/payment reminders
      * with volunteers filtered out
@@ -2544,13 +2732,28 @@ SET participant_id = ?, amount = ?, cost = ?, fees = ?, timestamp = NOW()
         });
     }
 
-    public function getParticipantsForPaymentReminder()
+    /**
+     * 
+     */
+    public function getParticipantsForPaymentReminder($days_ago = 1)
     {
-        $participants = $this->filterOutPaidSignups($this->createEntity('Deltagere')->findAll());
+        $participants = $this->getParticipantsSignedupDaysAgo($days_ago);
+        $participants = $this->filterOutPaidSignups($participants);
         $participants = $this->filterOutGroups($participants);
-        $participants = $this->filterOutTodaysReminders($participants);
+        $participants = $this->filterOutRecentReminders($participants, $days_ago);
         $participants = $this->filterOutAnnulled($participants);
-        $participants = $this->filterSignedUpToday($participants);
+
+        //return [$this->createEntity('Deltagere')->findById(1)];
+        return $participants;
+    }
+
+    public function getParticipantsForwelcomeMail()
+    {
+        //return [$this->createEntity('Deltagere')->findById(1)];
+
+        $participants = $this->createEntity('Deltagere')->findAll();
+        $participants = $this->filterOutRecentMails($participants, 1);
+        $participants = $this->filterOutAnnulled($participants);
 
         return $participants;
     }
@@ -2826,7 +3029,7 @@ ORDER BY
         $vouchers = 0;
 
         foreach ($participant->getPladser() as $spot) {
-            if ($spot->type === 'spilleder') {
+            if ($spot->type === 'spilleder' && $spot->getAktivitet()->type !== 'braet') {
                 $vouchers++;
             }
 
@@ -3073,4 +3276,407 @@ WHERE (
         return $refundees;
     }
 
+    public function parsePaymentSheet($file){
+        $csv = file_get_contents($file['tmp_name']);
+        $lines = explode("\n", $csv);
+        $data = new stdClass();
+        
+        $data->header_ids = [];
+        $data->header_text= [];
+        foreach(explode(";", $lines[0]) as $index => $value){
+            $id = preg_replace("/\W+/","-", strtolower($value));
+            $data->header_ids[] = $id;
+            $data->header_text[$id] = $value;
+        }
+        unset($lines[0]);
+        
+        $data->rows = [];
+        foreach ($lines as $line) {
+            if ($line === '') continue;
+            $row = [];
+            foreach(explode(";", $line) as $index => $value) {
+                $row[$data->header_ids[$index]] = $value;
+            }
+            $data->rows[] = $row;
+        }
+        return $data;
+    }
+
+    public function matchPayments($data) {
+        $match_data = [
+            'id-phone-name-amount' => [],
+            'id-phone-amount' => [],
+            'id-name-amount' => [],
+            'id-phone-name' => [],
+            'phone-name-amount' => [],
+            'phone-amount' => [],
+            'phone-name' => [],
+            'phone-multi' => [],
+            'unknown' => [],
+            'processed' => [],
+            'all' => [],
+        ];
+
+        foreach($data->rows as $row) {
+            $match_data_row = [];
+            $match_data_row['sheet-row'] = $row;
+
+            // First check if we already processed this payment
+            $payment_id = $row['transactionid'];
+            $select = $this->createEntity('Deltagere')->getSelect();
+            $select->setWhere('paid_note','like',"%Transaktion:$payment_id%");
+            $deltager = $this->createEntity('Deltagere')->findBySelect($select);
+            if ($deltager) {
+                $participant_info = [];
+                $participant_info['object'] = $deltager;
+                $participant_info['name'] = $deltager->getName();
+                $participant_info['phone'] = $deltager->mobiltlf;
+                $participant_info['signup-amount'] = $deltager->calcSignupTotal();
+                $participant_info['real-amount'] = $deltager->calcRealTotal();
+                $participant_info['display-id'] = $deltager->id;
+                
+                $match_data_row['participant-info'][$deltager->id] = $participant_info;
+                $match_data['processed'][$payment_id] = $match_data_row;
+                $match_data['all'][$payment_id] = $match_data_row;
+                continue;
+            }
+
+            
+            $category = 'unknown';
+            $payment_amount = intval($row['amount']);
+
+            $deltager = null;
+            $matches = [];
+            if (preg_match("/\d+/", $row['comment'], $matches)) {
+                $id = $matches[0];
+                $deltager = $this->createEntity('Deltagere')->findById($id);
+            }
+
+            $last4 = null;
+            $matches = [];
+            if (preg_match("/\d{4}/", $row['mp-number'], $matches)) {
+                $last4 = $matches[0];
+            }
+
+            if ($deltager) {
+                $participant_info = [];
+                $participant_info['object'] = $deltager;
+                
+                // We know id matches
+                $participant_info['matches']['id'] = true;
+                $participant_info['display-id'] = "<span class='match matched-id'>$deltager->id</span>";
+                $participant_info['comment'] =
+                    str_replace( $deltager->id, $participant_info['display-id'], $row['comment']);
+
+                // Match payment phone number with participant number
+                $participant_info['phone'] = $deltager->mobiltlf;
+                if (preg_match("/\d{4}$last4/", $participant_info['phone'])) {
+                    $participant_info['matches']['phone'] = true;
+                    $participant_info['phone'] = str_replace(
+                        $last4,
+                        "<span class='match matched-phone'>$last4</span>",
+                        $participant_info['phone']
+                    );
+                }
+                
+                // Match payment amount with owed amount
+                $pay_match = self::matchpayment($deltager, $payment_amount);
+                $participant_info['matches'] = array_merge($participant_info['matches'], $pay_match['matches']);
+                $participant_info['signup-amount'] = $pay_match['signup-amount'];
+                $participant_info['real-amount'] = $pay_match['real-amount'];
+
+                // Match name with participant
+                $name_match = self::matchname($deltager, $row['customer-name'], $participant_info['comment']);
+                $participant_info['matches'] = array_merge($participant_info['matches'], $name_match['matches']);
+                $participant_info['name'] = $name_match['name'];
+                $participant_info['comment'] = $name_match['comment'];
+
+                $category = 'id';
+                $category .= $participant_info['matches']['phone'] ? '-phone' : '';
+                $category .= 
+                    $participant_info['matches']['firstname'] && $participant_info['matches']['surname'] ? '-name' : '';
+                $category .= $participant_info['matches']['amount'] ? '-amount' : '';
+                $match_data_row['participant-info'][$deltager->id] = $participant_info;
+            } else {
+                // Try to find particpant without ID
+                
+                // Find by number
+                $select = $this->createEntity('Deltagere')->getSelect();
+                $select->setWhere('mobiltlf','like',"%$last4");
+                $res = $this->createEntity('Deltagere')->findBySelectMany($select);
+                if ($res) {
+                    foreach ($res as $deltager) {
+                        $participant_info = [];
+                        $participant_info['object'] = $deltager;
+                        $participant_info['display-id'] = $deltager->id;
+
+                        // We know phone number matches
+                        $participant_info['phone'] = $deltager->mobiltlf;
+                        $participant_info['matches']['phone'] = true;
+                        $participant_info['phone'] = str_replace(
+                            $last4,
+                            "<span class='match matched-phone'>$last4</span>",
+                            $participant_info['phone']
+                        );
+
+                        // Match payment amount with owed amount
+                        $pay_match = self::matchpayment($deltager, $payment_amount);
+                        $participant_info['matches'] = $pay_match['matches'];
+                        $participant_info['signup-amount'] = $pay_match['signup-amount'];
+                        $participant_info['real-amount'] = $pay_match['real-amount'];
+
+                        
+                        // Match name
+                        $name_match = self::matchname($deltager, $row['customer-name'], $row['comment']);
+                        $participant_info['matches'] = array_merge($participant_info['matches'], $name_match['matches']);
+                        $participant_info['name'] = $name_match['name'];
+                        $participant_info['comment'] = $name_match['comment'];
+
+                        $match_data_row['participant-info'][$deltager->id] = $participant_info;
+                    }
+
+                    $category = 'phone';
+                    if (count($res) > 1) {
+                        $category .= '-multi';
+                    } else {
+                        $category .= 
+                            $participant_info['matches']['firstname'] && $participant_info['matches']['surname'] ? '-name' : '';
+                        $category .= $participant_info['matches']['amount'] ? '-amount' : '';
+                    }
+                }
+            }
+
+            $match_data[$category][$payment_id] = $match_data_row;
+            $match_data['all'][$payment_id] = $match_data_row;
+        }
+        return $match_data;
+    }
+
+    // helper function to match names of participant with payment
+    private static function matchname($deltager, $name, $comment){
+        $match_info = [];
+        $match_info['matches'] = [];
+
+        // Match name directly
+        if (str_contains($name, $deltager->fornavn)) {
+            $match_info['matches']['firstname-customer'] = true;
+            $match_info['name'] = "<span class='match matched-firstname'>$deltager->fornavn</span>";
+        } else {
+            $match_info['name'] = "$deltager->fornavn";
+        }
+
+        if (str_contains($name, $deltager->efternavn)) {
+            $match_info['matches']['surname-customer'] = true;
+            $match_info['name'] .= " <span class='match matched-firstname'>$deltager->efternavn</span>";
+        } else {
+            $match_info['name'] .= " $deltager->efternavn";
+        }
+
+        // Find name in comment
+        if (str_contains($comment, $deltager->fornavn)) {
+            $match_info['matches']['firstname-comment'] = true;
+            $match_info['comment'] = str_replace(
+                $deltager->fornavn,
+                "<span class='match matched-firstname'>$deltager->fornavn</span>",
+                $comment
+            );
+        } else {
+            $match_info['comment'] = $comment; 
+        }
+
+        if (str_contains($comment, $deltager->efternavn)) {
+            $match_info['matches']['surname-comment'] = true;
+            $match_info['comment'] = str_replace(
+                $deltager->efternavn,
+                "<span class='match matched-surname'>$deltager->efternavn</span>",
+                $match_info['comment']
+            );
+        }
+
+        $match_info['matches']['firstname'] = 
+            $match_info['matches']['firstname-customer'] || $match_info['matches']['firstname-comment'];
+        $match_info['matches']['surname'] = 
+            $match_info['matches']['surname-customer'] || $match_info['matches']['surname-comment'];
+        
+        return $match_info;
+    }
+
+    // helper function to match amounts of payment with what participant owes
+    private static function matchpayment($deltager, $payment_amount){
+        $match_info['matches'] = [];
+
+        $match_info['signup-amount'] = $deltager->calcSignupTotal() - $deltager->betalt_beloeb;
+        $match_info['real-amount'] = $deltager->calcRealTotal() - $deltager->betalt_beloeb;
+        if ($match_info['signup-amount'] === $payment_amount) {
+            $match_info['matches']['amount'] = true;
+            $match_info['signup-amount'] = 
+                "<span class='match matched-amount'>".$match_info['signup-amount']."</span>";
+        }
+        if ($match_info['real-amount'] === $payment_amount) {
+            $match_info['matches']['amount'] = true;
+            $match_info['real-amount'] = 
+                "<span class='match matched-amount'>".$match_info['real-amount']."</span>";
+        }
+
+        return $match_info;
+    }
+
+    /**
+     * Confirm MobilePay payment belongs to participant and save it in the system
+     *
+     * @param $pid ID of participant
+     * @param $tid ID of transaction
+     *
+     * @access public
+     * @return null|Deltagere
+     */
+    public function confirmPayement($pid, $tid) {
+        // Find transaction
+        $transactions = $this->dic->get('Session')->payment_data['all'];
+        if(!isset($transactions[$tid])) {
+            return ['error' => "Transaktion $tid findes ikke"];
+        }
+        $sheet_row = $transactions[$tid]['sheet-row'];
+
+        // Find participant
+        $participant = $this->createEntity('Deltagere')->findById($pid);
+        if(!$participant) {
+            return ['error' => "Ingen deltager med ID:$pid"];
+        }
+
+        // Check if we already processed this payment to avoid double processing
+        if(str_contains($participant->paid_note ,"Transaktion:$tid")) {
+            return ['success' => 'already processed'];    
+        }
+
+        // Update amount
+        $amount = intval($sheet_row['amount']);
+        $participant->betalt_beloeb = $participant->betalt_beloeb ? $participant->betalt_beloeb + $amount : $amount;
+        
+        // Update note with payment info
+        $note = "Payed with Mobilepay"
+            .PHP_EOL."Transaktion:$tid Dato:$sheet_row[date] Beløb:$sheet_row[amount] Navn:".$sheet_row['customer-name']." Nummer:".$sheet_row['mp-number']
+            .PHP_EOL."Kommentar:$sheet_row[comment]";
+        $participant->paid_note ? $participant->paid_note .= PHP_EOL.$note : $participant->paid_note = $note;
+        
+        // Update participant
+        if ($participant->update()) {
+            $this->log(
+                "MobilePay transaktion $tid blev bogført på deltager #$pid af {$this->getLoggedInUser()->user}",
+                'Betaling',
+                $this->getLoggedInUser()
+            );
+            return [
+                'success' => true,
+                'info' => [
+                    'name' => $participant->getName(),
+                    'phone' => $participant->mobiltlf,
+                    'signup-amount' => $participant->calcSignupTotal(),
+                    'real-amount' => $participant->calcRealTotal(),
+                    'display-id' => $participant->id,
+                ]
+            ];
+        }
+        return ['error' => "Kunne ikke opdatere deltager $pid"];
+    }
+
+    /**
+     * 
+     */
+    public function findParticipantsByIds($ids = []) {
+        if (empty($ids)) return [];
+
+        $select = $this->createEntity('Deltagere')->getSelect();
+        $select->setWhere('id', 'in', $ids);
+        return $this->createEntity('Deltagere')->findBySelectMany($select);
+    }
+
+    public function anonymizeParticipants($keep) {
+        // Always keep id
+        if (!in_array('id', $keep)) $keep[] = 'id';
+
+        $fields = [];
+        $unknown = [];
+        $deltager = $this->createEntity('Deltagere');
+        $columns = $deltager->getColumnInfo();
+        foreach($columns as $name => $type ) {
+            switch(true) {
+                case in_array($name, $keep):
+                    break;
+                case $name == "country":
+                    $fields[$name] = "DK";
+                    break;
+                case $deltager->isFieldNullable($name):
+                    $fields[$name] = null;
+                    break;
+                case $name == "brugerkategori_id": // Avoid error on foreign key constraint 
+                    $fields[$name] = 1;
+                    break;
+                case preg_match("/int\(\d+\)/", $type) || $type == "float":
+                    $fields[$name] = 0;
+                    break;
+                case $type == "enum('ja','nej')":
+                    $fields[$name] = 'nej';
+                    break;
+                case str_contains($type, "set(") || str_contains($type, "char(") || $type == "text" || $type == "mediumtext":
+                    $fields[$name] = '';
+                    break;
+                case $type == "datetime";
+                    $fields[$name] = '0000-00-00 00:00:00';
+                    break;
+                default:
+                    $unknown[$name] = $type;
+                    $this->dic->get('Log')->logToFile(
+                        "Error in anonymizeParticipants()\n".
+                        "Unknown data type for field $name : $type"
+                    );
+            }
+        }
+
+        $errors = [];
+
+        if (!empty($unknown)) {
+            $errors[] = [
+                'id' => 'unknown',
+                'desc' => "There are fields with unknown datatypes that we don't know how to reset",
+                'data' => $unknown
+            ];
+        }
+
+        if(!$deltager->updateAll($fields)){
+            $errors[] = [
+                'id' => 'db',
+                'desc' => "Failed to execute the update query",
+            ];
+        }
+
+        $res = (object)[
+            'success' => empty($errors),
+            'fields' => $fields,
+            'errors' => $errors,
+        ];
+
+        return $res;
+    }
+
+    public function getCountries($sort = 'da') {
+        if ($sort == 'da') $sort = " ORDER BY name_da COLLATE utf8mb4_danish_ci";
+        if ($sort == 'en') $sort = " ORDER BY name_en";
+
+        return $this->db->query("SELECT code, name_en, name_da FROM countries $sort");
+    }
+
+    public function getWorkAreas($sort = 'da') {
+        if ($sort == 'da') $sort = " ORDER BY name_da COLLATE utf8mb4_danish_ci";
+        if ($sort == 'en') $sort = " ORDER BY name_en";
+
+        return $this->db->query("SELECT id, name_en, name_da FROM organizer_categories $sort");
+    }
+
+    public function getGames($sort = 'da') {
+        if ($sort == 'da') $sort = " ORDER BY navn COLLATE utf8mb4_danish_ci";
+        if ($sort == 'en') $sort = " ORDER BY title_en";
+
+        return $this->db->query("SELECT id, title_en, navn FROM aktiviteter WHERE type = 'braet' OR type = 'rolle' $sort");
+    }
 }

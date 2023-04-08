@@ -1,0 +1,1 @@
+ALTER TABLE deltagere ADD knows_fastaval_from TINYINT(2) DEFAULT 0;

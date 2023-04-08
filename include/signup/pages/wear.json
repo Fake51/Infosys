@@ -1,0 +1,70 @@
+{
+    "order": 9,
+    "slug": {
+        "en": "Wear",
+        "da": "Wear"
+    },
+    "title": {
+        "en": "Fastaval Wear",
+        "da": "Fastaval Wear"
+    },
+    "sections": [
+        {
+            "headline": {
+                "en": "\n",
+                "da": "\n"
+            },
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Here you can order wear (clothes and other merchandise) for Fastaval 2023. Only wear ordered in advance is produced. This means that there is no physical shop at Fastaval - order here or miss out!",
+                        "da": "Her kan du bestile wear (t\u00f8j og anden merchandise) til Fastaval 2023. Der bliver kun produceret det wear som bliver bestilt. Det betyder at der ikke er mulighed for at k\u00f8be det i en fysisk butik p\u00e5 Fastaval - bestil her, eller g\u00e5 glip af det!"
+                    }
+                }
+            ]
+        },
+        {
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Som en del af prisen f\u00e5r alle b\u00f8rn en Fastaval Junior-T-shirt. Du f\u00e5r den udleveret, n\u00e5r du tjekker ind p\u00e5 Fastaval Junior p\u00e5 dagen. Du kan derudover tilk\u00f8be flere Fastaval Junior t-shirts.",
+                        "da": "Som en del af prisen f\u00e5r alle b\u00f8rn en Fastaval Junior-T-shirt. Du f\u00e5r den udleveret, n\u00e5r du tjekker ind p\u00e5 Fastaval Junior p\u00e5 dagen. \nDu kan derudover tilk\u00f8be flere Fastaval Junior t-shirts."
+                    }
+                }
+            ],
+            "display_logic": [
+                {
+                    "type": "default",
+                    "status": "hidden"
+                },
+                {
+                    "type": "field_compare",
+                    "status": "normal",
+                    "input": "participant",
+                    "compare": "equals",
+                    "value": "Juniordeltager"
+                }
+            ]
+        },
+        {
+            "items": [
+                {
+                    "type": "paragraph",
+                    "text": {
+                        "en": "Find more information about FastaWear and find a size chart at [url=https:\/\/www.fastaval.dk\/en\/praktisk\/praktiske-informationer\/#wear]Fastaval's website[\/url]",
+                        "da": "L\u00e6s mere information om FastaWear og se et st\u00f8rrelsesskema p\u00e5 [url=https:\/\/www.fastaval.dk\/praktisk\/praktiske-informationer\/#wear]Fastavals hjemmeside[\/url]"
+                    }
+                }
+            ]
+        },
+        {
+            "headline": {
+                "en": "\n",
+                "da": "\n"
+            },
+            "module": "wear"
+        }
+    ]
+}

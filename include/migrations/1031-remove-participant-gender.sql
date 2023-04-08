@@ -1,0 +1,1 @@
+ALTER TABLE deltagere DROP COLUMN gender;
