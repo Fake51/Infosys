@@ -8,7 +8,7 @@ then
     /usr/bin/mysql -u root -h mysql -proot  < /var/www/infosys/docker/create.sql
 fi
 
-if [ -f /var/www/infosys/compooser.json ]
+if [ -f /var/www/infosys/composer.json ]
 then
     (cd /var/www/infosys/ && composer i)
 fi

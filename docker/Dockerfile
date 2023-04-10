@@ -10,7 +10,7 @@ RUN apt-get update -y; \
     add-apt-repository ppa:ondrej/php; \
     apt-get update -y; \
     echo "Europe/Copenhagen" > /etc/timezone; \
-    DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         mysql-client \
         php8.0-cli \
         php8.0-curl \
@@ -33,6 +33,8 @@ RUN apt-get update -y; \
     php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"; \
     php composer-setup.php; \
     php -r "unlink('composer-setup.php');"; \
+    mv composer.phar /usr/bin/composer; \
+    addgroup --gid "$GROUP_ID" infosys; \
     adduser --home /var/www --disabled-login --disabled-password --uid "$USER_ID" --gid "$GROUP_ID" infosys
 
 COPY run.sh /usr/local/bin

@@ -3,7 +3,7 @@
 Running
 
 ```bash
-docker-compose up -d
+UID=${UID} GID=${GID} docker-compose up -d
 ```
 
 Stopping
