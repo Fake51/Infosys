@@ -1,30 +1,34 @@
 <?php
 
-namespace Fv\Tests;
+namespace Fv\Tests\Models;
+use PHPUnit\Framework\TestCase;
+use ArrayConfig;
+use DIC;
+use Autoloader;
+use EntityFactory;
+use ApiModel;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class ApiModelTest extends \PHPUnit_Framework_TestCase
+class ApiModelTest extends TestCase
 {
-    public function setup()
+    public function setup(): void
     {
-        $this->config = new \ArrayConfig([]);
-        $this->dic    = new \DIC();
+        $this->config = new ArrayConfig([]);
+        $this->dic    = new DIC();
 
         $this->db = $this->getMockBuilder('DB')
             ->disableOriginalConstructor()
             ->setMethods(['query'])
             ->getMock();
 
-        $autoloader = new \Autoloader(['../../../includes/entities/']);
+        $autoloader = new Autoloader(['../../../includes/entities/']);
 
         $this->dic->addReusableObject($this->db, 'DB');
-        $this->dic->addReusableObject(new \EntityFactory($this->db, $autoloader));
+        $this->dic->addReusableObject(new EntityFactory($this->db, $autoloader));
     }
 
     public function testParseSignupConfirmation()
     {
-        $model = new \ApiModel($this->db, $this->config, $this->dic);
+        $model = new ApiModel($this->db, $this->config, $this->dic);
 
         $data = [
                  'participant' => [
