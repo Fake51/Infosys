@@ -44,6 +44,10 @@ class KarmaTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $participant->method('__get')
+            ->with('id')
+            ->willReturn(1);
+
         $return = [
                    [
                     'deltager_id' => 1,
@@ -227,7 +231,8 @@ class KarmaTest extends TestCase
                    ],
                   ];
 
-        $this->db->method('query')
+        $this->db->expects($this->once())
+            ->method('query')
             ->willReturn($return);
 
         $this->assertEquals(14, $karma->calculate($participant));
@@ -241,6 +246,9 @@ class KarmaTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $participant->method('__get')
+            ->with('id')
+            ->willReturn(1);
 
         $return = [
                    [
@@ -313,6 +321,10 @@ class KarmaTest extends TestCase
         $participant = $this->getMockBuilder('Deltagere')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $participant->method('__get')
+            ->with('id')
+            ->willReturn(1);
 
         $return = [
                    [
