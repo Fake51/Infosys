@@ -7,7 +7,7 @@ CREATE TABLE messages (
 );
 
 CREATE TABLE participant_messages (
-  participant_id INT(11) DEFAULT NULL,
+  participant_id INT(11) NOT NULL,
   message_id INT,
   PRIMARY KEY(participant_id, message_id),
   CONSTRAINT `participant_messages_ibfk_1` FOREIGN KEY (`participant_id`) REFERENCES `deltagere` (`id`),

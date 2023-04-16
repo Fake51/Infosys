@@ -1,5 +1,5 @@
 CREATE DATABASE infosys default character set utf8mb4;
-GRANT ALL ON infosys.* to 'infosys'@'localhost' IDENTIFIED BY 'infosys';
+GRANT ALL ON infosys.* to 'infosys'@'%' IDENTIFIED BY 'infosys';
 FLUSH PRIVILEGES;
 USE infosys;
 
